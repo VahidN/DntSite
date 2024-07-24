@@ -1351,7 +1351,7 @@ window.DntUtilities = {
         DntInputFile.enable();
         DntReactionsPopOver.enable();
         DntDocumentFontSize.enable();
-        DntAddIconsToExternalLinks.enable();
+        // DntAddIconsToExternalLinks.enable();
         DntApplyBootstarpTable.enable();
         DntPreventDoubleClick.enable();
         DntChangeInputDirectionDependOnLanguage.enable();
