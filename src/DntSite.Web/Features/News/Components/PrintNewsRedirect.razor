@@ -1,0 +1,19 @@
+﻿@if (DailyNewsItem is not null)
+{
+    @if (DailyNewsItem.LastHttpStatusCodeCheckDateTime.HasValue)
+    {
+        <div title="وضعیت پیوند" class="ms-2 badge @StatusIcon">@HttpStatusCodeText</div>
+    }
+
+    <img class="ms-2"
+         src="https://www.google.com/s2/favicons?domain=@UrlHost"
+         alt="@DailyNewsItem.Url icon"
+         title="@DailyNewsItem.Url"
+         width="16" height="16"/>
+    <div class="badge bg-primary">
+        <DntLink IsExternal="true" Url="@GetUrl(DailyNewsItem)" title="@DailyNewsItem.Url" CssClass="text-light">
+            مشاهده مطلب اصلی
+            <span aria-hidden="true">&larr;</span>
+        </DntLink>
+    </div>
+}

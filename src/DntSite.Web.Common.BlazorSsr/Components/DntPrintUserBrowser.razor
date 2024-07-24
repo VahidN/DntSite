@@ -1,0 +1,35 @@
+@if (!string.IsNullOrWhiteSpace(BrowserName))
+{
+    if (IsEdge)
+    {
+        <span title="@BrowserName" alt="@BrowserName" aria-hidden="true" class="@DntBootstrapIcons.BiBrowserEdge"></span>
+    }
+    else if (IsIE)
+    {
+        <span title="@BrowserName" alt="@BrowserName" aria-hidden="true" class="@DntBootstrapIcons.BiMicrosoft"></span>
+    }
+    else if (IsFirefox)
+    {
+        <span title="@BrowserName" alt="@BrowserName" aria-hidden="true" class="@DntBootstrapIcons.BiBrowserFirefox"></span>
+    }
+    else if (IsChrome)
+    {
+        <span title="@BrowserName" alt="@BrowserName" aria-hidden="true" class="@DntBootstrapIcons.BiBrowserChrome"></span>
+    }
+    else if (IsSafari)
+    {
+        <span title="@BrowserName" alt="@BrowserName" aria-hidden="true" class="@DntBootstrapIcons.BiBrowserSafari"></span>
+    }
+    else if (IsOpera)
+    {
+        <span title="@BrowserName" alt="@BrowserName" aria-hidden="true" class="@DntBootstrapIcons.BiCircle"></span>
+    }
+    else
+    {
+        <span title="@BrowserName" alt="@BrowserName" aria-hidden="true" class="@DntBootstrapIcons.BiPerson"></span>
+    }
+}
+else
+{
+    <span aria-hidden="true" class="@DntBootstrapIcons.BiPerson"></span>
+}

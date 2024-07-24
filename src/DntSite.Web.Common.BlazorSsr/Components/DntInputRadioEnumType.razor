@@ -1,0 +1,31 @@
+@typeparam TEnum  where TEnum : Enum
+
+<div class="row mb-@InputRowMarginBottom">
+    <label class="col-form-label col-lg-@LabelColumnWidth" for="@ValueField.HtmlFieldName">
+        @if (!string.IsNullOrWhiteSpace(LabelName))
+        {
+            @LabelName
+        }
+        else
+        {
+            @ValueExpression.GetDisplayName()
+        }
+    </label>
+    <div class="col-lg-@InputTextColumnWidth">
+        <InputRadioGroup Value="@Value" ValueExpression="@ValueExpression" ValueChanged="@ValueChanged">
+            @foreach (var item in Items)
+            {
+                <div class="form-check mb-@InputRowMarginBottom">
+                    <InputRadio class="form-check-input" type="radio"
+                                Value="@item.Value"
+                                @attributes="@AdditionalAttributes"/>
+                    <label class="form-check-label" for="@ValueField.HtmlFieldName">@item.Key</label>
+                </div>
+            }
+        </InputRadioGroup>
+        @if (ValueExpression is not null)
+        {
+            <ValidationMessage For="@ValueExpression"/>
+        }
+    </div>
+</div>

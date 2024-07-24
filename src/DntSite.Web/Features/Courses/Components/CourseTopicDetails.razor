@@ -1,0 +1,99 @@
+@using DntSite.Web.Features.Courses.Entities
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(CoursesRoutingConstants.CoursesTopicCourseIdDisplayId)]
+
+<DntLoading IsLoading="@(_courseTopic is null || CurrentPost is null || _courseTopicComments is null)">
+    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+
+    <DntPageSeo Description="@CurrentPost.Body"
+                Title="@CurrentPost.Title"
+                OpenSearchUrl="@ApiUrlsRoutingConstants.OpenSearch.HttpGet.RenderOpenSearch"
+                Tags="@GetTags()"
+                AuthorName="@CurrentPost.User?.FriendlyName"
+                DateModified="@ModifiedAt"
+                DatePublished="CurrentPost.Audit.CreatedAt"
+                SiteName="@ApplicationState.AppSetting?.BlogName"
+                YourTwitterHandle=""
+                TotalRaters="CurrentPost.Rating.TotalRaters"
+                AverageRating="CurrentPost.Rating.AverageRating"
+                ImageDescription="@CurrentPost.Title"
+                ImageUrl="@CurrentPostImageUrl"
+                RssUrl=""
+                SiteMapUrl="@ApiUrlsRoutingConstants.Sitemap.HttpAny.Get"/>
+
+    <InjectLastAndNextPostLinks
+        LastPostUrl="@LastPostUrl"
+        NextPostUrl="@NextPostUrl"
+        LastPostTitle="@_courseTopic!.PreviousTopic?.Title"
+        NextPostTitle="@_courseTopic!.NextTopic?.Title"/>
+
+    <ShowBlogPostItem TReactionEntity="CourseTopicReaction"
+                      TForeignKeyEntity="CourseTopic"
+                      SiteName="@ApplicationState.AppSetting?.BlogName"
+                      CommentsUrlTemplate="@CommentsUrlTemplate"
+                      PostUrlTemplate="@PostUrlTemplate"
+                      PostTagUrlTemplate="@CoursesRoutingConstants.PostTagUrlTemplate"
+                      ShowBriefDescription="false"
+                      ShowTags="true"
+                      ShowCommentsButton="true"
+                      Id="CurrentPost.Id"
+                      Body="@CurrentPost.Body"
+                      Reactions="CurrentPost.Reactions"
+                      Tags="@GetTags()"
+                      Title="@CurrentPost.Title"
+                      BriefDescription="@CurrentPost.Body"
+                      CreatedAt="CurrentPost.Audit.CreatedAt"
+                      RecordUser="CurrentPost.User"
+                      NumberOfComments="CurrentPost.EntityStat.NumberOfComments"
+                      NumberOfViews="CurrentPost.EntityStat.NumberOfViews"
+                      ReadingTimeMinutes="0"
+                      CreatedByUserAgent="@CurrentPost.Audit.CreatedByUserAgent"
+                      NumberOfViewsFromFeed="CurrentPost.EntityStat.NumberOfViewsFromFeed"
+                      CanUserDeleteThisPost="CanUserDeleteThisPost"
+                      CanUserEditThisPost="CanUserEditThisPost"
+                      EditPostUrlTemplate="@EditPostUrlTemplate"
+                      DeletePostUrlTemplate="@DeletePostUrlTemplate">
+        <AdditionalHeaderContent>
+        </AdditionalHeaderContent>
+        <AdditionalBodyContent>
+        </AdditionalBodyContent>
+    </ShowBlogPostItem>
+
+    <span id="comments"></span>
+
+    <ManageBlogPostCommentItem
+        IsReplyToPost="true"
+        Body="@null"
+        CommentId="@null"
+        CreatedAt="@null"
+        PostId="@CurrentPost.Id"
+        RecordUser="@null"
+        UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.CourseFileUpload"
+        UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.CourseImagesUpload"
+        HandleCommentAction="HandleCommentActionAsync"/>
+
+    <DntTreeView
+        TRecord="CourseTopicComment"
+        Items="_courseTopicComments"
+        ChildrenSelector="m => m.Children"
+        style="list-style: none;">
+        <ItemTemplate Context="record">
+            <ShowBlogPostCommentItem
+                PostId="@CurrentPost.Id"
+                CommentId="@record.Id"
+                Body="@record.Body"
+                Reactions="@record.Reactions"
+                RecordUser="@record.User"
+                CreatedAt="@record.Audit.CreatedAt"
+                CreatedByUserAgent="@record.Audit.CreatedByUserAgent"
+                TReactionEntity="CourseTopicCommentReaction"
+                TForeignKeyEntity="CourseTopicComment"
+                HandleCommentAction="HandleCommentActionAsync"
+                UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.CourseFileUpload"
+                UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.CourseImagesUpload"/>
+        </ItemTemplate>
+        <EmptyContentTemplate>
+            <DntAuthorizedMessageBox/>
+        </EmptyContentTemplate>
+    </DntTreeView>
+</DntLoading>

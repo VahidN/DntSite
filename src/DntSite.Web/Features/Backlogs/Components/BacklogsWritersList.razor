@@ -1,0 +1,23 @@
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(BacklogsRoutingConstants.BacklogsWriters)]
+@attribute [Route(BacklogsRoutingConstants.BacklogsWritersPageCurrentPage)]
+@attribute [Route(BacklogsRoutingConstants.BacklogsWritersUserFriendlyName)]
+@attribute [Route(BacklogsRoutingConstants.BacklogsWritersUserFriendlyNamePageCurrentPage)]
+
+@if (HasUserFriendlyName)
+{
+    <ShowBacklogsArchiveList Posts="_blogPosts"
+                             CurrentPage="CurrentPage"
+                             ItemsPerPage="PostItemsPerPage"
+                             BasePath="@BasePath"
+                             MainTitle="@MainTitle"/>
+}
+else
+{
+    <WritersList MainTitle="@MainTitle"
+                 CurrentPage="CurrentPage"
+                 ItemsPerPage="PostItemsPerPage"
+                 TotalItemCount="@_totalUsersCount"
+                 BasePath="@BasePath"
+                 Users="_users"/>
+}

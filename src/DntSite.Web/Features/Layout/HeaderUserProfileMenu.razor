@@ -1,0 +1,75 @@
+@using DntSite.Web.Features.UserProfiles.Components
+<DntNavLinkMenu>
+    <MainTitle>
+        <PrintUser User="ApplicationState.CurrentUser?.User" ShowAsUrl="@false"/>
+        <DntBadge BadgeValue="_unreadPrivateMessagesCount"
+                  Title="پیام‌های خوانده نشده"
+                  BadgeValueBgColor="TextBgColor.Danger"
+                  IsBadgeValueVisible="@(_unreadPrivateMessagesCount > 0)"/>
+    </MainTitle>
+    <MenuItems>
+        <DntNavLinkMenuItem Url="@ApplicationState.CurrentUser?.ProfileUrl" CssIcon="@DntBootstrapIcons.BiPerson">
+            مشخصات من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem IsDivider="@true"></DntNavLinkMenuItem>
+
+        <DntNavLinkMenuItem Url="@UserProfilesRoutingConstants.EditProfile" CssIcon="@DntBootstrapIcons.BiPersonGear">
+            تغییر مشخصات کاربری
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@UserProfilesRoutingConstants.EditSocialNetworks" CssIcon="@DntBootstrapIcons.BiWifi">
+            من در شبکه‌های اجتماعی
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@UserProfilesRoutingConstants.ChangePassword" CssIcon="@DntBootstrapIcons.BiPersonLock">
+            تغییر کلمه‌ی عبور
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem IsDivider="@true"></DntNavLinkMenuItem>
+
+        <DntNavLinkMenuItem Url="@PrivateMessagesRoutingConstants.MyPrivateMessages" CssIcon="@DntBootstrapIcons.BiInbox">
+            پیام‌های خصوصی من
+            <DntBadge BadgeValue="_unreadPrivateMessagesCount"
+                      Title="پیام‌های خوانده نشده"
+                      BadgeValueBgColor="TextBgColor.Danger"
+                      IsBadgeValueVisible="@(_unreadPrivateMessagesCount > 0)"/>
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem IsDivider="@true"></DntNavLinkMenuItem>
+
+        <DntNavLinkMenuItem Url="@PostsRoutingConstants.MyDrafts" CssIcon="@DntBootstrapIcons.BiPencil">
+            پیش نویس‌های مقالات من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(PostsRoutingConstants.PostsWriters)" CssIcon="@DntBootstrapIcons.BiViewList">
+            مطالب ارسالی من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(NewsRoutingConstants.NewsWriters)" CssIcon="@DntBootstrapIcons.BiShareFill">
+            لینک‌های ارسالی من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(PostsRoutingConstants.PostsComments)" CssIcon="@DntBootstrapIcons.BiChatQuote">
+            نظرات ارسالی من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(RoadMapsRoutingConstants.LearningPathsWriters)" CssIcon="@DntBootstrapIcons.BiMap">
+            نقشه‌های راه من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(SurveysRoutingConstants.SurveysWriters)" CssIcon="@DntBootstrapIcons.BiCardList">
+            نظر سنجی‌های من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(CoursesRoutingConstants.CoursesWriters)" CssIcon="@DntBootstrapIcons.BiMortarboard">
+            دوره‌های من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(BacklogsRoutingConstants.BacklogsWriters)" CssIcon="@DntBootstrapIcons.BiListTask">
+            پیشنهادهای من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(AdvertisementsRoutingConstants.AdvertisementsWriters)" CssIcon="@DntBootstrapIcons.BiCreditCard">
+            آگهی‌های من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(QuestionsRoutingConstants.QuestionsWriters)" CssIcon="@DntBootstrapIcons.BiQuestion">
+            پرسش‌های من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@GetUserUrl(ProjectsRoutingConstants.ProjectsWriters)" CssIcon="@DntBootstrapIcons.BiPuzzle">
+            پروژه‌های من
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem IsDivider="@true"></DntNavLinkMenuItem>
+
+        <DntNavLinkMenuItem Url="@UserProfilesRoutingConstants.Logout" CssIcon="@DntBootstrapIcons.BiDoorClosed">
+            خروج
+        </DntNavLinkMenuItem>
+    </MenuItems>
+</DntNavLinkMenu>

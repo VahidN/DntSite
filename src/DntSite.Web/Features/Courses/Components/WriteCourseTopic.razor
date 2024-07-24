@@ -1,0 +1,47 @@
+@attribute [Route(CoursesRoutingConstants.WriteCourseTopicCourseId)]
+@attribute [Route(CoursesRoutingConstants.WriteCourseTopicEditCourseIdEditId)]
+@attribute [Route(CoursesRoutingConstants.WriteCourseTopicDeleteCourseIdDeleteId)]
+
+
+<DntSitePageTitle PageTitle="تعریف مطلب دوره"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        تعریف مطلب دوره
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="WriteCourseItemModel" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(WriteCourseTopic)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="WriteCourseItemModel.Title"/>
+
+            <DntHtmlEditor @bind-Value="WriteCourseItemModel.Body"
+                           LabelName="توضیحات"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.CourseFileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.CourseImagesUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+
+            <DntInputCheckBox @bind-Value="WriteCourseItemModel.IsMainTopic"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

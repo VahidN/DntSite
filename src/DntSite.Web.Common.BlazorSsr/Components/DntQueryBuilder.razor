@@ -1,0 +1,165 @@
+@attribute [CascadingTypeParameter(nameof(TRecord))]
+@typeparam TRecord
+<CascadingValue Value="this">
+    @ChildContent
+    <EditForm Model="this" method="post" OnValidSubmit="OnValidSubmitAsync" FormName="@FormName" Enhance>
+        <fieldset class="@FieldSetClass" @attributes="@AdditionalAttributes">
+            <legend class="w-auto" style="float: none; padding: inherit;">
+                <h3>
+                    <span class="@LegendHeaderClass">@Header</span>
+                </h3>
+            </legend>
+            <div class="@FieldSetBodyClass">
+                @if (string.IsNullOrWhiteSpace(PreviousFilter))
+                {
+                    <div class="@ButtonsGroupDivClass">
+                        <button type="submit" class="@AddRuleButtonClass"
+                                name="@nameof(QueryBuilderAction)" value="@DntQueryBuilderAction.AddRule">
+                            <i class="@AddRuleButtonIconClass"></i>
+                            @AddRuleButtonLabel
+                        </button>
+                        <InputSelect class="@FormSelectClass"
+                                     @bind-Value="@AddRulePropertyIndex">
+                            <option hidden disabled selected value></option>
+                            @foreach (var row in DefinedProperties)
+                            {
+                                <option value="@row.PropertyIndex">
+                                    @if (row.Title is not null)
+                                    {
+                                        @row.Title
+                                    }
+                                    else
+                                    {
+                                        @row.ValueExpression.GetDisplayName()
+                                    }
+                                </option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                    @if (SearchRuleRows is not null)
+                    {
+                        @for (var index = 0; index < SearchRuleRows.Count; index++)
+                        {
+                            var rule = SearchRuleRows[index];
+                            var property = rule.QueryBuilderProperty;
+
+                            if (property is null)
+                                continue;
+
+                            var customValueTemplate = property.QueryBuilderValueTemplate;
+                            <div class="@SearchRuleClass">
+                                <div class="col-auto">
+                                    <span class="@RowPropertyTitleClass">@property.Title</span>
+                                    <input type="hidden" name="@rule.RulePropertyIndexName" value="@property.PropertyIndex"/>
+                                </div>
+
+                                <div class="col-auto">
+                                    <select class="@FormSelectClass"
+                                            name="@rule.RuleOperationKindName"
+                                            @bind="@rule.OperationKind">
+                                        <option hidden disabled selected value></option>
+                                        @foreach (var operationKind in OperationKinds)
+                                        {
+                                            <option value="@operationKind.Key">@operationKind.Value</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="col-auto">
+                                    <select class="@FormSelectClass"
+                                            name="@rule.RuleOperationName"
+                                            @bind="@rule.Operation">
+                                        <option hidden disabled selected value></option>
+                                        @foreach (var operation in GetValidOperations(property.PropertyType))
+                                        {
+                                            <option value="@operation.Key">@operation.Value</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="col-lg">
+                                    @if (customValueTemplate is not null)
+                                    {
+                                        @customValueTemplate(rule)
+                                    }
+                                    else
+                                    {
+                                        <input
+                                            type="text"
+                                            name="@rule.RuleValueName"
+                                            autocapitalize="off" autocorrect="off" autocomplete="off"
+                                            class="@FormControlClass"
+                                            value="@rule.Value"/>
+                                    }
+                                </div>
+
+                                <div class="col-lg-1">
+                                    <button type="submit" class="@DeleteRuleButtonClass"
+                                            name="@nameof(DeleteRowIndex)" value="@index">
+                                        <i class="@DeleteRuleButtonIconClass"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="@SearchRuleClass">
+                                <div class="col-auto">
+                                    <select class="@FormSelectClass"
+                                            name="@rule.RuleNextOperationLogicName"
+                                            @bind="@rule.NextOperationLogic">
+                                        <option hidden disabled selected value></option>
+                                        @foreach (var groupLogic in GroupLogics)
+                                        {
+                                            <option value="@groupLogic.Key">@groupLogic.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <button type="submit" disabled="@(!HasDefinedSearchRule)" class="@SearchButtonClass"
+                            name="@nameof(QueryBuilderAction)" value="@DntQueryBuilderAction.DoSearch">
+                        <i class="@SearchButtonIconClass"></i>
+                        @SearchButtonLabel
+                    </button>
+
+                    <button type="submit" disabled="@(!HasDefinedSearchRule)" class="@DeleteAllRulesButtonClass"
+                            name="@nameof(QueryBuilderAction)" value="@DntQueryBuilderAction.DeleteAllRules">
+                        <i class="@DeleteAllRulesButtonIconClass"></i>
+                        @DeleteAllRulesButtonLabel
+                    </button>
+
+                    @if (ShowGridifyFilter)
+                    {
+                        var filter = GridifyFilter;
+
+                        @if (!string.IsNullOrWhiteSpace(filter))
+                        {
+                            <div class="@GridifyFilterClass" dir="ltr">
+                                @filter
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="@GridifyFilterClass">
+                        <div dir="@PreviousFilterLabel.GetDir()">
+                            <strong>@PreviousFilterLabel</strong>
+                        </div>
+                        <div dir="ltr">
+                            @PreviousFilter
+                        </div>
+                        <div>
+                            <a href="@StartNewSearchUrl" class="@StartNewSearchClass">
+                                @StartNewSearchLabel
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </fieldset>
+    </EditForm>
+</CascadingValue>

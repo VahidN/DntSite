@@ -1,0 +1,12 @@
+<span aria-hidden="true" class="@DntBootstrapIcons.BiCalendar"></span>
+<span class="badge bg-info">تاریخ انقضاء</span>
+@if (Survey?.DueDate is not null)
+{
+    <span class="badge @(Survey.DueDate.Value > DateTime.UtcNow ? "bg-info" : "bg-warning") ms-1">
+        @Survey.DueDate.Value.ToFriendlyPersianDateTextify().ToPersianNumbers()
+    </span>
+}
+else
+{
+    <span class="badge bg-success ms-1">ندارد</span>
+}

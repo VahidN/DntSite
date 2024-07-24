@@ -1,0 +1,55 @@
+@using DntSite.Web.Features.UserProfiles.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    اکانت شما با مشخصات ذیل ایجاد گردید:
+    <br/>
+    <br/>
+    <div align="center" dir="rtl" style="font-family: Tahoma;">
+        نام کاربری (جهت لاگین) : @Model.Username
+        <br/>
+        نام مستعار (جهت نمایش در سایت) : @Model.FriendlyName
+        <br/>
+        <br/>
+        لطفا جهت فعال سازی اکانت خود بر روی لینک ذیل کلیک نمائید:
+        <br/>
+        <div align="center">
+            <a href="@ActivationUrl">
+                فعال سازی اکانت
+            </a>
+        </div>
+        <br/>
+        <br/>
+        همچنین در هر زمان برای بازیابی کلمه عبور فراموش شده خود می‌توانید از آدرس ذیل استفاده
+        نمائید:
+        <br/>
+        <div align="center">
+            <a href="@ForgottenPasswordUrl">
+                بازیابی
+                کلمه عبور
+            </a>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public ActivationEmailModel Model { set; get; } = null!;
+
+    private string ActivationUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.ActivationBase).CombineUrl($"/{Uri.EscapeDataString(Model.QueryString)}");
+
+    private string ForgottenPasswordUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.ForgottenPassword);
+
+}

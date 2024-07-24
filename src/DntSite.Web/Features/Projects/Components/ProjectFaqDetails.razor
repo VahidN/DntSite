@@ -1,0 +1,65 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Projects.Entities
+@attribute [Route(ProjectsRoutingConstants.ProjectFaqsProjectIdFaqId)]
+
+<DntLoading IsLoading="@(_faqs is null || CurrentPost is null)">
+    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+
+    <DntPageSeo Description="@CurrentPost.Description"
+                Title="@CurrentPost.Title"
+                OpenSearchUrl="@ApiUrlsRoutingConstants.OpenSearch.HttpGet.RenderOpenSearch"
+                Tags="@GetTags()"
+                AuthorName="@CurrentPost.User?.FriendlyName"
+                DateModified="@ModifiedAt"
+                DatePublished="CurrentPost.Audit.CreatedAt"
+                SiteName="@ApplicationState.AppSetting?.BlogName"
+                YourTwitterHandle=""
+                TotalRaters="CurrentPost.Rating.TotalRaters"
+                AverageRating="CurrentPost.Rating.AverageRating"
+                ImageDescription="@CurrentPost.Title"
+                ImageUrl="@CurrentPostImageUrl"
+                RssUrl=""
+                SiteMapUrl="@ApiUrlsRoutingConstants.Sitemap.HttpAny.Get"/>
+
+    <InjectLastAndNextPostLinks
+        LastPostTitle="@_faqs!.PreviousItem?.Title"
+        NextPostTitle="@_faqs.NextItem?.Title"
+        LastPostUrl="@LastPostUrl"
+        NextPostUrl="@NextPostUrl"/>
+
+    <ShowBlogPostItem TReactionEntity="ProjectFaqReaction"
+                      TForeignKeyEntity="ProjectFaq"
+                      SiteName="@ApplicationState.AppSetting?.BlogName"
+                      CommentsUrlTemplate=""
+                      PostUrlTemplate="@PostUrlTemplate"
+                      PostTagUrlTemplate=""
+                      ShowBriefDescription="false"
+                      ShowNumberOfComments="false"
+                      ShowTags="false"
+                      ShowCommentsButton="false"
+                      Id="CurrentPost.Id"
+                      Body="@CurrentPost.Description"
+                      Reactions="CurrentPost.Reactions"
+                      Tags="@GetTags()"
+                      Title="@CurrentPost.Title"
+                      BriefDescription="@CurrentPost.Description"
+                      CreatedAt="CurrentPost.Audit.CreatedAt"
+                      RecordUser="CurrentPost.User"
+                      NumberOfComments="CurrentPost.EntityStat.NumberOfComments"
+                      NumberOfViews="CurrentPost.EntityStat.NumberOfViews"
+                      ReadingTimeMinutes="0"
+                      CreatedByUserAgent="@CurrentPost.Audit.CreatedByUserAgent"
+                      NumberOfViewsFromFeed="CurrentPost.EntityStat.NumberOfViewsFromFeed"
+                      CanUserDeleteThisPost="CanUserDeleteThisPost"
+                      CanUserEditThisPost="CanUserEditThisPost"
+                      EditPostUrlTemplate="@EditPostUrlTemplate"
+                      DeletePostUrlTemplate="@DeletePostUrlTemplate">
+        <AdditionalHeaderContent>
+        </AdditionalHeaderContent>
+        <AdditionalBodyContent>
+        </AdditionalBodyContent>
+        <AdditionalInfoContent>
+            <ProjectUrl Project="CurrentPost.Project"/>
+        </AdditionalInfoContent>
+    </ShowBlogPostItem>
+</DntLoading>

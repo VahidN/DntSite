@@ -1,0 +1,22 @@
+@using DntSite.Web.Features.PrivateMessages.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    <br/>
+    <div dir="rtl" style="font-family: Tahoma; ">
+        @Model.Body.HtmlRaw()
+    </div>
+    <br/>
+    <br/>
+    <hr/>
+    <div dir="rtl" style="font-family: Tahoma;">
+        درصورت عدم تمایل به دریافت ایمیل‌های روزانه خلاصه مطالب، لطفا به قسمت تنظیمات کاربری
+        خود در سایت <a href="@(Model.SiteRootUri)">مراجعه نموده</a> و گزینه دریافت ایمیل
+        را غیرفعال نمائید.
+    </div>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public DailyNewsletterEmailModel Model { set; get; } = null!;
+
+}

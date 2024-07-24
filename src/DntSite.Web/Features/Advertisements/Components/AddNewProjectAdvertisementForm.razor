@@ -1,0 +1,85 @@
+<DntCardFrame>
+    <FrameHeader>
+        ارسال آگهی درخواست انجام پروژه
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(AddNewProjectAdvertisementForm)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiPerson"
+                          @bind-Value="Model.Name"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiTelephone"
+                          @bind-Value="Model.Tel"
+                          dir="ltr"/>
+
+            <DntHtmlEditor @bind-Value="Model.GeneralConditions"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntHtmlEditor @bind-Value="Model.SpecialConditions"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiVoicemail"
+                          @bind-Value="Model.SendResumeTo"/>
+
+            <DntInputPersianDatePicker @bind-Value="Model.DueDate"/>
+
+            <DntInputTime MinutesSteps="5"
+                          @bind-Hour="@Model.Hour"
+                          @bind-Minute="@Model.Minute"
+                          LabelName="زمان انقضاء"
+                          HourLabel="ساعت"
+                          MinuteLabel="دقیقه"
+                          FieldIcon="@DntBootstrapIcons.BiClock"/>
+
+            <DntInputTag
+                FieldIcon="@DntBootstrapIcons.BiTag"
+                FieldAddButtonIcon="@DntBootstrapIcons.BiPlusCircle"
+                LabelName="برچسب‌ها"
+                FieldAddButtonTitle="افزودن تگ به لیست"
+                FieldRemoveButtonTitle="حذف تگ از لیست"
+                AutoCompleteDataList="AutoCompleteDataList"
+                @bind-InputTags="Model.Tags"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+
+        <WriteAdvertisementHelp/>
+    </FrameBody>
+</DntCardFrame>

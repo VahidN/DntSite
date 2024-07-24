@@ -1,0 +1,13 @@
+@if (IsVisible)
+{
+    <CascadingValue Value="@(this)" IsFixed="@true">
+        <li class="nav-item dropdown">
+            <NavLink class="nav-link dropdown-toggle" href="#">
+                @MainTitle
+            </NavLink>
+            <ul class="dropdown-menu slideIn">
+                @MenuItems
+            </ul>
+        </li>
+    </CascadingValue>
+}

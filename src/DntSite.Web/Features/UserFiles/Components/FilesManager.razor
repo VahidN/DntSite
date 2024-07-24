@@ -1,0 +1,86 @@
+﻿@using DntSite.Web.Features.UserFiles.Models
+@attribute [Route(UserFilesRoutingConstants.FilesManagerType)]
+@attribute [Route(UserFilesRoutingConstants.FilesManagerTypePageCurrentPage)]
+
+<DntSitePageTitle PageTitle="@Title"/>
+
+<DntLoading IsLoading="@(_files is null)">
+    <DntSimpleTable TRecord="FileModel"
+                    Records="_files!.Data"
+                    TableClass="table table-striped table-hover caption-top"
+                    HeaderClass="table-secondary"
+                    FooterRowClass="table-warning"
+                    TableResponsiveClass="row table-responsive"
+                    RowClass='record => ""'>
+        <CaptionTemplate>
+            <strong>@Title</strong>
+        </CaptionTemplate>
+        <TableColumns>
+            <DntSimpleTableColumn HeaderTitle="فایل"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "align-middle"'
+                                  FooterCellClass="text-center align-middle"
+                                  dir="ltr">
+                <CellValueTemplate Context="record">
+                    @if (IsUsersFilesList)
+                    {
+                        <img src="@record.Icon" alt="@record.Name" class="ms-2"/>
+                        <a data-enhance-nav="false" href="@GetFileUrl(record)">@record.Name</a>
+                    }
+                    else
+                    {
+                        <img class="d-block mx-auto" src="@GetImageUrl(record)" alt="@record.Name"/>
+                        <img src="@record.Icon" alt="@record.Name" class="ms-2"/>
+                        <a href="@GetImageUrl(record)">@record.Name</a>
+                    }
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="تاریخ ارسال"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    @record.LastWriteTime.ToFriendlyPersianDateTextify().ToPersianNumbers()
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="اندازه"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    <span dir="ltr">@record.Size.ToFormattedFileSize().ToPersianNumbers()</span>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="مدیریت"
+                                  IsVisible="IsCurrentUserAdmin"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    <EditForm Model="this" method="post" OnValidSubmit="OnDeleteFileAsync" FormName="@GetFormName(record)" Enhance>
+                        <input type="hidden" name="@nameof(FileNameToDelete)" value="@record.Name"/>
+                        <button type="submit" name="deleteFile"
+                                data-cancel-confirm-message="آیا می‌خواهید این فایل را حذف کنید؟"
+                                class="btn btn-danger btn-sm">
+                            حذف
+                        </button>
+                    </EditForm>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+        </TableColumns>
+
+        <DataSourceIsEmptyTemplate>
+            <div class="alert alert-info">
+                اطلاعاتی برای نمایش یافت نشد.
+            </div>
+        </DataSourceIsEmptyTemplate>
+    </DntSimpleTable>
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="_files!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

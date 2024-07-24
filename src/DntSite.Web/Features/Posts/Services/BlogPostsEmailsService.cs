@@ -1,0 +1,60 @@
+﻿using DntSite.Web.Features.Common.Services.Contracts;
+using DntSite.Web.Features.Posts.EmailLayouts;
+using DntSite.Web.Features.Posts.Entities;
+using DntSite.Web.Features.Posts.Models;
+using DntSite.Web.Features.Posts.Services.Contracts;
+
+namespace DntSite.Web.Features.Posts.Services;
+
+public class BlogPostsEmailsService(ICommonService commonService, IEmailsFactoryService emailsFactoryService)
+    : IBlogPostsEmailsService
+{
+    public async Task DraftConvertedEmailAsync(BlogPost blogPost)
+    {
+        ArgumentNullException.ThrowIfNull(blogPost);
+
+        var emails = (await commonService.GetAllActiveAdminsAsNoTrackingAsync()).Select(x => x.EMail).ToList();
+
+        await emailsFactoryService.SendEmailToAllUsersAsync<NewConvertedBlogPost, NewConvertedBlogPostModel>(emails,
+            "DraftConverted", "", "DraftConverted", new NewConvertedBlogPostModel
+            {
+                Source = blogPost.Title,
+                Dest = blogPost.Body
+            }, $"مطلب جدید تبدیل شده: {blogPost.Title}", false);
+
+        await emailsFactoryService.SendEmailAsync<NewConvertedBlogPost, NewConvertedBlogPostModel>("DraftConverted", "",
+            "DraftConverted", new NewConvertedBlogPostModel
+            {
+                Source = blogPost.Title,
+                Dest = blogPost.Body
+            }, blogPost.User?.EMail, $"مطلب جدید تبدیل شده: {blogPost.Title}", false);
+    }
+
+    public Task WriteArticleSendEmailAsync(BlogPost blogPost)
+    {
+        ArgumentNullException.ThrowIfNull(blogPost);
+
+        return emailsFactoryService.SendEmailToAllAdminsAsync<WriteArticleEmail, WriteArticleEmailModel>(
+            Invariant($"WriteArticle/{blogPost.Id}"), "", Invariant($"WriteArticle/{blogPost.Id}"),
+            new WriteArticleEmailModel
+            {
+                Title = blogPost.Title,
+                Body = blogPost.Body,
+                PmId = blogPost.Id.ToString(CultureInfo.InvariantCulture)
+            }, $"مطلب جدید: {blogPost.Title}");
+    }
+
+    public Task WriteDraftSendEmailAsync(BlogPostDraft blogPost)
+    {
+        ArgumentNullException.ThrowIfNull(blogPost);
+
+        return emailsFactoryService.SendEmailToAllAdminsAsync<NewDraftEmail, NewDraftEmailModel>(
+            Invariant($"WriteDraft/{blogPost.Id}"), "", Invariant($"WriteDraft/{blogPost.Id}"), new NewDraftEmailModel
+            {
+                Title = blogPost.Title,
+                Body = blogPost.Body,
+                PmId = blogPost.Id.ToString(CultureInfo.InvariantCulture),
+                IsReady = blogPost.IsReady ? "آماده انتشار" : "در حال ویرایش"
+            }, $"پیش نویس جدید: {blogPost.Title}");
+    }
+}

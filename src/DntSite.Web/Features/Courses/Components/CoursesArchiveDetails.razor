@@ -1,0 +1,69 @@
+﻿@using DntSite.Web.Features.Courses.Entities
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(CoursesRoutingConstants.CoursesDetailsCourseId)]
+@attribute [Route(CoursesRoutingConstants.CoursesCourseId)]
+
+<DntLoading IsLoading="@(_courseModel is null || CurrentPost is null)">
+    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+
+    <DntPageSeo Description="@CurrentPost.Description"
+                Title="@CurrentPost.Title"
+                OpenSearchUrl="@ApiUrlsRoutingConstants.OpenSearch.HttpGet.RenderOpenSearch"
+                Tags="@GetTags()"
+                AuthorName="@CurrentPost.User?.FriendlyName"
+                DateModified="@ModifiedAt"
+                DatePublished="CurrentPost.Audit.CreatedAt"
+                SiteName="@ApplicationState.AppSetting?.BlogName"
+                YourTwitterHandle=""
+                TotalRaters="CurrentPost.Rating.TotalRaters"
+                AverageRating="CurrentPost.Rating.AverageRating"
+                ImageDescription="@CurrentPost.Title"
+                ImageUrl="@CurrentPostImageUrl"
+                RssUrl=""
+                SiteMapUrl="@ApiUrlsRoutingConstants.Sitemap.HttpAny.Get"/>
+
+    <InjectLastAndNextPostLinks
+        PostUrlTemplate="@CoursesRoutingConstants.PostUrlTemplate"
+        LastPostId="_courseModel!.PreviousCourse?.Id"
+        LastPostTitle="@_courseModel.PreviousCourse?.Title"
+        NextPostId="_courseModel.NextCourse?.Id"
+        NextPostTitle="@_courseModel.NextCourse?.Title"/>
+
+    <ShowBlogPostItem TReactionEntity="CourseReaction"
+                      TForeignKeyEntity="Course"
+                      SiteName="@ApplicationState.AppSetting?.BlogName"
+                      CommentsUrlTemplate="@CoursesRoutingConstants.CommentsUrlTemplate"
+                      PostUrlTemplate="@CoursesRoutingConstants.PostUrlTemplate"
+                      PostTagUrlTemplate="@CoursesRoutingConstants.PostTagUrlTemplate"
+                      ShowBriefDescription="false"
+                      ShowTags="true"
+                      ShowCommentsButton="true"
+                      Id="CurrentPost.Id"
+                      Body="@CurrentPost.Description"
+                      Reactions="CurrentPost.Reactions"
+                      Tags="@GetTags()"
+                      Title="@CurrentPost.Title"
+                      BriefDescription="@CurrentPost.Description"
+                      CreatedAt="CurrentPost.Audit.CreatedAt"
+                      RecordUser="CurrentPost.User"
+                      NumberOfComments="CurrentPost.EntityStat.NumberOfComments"
+                      NumberOfViews="CurrentPost.EntityStat.NumberOfViews"
+                      ReadingTimeMinutes="0"
+                      CreatedByUserAgent="@CurrentPost.Audit.CreatedByUserAgent"
+                      NumberOfViewsFromFeed="CurrentPost.EntityStat.NumberOfViewsFromFeed"
+                      CanUserDeleteThisPost="CanUserDeleteThisPost"
+                      CanUserEditThisPost="CanUserEditThisPost"
+                      EditPostUrlTemplate="@CoursesRoutingConstants.EditPostUrlTemplate"
+                      DeletePostUrlTemplate="@CoursesRoutingConstants.DeletePostUrlTemplate">
+        <AdditionalHeaderContent>
+        </AdditionalHeaderContent>
+        <AdditionalBodyContent>
+            <CourseDetails Course="CurrentPost"/>
+        </AdditionalBodyContent>
+        <AdditionalButtonsContentForOwner>
+            <a href="@CoursesRoutingConstants.WriteCourseTopicBase/@CourseId" class="btn btn-primary ms-2 btn-sm">
+                افزودن یک مطلب جدید
+            </a>
+        </AdditionalButtonsContentForOwner>
+    </ShowBlogPostItem>
+</DntLoading>

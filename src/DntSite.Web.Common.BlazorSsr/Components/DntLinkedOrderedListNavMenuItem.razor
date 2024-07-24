@@ -1,0 +1,25 @@
+@if (IsVisible)
+{
+    <NavLink class="list-group-item list-group-item-action d-flex align-items-center border-0 rounded"
+             href="@Url"
+             @attributes="AdditionalAttributes">
+        @if (!string.IsNullOrWhiteSpace(GlyphIcon))
+        {
+            <span class="@GlyphIcon me-2"></span>
+        }
+        @if (IsTitleBold)
+        {
+            <strong>@Title</strong>
+        }
+        else
+        {
+            @Title
+        }
+        @if (BadgeValue is not null && IsBadgeValueVisible)
+        {
+            <span class="badge @BadgeValueBgColor.Value rounded-pill ms-auto">
+                <DntToPersianNumbers Value="BadgeValue"/>
+            </span>
+        }
+    </NavLink>
+}

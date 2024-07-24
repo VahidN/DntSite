@@ -1,0 +1,51 @@
+﻿@using DntSite.Web.Features.News.Entities
+@attribute [Route(NewsRoutingConstants.News)]
+@attribute [Route(NewsRoutingConstants.NewsPageCurrentPage)]
+@attribute [Route(NewsRoutingConstants.NewsFilterFilterPageCurrentPage)]
+@attribute [Route(NewsRoutingConstants.NewsRedirectRedirectId)]
+
+<DntQueryBuilder TRecord="DailyNewsItem"
+                 Header="جستجوی پیشرفته اشتراک‌ها"
+                 PreviousFilter="@Filter"
+                 PreviousFilterLabel="فیلتر جستجو:"
+                 StartNewSearchLabel="شروع یک جستجوی جدید"
+                 StartNewSearchUrl="@NewsRoutingConstants.News"
+                 StartsWithLabel="شروع شده با"
+                 EndsWithLabel="خاتمه یافته با"
+                 ContainsLabel="حاوی"
+                 EqualLabel="مساوی"
+                 LessThanLabel="کوچک‌تر از"
+                 LessThanOrEqualLabel="کوچکتر یا مساوی"
+                 GreaterThanLabel="بزرگتر از"
+                 GreaterThanOrEqualLabel="بزرگتر یا مساوی"
+                 AndLabel="و"
+                 OrLabel="یا"
+                 IsLabel="هست"
+                 NotLabel="نیست"
+                 SearchButtonLabel="جستجو"
+                 AddRuleButtonLabel="افزودن یک شرط جستجوی جدید بر اساس"
+                 DeleteAllRulesButtonLabel="حذف تمام شرط‌های جستجو"
+                 ShowGridifyFilter="true"
+                 OnSearch="DoSearchAsync">
+    <DntQueryBuilderProperty Title="شماره اشتراک" ValueExpression="newsItem => newsItem.Id"/>
+    <DntQueryBuilderProperty Title="عنوان" ValueExpression="newsItem => newsItem.Title"/>
+    <DntQueryBuilderProperty Title="خلاصه محتوا" ValueExpression="newsItem => newsItem.BriefDescription"/>
+    <DntQueryBuilderProperty Title="آدرس اینترنتی" ValueExpression="newsItem => newsItem.Url"/>
+    <DntQueryBuilderProperty Title="نام نویسنده" ValueExpression="newsItem => newsItem.User!.FriendlyName"/>
+    <DntQueryBuilderProperty Title="تاریخ انتشار" ValueExpression="newsItem => newsItem.Audit.CreatedAtPersian">
+        <QueryBuilderValueTemplate Context="rule">
+            <input class="form-control" type="text"
+                   data-dnt-date-picker
+                   dir="ltr"
+                   autocapitalize="off" autocorrect="off" autocomplete="off"
+                   name="@rule.RuleValueName"
+                   value="@rule.Value"/>
+        </QueryBuilderValueTemplate>
+    </DntQueryBuilderProperty>
+</DntQueryBuilder>
+
+<ShowNewsArchiveList Posts="_posts"
+                     CurrentPage="CurrentPage"
+                     ItemsPerPage="ItemsPerPage"
+                     BasePath="@_basePath"
+                     MainTitle="آرشیو اشتراک‌ها"/>

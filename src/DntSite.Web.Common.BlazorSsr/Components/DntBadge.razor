@@ -1,0 +1,8 @@
+@if (BadgeValue is not null && IsBadgeValueVisible)
+{
+    <span class="badge @BadgeValueBgColor.Value rounded-pill ms-auto"
+          @attributes="AdditionalAttributes"
+          title="@Title">
+        <DntToPersianNumbers Value="BadgeValue"/>
+    </span>
+}

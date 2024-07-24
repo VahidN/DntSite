@@ -1,0 +1,25 @@
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntLoading IsLoading="@(Tags is null)">
+    <ul class="list-group">
+        @foreach (var tag in Tags!)
+        {
+            <a class="list-group-item list-group-item-action d-flex align-items-center"
+               href="@GetUrl(tag.Name)">
+                @if (!string.IsNullOrWhiteSpace(GlyphIcon))
+                {
+                    <span class="@GlyphIcon me-2"></span>
+                }
+                <span dir="@tag.Name.GetDir()">@tag.Name</span>
+                <span class="badge @BadgeValueBgColor.Value rounded-pill ms-auto">
+                    <DntToPersianNumbers Value="tag.InUseCount"/>
+                </span>
+            </a>
+        }
+    </ul>
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="TotalItemCount"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

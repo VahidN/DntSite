@@ -1,0 +1,47 @@
+@font-face {
+  font-family: Samim;
+  src: url("/fonts/Samim.eot");
+  src: url("/fonts/Samim.eot?#iefix") format("embedded-opentype"),
+    url("/fonts/Samim.woff2") format("woff2"),
+    url("/fonts/Samim.woff") format("woff"),
+    url("/fonts/Samim.ttf") format("truetype");
+  font-weight: normal;
+}
+
+html,
+body {
+  direction: rtl;
+  margin: 0px;
+  padding: 0px;
+  font-family: Samim;
+  background: aliceblue;
+}
+.center-box { 
+  position: fixed;
+  width: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0.3em;
+  background: #1b5562;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 0.5em;
+  box-shadow: 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.3);
+}
+.center-content {
+  box-sizing: border-box;
+  border-radius: 0.4em;
+}
+.center-content p {
+  margin: 0.4em;
+  line-height: 1.5em;
+}
+.center-content a {
+  color: #bcf2ff;
+  line-height: 1.5em;
+  text-decoration: none;
+}
+.center-content a:hover {
+  color: #d6d6f6;
+}

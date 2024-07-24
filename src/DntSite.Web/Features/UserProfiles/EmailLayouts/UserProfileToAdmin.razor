@@ -1,0 +1,44 @@
+@using DntSite.Web.Features.UserProfiles.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    تنظیمات حساب کاربری <a href="@UserUrl">@Model.UserId</a>
+    با مشخصات ذیل ویرایش/ایجاد گردید:
+    <br/>
+    <br/>
+    <div dir="rtl" style="font-family: Tahoma; ">
+        نام کاربری (جهت لاگین): @Model.Username
+        <br/>
+        نام مستعار (جهت نمایش در سایت): @Model.FriendlyName
+        <br/>
+        ایمیل: @Model.UserEmail
+        <br/>
+        سایت: <a href="@Model.HomePageUrl">@Model.HomePageUrl</a>
+        <br/>
+        تصویر:
+        <img src="@ImageUrl"/>
+        <br/>
+        توضیحات: @Model.Description.HtmlRaw()
+        <br/>
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+</LayoutView>
+
+@code {
+
+    [Parameter] public UserProfileToAdminModel Model { set; get; } = null!;
+
+    private string UserUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.Users).CombineUrl($"/{Uri.EscapeDataString(Model.FriendlyName)}");
+
+    private string ImageUrl => Model.SiteRootUri.CombineUrl(ApiUrlsRoutingConstants.File.HttpAny.Avatar).CombineUrl(Uri.EscapeDataString(Model.Photo));
+
+}

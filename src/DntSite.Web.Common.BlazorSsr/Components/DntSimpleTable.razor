@@ -1,0 +1,87 @@
+@attribute [CascadingTypeParameter(nameof(TRecord))]
+@typeparam TRecord
+
+<CascadingValue Value="this">
+    @TableColumns
+    <DntLoading IsLoading="@(Records is null)">
+        <div class="@TableResponsiveClass">
+            <table class="@TableClass" @attributes="AdditionalAttributes">
+                @if (CaptionTemplate is not null)
+                {
+                    <caption>
+                        @CaptionTemplate
+                    </caption>
+                }
+
+                <thead class="@HeaderClass">
+                <tr>
+                    @foreach (var column in DefinedColumns)
+                    {
+                        <th class="@column.HeaderCellClass">
+                            @if (column.HeaderTitle is not null)
+                            {
+                                @column.HeaderTitle
+                            }
+                            else
+                            {
+                                @column.HeaderTitleTemplate
+                            }
+                        </th>
+                    }
+                </tr>
+                </thead>
+
+                <tbody>
+                @if (!Records!.Any())
+                {
+                    <tr>
+                        <td colspan="@DefinedColumns.Count">
+                            @DataSourceIsEmptyTemplate
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var record in Records!)
+                    {
+                        <tr @key="record?.GetHashCode()" class="@(RowClass?.Invoke(record))">
+                            @foreach (var column in DefinedColumns)
+                            {
+                                var cellFormattedValue = column.GetFormattedValue(record);
+                                <td class="@column.RowCellClass?.Invoke(record)"
+                                    @attributes="@column.AdditionalAttributes">
+                                    @if (cellFormattedValue is not null)
+                                    {
+                                        @cellFormattedValue
+                                    }
+                                    else if (record is not null && column.CellValueTemplate is not null)
+                                    {
+                                        @column.CellValueTemplate(record)
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+                </tbody>
+
+                @if (IsFooterDefined)
+                {
+                    <tfoot @attributes="AdditionalAttributes">
+                    <tr class="@FooterRowClass">
+                        @foreach (var column in DefinedColumns)
+                        {
+                            <td class="@column.FooterCellClass">
+                                @if (column.FooterCellValueTemplate is not null)
+                                {
+                                    @column.FooterCellValueTemplate(Records!)
+                                }
+                            </td>
+                        }
+                    </tr>
+                    </tfoot>
+                }
+            </table>
+        </div>
+    </DntLoading>
+</CascadingValue>

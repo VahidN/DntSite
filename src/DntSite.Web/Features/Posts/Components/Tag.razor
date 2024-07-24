@@ -1,0 +1,23 @@
+@attribute [Route(PostsRoutingConstants.Tag)]
+@attribute [Route(PostsRoutingConstants.TagPageCurrentPage)]
+@attribute [Route(PostsRoutingConstants.TagTagName)]
+@attribute [Route(PostsRoutingConstants.TagTagNamePageCurrentPage)]
+
+
+@if (HasTag)
+{
+    <ShowBlogPostsList BlogPosts="_blogPosts"
+                       CurrentPage="CurrentPage"
+                       ItemsPerPage="PostItemsPerPage"
+                       BasePath="@BasePath"
+                       MainTitle="@MainTitle"/>
+}
+else
+{
+    <TagsList MainTitle="@MainTitle"
+              CurrentPage="CurrentPage"
+              ItemsPerPage="TagItemsPerPage"
+              TotalItemCount="@_totalTagItemsCount"
+              BasePath="@BasePath"
+              Tags="_tags"/>
+}

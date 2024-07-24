@@ -1,0 +1,56 @@
+﻿@attribute [Route(ProjectsRoutingConstants.WriteProjectRelease)]
+@attribute [Route(ProjectsRoutingConstants.WriteProjectReleaseEditEditId)]
+@attribute [Route(ProjectsRoutingConstants.WriteProjectReleaseDeleteDeleteId)]
+
+<DntSitePageTitle PageTitle="ارسال یک فایل پروژه"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ارسال یک فایل پروژه
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="ProjectPostFileModel" method="post" OnValidSubmit="PerformAsync"
+                  enctype="multipart/form-data"
+                  FormName="@nameof(WriteProjectRelease)" Enhance>
+            <DataAnnotationsValidator/>
+
+            @if (!string.IsNullOrWhiteSpace(ProjectPostFileModel.FileName))
+            {
+                <div class="row">
+                    <div class="col-lg-3">فایل فعلی</div>
+                    <div class="col-lg-9" dir="ltr">
+                        @ProjectPostFileModel.FileName
+                        <div class="text-muted" dir="rtl">
+                            اگر فایل جدیدی انتخاب نشود، از فایل موجود استفاده خواهد شد.
+                        </div>
+                    </div>
+                </div>
+            }
+            <DntInputFile @bind-Files="ProjectPostFileModel.ProjectFiles"
+                          AllowSelectingMultipleFiles="false"
+                          OptionalLabel="(اختیاری)"
+                          AcceptedFileFormats=".zip,.rar,.7z"/>
+
+            <DntHtmlEditor @bind-Value="ProjectPostFileModel.Description"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

@@ -1,0 +1,23 @@
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(SurveysRoutingConstants.SurveysTag)]
+@attribute [Route(SurveysRoutingConstants.SurveysTagPageCurrentPage)]
+@attribute [Route(SurveysRoutingConstants.SurveysTagTagName)]
+@attribute [Route(SurveysRoutingConstants.SurveysTagTagNamePageCurrentPage)]
+
+@if (HasTag)
+{
+    <ShowSurveysArchiveList Posts="_posts"
+                            CurrentPage="CurrentPage"
+                            ItemsPerPage="PostItemsPerPage"
+                            BasePath="@BasePath"
+                            MainTitle="@MainTitle"/>
+}
+else
+{
+    <TagsList MainTitle="@MainTitle"
+              CurrentPage="CurrentPage"
+              ItemsPerPage="TagItemsPerPage"
+              TotalItemCount="@_totalTagItemsCount"
+              BasePath="@BasePath"
+              Tags="_tags"/>
+}

@@ -1,0 +1,6 @@
+@if (Project is not null)
+{
+    <a class="btn btn-sm btn-light me-2" href="@ProjectsRoutingConstants.ProjectsDetailsBase/@Project.Id">
+        <span dir="@Project.Title.GetDir()">@Project.Title</span>
+    </a>
+}

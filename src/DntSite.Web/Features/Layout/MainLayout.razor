@@ -1,0 +1,25 @@
+@inherits LayoutComponentBase
+
+<MainHeaderMenu/>
+
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+        <div id="sidebar-menu" class="col-md-2 bg-body">
+            <DntCacheComponent TComponent="SidebarMenu"
+                               CacheKey="side-bar-menu-1"
+                               ExpiresAfter="TimeSpan.FromMinutes(value: 5)"/>
+        </div>
+        <div id="main" class="col-md-10 bg-body-tertiary">
+            <DntBreadCrumb BreadCrumbs="ApplicationState.BreadCrumbs"/>
+            <div class="mt-4 mb-3 container-fluid">
+                @Body
+            </div>
+        </div>
+    </div>
+    <div id="footer" class="row">
+        <DntCacheComponent TComponent="FooterMenu"
+                           CacheKey="footer-menu-1"
+                           Parameters="FooterMenuParameters"
+                           ExpiresAfter="TimeSpan.FromMinutes(value: 5)"/>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+@using DNTCommon.Web.Core
+@typeparam T
+
+<div class="row mb-@InputRowMarginBottom">
+    <label class="col-form-label col-lg-@LabelColumnWidth" for="@ValueField.HtmlFieldName">
+        @if (!string.IsNullOrWhiteSpace(LabelName))
+        {
+            @LabelName
+        }
+        else
+        {
+            @ValueExpression.GetDisplayName()
+        }
+
+        @if (!string.IsNullOrWhiteSpace(OptionalLabel))
+        {
+            <span class="text-muted mx-2"> @OptionalLabel</span>
+        }
+    </label>
+    <div class="col-lg-@InputTextColumnWidth">
+        <div class="input-group">
+            <div class="input-group-text">📅</div>
+            <input data-dnt-date-picker
+                   @attributes="@AdditionalAttributes"
+                   type="text" dir="ltr"
+                   name="@ValueField.HtmlFieldName" id="@ValueField.HtmlFieldName"
+                   autocapitalize="off" autocorrect="off" autocomplete="off"
+                   class="form-control"
+                   value="@FormatValueAsString"/>
+        </div>
+        @if (OptionalDescription is not null)
+        {
+            <div class="text-muted">
+                @OptionalDescription
+            </div>
+        }
+        @if (ValueExpression is not null)
+        {
+            <ValidationMessage For="@ValueExpression"/>
+        }
+    </div>
+</div>

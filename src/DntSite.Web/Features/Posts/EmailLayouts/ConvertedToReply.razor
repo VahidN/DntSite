@@ -1,0 +1,24 @@
+@using DntSite.Web.Features.Posts.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    پیش نویس ارسالی شما به یک <a href="@PostUrl">نظر تکمیلی جدید</a> تبدیل گشت.
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+</LayoutView>
+
+@code {
+
+    [Parameter] public ConvertedToReplyModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(PostsRoutingConstants.PostBase).CombineUrl($"/{Model.PostId}");
+
+}

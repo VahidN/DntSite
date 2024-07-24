@@ -1,0 +1,61 @@
+@using DntSite.Web.Features.AppConfigs.Services
+<DntNavLinkMenu>
+    <MainTitle>
+        اختیارات
+    </MainTitle>
+    <MenuItems>
+        <DntNavLinkMenuItem Url="@QuestionsRoutingConstants.WriteQuestion" CssIcon="@DntBootstrapIcons.BiQuestion">
+            ارسال یک پرسش
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@PostsRoutingConstants.WriteDraft" CssIcon="@DntBootstrapIcons.BiPencil">
+            تهیه پیش نویس مقالات
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@NewsRoutingConstants.WriteNews" CssIcon="@DntBootstrapIcons.BiShare">
+            ارسال لینک‌های خبری
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@BacklogsRoutingConstants.WriteBacklog"
+                            IsVisible="ApplicationState.CanCurrentUserCreateANewBacklog()"
+                            CssIcon="@DntBootstrapIcons.BiListTask">
+            ارسال پیشنهاد تهیه مطلب
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@RoadMapsRoutingConstants.WriteLearningPath"
+                            IsVisible="ApplicationState.CanCurrentUserCreateALearningPath()"
+                            CssIcon="@DntBootstrapIcons.BiSignMergeRight">
+            ایجاد یک نقشه راه جدید
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@CoursesRoutingConstants.WriteCourse"
+                            IsVisible="ApplicationState.CanCurrentUserCreateANewCourse()"
+                            CssIcon="@DntBootstrapIcons.BiMortarboard">
+            ایجاد دوره جدید
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@SurveysRoutingConstants.WriteSurvey"
+                            IsVisible="ApplicationState.CanCurrentUserCreateANewSurvey()"
+                            CssIcon="@DntBootstrapIcons.BiCardChecklist">
+            ارسال نظرسنجی
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@ProjectsRoutingConstants.WriteProject"
+                            IsVisible="ApplicationState.CanCurrentUserCreateANewProject()"
+                            CssIcon="@DntBootstrapIcons.BiPuzzle">
+            ایجاد پروژه جدید
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem IsDivider="@true"></DntNavLinkMenuItem>
+
+        <DntNavLinkMenuItem Url="@AdvertisementsRoutingConstants.WriteAdvertisementJobOffer" CssIcon="@DntBootstrapIcons.BiPeopleFill">
+            ارسال آگهی استخدام
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@AdvertisementsRoutingConstants.WriteNewProjectAdvertisement" CssIcon="@DntBootstrapIcons.BiMinecart">
+            ارسال آگهی درخواست انجام پروژه
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@AdvertisementsRoutingConstants.WriteSpecialAdvertisement" CssIcon="@DntBootstrapIcons.BiCreditCard">
+            ارسال آگهی ویژه
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem IsDivider="@true"></DntNavLinkMenuItem>
+
+        <DntNavLinkMenuItem Url="@UserFilesRoutingConstants.FilesManagerImagesUrl" CssIcon="@DntBootstrapIcons.BiFileImage">
+            تصاویر ارسالی
+        </DntNavLinkMenuItem>
+        <DntNavLinkMenuItem Url="@UserFilesRoutingConstants.FilesManagerFilesUrl" CssIcon="@DntBootstrapIcons.BiFiles">
+            فایل‌های ارسالی
+        </DntNavLinkMenuItem>
+    </MenuItems>
+</DntNavLinkMenu>

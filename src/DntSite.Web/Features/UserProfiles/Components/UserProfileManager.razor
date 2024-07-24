@@ -1,0 +1,162 @@
+﻿@using DntSite.Web.Features.UserProfiles.Models
+@if (User is not null)
+{
+    <DntSecurityTrim AllowAnonymous="false" AllowedRoles="@CustomRoles.Admin">
+        <hr/>
+        <DntCardFrame>
+            <FrameHeader>
+                مدیریت کاربر [@User.UserName]
+            </FrameHeader>
+            <FrameBody>
+                <EditForm Model="this" method="post" OnValidSubmit="PerformAsync" FormName="@FormName" Enhance>
+                    <table class="table table-striped table-hover">
+                        <thead class="table-secondary">
+                        <tr>
+                            <th scope="col">مشخصه</th>
+                            <th scope="col">وضعیت</th>
+                            <th scope="col">عملیات</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>محدود است؟</td>
+                            <td>
+                                <DntBooleanLabel Value="User.IsRestricted"/>
+                            </td>
+                            <td>
+                                @if (User.IsRestricted)
+                                {
+                                    <button class="btn btn-success btn-sm" type="submit"
+                                            name="@nameof(AdminActionValue)" value="@AdminAction.MakeUnRestricted"
+                                            data-cancel-confirm-message="آیا می‌خواهید این کاربر را غیرمحدود کنید؟">
+                                        <span class="@DntBootstrapIcons.BiPersonCheck"></span>
+                                        غیرمحدود کردن کاربر
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-danger btn-sm" type="submit"
+                                            name="@nameof(AdminActionValue)" value="@AdminAction.MakeRestricted"
+                                            data-cancel-confirm-message="آیا می‌خواهید این کاربر را محدود کنید؟">
+                                        <span class="@DntBootstrapIcons.BiPersonDash"></span>
+                                        محدود کردن کاربر
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>فعال است؟</td>
+                            <td>
+                                <DntBooleanLabel Value="User.IsActive"/>
+                            </td>
+                            <td>
+                                @if (User.IsActive)
+                                {
+                                    <button class="btn btn-danger btn-sm" type="submit"
+                                            name="@nameof(AdminActionValue)" value="@AdminAction.MakeInActive"
+                                            data-cancel-confirm-message="آیا می‌خواهید این کاربر را غیرفعال کنید؟">
+                                        <span class="@DntBootstrapIcons.BiHandThumbsDown"></span>
+                                        غیرفعال کردن
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-success btn-sm" type="submit"
+                                            name="@nameof(AdminActionValue)" value="@AdminAction.MakeActive"
+                                            data-cancel-confirm-message="آیا می‌خواهید این ایمیل فعالسازی را ارسال کنید؟">
+                                        <span class="@DntBootstrapIcons.BiHandThumbsUp"></span>
+                                        فعال کردن
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>دارای ایمیل (@User.EMail) تائید شده‌است؟</td>
+                            <td>
+                                <DntBooleanLabel Value="User.EmailIsValidated"/>
+                            </td>
+                            <td>
+                                @if (!User.EmailIsValidated)
+                                {
+                                    @if (User.IsActive)
+                                    {
+                                        <button class="btn btn-success btn-sm" type="submit"
+                                                name="@nameof(AdminActionValue)" value="@AdminAction.SendEmailValidationMessage"
+                                                data-cancel-confirm-message="آیا می‌خواهید این ایمیل فعالسازی را ارسال کنید؟">
+                                            <span class="@DntBootstrapIcons.BiMailbox"></span>
+                                            ارسال درخواست تائید ایمیل کاربر
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-success btn-sm" type="submit"
+                                                name="@nameof(AdminActionValue)" value="@AdminAction.MakeActive"
+                                                data-cancel-confirm-message="آیا می‌خواهید این ایمیل فعالسازی را ارسال کنید؟">
+                                            <span class="@DntBootstrapIcons.BiMailboxFlag"></span>
+                                            فعال کردن و ارسال درخواست تائید ایمیل کاربر
+                                        </button>
+                                    }
+                                }
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>مدیر سیستم است؟</td>
+                            <td>
+                                <DntBooleanLabel Value="IsUserAdmin"/>
+                            </td>
+                            <td>
+                                @if (IsUserAdmin)
+                                {
+                                    <button class="btn btn-danger btn-sm" type="submit"
+                                            name="@nameof(AdminActionValue)" value="@AdminAction.RemoveAdmin"
+                                            data-cancel-confirm-message="آیا می‌خواهید این کاربر را از مدیریت سیستم حذف کنید؟">
+                                        <span class="@DntBootstrapIcons.BiPersonDash"></span>
+                                        از مدیریت سیستم حذف شود؟
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-warning btn-sm" type="submit"
+                                            name="@nameof(AdminActionValue)" value="@AdminAction.MakeAdmin"
+                                            data-cancel-confirm-message="آیا می‌خواهید این کاربر را مدیر سیستم کنید؟">
+                                        <span class="@DntBootstrapIcons.BiPersonAdd"></span>
+                                        مدیر سیستم شود؟
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>آی‌پی ثبت‌نام</td>
+                            <td>@User.Audit.CreatedByUserIp</td>
+                            <td></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </EditForm>
+
+                <div class="d-flex flex-row flex-wrap justify-content-between align-items-center mt-2">
+
+                    <a href="@UserProfilesRoutingConstants.EditProfile/@User.Id" class="btn btn-primary btn-sm">
+                        <span class="@DntBootstrapIcons.BiPersonGear"></span>
+                        ویرایش مشخصات کاربر
+                    </a>
+
+                    <a href="@UserProfilesRoutingConstants.EditSocialNetworks/@User.Id" class="btn btn-primary btn-sm">
+                        <span class="@DntBootstrapIcons.BiWifi"></span>
+                        ویرایش شبکه‌های اجتماعی کاربر
+                    </a>
+
+                    <a href="@UserProfilesRoutingConstants.ChangeUserPasswordBase/@User.Id" class="btn btn-primary btn-sm">
+                        <span class="@DntBootstrapIcons.BiPersonLock"></span>
+                        ویرایش کلمه عبور کاربر
+                    </a>
+                </div>
+            </FrameBody>
+        </DntCardFrame>
+    </DntSecurityTrim>
+}

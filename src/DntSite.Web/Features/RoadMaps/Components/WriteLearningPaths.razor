@@ -1,0 +1,54 @@
+﻿@attribute [Route(RoadMapsRoutingConstants.WriteLearningPath)]
+@attribute [Route(RoadMapsRoutingConstants.WriteLearningPathEditEditId)]
+@attribute [Route(RoadMapsRoutingConstants.WriteLearningPathDeleteDeleteId)]
+
+<DntSitePageTitle PageTitle="ارسال نقشه‌ راه"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ایجاد نقشه‌ راه
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="WriteLearningPathModel" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(WriteLearningPaths)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="WriteLearningPathModel.Title"/>
+
+            <DntHtmlEditor @bind-Value="WriteLearningPathModel.Description"
+                           LabelName="توضیحات"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputTag
+                FieldIcon="@DntBootstrapIcons.BiTag"
+                FieldAddButtonIcon="@DntBootstrapIcons.BiPlusCircle"
+                LabelName="برچسب‌ها"
+                FieldAddButtonTitle="افزودن تگ به لیست"
+                FieldRemoveButtonTitle="حذف تگ از لیست"
+                AutoCompleteDataList="AutoCompleteDataList"
+                @bind-InputTags="WriteLearningPathModel.Tags"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+
+        <WriteLearningPathsHelp/>
+    </FrameBody>
+</DntCardFrame>

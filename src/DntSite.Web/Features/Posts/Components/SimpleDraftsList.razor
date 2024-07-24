@@ -1,0 +1,101 @@
+﻿@using DntSite.Web.Features.AppConfigs.Services
+@using DntSite.Web.Features.UserProfiles.Components
+<DntLoading IsLoading="@(BlogPostDrafts is null)">
+    <DntCard>
+        <Header>
+            <DntLink Url="@TitleUrl" IsExternal="false">
+                <h5>@Title</h5>
+            </DntLink>
+        </Header>
+        <ChildContent>
+            <ul class="list-group">
+                @foreach (var item in BlogPostDrafts!)
+                {
+                    var canUserEditThisDraft = CurrentUser.CanUserEditThisDraft(item);
+                    <li class="list-group-item list-group-item-action">
+                        <div class="mb-3 mt-1">
+                            <div class="d-flex flex-row justify-content-start card-header entry-title border-light shadow-sm">
+                                @if (!item.IsReady)
+                                {
+                                    <span alt="در حال تهیه" title="در حال تهیه" class="@DntBootstrapIcons.BiPencil me-2" aria-hidden="true"></span>
+                                }
+                                else
+                                {
+                                    <span alt="آماده برای انتشار" title="آماده برای انتشار" aria-hidden="true"
+                                          class="@DntBootstrapIcons.BiHandThumbsUp me-2">
+                                    </span>
+                                }
+
+                                @if (canUserEditThisDraft)
+                                {
+                                    <DntLink Url="@GetShowDraftLink(item.Id)" IsExternal="false">
+                                        <strong>@item.Title</strong>
+                                    </DntLink>
+                                }
+
+                                else
+
+                                {
+                                    <strong>@item.Title</strong>
+                                }
+                            </div>
+                            <div class="mt-4">
+                                @if (ShowBriefDescription)
+                                {
+                                    @item.Body.GetBriefDescription(charLength: 450).HtmlRaw()
+                                }
+                                else
+                                {
+                                    @item.Body.HtmlRaw()
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer byline border-light bg-transparent"></div>
+                        <div class="mb-1 d-flex flex-row flex-wrap justify-content-between align-items-center">
+                            <div class="author mb-2">
+                                <DntPrintUserBrowser BrowserName="@item.Audit.CreatedByUserAgent"/>
+                                <PrintUser User="@item.User" IsNavLink="false"/>
+                            </div>
+                            @if (item.DateTimeToShow.HasValue)
+                            {
+                                <div>
+                                    <span aria-hidden="true" class="@DntBootstrapIcons.BiClock me-2 ms-3"></span>
+                                    <span class="text-muted">@item.DateTimeToShow.ToFriendlyPersianDateTextify().ToPersianNumbers()</span>
+                                </div>
+                            }
+
+                            @if (item.Tags.Count > 0)
+                            {
+                                <div>
+                                    <span class="@DntBootstrapIcons.BiTag me-2 ms-3" aria-hidden="true"></span>
+
+                                    @foreach (var tag in item.Tags)
+                                    {
+                                        <div class="badge bg-secondary me-2">
+                                            <DntLink IsExternal="false" Url="@GetTagUrl(tag)" CssClass="text-light">
+                                                <span dir="@tag.GetDir()" class="p-1">
+                                                    @tag
+                                                </span>
+                                            </DntLink>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        @if (canUserEditThisDraft)
+                        {
+                            <div>
+                                <a href="@PostsRoutingConstants.WriteDraftEditBase/@item.Id" class="btn btn-success btn-sm">ویرایش</a>
+                                <a href="@PostsRoutingConstants.WriteDraftDeleteBase/@item.Id"
+                                   data-cancel-confirm-message="آیا می‌خواهید این پیش‌نویس را حذف کنید؟"
+                                   class="btn btn-danger me-2 btn-sm">
+                                    حذف
+                                </a>
+                            </div>
+                        }
+                    </li>
+                }
+            </ul>
+        </ChildContent>
+    </DntCard>
+</DntLoading>

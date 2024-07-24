@@ -1,0 +1,116 @@
+﻿@using DntSite.Web.Features.AppConfigs.RoutingConstants
+@attribute [Route(AppConfigsRoutingConstants.SystemLogs)]
+@attribute [Route(AppConfigsRoutingConstants.SystemLogsCurrentLogLevel)]
+@attribute [Route(AppConfigsRoutingConstants.SystemLogsCurrentLogLevelPageCurrentPage)]
+@attribute [Route(AppConfigsRoutingConstants.SystemLogsPageCurrentPage)]
+
+<DntSitePageTitle PageTitle="گزارش رخ‌دادهای سیستم"/>
+
+<DntLoading IsLoading="@(_pagedResults is null)">
+    <div class="mb-2 d-flex flex-row flex-warp justify-content-center align-items-center card shadow-sm p-2">
+        <div class="me-2">
+            انتخاب
+            <span class="badge bg-primary">
+                <DntToPersianNumbers Value="_pagedResults!.TotalItems"/>
+            </span>
+            رخ‌داد بر اساس سطح:
+        </div>
+        @foreach (var logLevel in Enum.GetValues<LogLevel>().Where(logLevel => logLevel != LogLevel.None))
+        {
+            <a class="@LogLevelExtensions.GetActiveLogLevelClass(logLevel, CurrentLogLevelValue) me-2"
+               href="@AppConfigsRoutingConstants.SystemLogs/@logLevel" role="button">
+                @logLevel
+            </a>
+        }
+        <a class="@LogLevelExtensions.GetActiveLogLevelClass(buttonLogLevel: null, CurrentLogLevelValue) me-2"
+           role="button" href="@AppConfigsRoutingConstants.SystemLogs">
+            All
+        </a>
+    </div>
+
+    @if (_pagedResults!.Data.Count > 0)
+    {
+        <div class="row" dir="ltr">
+            @foreach (var item in _pagedResults!.Data)
+            {
+                <DntCard>
+                    <Header>
+                        <EditForm Model="this" method="post" OnValidSubmit="LogItemDeleteAsync"
+                                  FormName="@GetDeleteLogRowFormName(item.Id)" Enhance>
+                            <input type="hidden" name="@nameof(RowId)" value="@item.Id"/>
+                            <button type="submit"
+                                    data-cancel-confirm-message="آیا می‌خواهید این ردیف را حذف کنید؟"
+                                    class="btn btn-danger ms-2 btn-sm">
+                                حذف
+                            </button>
+                        </EditForm>
+                        <span dir="ltr" class="@item.LogLevel.LogLevelToBootstrapClass() me-2 badge">
+                            @item.LogLevel
+                        </span>
+                        <span dir="ltr" class="badge bg-dark me-2">
+                            @item.Id
+                        </span>
+                        <span dir="ltr" class="badge bg-info me-2">
+                            @item.Logger
+                        </span>
+                    </Header>
+                    <Body>
+                    <div dir="ltr">
+                        <div class="badge bg-primary">@item.Url</div>
+                        <div class="badge bg-success">@item.UserFriendlyName</div>
+                        <div class="badge bg-success" dir="ltr">@item.UserAgent</div>
+                        <div class="badge bg-success" dir="ltr">@item.UserIp</div>
+                        <div class="badge bg-secondary">@item.CreatedAt.ToFriendlyPersianDateTextify()</div>
+                        <div class="mt-3">
+                            @item.Message.HtmlRaw()
+                        </div>
+                    </div>
+                    </Body>
+                </DntCard>
+            }
+        </div>
+
+        <div class="mt-4 d-flex flex-row flex-warp justify-content-evenly">
+            <EditForm Model="this" method="post" OnValidSubmit="LogDeleteAllAsync"
+                      FormName="LogDeleteAll" Enhance>
+                <button type="submit"
+                        data-cancel-confirm-message="آیا می‌خواهید لاگ‌های جاری را حذف کنید؟"
+                        class="btn btn-sm btn-danger me-3">
+                    حذف تمام رکوردهای رخ‌دادها
+                </button>
+            </EditForm>
+
+            <EditForm Model="this" method="post" OnValidSubmit="LogDeleteOlderThanAsync"
+                      FormName="LogDeleteOlderThan" Enhance>
+                <div class="d-flex flex-row align-items-center">
+                    <button type="submit"
+                            class="btn btn-sm btn-danger col-9 me-1"
+                            data-cancel-confirm-message="آیا می‌خواهید لاگ‌های انتخابی را حذف کنید؟">
+                        حذف رکوردهای قدیمی‌تر از
+                    </button>
+                    <InputSelect class="form-select me-1 w-auto"
+                                 @bind-Value="CutOffDays">
+                        <option hidden disabled selected value></option>
+                        <option value="1">1</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="30">30</option>
+                        <option value="60">60</option>
+                    </InputSelect>
+                    <span class="me-1">روز</span>
+                </div>
+            </EditForm>
+        </div>
+
+        <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                            TotalItemCount="_pagedResults!.TotalItems"
+                            BasePath="@BasePath"
+                            CurrentPage="CurrentPage"/>
+    }
+    else
+    {
+        <DntMessageBox IsVisible="true" Type="AlertType.Info">
+            رخ‌دادی یافت نشد.
+        </DntMessageBox>
+    }
+</DntLoading>

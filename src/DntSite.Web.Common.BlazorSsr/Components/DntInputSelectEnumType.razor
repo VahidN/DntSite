@@ -1,0 +1,39 @@
+@typeparam TEnum   where TEnum : Enum
+
+<div class="row mb-@InputRowMarginBottom">
+    <label class="col-form-label col-lg-@LabelColumnWidth" for="@ValueField.HtmlFieldName">
+        @if (!string.IsNullOrWhiteSpace(LabelName))
+        {
+            @LabelName
+        }
+        else
+        {
+            @ValueExpression.GetDisplayName()
+        }
+    </label>
+    <div class="col-lg-@InputTextColumnWidth">
+        <div class="input-group">
+            @if (!string.IsNullOrWhiteSpace(FieldIcon))
+            {
+                <div class="input-group-text">
+                    <span class="@FieldIcon" role="img" aria-label="@LabelName"></span>
+                </div>
+            }
+            <InputSelect class="form-select"
+                         Value="@Value"
+                         ValueExpression="@ValueExpression"
+                         ValueChanged="@ValueChanged"
+                         @attributes="@AdditionalAttributes">
+                <option hidden disabled selected value></option>
+                @foreach (var item in Items)
+                {
+                    <option value="@item.Value">@item.Key</option>
+                }
+            </InputSelect>
+        </div>
+        @if (ValueExpression is not null)
+        {
+            <ValidationMessage For="@ValueExpression"/>
+        }
+    </div>
+</div>

@@ -1,0 +1,129 @@
+﻿@typeparam TReactionEntity where TReactionEntity : BaseReactionEntity<TForeignKeyEntity>, new()
+    @typeparam TForeignKeyEntity where TForeignKeyEntity : BaseAuditedInteractiveEntity
+
+<DntCard>
+    <Header>
+        <div class="author me-3">
+            <DntPrintUserBrowser BrowserName="@CreatedByUserAgent"/>
+            <DntSite.Web.Features.UserProfiles.Components.PrintUser User="@RecordUser" IsNavLink="false"/>
+        </div>
+        <DntLink IsExternal="false" Url="@PostUrl">
+            <h5 class="mt-2" dir="@Title.GetDir()">
+                @Title
+            </h5>
+        </DntLink>
+        @if (AdditionalHeaderContent is not null)
+        {
+            @AdditionalHeaderContent
+        }
+    </Header>
+    <Body>
+    @if (!ShowBriefDescription && ReadingTimeMinutes.HasValue)
+    {
+        <DntReadingOptions ReadingTimeMinutes="ReadingTimeMinutes.Value"/>
+    }
+    <div class="main mb-4">
+        @if (!string.IsNullOrWhiteSpace(TextToShow))
+        {
+            if (!TextToShow.ContainsFarsi())
+            {
+                <div align="left" dir="ltr">@TextToShow.HtmlRaw()</div>
+            }
+            else
+            {
+                @TextToShow.HtmlRaw()
+            }
+        }
+        @if (AdditionalBodyContent is not null)
+        {
+            @AdditionalBodyContent
+        }
+    </div>
+    @if (ShowSocialLinks)
+    {
+        <DntSocialLinks Url="@PostUrl" Title="@Title" HashTags="@SiteName"/>
+    }
+    </Body>
+    <Footer>
+        <div class="d-flex align-items-center justify-content-start flex-wrap mb-2">
+            @if (AdditionalInfoContent is not null)
+            {
+                @AdditionalInfoContent
+            }
+            <div class="updated text-muted me-3">
+                <span class="@DntBootstrapIcons.BiCalendar me-1 p-1" aria-hidden="true"></span>
+                @CreatedAt.ToFriendlyPersianDateTextify().ToPersianNumbers()
+            </div>
+            @if (ShowNumberOfViews)
+            {
+                <div class="me-3">
+                    <span class="@DntBootstrapIcons.BiEye me-2" title="از طریق فید: @NumberOfViewsFromFeed.ToPersianNumbers()" aria-hidden="true"></span>
+                    <span class="text-muted">@NumberOfViews.ToPersianNumbers()</span>
+                </div>
+            }
+            @if (ShowNumberOfComments)
+            {
+                <div class="me-3">
+                    <DntLink IsExternal="false" Url="@CommentsUrl">
+                        <span class="@DntBootstrapIcons.BiChat me-2" aria-hidden="true"></span>
+                        <span>@NumberOfComments.ToPersianNumbers()</span>
+                    </DntLink>
+                </div>
+            }
+        </div>
+        @if (ShowTags && Tags?.Count > 0)
+        {
+            <div class="mb-2">
+                <span class="@DntBootstrapIcons.BiTag me-2" aria-hidden="true"></span>
+                @foreach (var tag in Tags)
+                {
+                    <DntLink IsExternal="false" Url="@GetTagUrl(tag)" CssClass="post-tag rounded">
+                        <span dir="@tag.GetDir()" class="p-1">
+                            @tag
+                        </span>
+                    </DntLink>
+                }
+            </div>
+        }
+
+        @if (ShowReactions)
+        {
+            <DntSite.Web.Features.Stats.Components.DntReactions
+                Id="@Id"
+                TReactionEntity="TReactionEntity"
+                TForeignKeyEntity="TForeignKeyEntity"
+                Reactions="Reactions"/>
+        }
+
+        @if (CanUserEditThisPost)
+        {
+            <div class="mb-2 mt-2">
+                <a href="@EditPostUrl" class="btn btn-success btn-sm">ویرایش</a>
+                @if (CanUserDeleteThisPost)
+                {
+                    <a href="@DeletePostUrl"
+                       data-cancel-confirm-message="آیا می‌خواهید این عنوان را حذف کنید؟"
+                       class="btn btn-danger ms-2 btn-sm">
+                        حذف
+                    </a>
+                }
+                @if (AdditionalButtonsContentForOwner is not null)
+                {
+                    @AdditionalButtonsContentForOwner
+                }
+            </div>
+        }
+
+        @if (AdditionalButtonsContentForAll is not null)
+        {
+            <div class="mb-2 mt-2">
+                @AdditionalButtonsContentForAll
+            </div>
+        }
+    </Footer>
+</DntCard>
+
+@if (AfterFooterContent is not null)
+{
+    @AfterFooterContent
+}

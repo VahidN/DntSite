@@ -1,0 +1,33 @@
+@using DntSite.Web.Features.Posts.Entities
+@attribute [Route(PostsRoutingConstants.PostsComments)]
+@attribute [Route(PostsRoutingConstants.PostsCommentsPageCurrentPage)]
+@attribute [Route(PostsRoutingConstants.PostsCommentsUserFriendlyName)]
+@attribute [Route(PostsRoutingConstants.PostsCommentsUserFriendlyNamePageCurrentPage)]
+
+<DntSitePageTitle PageTitle="@MainTitle"/>
+
+<DntLoading IsLoading="@(_posts is null)">
+    @foreach (var comment in _posts!.Data)
+    {
+        <ShowBlogPostCommentItem
+            PostId="@comment.ParentId"
+            CommentId="@comment.Id"
+            Body="@comment.Body"
+            Reactions="@comment.Reactions"
+            RecordUser="@comment.User"
+            CreatedAt="@comment.Audit.CreatedAt"
+            CreatedByUserAgent="@comment.Audit.CreatedByUserAgent"
+            TReactionEntity="BlogPostCommentReaction"
+            TForeignKeyEntity="BlogPostComment"
+            ShowManageBlogPostCommentItem="false"
+            ShowPleaseVoteMessage="false"
+            PostAbsoluteUrl="@GetPostAbsoluteUrl(comment)"
+            ShowPostTitle="true"
+            PostTitle="@comment.Parent.Title"/>
+    }
+
+    <DntSimplePaginator ItemsPerPage="PostItemsPerPage"
+                        TotalItemCount="_posts!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

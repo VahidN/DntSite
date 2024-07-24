@@ -1,0 +1,40 @@
+<div class="row mb-@InputRowMarginBottom">
+    <label class="col-form-label col-lg-@LabelColumnWidth" for="@ValueField.HtmlFieldName">
+        @if (!string.IsNullOrWhiteSpace(LabelName))
+        {
+            @LabelName
+        }
+        else
+        {
+            @FilesExpression.GetDisplayName()
+        }
+        @if (!string.IsNullOrWhiteSpace(OptionalLabel))
+        {
+            <span class="text-muted mx-2"> @OptionalLabel</span>
+        }
+    </label>
+    <div class="col-lg-@InputFileColumnWidth">
+        <div class="input-group">
+            @if (!string.IsNullOrWhiteSpace(InputFileButtonIconClass))
+            {
+                <div class="input-group-text">
+                    <span class="@InputFileButtonIconClass" role="img"></span>
+                </div>
+            }
+            <label for="@ValueField.HtmlFieldName" class="@InputFileButtonClass">
+                @InputFileLabel
+            </label>
+            <InputFile class="form-control d-none" type="file"
+                       name="@ValueField.HtmlFieldName" id="@ValueField.HtmlFieldName"
+                       accept="@AcceptedFileFormats"
+                       @attributes="@AdditionalAttributes"
+                       multiple="@AllowSelectingMultipleFiles">
+            </InputFile>
+            <span class="text-bg-light rounded ms-2 p-2 d-none" dir="ltr"></span>
+        </div>
+        @if (FilesExpression is not null)
+        {
+            <ValidationMessage For="@FilesExpression"/>
+        }
+    </div>
+</div>

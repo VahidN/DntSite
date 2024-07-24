@@ -1,0 +1,58 @@
+﻿@attribute [Route(UserProfilesRoutingConstants.Login)]
+<DntSitePageTitle PageTitle="ورود به برنامه"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ورود
+    </FrameHeader>
+    <FrameBody>
+        <div class="row">
+            <div class="col">
+                <EditForm Model="Model" method="post" OnValidSubmit="PerformLoginAsync" FormName="@nameof(Login)" Enhance>
+                    <DataAnnotationsValidator/>
+
+                    <DntInputText AutoCompleteType="AutoCompleteType.UserName"
+                                  FieldIcon="@DntBootstrapIcons.BiPerson"
+                                  @bind-Value="Model.Username"
+                                  dir="ltr"/>
+                    <DntInputText AutoCompleteType="AutoCompleteType.CurrentPassword"
+                                  FieldIcon="@DntBootstrapIcons.BiKey"
+                                  InputType="password"
+                                  @bind-Value="Model.Password"
+                                  dir="ltr"/>
+                    <DntInputCheckBox @bind-Value="Model.RememberMe"/>
+
+                    <DntTextCaptcha @bind-InputCaptchaValue="Model.InputCaptchaValue"
+                                    @bind-RealCaptchaValue="Model.RealCaptchaValue"
+                                    Min="1"
+                                    Max="9"
+                                    CustomFontPath="@AppFoldersService.CustomFontWithPersianDigitsPath"
+                                    LabelName="حاصل عملیات به‌شکل یک عدد صحیح"
+                                    AbsoluteCaptchaExpirationRelativeToNow="TimeSpan.FromMinutes(value: 2)"
+                                    AllowedTriesPermitLimit="10"
+                                    BanDurationRelativeToNow="TimeSpan.FromMinutes(value: 2)"
+                                    BanErrorMessage="لطفا 2 دقیقه پیش از سعی مجدد بعدی، صبر کنید!"
+                                    BanErrorFieldIcon="@DntBootstrapIcons.BiSignStopFill"/>
+
+                    <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ورود به برنامه</DntButton>
+                </EditForm>
+            </div>
+            <div class="col-md-auto">
+                <div class="list-group">
+                    <NavLink href="@UserProfilesRoutingConstants.ForgottenPassword" class="list-group-item list-group-item-action">
+                        <span class="me-2 @DntBootstrapIcons.BiEnvelope" aria-hidden="true"></span>
+                        آیا کلمه‌ی عبور خود را فراموش کرده‌اید؟
+                    </NavLink>
+                    <NavLink href="@UserProfilesRoutingConstants.Register" class="list-group-item list-group-item-action">
+                        <span class="me-2 @DntBootstrapIcons.BiPlug" aria-hidden="true"></span>
+                        ثبت نام
+                    </NavLink>
+                    <NavLink href="@PrivateMessagesRoutingConstants.PublicContactUs2" class="list-group-item list-group-item-action">
+                        <span class="me-2 @DntBootstrapIcons.BiChatRight" aria-hidden="true"></span>
+                        تماس با ما
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    </FrameBody>
+</DntCardFrame>

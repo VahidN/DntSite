@@ -1,0 +1,54 @@
+@using DntSite.Web.Features.Projects.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    پروژه «
+    <a href="@PostUrl">
+        @Model.Title
+    </a>» به سایت اضافه/ویرایش شده است:
+    <br/>
+    <br/>
+    <strong>توضیحات:</strong><br/>
+    @Model.DescriptionText.HtmlRaw()
+    <br/>
+    <br/>
+    <strong>آدرس مخزن کد:</strong><br/>
+    <a href="@Model.SourcecodeRepositoryUrl">@Model.SourcecodeRepositoryUrl</a>
+    <br/>
+    <br/>
+    <strong>مجوز: </strong>
+    <br/>
+    @Model.License.HtmlRaw()
+    <br/>
+    <br/>
+    <strong>وابستگی‌ها:</strong><br/>
+    @Model.RequiredDependencies.HtmlRaw()
+    <br/>
+    <br/>
+    <strong>مطالب مرتبط:</strong><br/>
+    @Model.RelatedArticles.HtmlRaw()
+    <br/>
+    <br/>
+    <strong>همکاران:</strong><br/>
+    @Model.DevelopersDescription.HtmlRaw()
+    <br/>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public NewProjectEmailModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectsDetailsBase).CombineUrl(Model.Id);
+
+}

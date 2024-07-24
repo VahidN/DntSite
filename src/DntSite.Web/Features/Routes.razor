@@ -1,0 +1,29 @@
+@using DntSite.Web.Features.AppConfigs.Components
+@using DntSite.Web.Features.Layout
+@using DntSite.Web.Features.UserProfiles.Components
+<ErrorBoundary @ref="OurErrorBoundary">
+    <ChildContent>
+        <ApplicationState>
+            <DntAlert>
+                <Router AppAssembly="@typeof(Program).Assembly">
+                    <Found Context="routeData">
+                        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                            <NotAuthorized>
+                                <RedirectToLogin/>
+                            </NotAuthorized>
+                        </AuthorizeRouteView>
+                        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+                    </Found>
+                </Router>
+            </DntAlert>
+        </ApplicationState>
+    </ChildContent>
+    <ErrorContent Context="exception">
+        <DntGeneralError>
+            خطایی رخ داده‌است. لطفا پس از مدتی مجددا سعی کنید.
+            <p dir="ltr">
+                <code>@exception.FormatException()</code>
+            </p>
+        </DntGeneralError>
+    </ErrorContent>
+</ErrorBoundary>

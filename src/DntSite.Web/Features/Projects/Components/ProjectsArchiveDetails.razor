@@ -1,0 +1,77 @@
+﻿@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Projects.Entities
+@attribute [Route(ProjectsRoutingConstants.ProjectsDetailsProjectId)]
+
+<DntLoading IsLoading="@(_projects is null || CurrentPost is null)">
+    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+
+    <DntPageSeo Description="@CurrentPost.Description"
+                Title="@CurrentPost.Title"
+                OpenSearchUrl="@ApiUrlsRoutingConstants.OpenSearch.HttpGet.RenderOpenSearch"
+                Tags="@GetTags()"
+                AuthorName="@CurrentPost.User?.FriendlyName"
+                DateModified="@ModifiedAt"
+                DatePublished="CurrentPost.Audit.CreatedAt"
+                SiteName="@ApplicationState.AppSetting?.BlogName"
+                YourTwitterHandle=""
+                TotalRaters="CurrentPost.Rating.TotalRaters"
+                AverageRating="CurrentPost.Rating.AverageRating"
+                ImageDescription="@CurrentPost.Title"
+                ImageUrl="@CurrentPostImageUrl"
+                RssUrl=""
+                SiteMapUrl="@ApiUrlsRoutingConstants.Sitemap.HttpAny.Get"/>
+
+    <InjectLastAndNextPostLinks
+        PostUrlTemplate="@ProjectsRoutingConstants.PostUrlTemplate"
+        LastPostId="_projects!.PreviousItem?.Id"
+        LastPostTitle="@_projects.PreviousItem?.Title"
+        NextPostId="_projects.NextItem?.Id"
+        NextPostTitle="@_projects.NextItem?.Title"/>
+
+    <ShowBlogPostItem TReactionEntity="ProjectReaction"
+                      TForeignKeyEntity="Project"
+                      SiteName="@ApplicationState.AppSetting?.BlogName"
+                      CommentsUrlTemplate="@ProjectsRoutingConstants.FeedbacksUrlTemplate"
+                      PostUrlTemplate="@ProjectsRoutingConstants.PostUrlTemplate"
+                      PostTagUrlTemplate="@ProjectsRoutingConstants.PostTagUrlTemplate"
+                      ShowBriefDescription="false"
+                      ShowTags="true"
+                      ShowCommentsButton="true"
+                      ShowNumberOfViews="false"
+                      Id="CurrentPost.Id"
+                      Body="@CurrentPost.Description"
+                      Reactions="CurrentPost.Reactions"
+                      Tags="@GetTags()"
+                      Title="@CurrentPost.Title"
+                      BriefDescription="@CurrentPost.Description"
+                      CreatedAt="CurrentPost.Audit.CreatedAt"
+                      RecordUser="CurrentPost.User"
+                      NumberOfComments="CurrentPost.NumberOfIssues"
+                      NumberOfViews="CurrentPost.EntityStat.NumberOfViews"
+                      ReadingTimeMinutes="0"
+                      CreatedByUserAgent="@CurrentPost.Audit.CreatedByUserAgent"
+                      NumberOfViewsFromFeed="CurrentPost.EntityStat.NumberOfViewsFromFeed"
+                      CanUserDeleteThisPost="CanUserDeleteThisPost"
+                      CanUserEditThisPost="CanUserEditThisPost"
+                      EditPostUrlTemplate="@ProjectsRoutingConstants.EditPostUrlTemplate"
+                      DeletePostUrlTemplate="@ProjectsRoutingConstants.DeletePostUrlTemplate">
+        <AdditionalHeaderContent>
+        </AdditionalHeaderContent>
+        <AdditionalBodyContent>
+            <ProjectDetails Project="CurrentPost"/>
+        </AdditionalBodyContent>
+        <AdditionalButtonsContentForOwner>
+            <a href="@ProjectsRoutingConstants.WriteProjectFaqBase/@ProjectId" class="btn btn-success ms-2 btn-sm">
+                افزودن یک راهنمای جدید
+            </a>
+            <a href="@ProjectsRoutingConstants.WriteProjectReleaseBase/@ProjectId" class="btn btn-primary ms-2 btn-sm">
+                ارسال یک فایل جدید
+            </a>
+        </AdditionalButtonsContentForOwner>
+        <AdditionalButtonsContentForAll>
+            <a href="@ProjectsRoutingConstants.WriteProjectFeedbackBase/@ProjectId" class="btn btn-secondary btn-sm">
+                ارسال یک بازخورد جدید
+            </a>
+        </AdditionalButtonsContentForAll>
+    </ShowBlogPostItem>
+</DntLoading>

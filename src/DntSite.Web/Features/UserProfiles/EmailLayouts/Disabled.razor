@@ -1,0 +1,18 @@
+@using DntSite.Web.Features.UserProfiles.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    هدف از ثبت نام در سایت ما مشارکت در تهیه و تولید محتوا بوده‌است. هدف از چندکاربری شدن آن نیز از روز اول همین مساله می‌باشد.
+    <br/>
+    شما در طی مدت زمانی که در این سایت ثبت نام کردید (بیش از 6 ماه قبل)، نه مقاله‌ای، نه لینکی/اشتراکی، نه حتی یک نظر کمکی، تکمیلی یا دلگرم کننده را ارسال کردید. به همین جهت اکانت شما غیرفعال گردید.
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.BaseUrl">@Model.SiteName</a>
+</LayoutView>
+
+@code {
+
+    [Parameter] public DisabledModel Model { set; get; } = null!;
+
+}

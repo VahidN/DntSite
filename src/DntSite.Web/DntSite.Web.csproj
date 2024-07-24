@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="Microsoft.EntityFrameworkCore"/>
+    <Using Include="Microsoft.EntityFrameworkCore.Metadata.Builders"/>
+    <Using Include="Microsoft.EntityFrameworkCore.ChangeTracking"/>
+    <Using Include="Microsoft.EntityFrameworkCore.Diagnostics"/>
+    <Using Include="DNTCommon.Web.Core"/>
+    <Using Include="DNTPersianUtils.Core"/>
+    <Using Include="Microsoft.AspNetCore.Components"/>
+    <Using Include="Microsoft.AspNetCore.Mvc"/>
+    <Using Include="Microsoft.AspNetCore.Authorization"/>
+
+    <Using Include="DntSite.Web.Common.BlazorSsr.Components"/>
+    <Using Include="DntSite.Web.Common.BlazorSsr.Models"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
+    <PackageReference Include="DNTPersianUtils.Core"/>
+    <PackageReference Include="AutoMapper"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
+    <PackageReference Include="DNTCommon.Web.Core"/>
+    <PackageReference Include="Gridify.EntityFramework"/>
+    <PackageReference Include="Humanizer.Core"/>
+    <PackageReference Include="Scrutor"/>
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders"/>
+    <PackageReference Include="EFCoreSecondLevelCacheInterceptor"/>
+    <PackageReference Include="UAParser"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DntSite.Web.Common.BlazorSsr\DntSite.Web.Common.BlazorSsr.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="libman.json"/>
+    <Content Remove="package.json"/>
+    <Content Remove="tsconfig.json"/>
+    <Content Remove="node_modules\**"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Watch Remove="wwwroot\**\*"/>
+    <Content Remove="wwwroot\App_Data\**"/>
+    <None Remove="wwwroot\App_Data\**"/>
+    <Compile Remove="wwwroot\App_Data\**"/>
+    <EmbeddedResource Remove="wwwroot\App_Data\**"/>
+  </ItemGroup>
+  <Target Name="CopyFilesAfterPublish" AfterTargets="AfterPublish">
+    <Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libSkiaSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/"/>
+    <Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libHarfBuzzSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/"/>
+  </Target>
+</Project>

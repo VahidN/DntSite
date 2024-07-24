@@ -1,0 +1,154 @@
+﻿@attribute [Route(ProjectsRoutingConstants.WriteProject)]
+@attribute [Route(ProjectsRoutingConstants.WriteProjectEditEditId)]
+@attribute [Route(ProjectsRoutingConstants.WriteProjectDeleteDeleteId)]
+
+
+<DntSitePageTitle PageTitle="ارسال یک پروژه"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        تعریف شناسنامه پروژه
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="WriteProjectModel" method="post" OnValidSubmit="PerformAsync"
+                  enctype="multipart/form-data"
+                  FormName="@nameof(WriteProject)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="WriteProjectModel.Title"/>
+
+            @if (!string.IsNullOrWhiteSpace(WriteProjectModel.Logo))
+            {
+                <div class="row">
+                    <div class="col-lg-3">تصویر فعلی</div>
+                    <div class="col-lg-9">
+                        <img alt="@WriteProjectModel.Title" src="@(ApiUrlsRoutingConstants.File.HttpAny.Avatar)?name=@(Uri.EscapeDataString(WriteProjectModel.Logo))"/>
+                    </div>
+                </div>
+            }
+            <DntInputFile @bind-Files="WriteProjectModel.PhotoFiles"
+                          AllowSelectingMultipleFiles="false"
+                          OptionalLabel="(اختیاری)"
+                          AcceptedFileFormats=".png,.jpg,.jpeg"/>
+
+            <DntHtmlEditor @bind-Value="WriteProjectModel.DescriptionText"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiGithub"
+                          OptionalLabel="(اختیاری)"
+                          @bind-Value="WriteProjectModel.SourcecodeRepositoryUrl"/>
+
+            <DntHtmlEditor @bind-Value="WriteProjectModel.LicenseText"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntHtmlEditor @bind-Value="WriteProjectModel.RequiredDependenciesText"
+                           ShowLabel="true"
+                           OptionalLabel="(اختیاری)"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntHtmlEditor @bind-Value="WriteProjectModel.RelatedArticlesText"
+                           ShowLabel="true"
+                           OptionalLabel="(اختیاری)"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+
+            <DntHtmlEditor @bind-Value="WriteProjectModel.DevelopersDescriptionText"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           OptionalLabel="(اختیاری)"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputTag
+                FieldIcon="@DntBootstrapIcons.BiTag"
+                FieldAddButtonIcon="@DntBootstrapIcons.BiPlusCircle"
+                LabelName="برچسب‌ها"
+                FieldAddButtonTitle="افزودن تگ به لیست"
+                FieldRemoveButtonTitle="حذف تگ از لیست"
+                AutoCompleteDataList="AutoCompleteDataList"
+                @bind-InputTags="WriteProjectModel.Tags"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+
+        <WriteProjectHelp/>
+    </FrameBody>
+</DntCardFrame>

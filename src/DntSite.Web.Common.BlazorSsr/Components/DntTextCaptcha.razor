@@ -1,0 +1,49 @@
+@if (!_isDosAttack)
+{
+    <div class="row mb-@InputRowMarginBottom">
+        <div class="col-lg-@LabelColumnWidth">
+            <label class="col-form-label" for="@ValueField.HtmlFieldName">
+                @if (!string.IsNullOrWhiteSpace(LabelName))
+                {
+                    @LabelName
+                }
+                else
+                {
+                    @InputCaptchaValueExpression.GetDisplayName()
+                }
+            </label>
+        </div>
+        <div class="col-lg-@InputTextColumnWidth">
+            <div class="input-group">
+                <div class="input-group-text">
+                    <img class="rounded-1" src="@_captchaImageSrc" alt="captcha text"/>
+                    <input type="hidden" name="@CaptchaHiddenFieldKey" id="@CaptchaHiddenFieldKey" value="@_cacheKey"/>
+                </div>
+                <InputText ValueExpression="@InputCaptchaValueExpression"
+                           Value="@InputCaptchaValue"
+                           ValueChanged="@InputCaptchaValueChanged"
+                           class="form-control"
+                           autocapitalize="off" autocorrect="off" autocomplete="off"
+                           dir="ltr"
+                           inputmode="numeric"
+                           type="tel"/>
+            </div>
+            @if (InputCaptchaValueExpression is not null)
+            {
+                <ValidationMessage For="@InputCaptchaValueExpression"/>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="row mb-@InputRowMarginBottom">
+        <div class="alert alert-danger d-flex justify-content-center">
+            @if (!string.IsNullOrWhiteSpace(BanErrorFieldIcon))
+            {
+                <span class="@BanErrorFieldIcon mr-2 me-2" role="img"></span>
+            }
+            @BanErrorMessage
+        </div>
+    </div>
+}

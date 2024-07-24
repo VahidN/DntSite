@@ -1,0 +1,50 @@
+﻿@if (TotalItemCount == 0)
+{
+    <DntMessageBox IsVisible="true" Type="AlertType.Warning">
+        @DataSourceIsEmptyMessage
+    </DntMessageBox>
+}
+else if (_hasPagination)
+{
+    <div class="row mt-@MarginTop">
+        <nav class="d-flex justify-content-center" aria-label="...">
+            <ul class="@PaginationClass">
+                @if (_pagerStart != 1)
+                {
+                    <li class="@PaginationItemClass">
+                        <a class="@PaginationPageLinkClass" href="@BasePath/page/1#main">&laquo;</a>
+                    </li>
+                    <li class="@PaginationItemClass">
+                        <a class="@PaginationPageLinkClass" href="@BasePath/page/@(_pagerStart - 1)#main">...</a>
+                    </li>
+                }
+
+                @foreach (var pageNo in Enumerable.Range(_pagerStart, _pagerEnd - _pagerStart + 1))
+                {
+                    @if (pageNo == CurrentPage)
+                    {
+                        <li class="@PaginationItemClass active">
+                            <span class="@PaginationPageLinkClass">@pageNo.ToPersianNumbers()</span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="@PaginationItemClass">
+                            <a class="@PaginationPageLinkClass" href="@BasePath/page/@pageNo#main">@pageNo.ToPersianNumbers()</a>
+                        </li>
+                    }
+                }
+
+                @if (_pagerEnd < _totalPages)
+                {
+                    <li class="@PaginationItemClass">
+                        <a class="@PaginationPageLinkClass" href="@BasePath/page/@(_pagerEnd + 1)">...</a>
+                    </li>
+                    <li class="@PaginationItemClass">
+                        <a class="@PaginationPageLinkClass" href="@BasePath/page/@_totalPages#main">&raquo;</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}

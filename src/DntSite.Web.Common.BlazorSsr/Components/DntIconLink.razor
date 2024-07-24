@@ -1,0 +1,15 @@
+@if (IsVisible)
+{
+    if (IsExternal)
+    {
+        <a target="_blank" data-enhance-nav="false" rel="nofollow" href="@Url" @attributes="AdditionalAttributes">
+            <i class="@GlyphIcon me-@MarginLeft" width="@Width" height="@Height" alt="@AltName"></i>
+        </a>
+    }
+    else
+    {
+        <a href="@Url" @attributes="AdditionalAttributes">
+            <i class="@GlyphIcon me-@MarginLeft" width="@Width" height="@Height" alt="@AltName"></i>
+        </a>
+    }
+}

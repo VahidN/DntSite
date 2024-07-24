@@ -1,0 +1,44 @@
+@attribute [Route(UserProfilesRoutingConstants.SendMassMail)]
+<DntSitePageTitle PageTitle="ارسال ایمیل به کاربران"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ارسال ایمیل به کاربران
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(SendMassMail)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="Model.NewsTitle"/>
+
+            <DntHtmlEditor @bind-Value="Model.NewsBody"
+                           IsReadOnly="false"
+                           AllowUploadFile="false"
+                           UploadFileApiPath=""
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="false"
+                           UploadImageFileApiPath=""
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="220px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputCheckBoxEnumList @bind-SelectedValues="Model.Groups"/>
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiDoorOpen"
+                            dir="ltr"
+                            @bind-Value="Model.MinPostsCount"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال ایمیل‌ها</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

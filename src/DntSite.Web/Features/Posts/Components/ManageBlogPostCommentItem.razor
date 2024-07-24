@@ -1,0 +1,87 @@
+﻿@using DntSite.Web.Features.Posts.Models
+<DntSecurityTrim AllowAnonymous="false">
+    <EditForm Model="this" class="w-100 mt-2" method="post" OnValidSubmit="OnValidSubmitAsync" FormName="@FormName" Enhance>
+        @if (CommentId.HasValue)
+        {
+            <input type="hidden" name="@nameof(FormCommentId)" value="@CommentId"/>
+        }
+        <input type="hidden" name="@nameof(FormPostId)" value="@PostId"/>
+
+        <div>
+            @if (IsReplyToPost)
+            {
+                <button class="btn btn-primary me-2 mt-3" type="submit" name="@nameof(CommentActionValue)" value="@CommentAction.ReplyToPost">
+                    ارسال نظر
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-primary btn-sm me-2" type="submit" name="@nameof(CommentActionValue)" value="@CommentAction.ReplyToComment">
+                    پاسخ به نظر
+                </button>
+
+                @if (CanUserEditThisReply)
+                {
+                    <button class="btn btn-success btn-sm me-2" type="submit" name="@nameof(CommentActionValue)" value="@CommentAction.Edit">
+                        ویرایش
+                    </button>
+                }
+
+                @if (ApplicationState.CurrentUser?.IsAdmin == true)
+                {
+                    <button class="btn btn-danger btn-sm me-2" type="submit"
+                            data-cancel-confirm-message="آیا می‌خواهید این رکورد را حذف کنید؟"
+                            name="@nameof(CommentActionValue)" value="@CommentAction.Delete">
+                        حذف
+                    </button>
+                }
+            }
+        </div>
+        @if (_showSubmitNewComment || _showSubmitEditedComment)
+        {
+            <div class="mb-2 w-100">
+                @if (ShowPleaseVoteMessage)
+                {
+                    <DntMessageBox Type="AlertType.Info" IsVisible="true">
+                        <span class="@DntBootstrapIcons.BiStar me-2 ms-2" aria-hidden="true"></span>
+                        لطفا جهت ابراز احساسات و تشکر از گزینه رای دادن (<i class="@DntBootstrapIcons.BiHandThumbsUp"></i>) که ذیل هر مطلب قرار دارد استفاده
+                        نمائید.
+                    </DntMessageBox>
+                }
+                <DntHtmlEditor @bind-Value="Comment"
+                               LabelName=""
+                               ShowLabel="false"
+                               IsReadOnly="false"
+                               AllowUploadFile="true"
+                               UploadFileApiPath="@UploadFileApiPath"
+                               AcceptedUploadFileFormats=".zip,.rar,.7z"
+                               MaximumUploadFileSizeInBytes="104857600"
+                               AdditionalJsonDataDuringFileUpload=""
+                               AllowUploadImageFile="true"
+                               UploadImageFileApiPath="@UploadImageFileApiPath"
+                               AcceptedUploadImageFormats="image/png, image/jpeg"
+                               MaximumUploadImageSizeInBytes="614400"
+                               AdditionalJsonDataDuringImageFileUpload=""
+                               AllowInsertImageUrl="true"
+                               Height="220px"
+                               Placeholder=""
+                               Theme="snow"
+                               Direction="rtl"/>
+                <div class="d-flex flex-row flex-wrap justify-content-center">
+                    <button class="btn btn-primary btn-sm me-2" type="submit"
+                            name="@nameof(CommentActionValue)"
+                            value="@(_showSubmitNewComment ? CommentAction.SubmitNewComment : CommentAction.SubmitEditedComment)">
+                        ارسال
+                    </button>
+
+                    <button class="btn btn-warning btn-sm me-2" type="submit"
+                            name="@nameof(CommentActionValue)"
+                            data-cancel-confirm-message="آیا می‌خواهید این عمل را لغو کنید؟"
+                            value="@CommentAction.Cancel">
+                        لغو
+                    </button>
+                </div>
+            </div>
+        }
+    </EditForm>
+</DntSecurityTrim>

@@ -1,0 +1,41 @@
+﻿@using DntSite.Web.Features.Common.RoutingConstants
+@attribute [Route(CommonRoutingConstants.Error)]
+@attribute [Route(CommonRoutingConstants.ErrorResponseCode)]
+
+<DntSitePageTitle PageTitle="خطایی رخ داده‌است"/>
+
+@switch (ResponseCode)
+{
+    case 500:
+        <div class="alert alert-danger mt-3" dir="rtl">
+            <i class="@DntBootstrapIcons.BiExclamationTriangle"></i>
+            خطایی در سمت سرور رخ داده‌است. لطفا پس از مدتی مجددا سعی کنید.
+        </div>
+
+        break;
+    case 404:
+        <div class="alert alert-danger mt-3" dir="rtl">
+            <i class="@DntBootstrapIcons.BiQuestionCircle"></i>
+            آدرس مدنظر شما یافت نشد.
+        </div>
+
+        break;
+    case 401:
+    case 403:
+        <div class="alert alert-danger mt-3" dir="rtl">
+            <i class="@DntBootstrapIcons.BiExclamationTriangleFill"></i>
+            به آدرس و یا عملیات مدنظر دسترسی ندارید.
+            <br/>
+            نکته: اگر کلمه‌ی عبور خود را در سیستم دیگری تغییر داده‌اید و یا سطوح دسترسی شما اخیرا تغییر کرده‌است و یا حتی در سیستم دیگری از برنامه خارج شده‌اید، نیاز است یکبار از سیستم جاری خارج شده و بار دیگر به آن وارد شوید.
+        </div>
+
+        break;
+
+    default:
+        <div class="alert alert-danger mt-3" dir="rtl">
+            <i class="@DntBootstrapIcons.BiExclamationTriangle"></i>
+            خطایی رخ داده‌است. لطفا پس از مدتی مجددا سعی کنید.
+        </div>
+
+        break;
+}

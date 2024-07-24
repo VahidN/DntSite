@@ -1,0 +1,65 @@
+<div @attributes="AdditionalAttributes" class="row mb-@InputRowMarginBottom">
+    <label class="col-form-label col-lg-@LabelColumnWidth">
+        @if (!string.IsNullOrWhiteSpace(LabelName))
+        {
+            @LabelName
+        }
+        else
+        {
+            @InputTagsExpression.GetDisplayName()
+        }
+    </label>
+    <div class="col-lg-@InputTextColumnWidth">
+        <div class="input-group">
+            @if (!string.IsNullOrWhiteSpace(FieldIcon))
+            {
+                <div class="input-group-text">
+                    <span class="@FieldIcon" role="img" aria-label="@LabelName"></span>
+                </div>
+            }
+            <InputText
+                @bind-Value="@NewTag"
+                class="form-control"
+                dir="ltr"
+                autocapitalize="off" autocorrect="off" autocomplete="off"
+                type="text"
+                list="@DataListId"/>
+            @if (AutoCompleteDataList is not null && AutoCompleteDataList.Count > 0)
+            {
+                <datalist id="@DataListId">
+                    @foreach (var option in AutoCompleteDataList)
+                    {
+                        <option value="@option"/>
+                    }
+                </datalist>
+            }
+            <button type="button" id="dnt-add-tag-@DataListId"
+                    data-dnt-data-list-id="@DataListId"
+                    class="btn btn-outline-secondary"
+                    title="@FieldAddButtonTitle">
+                <span class="@FieldAddButtonIcon" role="img"></span>
+            </button>
+        </div>
+        <div class="mt-@TagsRowMarginTop" id="tags-list-@DataListId">
+            @if (InputTags is not null && InputTags.Count > 0)
+            {
+                foreach (var tag in InputTags)
+                {
+                    <div class="badge bg-secondary me-2" id="dnt-tag-@tag">
+                        <span class="me-1" dir="@tag.GetDir()">@tag</span>
+                        <input type="hidden" name="@nameof(EnteredTags)" value="@tag"/>
+                        <button type="button"
+                                class="btn-close btn-close-white"
+                                data-dnt-tag-id="dnt-tag-@tag"
+                                title="@FieldRemoveButtonTitle">
+                        </button>
+                    </div>
+                }
+            }
+        </div>
+        @if (InputTagsExpression is not null)
+        {
+            <ValidationMessage For="@InputTagsExpression"/>
+        }
+    </div>
+</div>

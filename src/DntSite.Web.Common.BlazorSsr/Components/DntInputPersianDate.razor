@@ -1,0 +1,73 @@
+<div class="row mb-@InputRowMarginBottom">
+    @if (!string.IsNullOrWhiteSpace(LabelName))
+    {
+        <label class="col-form-label col-lg-@LabelColumnWidth">@LabelName</label>
+    }
+    <div class="col-lg-@InputTextColumnWidth">
+        <div class="input-group">
+            <div class="input-group-text">
+                <span class="@FieldIcon" role="img"></span>
+            </div>
+            <div class="input-group-text">
+                <span>@DayLabel</span>
+            </div>
+            <InputSelect class="form-select"
+                         ValueExpression="@DayExpression"
+                         Value="@Day"
+                         ValueChanged="@DayChanged">
+                <option hidden disabled selected value></option>
+                @for (var i = 1; i <= 31; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+            </InputSelect>
+            <div class="input-group-text">
+                <span>@MonthLabel</span>
+            </div>
+            <InputSelect class="form-select"
+                         ValueExpression="@MonthExpression"
+                         Value="@Month"
+                         ValueChanged="@MonthChanged">
+                <option hidden disabled selected value></option>
+                @for (var i = 1; i <= 12; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+            </InputSelect>
+            <div class="input-group-text">
+                <span>@YearLabel</span>
+            </div>
+            <InputSelect class="form-select"
+                         ValueExpression="@YearExpression"
+                         Value="@Year"
+                         ValueChanged="@YearChanged">
+                <option hidden disabled selected value></option>
+                @for (var i = FromYear; i <= ToYear; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+            </InputSelect>
+
+            @if (PersianDateExpression is not null)
+            {
+                <ValidationMessage For="@PersianDateExpression"/>
+            }
+            @if (DateExpression is not null)
+            {
+                <ValidationMessage For="@DateExpression"/>
+            }
+            @if (DayExpression is not null)
+            {
+                <ValidationMessage For="@DayExpression"/>
+            }
+            @if (MonthExpression is not null)
+            {
+                <ValidationMessage For="@MonthExpression"/>
+            }
+            @if (YearExpression is not null)
+            {
+                <ValidationMessage For="@YearExpression"/>
+            }
+        </div>
+    </div>
+</div>

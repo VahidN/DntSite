@@ -1,0 +1,55 @@
+﻿@using DntSite.Web.Features.Courses.Entities
+@using DntSite.Web.Features.Posts.Components
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntLoading IsLoading="@(Posts is null)">
+    @foreach (var post in Posts!.Data)
+    {
+        <ShowBlogPostItem TReactionEntity="CourseReaction"
+                          TForeignKeyEntity="Course"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate="@CoursesRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@CoursesRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@CoursesRoutingConstants.PostTagUrlTemplate"
+                          Id="post.Id"
+                          Body="@post.Description"
+                          Reactions="post.Reactions"
+                          Tags="@GetTags(post)"
+                          Title="@post.Title"
+                          BriefDescription="@post.Description"
+                          CreatedAt="post.Audit.CreatedAt"
+                          RecordUser="post.User"
+                          NumberOfComments="post.EntityStat.NumberOfComments"
+                          NumberOfViews="post.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@post.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="post.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(post)"
+                          EditPostUrlTemplate="@CoursesRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@CoursesRoutingConstants.DeletePostUrlTemplate"
+                          ShowReactions="true"
+                          ShowSocialLinks="true"
+                          ShowNumberOfViews="false"
+                          ShowNumberOfComments="true">
+            <AdditionalHeaderContent>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+                <CourseDetails Course="post"/>
+            </AdditionalBodyContent>
+            <AdditionalButtonsContentForOwner>
+                <a href="@CoursesRoutingConstants.WriteCourseTopicBase/@post.Id" class="btn btn-primary ms-2 btn-sm">
+                    افزودن یک مطلب جدید
+                </a>
+            </AdditionalButtonsContentForOwner>
+        </ShowBlogPostItem>
+    }
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="Posts!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

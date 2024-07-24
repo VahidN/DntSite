@@ -1,0 +1,31 @@
+﻿@using DntSite.Web.Features.UserProfiles.Models
+@attribute [Route(UserProfilesRoutingConstants.SendActivationEmails)]
+
+<DntSitePageTitle PageTitle="ارسال مجدد ایمیل‌های فعال سازی کاربران"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ارسال مجدد ایمیل‌های فعال سازی کاربران
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="this" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(SendActivationEmails)" Enhance>
+
+            <DntMessageBox Type="AlertType.Info" IsVisible="@(_numberOfNotActivatedUsers > 0)">
+                <span>ارسال ایمیل‌های فعال سازی به تمام کاربران از ابتدا</span>
+                <button type="submit" class="btn btn-small btn-primary"
+                        name="@nameof(SendActivationEmailsAction)" value="@SendActivationEmailsAction.ActivateAll">
+                    ارسال ایمیل‌ها به @_numberOfNotActivatedUsers.ToPersianNumbers() نفر
+                </button>
+            </DntMessageBox>
+
+            <DntMessageBox Type="AlertType.Info" IsVisible="@(_numberOfNotActivatedUsersOfLastMonth > 0)">
+                <span>ارسال ایمیل‌های فعال سازی به تمام کاربران یک ماه قبل</span>
+                <button type="submit" class="btn btn-small btn-primary"
+                        name="@nameof(SendActivationEmailsAction)" value="@SendActivationEmailsAction.ActivateOnlyLastMonth">
+                    ارسال ایمیل‌ها به @_numberOfNotActivatedUsersOfLastMonth.ToPersianNumbers() نفر
+                </button>
+            </DntMessageBox>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

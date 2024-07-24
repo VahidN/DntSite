@@ -1,0 +1,47 @@
+﻿@using DntSite.Web.Features.UserProfiles.Entities
+@attribute [Route(UserProfilesRoutingConstants.UsersManager)]
+@attribute [Route(UserProfilesRoutingConstants.UsersManagerFilterFilterPageCurrentPage)]
+
+<DntSitePageTitle PageTitle="مدیریت کاربران"/>
+
+<DntQueryBuilder TRecord="User"
+                 Header="جستجوی پیشرفته مدیریت کاربران"
+                 PreviousFilter="@Filter"
+                 PreviousFilterLabel="فیلتر جستجو:"
+                 StartNewSearchLabel="شروع یک جستجوی جدید"
+                 StartNewSearchUrl="@UserProfilesRoutingConstants.UsersManager"
+                 StartsWithLabel="شروع شده با"
+                 EndsWithLabel="خاتمه یافته با"
+                 ContainsLabel="حاوی"
+                 EqualLabel="مساوی"
+                 LessThanLabel="کوچک‌تر از"
+                 LessThanOrEqualLabel="کوچکتر یا مساوی"
+                 GreaterThanLabel="بزرگتر از"
+                 GreaterThanOrEqualLabel="بزرگتر یا مساوی"
+                 AndLabel="و"
+                 OrLabel="یا"
+                 IsLabel="هست"
+                 NotLabel="نیست"
+                 SearchButtonLabel="جستجو"
+                 AddRuleButtonLabel="افزودن یک شرط جستجوی جدید بر اساس"
+                 DeleteAllRulesButtonLabel="حذف تمام شرط‌های جستجو"
+                 ShowGridifyFilter="true"
+                 OnSearch="DoSearchAsync">
+    <DntQueryBuilderProperty Title="شماره کاربر" ValueExpression="user => user.Id"/>
+    <DntQueryBuilderProperty Title="نام کاربری" ValueExpression="user => user.UserName"/>
+    <DntQueryBuilderProperty Title="نام مستعار" ValueExpression="user => user.FriendlyName"/>
+    <DntQueryBuilderProperty Title="آدرس ایمیل" ValueExpression="user => user.EMail"/>
+</DntQueryBuilder>
+
+@if (_users is not null)
+{
+    @foreach (var user in _users.Data)
+    {
+        <UserProfile User="user" MarginTop="3"/>
+    }
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="_users.TotalItems"
+                        BasePath="@_basePath"
+                        CurrentPage="CurrentPage"/>
+}

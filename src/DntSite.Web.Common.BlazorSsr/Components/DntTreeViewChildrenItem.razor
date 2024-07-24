@@ -1,0 +1,17 @@
+@typeparam TRecord
+
+<li @attributes="@SafeOwnerTreeView.ChildrenHtmlAttributes" @key="ParentItem?.GetHashCode()">
+    @if (SafeOwnerTreeView.ItemTemplate is not null && ParentItem is not null)
+    {
+        @SafeOwnerTreeView.ItemTemplate(ParentItem)
+    }
+    @if (Children is not null)
+    {
+        <ul>
+            @foreach (var item in Children)
+            {
+                <DntTreeViewChildrenItem TRecord="TRecord" ParentItem="item"/>
+            }
+        </ul>
+    }
+</li>

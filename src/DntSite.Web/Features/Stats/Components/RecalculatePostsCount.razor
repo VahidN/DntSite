@@ -1,0 +1,31 @@
+@using DntSite.Web.Features.Stats.Models
+@using DntSite.Web.Features.Stats.RoutingConstants
+@attribute [Route(StatsRoutingConstants.RecalculatePostsCount)]
+
+<DntSitePageTitle PageTitle="بازشماری آمار تعداد مطالب سیستم"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        بازشماری آمار
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="this" method="post"
+                  OnValidSubmit="OnValidSubmitAsync"
+                  FormName="@nameof(RecalculatePostsCount)"
+                  Enhance>
+            <div class="d-flex align-items-center justify-content-center">
+                <button type="submit"
+                        name="@nameof(RecalculateAction)" value="@RecalculatePostsCountAction.RecalculateForm"
+                        class="btn btn-sm btn-primary me-2">
+                    محاسبه مجدد تعداد مطالب
+                </button>
+
+                <button type="submit"
+                        name="@nameof(RecalculateAction)" value="@RecalculatePostsCountAction.UpdateAllUsersRatings"
+                        class="btn btn-sm btn-primary me-2">
+                    محاسبه مجدد جمع امتیازهای کلیه کاربران
+                </button>
+            </div>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

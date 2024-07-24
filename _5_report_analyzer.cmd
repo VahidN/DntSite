@@ -1,0 +1,2 @@
+dotnet build /bl
+pause

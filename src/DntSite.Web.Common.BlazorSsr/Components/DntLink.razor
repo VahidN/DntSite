@@ -1,0 +1,21 @@
+@if (string.IsNullOrWhiteSpace(Url))
+{
+    <span class="@CssClass" @attributes="AdditionalAttributes">
+        @ChildContent
+    </span>
+}
+else
+{
+    if (IsExternal)
+    {
+        <a class="@CssClass" target="_blank" href="@Url" data-enhance-nav="false" rel="nofollow" @attributes="AdditionalAttributes">
+            @ChildContent
+        </a>
+    }
+    else
+    {
+        <a class="@CssClass" href="@Url" @attributes="AdditionalAttributes">
+            @ChildContent
+        </a>
+    }
+}

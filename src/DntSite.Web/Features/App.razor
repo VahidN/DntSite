@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+    <base href="/"/>
+
+    <DntFileVersionedCssLink CssFilePath="lib/bootstrap/dist/css/bootstrap.rtl.min.css"/>
+    <DntFileVersionedCssLink CssFilePath="lib/bootstrap-icons/font/bootstrap-icons.min.css"/>
+    <DntFileVersionedCssLink CssFilePath="lib/highlightjs/cdn-assets/styles/atom-one-dark.min.css"/>
+    <DntFileVersionedCssLink CssFilePath="lib/quill/dist/quill.snow.css"/>
+    <DntFileVersionedCssLink CssFilePath="DntSite.Web.styles.css"/>
+    <DntFileVersionedCssLink CssFilePath="app.css"/>
+
+    <DntSiteVerification GoogleSiteVerificationToken="@SiteSettings.Value.SiteVerification.GoogleSiteVerificationToken"/>
+    <DntFavicons/>
+    <DntPrintNoScript/>
+
+    <HeadOutlet/>
+</head>
+
+<body class="bg-body-secondary">
+<Routes/>
+
+<DntFileVersionedJavaScriptSource JsFilePath="_framework/blazor.web.js"/>
+<DntFileVersionedJavaScriptSource JsFilePath="lib/highlightjs/cdn-assets/highlight.min.js"/>
+<DntFileVersionedJavaScriptSource JsFilePath="lib/quill/dist/quill.js"/>
+<DntFileVersionedJavaScriptSource JsFilePath="_content/DntSite.Web.Common.BlazorSsr/scripts/app.js"/>
+
+<SectionOutlet SectionName="scripts"/>
+</body>
+
+</html>

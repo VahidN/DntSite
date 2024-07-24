@@ -1,0 +1,29 @@
+﻿<header id="header"
+        class="navbar navbar-expand-sm sticky-top bg-light-subtle shadow-sm border-bottom border-body">
+    <nav class="container-fluid">
+        <ul class="navbar-nav align-items-center">
+            <AuthorizeView>
+                <Authorized>
+                    <HeaderUserProfileMenu/>
+                    <HeaderUserOptionsMenu/>
+                    <HeaderAdminMenu/>
+                </Authorized>
+                <NotAuthorized>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="@UserProfilesRoutingConstants.Login">
+                            <span class="@DntBootstrapIcons.BiDoorOpen" aria-hidden="true"></span> ورود
+                        </NavLink>
+                    </li>
+                </NotAuthorized>
+            </AuthorizeView>
+        </ul>
+        <div class="navbar-brand">
+            <a dir="ltr" target="_blank" data-enhance-nav="false" class="navbar-brand mb-0 me-3 h1" href="https://github.com/VahidN/DntSite">
+                <span class="@DntBootstrapIcons.BiGithub"></span>
+            </a>
+            <a dir="@SiteName.GetDir()" class="navbar-brand mb-0 h1 ms-0" href="/">
+                @SiteName
+            </a>
+        </div>
+    </nav>
+</header>

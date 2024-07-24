@@ -1,0 +1,12 @@
+﻿@if (ProjectRelease is not null)
+{
+    <div class="mt-2">
+        <EditForm Model="this" method="post" OnSubmit="PerformAsync" FormName="@FormName">
+            <button type="submit" class="btn btn-success btn-sm">
+                دریافت فایل
+                <span>@ProjectRelease.FileName</span>
+                <span dir="ltr">(@ProjectRelease.FileSize.ToFormattedFileSize().ToPersianNumbers())</span>
+            </button>
+        </EditForm>
+    </div>
+}

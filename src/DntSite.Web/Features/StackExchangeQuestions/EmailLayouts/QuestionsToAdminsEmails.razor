@@ -1,0 +1,42 @@
+@using DntSite.Web.Features.StackExchangeQuestions.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+
+    <a href="@PostUrl">
+        پرسش
+        جدید
+    </a> ذیل در سایت ارسال گردیده است:
+    <br/>
+    <br/>
+    <div align="right" dir="rtl" style="font-family: Tahoma; ">
+        <strong>از طرف</strong>: @Model.FriendlyName
+        <br/>
+        <strong>عنوان</strong>: @Model.Title
+        <br/>
+        <strong>توضیحات</strong>: @Model.Body.HtmlRaw()
+        <br/>
+        <br/>
+        <strong>وضعیت:</strong>: @Model.Stat
+        <br/>
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public QuestionsToAdminsEmailsModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(QuestionsRoutingConstants.Questions);
+
+}

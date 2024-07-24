@@ -1,0 +1,32 @@
+@if (IsVisible)
+{
+    <li class="list-group-item list-group-item-action d-flex align-items-center" @attributes="AdditionalAttributes">
+        @if (!string.IsNullOrWhiteSpace(GlyphIcon))
+        {
+            <span class="@GlyphIcon me-2"></span>
+        }
+        @if (!string.IsNullOrWhiteSpace(Title))
+        {
+            if (IsTitleBold)
+            {
+                <strong>@Title</strong>
+            }
+            else
+            {
+                @Title
+            }
+        }
+        @if (ChildContent is not null)
+        {
+            <div class="@(LeftAlignChildContent ? "ms-auto" : "")">
+                @ChildContent
+            </div>
+        }
+        @if (BadgeValue is not null && IsBadgeValueVisible)
+        {
+            <span class="badge @BadgeValueBgColor.Value rounded-pill ms-auto">
+                <DntToPersianNumbers Value="BadgeValue"/>
+            </span>
+        }
+    </li>
+}

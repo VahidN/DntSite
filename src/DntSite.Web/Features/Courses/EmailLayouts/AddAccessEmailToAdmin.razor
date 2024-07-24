@@ -1,0 +1,25 @@
+@using DntSite.Web.Features.Courses.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    دسترسی @Model.UserName به دوره @Model.Title
+    @Model.Operation گردید.
+    <br/>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public AddAccessEmailToAdminModel Model { set; get; } = null!;
+
+}

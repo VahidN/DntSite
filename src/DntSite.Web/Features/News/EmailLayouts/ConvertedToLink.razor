@@ -1,0 +1,24 @@
+@using DntSite.Web.Features.News.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    پیش نویس ارسالی شما به یک <a href="@PostUrl">لینک اشتراکی</a> تبدیل گشت.
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+</LayoutView>
+
+@code {
+
+    [Parameter] public ConvertedToLinkModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(NewsRoutingConstants.News);
+
+}

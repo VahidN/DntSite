@@ -1,0 +1,23 @@
+@using DntSite.Web.Features.UserProfiles.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    @Model.Text.HtmlRaw()
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public SendTextToAdminsModel Model { set; get; } = null!;
+
+}

@@ -1,0 +1,149 @@
+<DntCardFrame>
+    <FrameHeader>
+        ارسال آگهی استخدام
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(AddJobOfferAdvertisementForm)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiPeople"
+                          @bind-Value="Model.OrganizationName"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.Bi0Square"
+                          @bind-Value="Model.Address"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiLink"
+                          @bind-Value="Model.WebSiteUrl"
+                          dir="ltr"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiTelephone"
+                          @bind-Value="Model.Tel"
+                          dir="ltr"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiPerson"
+                          @bind-Value="Model.Name"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiJournal"
+                          @bind-Value="Model.JobTitle"/>
+
+            <DntHtmlEditor @bind-Value="Model.GeneralConditions"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntHtmlEditor @bind-Value="Model.SpecialConditions"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntHtmlEditor @bind-Value="Model.SpecialPoints"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntHtmlEditor @bind-Value="Model.Benefits"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputCheckBoxEnumList @bind-SelectedValues="Model.Genders"/>
+
+            <DntInputCheckBoxEnumList @bind-SelectedValues="Model.JobTypes"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiLine"
+                            dir="ltr"
+                            @bind-Value="Model.MaxAge"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiVoicemail"
+                          @bind-Value="Model.SendResumeTo"/>
+
+            <DntInputPersianDatePicker @bind-Value="Model.DueDate"/>
+
+            <DntInputTime MinutesSteps="5"
+                          @bind-Hour="@Model.Hour"
+                          @bind-Minute="@Model.Minute"
+                          LabelName="زمان انقضاء"
+                          HourLabel="ساعت"
+                          MinuteLabel="دقیقه"
+                          FieldIcon="@DntBootstrapIcons.BiClock"/>
+
+            <DntInputTag
+                FieldIcon="@DntBootstrapIcons.BiTag"
+                FieldAddButtonIcon="@DntBootstrapIcons.BiPlusCircle"
+                LabelName="برچسب‌ها"
+                FieldAddButtonTitle="افزودن تگ به لیست"
+                FieldRemoveButtonTitle="حذف تگ از لیست"
+                AutoCompleteDataList="AutoCompleteDataList"
+                @bind-InputTags="Model.Tags"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+
+        <WriteAdvertisementHelp/>
+    </FrameBody>
+</DntCardFrame>

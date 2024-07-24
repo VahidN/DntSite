@@ -1,0 +1,64 @@
+﻿@attribute [Route(UserProfilesRoutingConstants.Register)]
+<DntSitePageTitle PageTitle="ثبت نام"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ثبت نام
+    </FrameHeader>
+    <FrameBody>
+        @if (_canUsersRegister)
+        {
+            <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync" FormName="@nameof(Register)" Enhance>
+                <DataAnnotationsValidator/>
+
+                <DntInputText AutoCompleteType="AutoCompleteType.On"
+                              FieldIcon="@DntBootstrapIcons.BiPerson"
+                              @bind-Value="Model.Username"
+                              OptionalLabel="(انگلیسی؛ جهت لاگین)"
+                              dir="ltr"/>
+
+                <DntInputText AutoCompleteType="AutoCompleteType.On"
+                              FieldIcon="@DntBootstrapIcons.BiPersonCircle"
+                              OptionalLabel="(فارسی؛ برای نمایش در سایت)"
+                              @bind-Value="Model.FriendlyName"/>
+
+                <DntInputText AutoCompleteType="AutoCompleteType.On"
+                              FieldIcon="@DntBootstrapIcons.BiMailbox"
+                              @bind-Value="Model.EMail"
+                              dir="ltr"/>
+
+                <DntInputText AutoCompleteType="AutoCompleteType.NewPassword"
+                              FieldIcon="@DntBootstrapIcons.BiKey"
+                              InputType="password"
+                              @bind-Value="Model.Password1"
+                              dir="ltr"/>
+
+                <DntInputText AutoCompleteType="AutoCompleteType.NewPassword"
+                              FieldIcon="@DntBootstrapIcons.BiKey"
+                              InputType="password"
+                              @bind-Value="Model.Password2"
+                              dir="ltr"/>
+
+                <DntTextCaptcha @bind-InputCaptchaValue="Model.InputCaptchaValue"
+                                @bind-RealCaptchaValue="Model.RealCaptchaValue"
+                                Min="1"
+                                Max="9"
+                                CustomFontPath="@AppFoldersService.CustomFontWithPersianDigitsPath"
+                                LabelName="حاصل عملیات به‌شکل یک عدد صحیح"
+                                AbsoluteCaptchaExpirationRelativeToNow="TimeSpan.FromMinutes(value: 2)"
+                                AllowedTriesPermitLimit="10"
+                                BanDurationRelativeToNow="TimeSpan.FromMinutes(value: 2)"
+                                BanErrorMessage="لطفا 2 دقیقه پیش از سعی مجدد بعدی، صبر کنید!"
+                                BanErrorFieldIcon="@DntBootstrapIcons.BiSignStopFill"/>
+
+                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+            </EditForm>
+        }
+        else
+        {
+            <DntMessageBox Type="AlertType.Danger" IsVisible="true">
+                @UsersService.UsersCantRegisterErrorMessage
+            </DntMessageBox>
+        }
+    </FrameBody>
+</DntCardFrame>

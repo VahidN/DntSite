@@ -1,0 +1,25 @@
+﻿<div class="row mb-@InputRowMarginBottom">
+    <label class="col-form-label col-lg-@LabelColumnWidth">
+        @if (!string.IsNullOrWhiteSpace(LabelName))
+        {
+            @LabelName
+        }
+    </label>
+    <div class="col-lg-@InputTextColumnWidth">
+        <div class="input-group">
+            @if (!string.IsNullOrWhiteSpace(FieldIcon))
+            {
+                <div class="input-group-text">
+                    <span class="@FieldIcon" role="img" aria-label="@LabelName"></span>
+                </div>
+            }
+            @Value.HtmlRaw()
+        </div>
+        @if (OptionalDescription is not null)
+        {
+            <div class="text-muted">
+                @OptionalDescription
+            </div>
+        }
+    </div>
+</div>

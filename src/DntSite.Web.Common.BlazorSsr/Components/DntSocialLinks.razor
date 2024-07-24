@@ -1,0 +1,56 @@
+<div class="d-flex flex-row flex-wrap align-items-center justify-content-center mt-2 mb-2"
+     id="social-links-@Guid.NewGuid()">
+    <a target="_blank" rel="noopener norefer" class="me-3"
+       title="Share it via SMS" data-enhance-nav="false"
+       href="sms:?body=@EncodedTitle%0D%0A@(EncodedPostUrl)">
+        <i class="@DntBootstrapIcons.BiPhone"></i>
+    </a>
+
+    <a target="_blank" rel="noopener norefer" class="me-3"
+       title="Share it via email" data-enhance-nav="false"
+       href="mailto:?subject=@EncodedTitle&body=@EncodedPostUrl">
+        <i class="@DntBootstrapIcons.BiMailbox"></i>
+    </a>
+
+    <a target="_blank" rel="noopener norefer" class="me-3"
+       title="Share it via gmail" data-enhance-nav="false"
+       href="https://mail.google.com/mail/?view=cm&fs=1&to=&su=@EncodedTitle&body=@EncodedPostUrl&ui=2&tf=1&shva=1">
+        <i class="@DntBootstrapIcons.BiGoogle"></i>
+    </a>
+
+    <a target="_blank" rel="noopener norefer" class="me-3"
+       title="Share it via telegram" data-enhance-nav="false"
+       href="https://telegram.me/share/url?url=@EncodedPostUrl&text=@EncodedTitle">
+        <i class="@DntBootstrapIcons.BiTelegram"></i>
+    </a>
+
+    <a target="_blank" rel="noopener norefer" class="me-3"
+       title="Share it via whatsapp" data-enhance-nav="false"
+       href="https://api.whatsapp.com/send?text=@(EncodedTitle)%0D%0A@(EncodedPostUrl)">
+        <i class="@DntBootstrapIcons.BiWhatsapp"></i>
+    </a>
+
+    <a target="_blank" rel="noopener norefer" class="me-3"
+       title="Share it via Twitter" data-enhance-nav="false"
+       href="https://twitter.com/intent/tweet?text=@EncodedTitle&url=@EncodedPostUrl&hashtags=@EncodedHashtag">
+        <i class="@DntBootstrapIcons.BiTwitter"></i>
+    </a>
+
+    <a target="_blank" rel="noopener norefer" class="me-3"
+       title="Share it via Linkedin" data-enhance-nav="false"
+       href="https://www.linkedin.com/shareArticle?mini=true&url=@EncodedPostUrl&title=@EncodedTitle">
+        <i class="@DntBootstrapIcons.BiLinkedin"></i>
+    </a>
+
+    <a target="_blank" rel="noopener norefer" class="me-3"
+       title="Share it via reddit" data-enhance-nav="false"
+       href="https://www.reddit.com/submit?title=@EncodedTitle&url=@EncodedPostUrl">
+        <i class="@DntBootstrapIcons.BiReddit"></i>
+    </a>
+
+    <a target="_blank" rel="noopener norefer" class="me-3"
+       title="Share it via Facebook" data-enhance-nav="false"
+       href="https://www.facebook.com/sharer/sharer.php?title=@EncodedTitle&u=@EncodedPostUrl&hashtag=@EncodedHashtag">
+        <i class="@DntBootstrapIcons.BiFacebook"></i>
+    </a>
+</div>

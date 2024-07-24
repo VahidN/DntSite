@@ -1,0 +1,20 @@
+﻿@attribute [Route(UserProfilesRoutingConstants.UsersBirthdays)]
+<DntSitePageTitle PageTitle="تولدهای امروز"/>
+
+<DntLoading IsLoading="@(_users is null)">
+    @if (_ageStat is not null)
+    {
+        <DntMessageBox IsVisible="true" Type="AlertType.Info">
+            میانگین سنی کاربران:
+            @_ageStat.AverageAge.ToPersianNumbers()
+            سال
+            <hr/>
+            @_ageStat.MinMax
+        </DntMessageBox>
+    }
+
+    @foreach (var user in _users!)
+    {
+        <UserProfile User="user" MarginTop="3"/>
+    }
+</DntLoading>

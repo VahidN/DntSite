@@ -1,0 +1,45 @@
+﻿<div class="row mb-@InputRowMarginBottom">
+    <label class="col-form-label col-lg-@LabelColumnWidth" for="@ValueField.HtmlFieldName">
+        @if (!string.IsNullOrWhiteSpace(LabelName))
+        {
+            @LabelName
+        }
+        else
+        {
+            @ValueExpression.GetDisplayName()
+        }
+
+        @if (!string.IsNullOrWhiteSpace(OptionalLabel))
+        {
+            <span class="text-muted mx-2"> @OptionalLabel</span>
+        }
+    </label>
+    <div class="col-lg-@InputTextColumnWidth">
+        <div class="input-group">
+            @if (!string.IsNullOrWhiteSpace(FieldIcon))
+            {
+                <div class="input-group-text">
+                    <span class="@FieldIcon" role="img" aria-label="@LabelName"></span>
+                </div>
+            }
+            <InputText ValueExpression="@ValueExpression"
+                       Value="@Value"
+                       ValueChanged="@ValueChanged"
+                       @attributes="@AdditionalAttributes"
+                       class="form-control"
+                       autocapitalize="off" autocorrect="off" autocomplete="@AutoCompleteType.Value"
+                       type="@InputType"/>
+
+        </div>
+        @if (OptionalDescription is not null)
+        {
+            <div class="text-muted">
+                @OptionalDescription
+            </div>
+        }
+        @if (ValueExpression is not null)
+        {
+            <ValidationMessage For="@ValueExpression"/>
+        }
+    </div>
+</div>

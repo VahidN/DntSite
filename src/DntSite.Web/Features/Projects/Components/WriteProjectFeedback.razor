@@ -1,0 +1,54 @@
+﻿@attribute [Route(ProjectsRoutingConstants.WriteProjectFeedback)]
+@attribute [Route(ProjectsRoutingConstants.WriteProjectFeedbackEditEditId)]
+@attribute [Route(ProjectsRoutingConstants.WriteProjectFeedbackDeleteDeleteId)]
+
+<DntSitePageTitle PageTitle="ارسال یک بازخورد"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ارسال یک بازخورد
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="IssueModel" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(WriteProjectFeedback)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="IssueModel.Title"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiPuzzle"
+                          @bind-Value="IssueModel.RevisionNumber"/>
+
+            <DntInputSelect @bind-Value="IssueModel.IssueTypeId"
+                            FieldIcon="@DntBootstrapIcons.BiCardList"
+                            Items="_issueTypes"/>
+
+            <DntInputSelect @bind-Value="IssueModel.IssuePriorityId"
+                            FieldIcon="@DntBootstrapIcons.BiSignDeadEnd"
+                            Items="_issuePriorities"/>
+
+            <DntHtmlEditor @bind-Value="IssueModel.Description"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="300px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

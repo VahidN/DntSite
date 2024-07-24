@@ -1,0 +1,72 @@
+﻿@using DntSite.Web.Features.UserProfiles.Entities
+@attribute [Route(UserProfilesRoutingConstants.Users)]
+@attribute [Route(UserProfilesRoutingConstants.UsersPageCurrentPage)]
+@attribute [Route(UserProfilesRoutingConstants.UsersFilterFilterPageCurrentPage)]
+@attribute [Route(UserProfilesRoutingConstants.User)]
+@attribute [Route(UserProfilesRoutingConstants.UserPageCurrentPage)]
+@attribute [Route(UserProfilesRoutingConstants.UserFilterFilterPageCurrentPage)]
+@attribute [Route(UserProfilesRoutingConstants.UsersName)]
+@attribute [Route(UserProfilesRoutingConstants.UserName)]
+
+<DntSitePageTitle PageTitle="@_user?.FriendlyName"/>
+
+@if (!string.IsNullOrWhiteSpace(Name))
+{
+    <DntLoading IsLoading="@(_user is null)">
+        <UserProfile User="_user!"/>
+    </DntLoading>
+}
+else
+{
+    <DntQueryBuilder TRecord="User"
+                     Header="جستجوی پیشرفته کاربران"
+                     PreviousFilter="@Filter"
+                     PreviousFilterLabel="فیلتر جستجو:"
+                     StartNewSearchLabel="شروع یک جستجوی جدید"
+                     StartNewSearchUrl="@UserProfilesRoutingConstants.Users"
+                     StartsWithLabel="شروع شده با"
+                     EndsWithLabel="خاتمه یافته با"
+                     ContainsLabel="حاوی"
+                     EqualLabel="مساوی"
+                     LessThanLabel="کوچک‌تر از"
+                     LessThanOrEqualLabel="کوچکتر یا مساوی"
+                     GreaterThanLabel="بزرگتر از"
+                     GreaterThanOrEqualLabel="بزرگتر یا مساوی"
+                     AndLabel="و"
+                     OrLabel="یا"
+                     IsLabel="هست"
+                     NotLabel="نیست"
+                     SearchButtonLabel="جستجو"
+                     AddRuleButtonLabel="افزودن یک شرط جستجوی جدید بر اساس"
+                     DeleteAllRulesButtonLabel="حذف تمام شرط‌های جستجو"
+                     ShowGridifyFilter="true"
+                     OnSearch="DoSearchAsync">
+        <DntQueryBuilderProperty Title="شماره کاربر" ValueExpression="user => user.Id"/>
+        <DntQueryBuilderProperty Title="نام مستعار" ValueExpression="user => user.FriendlyName"/>
+        <DntQueryBuilderProperty Title="آدرس صفحه خانگی" ValueExpression="user => user.HomePageUrl"/>
+        <DntQueryBuilderProperty Title="محل اقامت" ValueExpression="user => user.Location"/>
+        <DntQueryBuilderProperty Title="امضاء" ValueExpression="user => user.Description"/>
+        <DntQueryBuilderProperty Title="آخرین تاریخ مراجعه" ValueExpression="user => user.LastVisitDateTime">
+            <QueryBuilderValueTemplate Context="rule">
+                <input class="form-control" type="text"
+                       data-dnt-date-picker
+                       dir="ltr"
+                       autocapitalize="off" autocorrect="off" autocomplete="off"
+                       name="@rule.RuleValueName"
+                       value="@rule.Value"/>
+            </QueryBuilderValueTemplate>
+        </DntQueryBuilderProperty>
+    </DntQueryBuilder>
+
+    <DntLoading IsLoading="@(_users is null)">
+        @foreach (var user in _users!.Data)
+        {
+            <UserProfile User="user" MarginTop="3"/>
+        }
+
+        <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                            TotalItemCount="_users!.TotalItems"
+                            BasePath="@_basePath"
+                            CurrentPage="CurrentPage"/>
+    </DntLoading>
+}

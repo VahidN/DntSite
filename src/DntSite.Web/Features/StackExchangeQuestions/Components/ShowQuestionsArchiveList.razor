@@ -1,0 +1,50 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.StackExchangeQuestions.Entities
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntLoading IsLoading="@(Posts is null)">
+    @foreach (var post in Posts!.Data)
+    {
+        <ShowBlogPostItem TReactionEntity="StackExchangeQuestionReaction"
+                          TForeignKeyEntity="StackExchangeQuestion"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate="@QuestionsRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@QuestionsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@QuestionsRoutingConstants.PostTagUrlTemplate"
+                          Id="post.Id"
+                          Body="@post.Description"
+                          Reactions="post.Reactions"
+                          Tags="@GetTags(post)"
+                          Title="@post.Title"
+                          BriefDescription="@post.Description"
+                          CreatedAt="post.Audit.CreatedAt"
+                          RecordUser="post.User"
+                          NumberOfComments="post.EntityStat.NumberOfComments"
+                          NumberOfViews="post.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@post.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="post.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(post)"
+                          EditPostUrlTemplate="@QuestionsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@QuestionsRoutingConstants.DeletePostUrlTemplate"
+                          ShowReactions="true"
+                          ShowSocialLinks="true"
+                          ShowNumberOfViews="true"
+                          ShowNumberOfComments="true">
+            <AdditionalHeaderContent>
+                <QuestionAnswerStat IsQuestionAnswered="post.IsAnswered"/>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    }
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="Posts!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

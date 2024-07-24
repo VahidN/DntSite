@@ -1,0 +1,40 @@
+@using DntSite.Web.Features.SideBar.RoutingConstants
+@attribute [Route(SideBarRoutingConstants.CustomSideBar)]
+
+<DntSitePageTitle PageTitle="طراحی منوی سفارشی کنار صفحه"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        طراحی منوی سفارشی کنار صفحه
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync" FormName="@nameof(AddCustomSidebar)" Enhance>
+
+            <DntMessageBox Type="AlertType.Info" IsVisible="true">
+                اطلاعات ثبت شده پس از به روز رسانی کش سمت راست صفحه نمایش داده خواهد شد.
+            </DntMessageBox>
+
+            <DntHtmlEditor @bind-Value="Model.Description"
+                           IsReadOnly="false"
+                           AllowUploadFile="false"
+                           UploadFileApiPath=""
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="false"
+                           UploadImageFileApiPath=""
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="220px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputCheckBox @bind-Value="Model.IsPublic"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

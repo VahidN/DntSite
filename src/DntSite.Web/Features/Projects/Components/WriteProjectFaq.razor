@@ -1,0 +1,42 @@
+@attribute [Route(ProjectsRoutingConstants.WriteProjectFaq)]
+@attribute [Route(ProjectsRoutingConstants.WriteProjectFaqEditEditId)]
+@attribute [Route(ProjectsRoutingConstants.WriteProjectFaqDeleteDeleteId)]
+
+<DntSitePageTitle PageTitle="تعریف یک پرسش و پاسخ متداول"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        تعریف یک پرسش و پاسخ متداول پروژه
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="WriteProjectFaqFormModel" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(WriteProjectFaq)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="WriteProjectFaqFormModel.Title"/>
+
+            <DntHtmlEditor @bind-Value="WriteProjectFaqFormModel.DescriptionText"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="300px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

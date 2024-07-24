@@ -1,0 +1,32 @@
+@using DntSite.Web.Features.RoadMaps.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    مسیر راه جدیدی به سایت اضافه/ویرایش گردید:
+    <br/>
+    <strong>مسیر راه: </strong><a href="@PostUrl">@Model.Title</a>
+    <br/>
+    <strong>محتوا: </strong> @Model.Description.HtmlRaw()
+    <br/>
+    <strong>نویسنده: </strong>@Model.Author
+    <br/>
+    <strong>وضعیت: </strong>@Model.Stat
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+</LayoutView>
+
+@code {
+
+    [Parameter] public LearningPathToAdminEmailModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(RoadMapsRoutingConstants.LearningPathsDetailsBase).CombineUrl($"/{Model.Id}");
+
+}

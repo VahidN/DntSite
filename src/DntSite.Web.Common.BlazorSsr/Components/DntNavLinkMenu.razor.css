@@ -1,0 +1,35 @@
+@keyframes slideIn {
+    0% {
+        transform: translateY(1rem);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0rem);
+        opacity: 1;
+    }
+}
+
+.slideIn {
+    -webkit-animation-name: slideIn;
+    animation-name: slideIn;
+    animation-duration: 0.1s;
+    animation-fill-mode: both;
+}
+
+@keyframes slideOut {
+    0% {
+        transform: translateY(0rem);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(1rem);
+        opacity: 0;
+    }
+}
+
+.slideOut {
+    -webkit-animation-name: slideOut;
+    animation-name: slideOut;
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+}

@@ -1,0 +1,90 @@
+@typeparam TReactionEntity      where TReactionEntity : BaseReactionEntity<TForeignKeyEntity>, new()
+    @typeparam TForeignKeyEntity    where TForeignKeyEntity : BaseAuditedInteractiveEntity
+
+<DntCard>
+    <Header>
+        <div>
+            @if (ShowPostTitle)
+            {
+                <div class="d-flex align-items-center justify-content-start flex-wrap">
+                    <div class="author p-1">
+                        <DntPrintUserBrowser BrowserName="@CreatedByUserAgent"/>
+                        <DntSite.Web.Features.UserProfiles.Components.PrintUser User="@RecordUser" IsNavLink="false"/>
+                    </div>
+                    <DntLink IsExternal="false" Url="@PostUrlWithComment" id="@CommentHtmlId" name="@CommentHtmlId">
+                        <h5 class="mt-2" dir="@PostTitle.GetDir()">
+                            @PostTitle
+                        </h5>
+                    </DntLink>
+                </div>
+                <div class="d-flex align-items-center justify-content-start flex-wrap">
+                    <div class="updated text-muted p-1">
+                        <span class="@DntBootstrapIcons.BiCalendar me-1" aria-hidden="true"></span>
+                        @CreatedAt.ToFriendlyPersianDateTextify().ToPersianNumbers()
+                    </div>
+                    <DntBackToTopButton/>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex align-items-center justify-content-start flex-wrap">
+                    <a href="@(PostUrl)#comment-@CommentId" name="comment-@CommentId" id="comment-@CommentId">
+                        <h5 class="p-1">#</h5>
+                    </a>
+                    <div class="author p-1">
+                        <DntPrintUserBrowser BrowserName="@CreatedByUserAgent"/>
+                        <DntSite.Web.Features.UserProfiles.Components.PrintUser User="@RecordUser" IsNavLink="false"/>
+                    </div>
+                    <div class="updated text-muted p-1">
+                        <span class="@DntBootstrapIcons.BiCalendar me-1" aria-hidden="true"></span>
+                        @CreatedAt.ToFriendlyPersianDateTextify().ToPersianNumbers()
+                    </div>
+                    <DntBackToTopButton/>
+                </div>
+            }
+        </div>
+    </Header>
+    <Body>
+    <div class="main">
+        @Body.HtmlRaw()
+        @if (AdditionalBodyContent is not null)
+        {
+            @AdditionalBodyContent
+        }
+    </div>
+    </Body>
+    <Footer>
+        <div class="d-flex flex-row flex-wrap align-items-center">
+            @if (AdditionalInfoContent is not null)
+            {
+                @AdditionalInfoContent
+            }
+            @if (ShowReactions)
+            {
+                <DntSite.Web.Features.Stats.Components.DntReactions
+                    Id="@CommentId"
+                    TReactionEntity="TReactionEntity"
+                    TForeignKeyEntity="TForeignKeyEntity"
+                    Reactions="@Reactions"/>
+            }
+            @if (ShowManageBlogPostCommentItem)
+            {
+                <ManageBlogPostCommentItem
+                    IsReplyToPost="false"
+                    Body="@Body"
+                    CommentId="CommentId"
+                    CreatedAt="CreatedAt"
+                    PostId="PostId"
+                    ShowPleaseVoteMessage="ShowPleaseVoteMessage"
+                    RecordUser="RecordUser"
+                    UploadFileApiPath="@UploadFileApiPath"
+                    UploadImageFileApiPath="@UploadImageFileApiPath"
+                    HandleCommentAction="HandleCommentAction"/>
+            }
+            @if (AdditionalButtonsContent is not null)
+            {
+                @AdditionalButtonsContent
+            }
+        </div>
+    </Footer>
+</DntCard>

@@ -1,0 +1,68 @@
+<DntLoading IsLoading="@(Project is null)">
+    <div id="ProjectDetails-@Project!.Id" class="col-md-12 mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                @if (!string.IsNullOrWhiteSpace(Project!.SourcecodeRepositoryUrl))
+                {
+                    <h5>
+                        <span aria-hidden="true" class="@DntBootstrapIcons.BiFileCode"></span>
+                        آدرس مخزن کد پروژه
+                    </h5>
+                    <div align="right" dir="ltr">
+                        <a href="@Project.SourcecodeRepositoryUrl">
+                            @if (!string.IsNullOrWhiteSpace(Project.Logo))
+                            {
+                                <img class="rounded-circle img-thumbnail me-1"
+                                     alt="@Project.Title"
+                                     src="@(ApiUrlsRoutingConstants.File.HttpAny.Avatar)?name=@(Uri.EscapeDataString(Project.Logo))"/>
+                            }
+                            @Project.SourcecodeRepositoryUrl
+                        </a>
+                    </div>
+                }
+            </div>
+            <div class="col-md-6">
+                @if (!string.IsNullOrWhiteSpace(Project.RequiredDependencies))
+                {
+                    <h5>
+                        <span aria-hidden="true" class="@DntBootstrapIcons.BiPuzzle"></span>
+                        وابستگی‌های پروژه
+                    </h5>
+                    <div class="editorText">@Project.RequiredDependencies.HtmlRaw()</div>
+                }
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                @if (!string.IsNullOrWhiteSpace(Project.RelatedArticles))
+                {
+                    <h5>
+                        <span aria-hidden="true" class="@DntBootstrapIcons.BiFileText"></span>
+                        مقالات و مطالب مرتبط
+                    </h5>
+                    <div class="editorText">@Project.RelatedArticles.HtmlRaw()</div>
+                }
+            </div>
+            <div class="col-md-6">
+                @if (!string.IsNullOrWhiteSpace(Project.DevelopersDescription))
+                {
+                    <h5>
+                        <span aria-hidden="true" class="@DntBootstrapIcons.BiPeople"></span>
+                        همکاران
+                    </h5>
+                    <div class="editorText">@Project.DevelopersDescription.HtmlRaw()</div>
+                }
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <h5>
+                    <span aria-hidden="true" class="@DntBootstrapIcons.BiLock"></span>
+                    نوع مجوز استفاده از پروژه
+                </h5>
+                <div class="editorText">@Project.License.HtmlRaw()</div>
+            </div>
+        </div>
+    </div>
+</DntLoading>

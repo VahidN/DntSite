@@ -1,0 +1,119 @@
+<HeadContent>
+    @if (!string.IsNullOrWhiteSpace(Keywords))
+    {
+        <meta name="keywords" content="@Keywords"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(LastModified))
+    {
+        <meta http-equiv="last-modified" content="@LastModified"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <meta name="description" content="@Description"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(AuthorName))
+    {
+        <meta name="author" content="@AuthorName"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(Title))
+    {
+        <meta itemprop="name" content="@Title">
+    }
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <meta itemprop="description" content="@Description">
+    }
+    @if (!string.IsNullOrWhiteSpace(SiteMapUrl))
+    {
+        <link rel="sitemap" type="application/xml" title="Sitemap" href="@SiteMapUrl"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(RssUrl))
+    {
+        <link rel="alternate" type="application/rss+xml" href="@RssUrl">
+    }
+    <link rel="canonical" href="@CanonicalUrl"/>
+    <meta name="robots" content="index, follow"/>
+
+    <script suppress-error="BL9992" type="application/ld+json">
+        {
+          "@@context": "https://schema.org/",
+          "@@type": "Article",
+          "headline": "@Title",
+          "author": {
+            "@@type": "Person",
+            "name": "@AuthorName"
+          },
+          "datePublished": "@DatePublished?.ToString(format: "yyyy-MM-dd", CultureInfo.InvariantCulture)",
+          "description": "@Description",
+          "image": "@ImageUrl",
+          "aggregateRating": {
+            "@@type": "AggregateRating",
+            "ratingValue": "@AverageRating",
+            "reviewCount": "@TotalRaters"
+          }
+        }
+    </script>
+
+    @if (!string.IsNullOrWhiteSpace(Title))
+    {
+        <meta property="og:title" content="@Title"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <meta property="og:description" content="@Description"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(ImageUrl))
+    {
+        <meta property="og:image" content="@ImageUrl"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(ImageDescription))
+    {
+        <meta property="og:image:alt" content="@ImageDescription"/>
+    }
+    <meta property="og:type" content="article"/>
+    <meta property="og:url" content="@CanonicalUrl"/>
+    @if (!string.IsNullOrWhiteSpace(SiteName))
+    {
+        <meta property="og:site_name" content="@SiteName"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(Title))
+    {
+        <meta name="twitter:title" content="@Title"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <meta name="twitter:description" content="@Description"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(ImageUrl))
+    {
+        <meta name="twitter:image" content="@ImageUrl"/>
+
+        @if (!string.IsNullOrWhiteSpace(ImageDescription))
+        {
+            <meta name="twitter:image:alt" content="@ImageDescription"/>
+        }
+    }
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <meta name="twitter:card" content="@Description"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(YourTwitterHandle))
+    {
+        <meta name="twitter:site" content="@YourTwitterHandle"/>
+        <meta name="twitter:creator" content="@YourTwitterHandle"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(PubDate))
+    {
+        <meta property="article:published_time" content="@PubDate"/>
+    }
+    @if (!string.IsNullOrWhiteSpace(LastModified))
+    {
+        <meta property="article:modified_time" content="@LastModified"/>
+    }
+    <meta property="article:section" content="article"/>
+    <meta property="article:tag" content="article"/>
+    @if (!string.IsNullOrWhiteSpace(OpenSearchUrl) && !string.IsNullOrWhiteSpace(SiteName))
+    {
+        <link rel="search" type="application/opensearchdescription+xml" title="@SiteName" href="@OpenSearchUrl"/>
+    }
+</HeadContent>

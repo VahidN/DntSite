@@ -1,0 +1,56 @@
+<div class="row mb-@InputRowMarginBottom">
+    @if (!string.IsNullOrWhiteSpace(LabelName))
+    {
+        <label class="col-form-label col-lg-@LabelColumnWidth" for="@(UniqueId)Start">
+            @LabelName
+            @if (!string.IsNullOrWhiteSpace(OptionalLabel))
+            {
+                <span class="text-muted mx-2"> @OptionalLabel</span>
+            }
+        </label>
+    }
+    <div class="col-lg-@InputTextColumnWidth">
+        <div class="input-group">
+            @if (!string.IsNullOrWhiteSpace(FieldIcon))
+            {
+                <div class="input-group-text">
+                    <span class="@FieldIcon" role="img" aria-label="@LabelName"></span>
+                </div>
+            }
+            <div class="input-group-text">
+                <span>@HourLabel</span>
+            </div>
+            <InputSelect class="form-select"
+                         ValueExpression="@HourExpression"
+                         Value="@Hour"
+                         ValueChanged="@HourChanged">
+                <option hidden disabled selected value></option>
+                @for (var hour = 0; hour <= 23; hour++)
+                {
+                    <option value="@hour">@hour.ToString("00")</option>
+                }
+            </InputSelect>
+            <div class="input-group-text">
+                <span>@MinuteLabel</span>
+            </div>
+            <InputSelect class="form-select"
+                         ValueExpression="@MinuteExpression"
+                         Value="@Minute"
+                         ValueChanged="@MinuteChanged">
+                <option hidden disabled selected value></option>
+                @for (var minute = 0; minute <= 59; minute += MinutesSteps)
+                {
+                    <option value="@minute">@minute.ToString("00")</option>
+                }
+            </InputSelect>
+        </div>
+        @if (HourExpression is not null)
+        {
+            <ValidationMessage For="@HourExpression"/>
+        }
+        @if (MinuteExpression is not null)
+        {
+            <ValidationMessage For="@MinuteExpression"/>
+        }
+    </div>
+</div>

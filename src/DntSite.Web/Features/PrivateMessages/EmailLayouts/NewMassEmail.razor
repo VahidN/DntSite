@@ -1,0 +1,21 @@
+@using DntSite.Web.Features.PrivateMessages.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    @Model.Body.HtmlRaw()
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public NewMassEmailModel Model { set; get; } = null!;
+
+}

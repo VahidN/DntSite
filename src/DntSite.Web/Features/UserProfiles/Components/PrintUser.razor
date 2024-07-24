@@ -1,0 +1,13 @@
+@if (ShowAsUrl)
+{
+    <DntLink IsExternal="_isExternal" CssClass="@CssClass" Url="@_homeUrl">
+        <DntRoundedImage MarginLeft="0" ImageUrl="@_imageUrl" AltName="@_name" Width="45px" Height="45px"/>
+        <span class="p-2">@_name</span>
+    </DntLink>
+}
+else
+{
+    <DntRoundedImage ImageUrl="@_imageUrl" AltName="@_name" Width="45px" Height="45px"/>
+
+    <span class="p-2">@_name</span>
+}

@@ -1,0 +1,19 @@
+@using DntSite.Web.Features.UserProfiles.Components
+<DntCardFrame>
+    <FrameHeader>
+        <DntLink IsExternal="false" Url="@PostUrl">
+            @BlogPost.Title
+        </DntLink>
+    </FrameHeader>
+    <FrameBody>
+        <DntMessageBox Type="AlertType.Warning" IsVisible="true">
+            دسترسی به این مطلب عمومی نبوده و تنها برای نویسندگانی با حداقل @BlogPost.NumberOfRequiredPoints?.NumberToText(Language.Persian)
+            مطلب ارسالی درنظر گرفته شده است.
+        </DntMessageBox>
+        <hr/>
+        توسط:
+        <PrintUser User="@BlogPost.User"/>
+        در:
+        @BlogPost.Audit.CreatedAt.ToFriendlyPersianDateTextify().ToPersianNumbers()
+    </FrameBody>
+</DntCardFrame>

@@ -1,0 +1,43 @@
+@using DntSite.Web.Features.UserProfiles.Models
+<DntSecurityTrim AllowAnonymous="false" AllowedRoles="@CustomRoles.Admin">
+    <DntNavLinkMenu>
+        <MainTitle>
+            منوی مدیریتی
+        </MainTitle>
+        <MenuItems>
+            <DntNavLinkMenuItem Url="@AppConfigsRoutingConstants.SystemLogs" CssIcon="@DntBootstrapIcons.BiCone">
+                خطاهای برنامه
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem Url="@AppConfigsRoutingConstants.ServerInfo" CssIcon="@DntBootstrapIcons.BiServer">
+                مشخصات سرور
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem Url="@AppConfigsRoutingConstants.SiteConfig" CssIcon="@DntBootstrapIcons.BiGear">
+                تنظیمات برنامه
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem Url="@UserProfilesRoutingConstants.UsersManager" CssIcon="@DntBootstrapIcons.BiPeople">
+                مدیریت کاربران
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem Url="@UserProfilesRoutingConstants.SendActivationEmails" CssIcon="@DntBootstrapIcons.BiVolumeUp">
+                ایمیل‌های فعال سازی
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem Url="@UserProfilesRoutingConstants.SendMassMail" CssIcon="@DntBootstrapIcons.BiWechat">
+                ارسال ایمیل به کاربران
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem Url="@SideBarRoutingConstants.CustomSideBar" CssIcon="@DntBootstrapIcons.BiWindowSidebar">
+                منوی سفارشی
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem IsDivider="@true"></DntNavLinkMenuItem>
+
+            <DntNavLinkMenuItem Url="@PostsRoutingConstants.AllDraftsList" CssIcon="@DntBootstrapIcons.BiCardChecklist">
+                پیش نویس‌های سایت
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem Url="@StatsRoutingConstants.RecalculatePostsCount" CssIcon="@DntBootstrapIcons.BiRepeat">
+                بازشماری آمار
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem Url="@PrivateMessagesRoutingConstants.PrivateMessagesViewer" CssIcon="@DntBootstrapIcons.BiSnapchat">
+                کنترل سیستم
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem IsDivider="@true"></DntNavLinkMenuItem>
+        </MenuItems>
+    </DntNavLinkMenu>
+</DntSecurityTrim>

@@ -1,0 +1,19 @@
+<div class="row mb-@ButtonRowMarginBottom">
+    <div class="col-form-label col-lg-@LabelColumnWidth"></div>
+    <div class="col-lg-@ButtonColumnWidth">
+        <button type="@Type.Value"
+                class="@CssClass"
+                data-cancel-confirm-message="@CancelConfirmMessage"
+                @attributes="@AdditionalAttributes"
+                data-dnt-button-spinner="@SubmittingDivId">
+            @if (ChildContent is not null)
+            {
+                @ChildContent
+            }
+        </button>
+        <div id="@SubmittingDivId" class="alert alert-info shadow-sm text-center d-none">
+            @IsSubmittingText
+            <span class="me-2 spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+@using DntSite.Web.Features.Courses.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    دوره «
+    <a href="@PostUrl">
+        @Model.Title
+    </a>» با موفقیت ایجاد گردید.
+    <br/>
+    برای افزودن سرفصل‌ها و مطالب مرتبط لطفا به دوره خود وارد شده و از گزینه‌های مهیای
+    مخصوص مسئول دوره استفاده نمائید.
+    <br/>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public NewCourseHelpEmailModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesDetailsBase).CombineUrl(Invariant($"/{Model.Id}"));
+
+}

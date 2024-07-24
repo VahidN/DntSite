@@ -1,0 +1,17 @@
+@typeparam TRecord
+
+@if (Items is null || !Items.Any())
+{
+    @EmptyContentTemplate
+}
+else
+{
+    <CascadingValue Value="this">
+        <ul @attributes="AdditionalAttributes">
+            @foreach (var item in Items)
+            {
+                <DntTreeViewChildrenItem TRecord="TRecord" ParentItem="item"/>
+            }
+        </ul>
+    </CascadingValue>
+}

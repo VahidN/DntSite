@@ -1,0 +1,27 @@
+@if (IsVisible)
+{
+    <li class="list-group-item list-group-item-action">
+        <a class="d-flex align-items-center link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+           href="@Url"
+           @attributes="AdditionalAttributes">
+            @if (!string.IsNullOrWhiteSpace(GlyphIcon))
+            {
+                <span class="@GlyphIcon me-2"></span>
+            }
+            @if (IsTitleBold)
+            {
+                <strong>@Title</strong>
+            }
+            else
+            {
+                @Title
+            }
+            @if (BadgeValue is not null && IsBadgeValueVisible)
+            {
+                <span class="badge @BadgeValueBgColor.Value rounded-pill ms-auto">
+                    <DntToPersianNumbers Value="BadgeValue"/>
+                </span>
+            }
+        </a>
+    </li>
+}

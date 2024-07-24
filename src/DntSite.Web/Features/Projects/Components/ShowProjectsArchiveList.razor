@@ -1,0 +1,50 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Projects.Entities
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntLoading IsLoading="@(Posts is null)">
+    @foreach (var post in Posts!.Data)
+    {
+        <ShowBlogPostItem TReactionEntity="ProjectReaction"
+                          TForeignKeyEntity="Project"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          ShowNumberOfViews="false"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate="@ProjectsRoutingConstants.FeedbacksUrlTemplate"
+                          PostUrlTemplate="@ProjectsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@ProjectsRoutingConstants.PostTagUrlTemplate"
+                          Id="post.Id"
+                          Body="@post.Description"
+                          Reactions="post.Reactions"
+                          Tags="@GetTags(post)"
+                          Title="@post.Title"
+                          BriefDescription="@post.Description"
+                          CreatedAt="post.Audit.CreatedAt"
+                          RecordUser="post.User"
+                          NumberOfComments="post.NumberOfIssues"
+                          NumberOfViews="post.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@post.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="post.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(post)"
+                          EditPostUrlTemplate="@ProjectsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@ProjectsRoutingConstants.DeletePostUrlTemplate"
+                          ShowReactions="true"
+                          ShowSocialLinks="true"
+                          ShowNumberOfComments="true">
+            <AdditionalHeaderContent>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+                <ProjectDetails Project="post"/>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    }
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="Posts!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

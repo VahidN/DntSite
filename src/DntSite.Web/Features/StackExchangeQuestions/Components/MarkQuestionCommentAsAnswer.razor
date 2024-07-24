@@ -1,0 +1,40 @@
+﻿@using DntSite.Web.Features.StackExchangeQuestions.Models
+@if (CanCurrentUserMarkAsAnswer)
+{
+    <div class="mt-2">
+        <EditForm Model="this" method="post"
+                  OnValidSubmit="OnValidSubmitAsync"
+                  FormName="@FormName"
+                  Enhance>
+
+            @if (IsQuestionAnswered)
+            {
+                if (IsThisCommentAnswer)
+                {
+                    <button type="submit" name="@nameof(Reaction)"
+                            value="@MarkAsAnswerAction.Cancel"
+                            class="btn btn-outline-secondary btn-sm me-2" title="لغو واکنش">
+                        <i class="@DntBootstrapIcons.BiDashCircle"></i>
+                        لغو انتخاب به عنوان پاسخ صحیح
+                    </button>
+                }
+            }
+            else
+            {
+                <button type="submit" name="@nameof(Reaction)"
+                        value="@MarkAsAnswerAction.ThumbsUp"
+                        class="btn btn-outline-success btn-sm me-2" title="ابراز رضایتمندی">
+                    <i class="@DntBootstrapIcons.BiCheckCircle"></i>
+                    انتخاب نظر به عنوان پاسخ صحیح
+                </button>
+            }
+        </EditForm>
+    </div>
+}
+@if (IsQuestionAnswered && IsThisCommentAnswer)
+{
+    <span class="badge bg-success mt-2">
+        <i class="@DntBootstrapIcons.BiCheckCircle me-1"></i>
+        پاسخ انتخابی
+    </span>
+}

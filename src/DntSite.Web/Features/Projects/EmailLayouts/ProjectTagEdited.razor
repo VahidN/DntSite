@@ -1,0 +1,30 @@
+@using DntSite.Web.Features.Projects.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    گروه پروژه ذیل ویرایش گردید:
+    <br/>
+    <div align="center" dir="rtl" style="font-family: Tahoma; ">
+        نام قدیمی: @Model.OldName
+        <br/>
+        نام جدید: @Model.NewName
+        <br/>
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public ProjectTagEditedModel Model { set; get; } = null!;
+
+}

@@ -1,0 +1,4 @@
+@if (!string.IsNullOrWhiteSpace(CssFilePath))
+{
+    <link href="@HttpContext.GetFileVersionedPath(CssFilePath)" rel="stylesheet" type="text/css"/>
+}

@@ -1,0 +1,126 @@
+@attribute [Route(UserProfilesRoutingConstants.EditSocialNetworks)]
+@attribute [Route(UserProfilesRoutingConstants.EditSocialNetworksEditUserId)]
+
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        @PageTitle
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(EditUserSocialNetworks)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiCupHot"
+                          @bind-Value="Model.CoffeebedeId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://www.coffeete.ir/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiTwitter"
+                          @bind-Value="Model.TwitterName"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://twitter.com/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiFacebook"
+                          @bind-Value="Model.FacebookName"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://www.facebook.com/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiLinkedin"
+                          @bind-Value="Model.LinkedInProfileId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://ir.linkedin.com/in/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiTelegram"
+                          @bind-Value="Model.TelegramId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://telegram.me/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiStackOverflow"
+                          @bind-Value="Model.StackOverflowId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://stackoverflow.com/users/<strong>1234567890</strong>/name)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiGithub"
+                          @bind-Value="Model.GithubId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://github.com/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiMicrosoft"
+                          @bind-Value="Model.NugetId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://nuget.org/profiles/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiPuzzle"
+                          @bind-Value="Model.CodeProjectId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://www.codeproject.com/Articles/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiSourceforge"
+                          @bind-Value="Model.SourceforgeId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://sourceforge.net/users/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiYoutube"
+                          @bind-Value="Model.YouTubeId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://www.youtube.com/<strong>@@name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiReddit"
+                          @bind-Value="Model.RedditId"
+                          dir="ltr">
+                <OptionalDescription>
+                    (https://www.reddit.com/user/<strong>name</strong>)
+                </OptionalDescription>
+            </DntInputText>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

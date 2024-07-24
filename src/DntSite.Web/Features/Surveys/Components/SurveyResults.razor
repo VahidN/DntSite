@@ -1,0 +1,38 @@
+﻿<DntLoading IsLoading="@(Survey is null)">
+    @foreach (var item in Survey!.SurveyItems.Where(x => !x.IsDeleted).OrderByDescending(x => x.TotalSurveys).ToList())
+    {
+        var percent = GetItemPercent(item);
+        var type = GetProgressBarType(percent);
+
+        <div class="row mt-2 bg-light-subtle rounded">
+            <div class="col-md-6">
+                <span dir="@item.Title.GetDir()">@item.Title</span>
+            </div>
+            <div class="col-md-6">
+                @if (item.TotalSurveys > 0 && percent > 0)
+                {
+                    var percentStr = percent.ToString(format: "F1", CultureInfo.InvariantCulture);
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="progress" title="@percentStr %">
+                                <div id="VoteItem-@item.Id"
+                                     title="@percentStr %"
+                                     class="progress-bar @type progress-bar-striped"
+                                     role="progressbar"
+                                     aria-valuenow="@percentStr"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100"
+                                     style="width: @percentStr%;">
+                                    @percentStr.ToPersianNumbers() %
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-info">با @item.TotalSurveys.ToPersianNumbers() رای</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</DntLoading>

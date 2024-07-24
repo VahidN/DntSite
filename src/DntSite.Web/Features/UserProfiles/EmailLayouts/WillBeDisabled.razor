@@ -1,0 +1,20 @@
+@using DntSite.Web.Features.UserProfiles.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    هدف از ثبت نام در سایت ما مشارکت در تهیه و تولید محتوا بوده‌است. هدف از چندکاربری شدن آن نیز از روز اول همین مساله می‌باشد.
+    <br/>
+    اکانت شما در صورت ادامه‌ی عدم فعالیت در حد حداقل ارسال یک لینک مفید یا نظری تکمیلی و یا مقاله‌ای جدید تا یک ماه آینده به صورت خودکار غیرفعال خواهد شد
+    <br/>
+    مراتب جهت اطلاع
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.BaseUrl">@Model.SiteName</a>
+</LayoutView>
+
+@code {
+
+    [Parameter] public WillBeDisabledModel Model { set; get; } = null!;
+
+}

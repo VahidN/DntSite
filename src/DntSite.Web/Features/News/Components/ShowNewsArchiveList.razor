@@ -1,0 +1,51 @@
+@using DntSite.Web.Features.News.Entities
+@using DntSite.Web.Features.Posts.Components
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntLoading IsLoading="@(Posts is null)">
+    @foreach (var post in Posts!.Data)
+    {
+        <ShowBlogPostItem TReactionEntity="DailyNewsItemReaction"
+                          TForeignKeyEntity="DailyNewsItem"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate="@NewsRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@NewsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@NewsRoutingConstants.PostTagUrlTemplate"
+                          Id="post.Id"
+                          Body="@post.BriefDescription"
+                          Reactions="post.Reactions"
+                          Tags="@GetTags(post)"
+                          Title="@post.Title"
+                          BriefDescription="@post.BriefDescription"
+                          CreatedAt="post.Audit.CreatedAt"
+                          RecordUser="post.User"
+                          NumberOfComments="post.EntityStat.NumberOfComments"
+                          NumberOfViews="post.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@post.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="post.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(post)"
+                          EditPostUrlTemplate="@NewsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@NewsRoutingConstants.DeletePostUrlTemplate"
+                          ShowReactions="true"
+                          ShowSocialLinks="true"
+                          ShowNumberOfViews="true"
+                          ShowNumberOfComments="true">
+            <AdditionalHeaderContent>
+                <PrintNewsRedirect DailyNewsItem="post"/>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+                <PrintNewsThumb DailyNewsItem="post"/>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    }
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="Posts!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

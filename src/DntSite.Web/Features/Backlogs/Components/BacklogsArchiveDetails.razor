@@ -1,0 +1,67 @@
+@using DntSite.Web.Features.Backlogs.Entities
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(BacklogsRoutingConstants.BacklogsDetailsBacklogId)]
+
+<DntLoading IsLoading="@(_backlogs is null || CurrentPost is null)">
+    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+
+    <DntPageSeo Description="@CurrentPost.Description"
+                Title="@CurrentPost.Title"
+                OpenSearchUrl="@ApiUrlsRoutingConstants.OpenSearch.HttpGet.RenderOpenSearch"
+                Tags="@GetTags()"
+                AuthorName="@CurrentPost.User?.FriendlyName"
+                DateModified="@ModifiedAt"
+                DatePublished="CurrentPost.Audit.CreatedAt"
+                SiteName="@ApplicationState.AppSetting?.BlogName"
+                YourTwitterHandle=""
+                TotalRaters="CurrentPost.Rating.TotalRaters"
+                AverageRating="CurrentPost.Rating.AverageRating"
+                ImageDescription="@CurrentPost.Title"
+                ImageUrl="@CurrentPostImageUrl"
+                RssUrl=""
+                SiteMapUrl="@ApiUrlsRoutingConstants.Sitemap.HttpAny.Get"/>
+
+    <InjectLastAndNextPostLinks
+        PostUrlTemplate="@BacklogsRoutingConstants.PostUrlTemplate"
+        LastPostId="_backlogs!.PreviousItem?.Id"
+        LastPostTitle="@_backlogs.PreviousItem?.Title"
+        NextPostId="_backlogs.NextItem?.Id"
+        NextPostTitle="@_backlogs.NextItem?.Title"/>
+
+    <ShowBlogPostItem TReactionEntity="BacklogReaction"
+                      TForeignKeyEntity="Backlog"
+                      SiteName="@ApplicationState.AppSetting?.BlogName"
+                      CommentsUrlTemplate="@BacklogsRoutingConstants.CommentsUrlTemplate"
+                      PostUrlTemplate="@BacklogsRoutingConstants.PostUrlTemplate"
+                      PostTagUrlTemplate="@BacklogsRoutingConstants.PostTagUrlTemplate"
+                      ShowBriefDescription="false"
+                      ShowTags="true"
+                      ShowCommentsButton="false"
+                      ShowNumberOfComments="false"
+                      Id="CurrentPost.Id"
+                      Body="@CurrentPost.Description"
+                      Reactions="CurrentPost.Reactions"
+                      Tags="@GetTags()"
+                      Title="@CurrentPost.Title"
+                      BriefDescription="@CurrentPost.Description"
+                      CreatedAt="CurrentPost.Audit.CreatedAt"
+                      RecordUser="CurrentPost.User"
+                      NumberOfComments="CurrentPost.EntityStat.NumberOfComments"
+                      NumberOfViews="CurrentPost.EntityStat.NumberOfViews"
+                      ReadingTimeMinutes="0"
+                      CreatedByUserAgent="@CurrentPost.Audit.CreatedByUserAgent"
+                      NumberOfViewsFromFeed="CurrentPost.EntityStat.NumberOfViewsFromFeed"
+                      CanUserDeleteThisPost="CanUserDeleteThisPost"
+                      CanUserEditThisPost="CanUserEditThisPost"
+                      EditPostUrlTemplate="@BacklogsRoutingConstants.EditPostUrlTemplate"
+                      DeletePostUrlTemplate="@BacklogsRoutingConstants.DeletePostUrlTemplate">
+        <AdditionalHeaderContent>
+        </AdditionalHeaderContent>
+        <AdditionalBodyContent>
+            <BacklogActionStat Model="BacklogStatModel"/>
+        </AdditionalBodyContent>
+        <AfterFooterContent>
+            <BacklogActionForm Model="BacklogStatModel"/>
+        </AfterFooterContent>
+    </ShowBlogPostItem>
+</DntLoading>

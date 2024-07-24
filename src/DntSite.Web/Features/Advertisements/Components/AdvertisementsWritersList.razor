@@ -1,0 +1,23 @@
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(AdvertisementsRoutingConstants.AdvertisementsWriters)]
+@attribute [Route(AdvertisementsRoutingConstants.AdvertisementsWritersPage)]
+@attribute [Route(AdvertisementsRoutingConstants.AdvertisementsWritersName)]
+@attribute [Route(AdvertisementsRoutingConstants.AdvertisementsWritersNamePage)]
+
+@if (HasUserFriendlyName)
+{
+    <ShowAdvertisementsArchiveList Posts="_blogPosts"
+                                   CurrentPage="CurrentPage"
+                                   ItemsPerPage="PostItemsPerPage"
+                                   BasePath="@BasePath"
+                                   MainTitle="@MainTitle"/>
+}
+else
+{
+    <WritersList MainTitle="@MainTitle"
+                 CurrentPage="CurrentPage"
+                 ItemsPerPage="PostItemsPerPage"
+                 TotalItemCount="@_totalUsersCount"
+                 BasePath="@BasePath"
+                 Users="_users"/>
+}

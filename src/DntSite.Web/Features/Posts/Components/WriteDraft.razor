@@ -1,0 +1,118 @@
+﻿@attribute [Route(PostsRoutingConstants.WriteDraft)]
+@attribute [Route(PostsRoutingConstants.WriteDraftEditEditId)]
+@attribute [Route(PostsRoutingConstants.WriteDraftDeleteDeleteId)]
+
+<DntSitePageTitle PageTitle="تهیه پیش نویس مقالات"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        تهیه پیش نویس مقالات
+    </FrameHeader>
+    <FrameBody>
+        <WriteDraftHelp/>
+
+        <EditForm Model="WriteDraftModel" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(WriteDraft)" Enhance>
+            <DataAnnotationsValidator/>
+
+            @if (ApplicationState.CurrentUser?.IsAdmin == true)
+            {
+                <DntInputPersianDate LabelName="تاریخ انتشار"
+                                     @bind-Year="WriteDraftModel.PersianDateYear"
+                                     @bind-Month="WriteDraftModel.PersianDateMonth"
+                                     @bind-Day="WriteDraftModel.PersianDateDay"
+                                     FromYear="1403"
+                                     ToYear="1410"/>
+
+                <DntInputTime
+                    MinutesSteps="5"
+                    @bind-Hour="@WriteDraftModel.Hour"
+                    @bind-Minute="@WriteDraftModel.Minute"
+                    LabelName="زمان انتشار"
+                    HourLabel="ساعت"
+                    MinuteLabel="دقیقه"
+                    FieldIcon="@DntBootstrapIcons.BiClock"/>
+            }
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="WriteDraftModel.Title"/>
+
+            <DntHtmlEditor @bind-Value="WriteDraftModel.ArticleBody"
+                           LabelName=""
+                           ShowLabel="false"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="1000px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiStar"
+                            @bind-Value="WriteDraftModel.NumberOfRequiredPoints"/>
+
+            <DntInputTag
+                FieldIcon="@DntBootstrapIcons.BiTag"
+                FieldAddButtonIcon="@DntBootstrapIcons.BiPlusCircle"
+                LabelName="برچسب‌ها"
+                FieldAddButtonTitle="افزودن تگ به لیست"
+                FieldRemoveButtonTitle="حذف تگ از لیست"
+                AutoCompleteDataList="AutoCompleteDataList"
+                @bind-InputTags="WriteDraftModel.Tags"/>
+
+            <DntInputCheckBox @bind-Value="WriteDraftModel.IsReady"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>
+
+@if (ApplicationState.CurrentUser?.IsAdmin == true && EditId.HasValue)
+{
+    <DntCardFrame MarginTop="3">
+        <FrameHeader>
+            تبدیل به لینک اشتراکی
+        </FrameHeader>
+        <FrameBody>
+            <EditForm Model="ConvertToLinkModel" method="post" OnValidSubmit="PerformConvertToLinkAsync"
+                      FormName="ConvertToLink" Enhance>
+                <DataAnnotationsValidator/>
+
+                <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                              FieldIcon="@DntBootstrapIcons.BiLink"
+                              @bind-Value="ConvertToLinkModel.Url"/>
+
+                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+            </EditForm>
+        </FrameBody>
+    </DntCardFrame>
+
+    <DntCardFrame MarginTop="3">
+        <FrameHeader>
+            تبدیل به نظر تکمیلی
+        </FrameHeader>
+        <FrameBody>
+            <EditForm Model="ConvertToCommentModel" method="post" OnValidSubmit="PerformConvertToCommentAsync"
+                      FormName="ConvertToComment" Enhance>
+                <DataAnnotationsValidator/>
+
+                <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                                FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                                @bind-Value="ConvertToCommentModel.ReplyPostId"/>
+
+                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+            </EditForm>
+        </FrameBody>
+    </DntCardFrame>
+}

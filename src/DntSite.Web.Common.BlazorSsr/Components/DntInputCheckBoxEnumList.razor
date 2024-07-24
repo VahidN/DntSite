@@ -1,0 +1,32 @@
+@typeparam TEnum where TEnum : Enum
+
+<div class="row mb-@InputRowMarginBottom">
+    <label class="col-form-label col-lg-@LabelColumnWidth" for="@SelectedValuesHtmlField.HtmlFieldName">
+        @if (!string.IsNullOrWhiteSpace(LabelName))
+        {
+            @LabelName
+        }
+        else
+        {
+            @SelectedValuesExpression.GetDisplayName()
+        }
+    </label>
+    <div class="col-lg-@InputCheckBoxListColumnWidth">
+        @foreach (var item in _items)
+        {
+            <div class="form-check form-switch mb-@InputRowMarginBottom">
+                <input type="checkbox"
+                       checked=@IsChecked(item.Value)
+                       class="form-check-input"
+                       name="@SelectedValuesHtmlField.HtmlFieldName"
+                       value="@item.Value"
+                       disabled=@IsReadOnly readonly=@IsReadOnly @attributes="@AdditionalAttributes"/>
+                <label class="form-check-label" for="@SelectedValuesHtmlField.HtmlFieldName">@item.Key</label>
+            </div>
+        }
+        @if (SelectedValuesExpression is not null)
+        {
+            <ValidationMessage For="@SelectedValuesExpression"/>
+        }
+    </div>
+</div>

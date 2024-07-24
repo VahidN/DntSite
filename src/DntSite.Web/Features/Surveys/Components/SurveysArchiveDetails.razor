@@ -1,0 +1,111 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Surveys.Entities
+@attribute [Route(SurveysRoutingConstants.SurveysArchiveDetailsSurveyId)]
+
+<DntLoading IsLoading="@(_surveys is null || CurrentPost is null || _surveyComments is null)">
+    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+
+    <DntPageSeo Description="@CurrentPost.Description"
+                Title="@CurrentPost.Title"
+                OpenSearchUrl="@ApiUrlsRoutingConstants.OpenSearch.HttpGet.RenderOpenSearch"
+                Tags="@GetTags()"
+                AuthorName="@CurrentPost.User?.FriendlyName"
+                DateModified="@ModifiedAt"
+                DatePublished="CurrentPost.Audit.CreatedAt"
+                SiteName="@ApplicationState.AppSetting?.BlogName"
+                YourTwitterHandle=""
+                TotalRaters="CurrentPost.Rating.TotalRaters"
+                AverageRating="CurrentPost.Rating.AverageRating"
+                ImageDescription="@CurrentPost.Title"
+                ImageUrl="@CurrentPostImageUrl"
+                RssUrl=""
+                SiteMapUrl="@ApiUrlsRoutingConstants.Sitemap.HttpAny.Get"/>
+
+    <InjectLastAndNextPostLinks
+        PostUrlTemplate="@SurveysRoutingConstants.PostUrlTemplate"
+        LastPostId="_surveys!.PreviousItem?.Id"
+        LastPostTitle="@_surveys.PreviousItem?.Title"
+        NextPostId="_surveys.NextItem?.Id"
+        NextPostTitle="@_surveys.NextItem?.Title"/>
+
+    <ShowBlogPostItem TReactionEntity="SurveyReaction"
+                      TForeignKeyEntity="Survey"
+                      SiteName="@ApplicationState.AppSetting?.BlogName"
+                      CommentsUrlTemplate="@SurveysRoutingConstants.CommentsUrlTemplate"
+                      PostUrlTemplate="@SurveysRoutingConstants.PostUrlTemplate"
+                      PostTagUrlTemplate="@SurveysRoutingConstants.PostTagUrlTemplate"
+                      ShowBriefDescription="false"
+                      ShowTags="true"
+                      ShowCommentsButton="true"
+                      Id="CurrentPost.Id"
+                      Body="@CurrentPost.Description"
+                      Reactions="CurrentPost.Reactions"
+                      Tags="@GetTags()"
+                      Title="@CurrentPost.Title"
+                      BriefDescription="@CurrentPost.Description"
+                      CreatedAt="CurrentPost.Audit.CreatedAt"
+                      RecordUser="CurrentPost.User"
+                      NumberOfComments="CurrentPost.EntityStat.NumberOfComments"
+                      NumberOfViews="CurrentPost.EntityStat.NumberOfViews"
+                      ShowNumberOfViews="false"
+                      ReadingTimeMinutes="0"
+                      CreatedByUserAgent="@CurrentPost.Audit.CreatedByUserAgent"
+                      NumberOfViewsFromFeed="CurrentPost.EntityStat.NumberOfViewsFromFeed"
+                      CanUserDeleteThisPost="CanUserDeleteThisPost"
+                      CanUserEditThisPost="CanUserEditThisPost"
+                      EditPostUrlTemplate="@SurveysRoutingConstants.EditPostUrlTemplate"
+                      DeletePostUrlTemplate="@SurveysRoutingConstants.DeletePostUrlTemplate">
+        <AdditionalHeaderContent>
+        </AdditionalHeaderContent>
+        <AdditionalBodyContent>
+            <SurveyForm Survey="CurrentPost" HandleVoteAction="HandleVoteActionAsync"/>
+        </AdditionalBodyContent>
+    </ShowBlogPostItem>
+
+    <DntCardFrame MarginTop="3" MarginBottom="3">
+        <FrameHeader>
+            <span name="results" id="results">نتایج نظر سنجی</span>
+        </FrameHeader>
+        <FrameBody>
+            <SurveyResults Survey="CurrentPost"/>
+        </FrameBody>
+    </DntCardFrame>
+
+    <span id="comments"></span>
+
+    <ManageBlogPostCommentItem
+        IsReplyToPost="true"
+        Body="@null"
+        CommentId="@null"
+        CreatedAt="@null"
+        PostId="@CurrentPost.Id"
+        RecordUser="@null"
+        UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+        UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+        HandleCommentAction="HandleCommentActionAsync"/>
+
+    <DntTreeView
+        TRecord="SurveyComment"
+        Items="_surveyComments"
+        ChildrenSelector="m => m.Children"
+        style="list-style: none;">
+        <ItemTemplate Context="record">
+            <ShowBlogPostCommentItem
+                PostId="@CurrentPost.Id"
+                CommentId="@record.Id"
+                Body="@record.Body"
+                Reactions="@record.Reactions"
+                RecordUser="@record.User"
+                CreatedAt="@record.Audit.CreatedAt"
+                CreatedByUserAgent="@record.Audit.CreatedByUserAgent"
+                TReactionEntity="SurveyCommentReaction"
+                TForeignKeyEntity="SurveyComment"
+                HandleCommentAction="HandleCommentActionAsync"
+                UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"/>
+        </ItemTemplate>
+        <EmptyContentTemplate>
+            <DntAuthorizedMessageBox/>
+        </EmptyContentTemplate>
+    </DntTreeView>
+</DntLoading>

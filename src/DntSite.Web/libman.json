@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/lib/bootstrap"
+    },
+    {
+      "library": "bootstrap-icons@1.11.3",
+      "destination": "wwwroot/lib/bootstrap-icons"
+    },
+    {
+      "library": "quill@2.0.2",
+      "destination": "wwwroot/lib/quill"
+    },
+    {
+      "library": "@highlightjs/cdn-assets@11.10.0",
+      "destination": "wwwroot/lib/highlightjs/cdn-assets"
+    }
+  ]
+}

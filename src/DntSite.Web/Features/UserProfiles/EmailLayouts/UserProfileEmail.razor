@@ -1,0 +1,34 @@
+﻿@using DntSite.Web.Features.UserProfiles.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    تنظیمات حساب کاربری شما با مشخصات ذیل ویرایش گردید:
+    <br/>
+    <div align="center" dir="rtl" style="font-family: Tahoma; ">
+        نام کاربری (جهت لاگین) : @Model.Username
+        <br/>
+        نام مستعار (جهت نمایش در سایت) : @Model.FriendlyName
+        <br/>
+        کلمه عبور جدید:
+        <span dir="ltr">@Model.OriginalPassword</span>
+        <br/>
+        <br/>
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public UserProfileEmailModel Model { set; get; } = null!;
+
+}

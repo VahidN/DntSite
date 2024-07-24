@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="DNTCommon.Web.Core"/>
+    <Using Include="DNTPersianUtils.Core"/>
+    <Using Include="Microsoft.AspNetCore.Components"/>
+    <Using Include="Microsoft.AspNetCore.Mvc"/>
+    <Using Include="Microsoft.AspNetCore.Http"/>
+    <Using Include="Microsoft.AspNetCore.Authorization"/>
+
+    <Using Include="DntSite.Web.Common.BlazorSsr.Models"/>
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="DNTPersianUtils.Core"/>
+    <PackageReference Include="DNTCommon.Web.Core"/>
+  </ItemGroup>
+</Project>

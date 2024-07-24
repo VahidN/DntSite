@@ -1,0 +1,40 @@
+@attribute [Route(PrivateMessagesRoutingConstants.PrivateMessagesViewer)]
+@attribute [Route(PrivateMessagesRoutingConstants.PrivateMessagesViewerPageCurrentPage)]
+
+
+<DntSitePageTitle PageTitle="کنترل پیام‌های خصوصی سیستم"/>
+
+<DntLoading IsLoading="@(_privateMessages is null)">
+    @foreach (var privateMessage in _privateMessages!.Data)
+    {
+        <DntCard>
+            <Header>
+                <div class="author me-3">
+                    <DntPrintUserBrowser BrowserName="@privateMessage.Audit.CreatedByUserAgent"/>
+                    از طرف:
+                    <DntSite.Web.Features.UserProfiles.Components.PrintUser User="@privateMessage.User" IsNavLink="false"/>
+                    به:
+                    <DntSite.Web.Features.UserProfiles.Components.PrintUser User="@privateMessage.ToUser" IsNavLink="false"/>
+                </div>
+            </Header>
+            <Body>
+            <div class="main mb-4">
+                @privateMessage.Body.HtmlRaw()
+            </div>
+            </Body>
+            <Footer>
+                <div class="d-flex align-items-center justify-content-start flex-wrap mb-2">
+                    <div class="updated text-muted me-3">
+                        <span class="@DntBootstrapIcons.BiCalendar me-1 p-1" aria-hidden="true"></span>
+                        @privateMessage.Audit.CreatedAt.ToFriendlyPersianDateTextify().ToPersianNumbers()
+                    </div>
+                </div>
+            </Footer>
+        </DntCard>
+    }
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="_privateMessages!.TotalItems"
+                        BasePath="@PrivateMessagesRoutingConstants.PrivateMessagesViewer"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

@@ -1,0 +1,27 @@
+﻿@if (ReadingTimeMinutes > 0)
+{
+    <div class="row mt-2">
+        <div class="col-md-6" align="right">
+            <div class="font_size">
+                <span class="text-muted">اندازه‌ی قلم متن</span>
+                <button type="button" id="btn_plus" title="افزایش اندازه‌ی قلم" class="btn btn-sm">
+                    <i class="@DntBootstrapIcons.BiPlusCircle"></i>
+                </button>
+                <button type="button" id="btn_minus" title="کاهش اندازه‌ی قلم" class="btn btn-sm">
+                    <i class="@DntBootstrapIcons.BiDashCircle"></i>
+                </button>
+                <button type="button" id="btn_reset" title="بازگشت به حالت نخست" class="btn btn-sm">
+                    <i class="@DntBootstrapIcons.BiCheckCircle"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6" align="left">
+            <i class="@DntBootstrapIcons.BiClock"></i>
+            <span class="text-muted">
+                تخمین مدت زمان مطالعه‌ی مطلب:
+                <span>@ReadingTimeMinutes.NumberToText(Language.Persian) دقیقه </span>
+            </span>
+        </div>
+    </div>
+    <hr class="mb-4"/>
+}

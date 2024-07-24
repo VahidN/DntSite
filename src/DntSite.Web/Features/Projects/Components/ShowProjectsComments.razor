@@ -1,0 +1,41 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Projects.Entities
+@attribute [Route(ProjectsRoutingConstants.ProjectsComments)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsCommentsPageCurrentPage)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsCommentsUserFriendlyName)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsCommentsUserFriendlyNamePageCurrentPage)]
+@attribute [Route(ProjectsRoutingConstants.ProjectCommentsProjectId)]
+@attribute [Route(ProjectsRoutingConstants.ProjectCommentsProjectIdPageCurrentPage)]
+
+
+<DntSitePageTitle PageTitle="@_pageTitle"/>
+
+<DntLoading IsLoading="@(_posts is null)">
+    @foreach (var comment in _posts!.Data)
+    {
+        <ShowBlogPostCommentItem
+            PostId="@comment.ParentId"
+            CommentId="@comment.Id"
+            Body="@comment.Body"
+            Reactions="@comment.Reactions"
+            RecordUser="@comment.User"
+            CreatedAt="@comment.Audit.CreatedAt"
+            CreatedByUserAgent="@comment.Audit.CreatedByUserAgent"
+            TReactionEntity="ProjectIssueCommentReaction"
+            TForeignKeyEntity="ProjectIssueComment"
+            ShowManageBlogPostCommentItem="false"
+            ShowPleaseVoteMessage="false"
+            PostAbsoluteUrl="@GetPostAbsoluteUrl(comment)"
+            ShowPostTitle="true"
+            PostTitle="@comment.Parent.Title">
+            <AdditionalInfoContent>
+                <ProjectUrl Project="comment.Parent.Project"/>
+            </AdditionalInfoContent>
+        </ShowBlogPostCommentItem>
+    }
+
+    <DntSimplePaginator ItemsPerPage="PostItemsPerPage"
+                        TotalItemCount="_posts!.TotalItems"
+                        BasePath="@GetBasePath()"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

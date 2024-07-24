@@ -1,0 +1,8 @@
+@if (Advertisement?.DueDate is not null)
+{
+    <span aria-hidden="true" class="@DntBootstrapIcons.BiCalendar"></span>
+    <span class="badge bg-info">تاریخ انقضاء</span>
+    <span class="badge @(Advertisement.DueDate.Value > DateTime.UtcNow ? "bg-info" : "bg-warning") ms-1">
+        @Advertisement.DueDate.Value.ToFriendlyPersianDateTextify().ToPersianNumbers()
+    </span>
+}

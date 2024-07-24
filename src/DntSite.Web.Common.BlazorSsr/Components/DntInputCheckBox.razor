@@ -1,0 +1,21 @@
+<div class="form-check form-switch mb-@InputRowMarginBottom">
+    <InputCheckbox class="form-check-input" type="checkbox"
+                   ValueExpression="@ValueExpression"
+                   Value="@Value"
+                   ValueChanged="@ValueChanged"
+                   @attributes="@AdditionalAttributes"/>
+    <label class="form-check-label" for="@ValueField.HtmlFieldName">
+        @if (!string.IsNullOrWhiteSpace(LabelName))
+        {
+            @LabelName
+        }
+        else
+        {
+            @ValueExpression.GetDisplayName()
+        }
+    </label>
+    @if (ValueExpression is not null)
+    {
+        <ValidationMessage For="@ValueExpression"/>
+    }
+</div>

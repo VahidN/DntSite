@@ -1,0 +1,32 @@
+<CascadingValue Value="@(this)" IsFixed="@true">
+    @if (_isModalVisible && !string.IsNullOrWhiteSpace(_message))
+    {
+        <div @key="@Hash" id="@MainDivId" class="modal fade show d-block"
+             tabindex="-1" @attributes="AdditionalAttributes">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" dir="rtl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">@_title</h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                data-dnt-btn-close="@MainDivId"
+                                aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <DntMessageBox IsVisible="true"
+                                       Type="_alertType"
+                                       MarginBottom="0"
+                                       MarginTop="0"
+                                       ShowCloseButton="false">
+                            @_message
+                        </DntMessageBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+    }
+    @ChildContent
+</CascadingValue>

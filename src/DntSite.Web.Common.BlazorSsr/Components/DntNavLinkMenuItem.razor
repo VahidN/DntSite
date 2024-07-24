@@ -1,0 +1,18 @@
+@if (IsVisible)
+{
+    @if (IsDivider)
+    {
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+    }
+    else
+    {
+        <li>
+            <NavLink class="dropdown-item" href="@Url" Match="NavLinkMatch.All">
+                <i class="@CssIcon" aria-hidden="true"></i>
+                @ChildContent
+            </NavLink>
+        </li>
+    }
+}

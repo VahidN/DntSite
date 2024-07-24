@@ -1,0 +1,35 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Surveys.Entities
+@attribute [Route(SurveysRoutingConstants.SurveysComments)]
+@attribute [Route(SurveysRoutingConstants.SurveysCommentsPageCurrentPage)]
+@attribute [Route(SurveysRoutingConstants.SurveysCommentsUserFriendlyName)]
+@attribute [Route(SurveysRoutingConstants.SurveysCommentsUserFriendlyNamePageCurrentPage)]
+
+
+<DntSitePageTitle PageTitle="@MainTitle"/>
+
+<DntLoading IsLoading="@(_posts is null)">
+    @foreach (var comment in _posts!.Data)
+    {
+        <ShowBlogPostCommentItem
+            PostId="@comment.ParentId"
+            CommentId="@comment.Id"
+            Body="@comment.Body"
+            Reactions="@comment.Reactions"
+            RecordUser="@comment.User"
+            CreatedAt="@comment.Audit.CreatedAt"
+            CreatedByUserAgent="@comment.Audit.CreatedByUserAgent"
+            TReactionEntity="SurveyCommentReaction"
+            TForeignKeyEntity="SurveyComment"
+            ShowManageBlogPostCommentItem="false"
+            ShowPleaseVoteMessage="false"
+            PostAbsoluteUrl="@GetPostAbsoluteUrl(comment)"
+            ShowPostTitle="true"
+            PostTitle="@comment.Parent.Title"/>
+    }
+
+    <DntSimplePaginator ItemsPerPage="PostItemsPerPage"
+                        TotalItemCount="_posts!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

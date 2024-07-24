@@ -1,0 +1,9 @@
+﻿@attribute [Route(PostsRoutingConstants.ShowDraftShowId)]
+
+<DntSitePageTitle PageTitle="بازبینی پیش نویس"/>
+
+<SimpleDraftsList Title="بازبینی پیش نویس قبل از انتشار نهایی"
+                  TitleUrl="@ShowDraftUrl"
+                  ShowBriefDescription="false"
+                  BlogPostDrafts="_blogPostDrafts"
+                  CurrentUser="_currentUser"/>

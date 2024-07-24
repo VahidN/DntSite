@@ -1,0 +1,283 @@
+﻿@if (User is not null)
+{
+    <DntCardFrame MarginTop="MarginTop">
+    <FrameHeader>
+        <PrintUser User="User"/>
+    </FrameHeader>
+    <FrameBody>
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-group list-group-flush">
+                <DntListGroupItem Title="عضو شماره" IsTitleBold="@true"
+                                  GlyphIcon="@DntBootstrapIcons.BiPerson"
+                                  BadgeValue="User.Id"
+                                  BadgeValueBgColor="TextBgColor.Success"/>
+
+                <DntListGroupItem Title="تاریخ عضویت" IsTitleBold="@true"
+                                  GlyphIcon="@DntBootstrapIcons.BiClock">
+                    <span dir="ltr">
+                        <abbr title="@User.Audit.CreatedAt.ToFriendlyPersianDateTextify()">
+                            @User.Audit.CreatedAt.ToShortPersianDateString().ToPersianNumbers()
+                        </abbr>
+                    </span>
+                </DntListGroupItem>
+
+                <DntListGroupItem Title="جمع امتیازها" IsTitleBold="@true"
+                                  IsVisible="@(User.Rating.TotalRating > 0)"
+                                  GlyphIcon="@DntBootstrapIcons.BiStar"
+                                  BadgeValue="User.Rating.TotalRating"
+                                  BadgeValueBgColor="TextBgColor.Success"/>
+
+                <DntListGroupItem Title="سن" IsTitleBold="@true"
+                                  IsVisible="User.DateOfBirth.HasValue"
+                                  GlyphIcon="@DntBootstrapIcons.BiCalendar">
+                    <abbr title="@User.DateOfBirth?.ToString(format: "yyyy/MM/dd", CultureInfo.InvariantCulture), @User.DateOfBirth?.ToShortPersianDateString().ToPersianNumbers()">
+                        @User.DateOfBirth?.GetAge().ToPersianNumbers()
+                    </abbr>
+                </DntListGroupItem>
+
+                <DntListGroupItem Title="آدرس ایمیل" IsTitleBold="@true"
+                                  IsVisible="User.IsEmailPublic"
+                                  GlyphIcon="@DntBootstrapIcons.BiEnvelope">
+                    <img src="@(ApiUrlsRoutingConstants.File.HttpAny.EmailToImage)?id=@(User.Id)" alt="@User.FriendlyName Email"/>
+                </DntListGroupItem>
+
+                <DntListGroupItem Title="محل اقامت" IsTitleBold="@true"
+                                  IsVisible="@(!string.IsNullOrWhiteSpace(User.Location))"
+                                  GlyphIcon="@DntBootstrapIcons.BiHouse">
+                    @User.Location
+                </DntListGroupItem>
+
+                <DntListGroupItem Title="آخرین مراجعه" IsTitleBold="@true"
+                                  IsVisible="@(User.LastVisitDateTime != null)"
+                                  GlyphIcon="@DntBootstrapIcons.BiCalendarCheck">
+                    @(User.LastVisitDateTime?.ToFriendlyPersianDateTextify().ToPersianNumbers())
+                </DntListGroupItem>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-group list-group-flush">
+                <DntListGroupItem IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.StackOverflowId))"
+                                  LeftAlignChildContent="@false">
+                    <a itemprop="social" target="_blank" href="https://stackoverflow.com/users/@(User.UserSocialNetwork?.StackOverflowId)">
+                        <img src="https://stackoverflow.com/users/flair/@(User.UserSocialNetwork?.StackOverflowId).png" width="208" height="58" alt="profile"/>
+                    </a>
+                </DntListGroupItem>
+
+                <DntListGroupItem Title="جویای کار" IsTitleBold="@true"
+                                  IsVisible="@(User.IsJobsSeeker)"
+                                  GlyphIcon="@DntBootstrapIcons.BiSearch"/>
+
+                <DntListGroupItem Title="شبکه‌های اجتماعی" IsTitleBold="@true" GlyphIcon="@DntBootstrapIcons.BiWifi" IsVisible="HasSocialNetworkItem">
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiLinkedin"
+                        Height="16" Width="16" AltName="LinkedIn"
+                        Url="@GetEscapedUrl(href: "https://ir.linkedin.com/in/", User.UserSocialNetwork?.LinkedInProfileId)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.LinkedInProfileId))"/>
+
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiTwitter"
+                        Height="16" Width="16" AltName="Twitter"
+                        Url="@GetEscapedUrl(href: "https://twitter.com/", User.UserSocialNetwork?.TwitterName)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.TwitterName))"/>
+
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiFacebook"
+                        Height="16" Width="16" AltName="facebook"
+                        Url="@GetEscapedUrl(href: "https://www.facebook.com/", User.UserSocialNetwork?.FacebookName)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.FacebookName))"/>
+
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiTelegram"
+                        Height="16" Width="16" AltName="Telegram"
+                        Url="@GetEscapedUrl(href: "https://telegram.me/", User.UserSocialNetwork?.TelegramId)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.TelegramId))"/>
+
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiGithub"
+                        Height="16" Width="16" AltName="Github"
+                        Url="@GetEscapedUrl(href: "https://github.com/", User.UserSocialNetwork?.GithubId)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.GithubId))"/>
+
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiMicrosoft"
+                        Height="16" Width="16" AltName="Nuget"
+                        Url="@GetEscapedUrl(href: "https://nuget.org/profiles/", User.UserSocialNetwork?.NugetId)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.NugetId))"/>
+
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiPuzzle"
+                        Height="16" Width="16" AltName="CodeProject"
+                        Url="@GetEscapedUrl(href: "https://www.codeproject.com/Articles/", User.UserSocialNetwork?.CodeProjectId)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.CodeProjectId))"/>
+
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiSourceforge"
+                        Height="16" Width="16" AltName="Sourceforge"
+                        Url="@GetEscapedUrl(href: "https://sourceforge.net/users/", User.UserSocialNetwork?.SourceforgeId)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.SourceforgeId))"/>
+
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiYoutube"
+                        Height="16" Width="16" AltName="YouTube"
+                        Url="@GetEscapedUrl(href: "https://www.youtube.com/", User.UserSocialNetwork?.YouTubeId)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.YouTubeId))"/>
+
+                    <DntIconLink
+                        GlyphIcon="@DntBootstrapIcons.BiReddit"
+                        Height="16" Width="16" AltName="Reddit"
+                        Url="@GetEscapedUrl(href: "https://www.reddit.com/user/", User.UserSocialNetwork?.RedditId)"
+                        itemprop="social"
+                        IsExternal="true"
+                        IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.RedditId))"/>
+
+                </DntListGroupItem>
+
+                <DntListGroupItem IsVisible="@(!string.IsNullOrWhiteSpace(GetUserHomePage()))"
+                                  LeftAlignChildContent="@false"
+                                  GlyphIcon="@DntBootstrapIcons.BiHouseDoor">
+                    <DntLink Url="@GetUserHomePage()" IsExternal="@true">
+                        صفحه خانگی
+                    </DntLink>
+                </DntListGroupItem>
+
+                <DntListGroupItem GlyphIcon="@DntBootstrapIcons.BiChat" LeftAlignChildContent="@false">
+                    <DntLink Url="@GetEscapedUrl(PrivateMessagesRoutingConstants.SendPrivateMessageBase, User.Id)">
+                        ارسال پیام خصوصی
+                    </DntLink>
+                </DntListGroupItem>
+
+                <DntListGroupItem LeftAlignChildContent="@false"
+                                  IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.CoffeebedeId))">
+                    <DntLink IsExternal="@true" Url="@GetEscapedUrl(href: "https://www.coffeete.ir/", User.UserSocialNetwork?.CoffeebedeId)">
+                        <img src="images/coffeebede.svg" width="200px" alt="یک قهوه من رو مهمون کن!"/>
+                    </DntLink>
+                </DntListGroupItem>
+            </ul>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-group list-group-flush">
+                <DntLinkedOrderedListItem Title="مطالب" GlyphIcon=""
+                                          Url="@GetEscapedUrl(PostsRoutingConstants.PostsWriters, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfPosts"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfPosts > 0)"/>
+
+                <DntLinkedOrderedListItem Title="نظرات" GlyphIcon=""
+                                          Url="@GetEscapedUrl(PostsRoutingConstants.PostsComments, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfComments"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfComments > 0)"/>
+
+                <DntLinkedOrderedListItem Title="اشتراک‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(NewsRoutingConstants.NewsWriters, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfLinks"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfLinks > 0)"/>
+
+                <DntLinkedOrderedListItem Title="نظرسنجی‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(SurveysRoutingConstants.SurveysWriters, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfSurveys"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfSurveys > 0)"/>
+
+                <DntLinkedOrderedListItem Title="آگهی‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(AdvertisementsRoutingConstants.AdvertisementsWriters, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfAdvertisements"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfAdvertisements > 0)"/>
+
+                <DntLinkedOrderedListItem Title="دوره‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(CoursesRoutingConstants.CoursesWriters, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfCourses"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfCourses > 0)"/>
+
+                <DntLinkedOrderedListItem Title="مسیرهای آموزشی" GlyphIcon=""
+                                          Url="@GetEscapedUrl(RoadMapsRoutingConstants.LearningPathsWriters, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfLearningPaths"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfLearningPaths > 0)"/>
+
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-group list-group-flush">
+                <DntLinkedOrderedListItem Title="پیشنهاد‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(BacklogsRoutingConstants.BacklogsWriters, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfBacklogs"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfBacklogs > 0)"/>
+
+                <DntLinkedOrderedListItem Title="نظرات اشتراک‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(NewsRoutingConstants.NewsComments, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfLinksComments"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfLinksComments > 0)"/>
+
+                <DntLinkedOrderedListItem Title="پروژه‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(ProjectsRoutingConstants.ProjectsWriters, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfProjects"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfProjects > 0)"/>
+
+                <DntLinkedOrderedListItem Title="بازخوردهای پروژه‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(ProjectsRoutingConstants.ProjectsFeedbacks, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfProjectsFeedbacks"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfProjectsFeedbacks > 0)"/>
+
+                <DntLinkedOrderedListItem Title="نظرات پروژه‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(ProjectsRoutingConstants.ProjectsComments, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfProjectsComments"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfProjectsComments > 0)"/>
+
+                <DntLinkedOrderedListItem Title="نظرات نظرسنجی‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(SurveysRoutingConstants.SurveysComments, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfSurveyComments"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfSurveyComments > 0)"/>
+
+                <DntLinkedOrderedListItem Title="نظرات آگهی‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(AdvertisementsRoutingConstants.AdvertisementsComments, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfAdvertisementComments"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfAdvertisementComments > 0)"/>
+            </ul>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row d-flex align-items-center" dir="@User.Description.GetDir()">
+        @User.Description.HtmlRaw()
+    </div>
+
+    <UserProfileManager User="User"/>
+    </FrameBody>
+    </DntCardFrame>
+}

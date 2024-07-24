@@ -1,0 +1,60 @@
+﻿@attribute [Route(NewsRoutingConstants.DailyLinks)]
+@attribute [Route(NewsRoutingConstants.WriteNews)]
+@attribute [Route(NewsRoutingConstants.WriteNewsEditEditId)]
+@attribute [Route(NewsRoutingConstants.WriteNewsDeleteDeleteId)]
+
+
+<DntSitePageTitle PageTitle="ارسال لینک‌های خبری"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ارسال یک لینک خبری
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="WriteNewsModel" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(WriteNews)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="WriteNewsModel.Title"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiShare"
+                          @bind-Value="WriteNewsModel.Url"/>
+
+            <DntHtmlEditor @bind-Value="WriteNewsModel.DescriptionText"
+                           LabelName="توضیحات"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputTag
+                FieldIcon="@DntBootstrapIcons.BiTag"
+                FieldAddButtonIcon="@DntBootstrapIcons.BiPlusCircle"
+                LabelName="برچسب‌ها"
+                FieldAddButtonTitle="افزودن تگ به لیست"
+                FieldRemoveButtonTitle="حذف تگ از لیست"
+                AutoCompleteDataList="AutoCompleteDataList"
+                @bind-InputTags="WriteNewsModel.Tags"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+
+        <WriteNewsHelp/>
+    </FrameBody>
+</DntCardFrame>

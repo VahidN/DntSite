@@ -1,0 +1,71 @@
+﻿@attribute [Route(SurveysRoutingConstants.WriteSurvey)]
+@attribute [Route(SurveysRoutingConstants.WriteSurveyEditEditId)]
+@attribute [Route(SurveysRoutingConstants.WriteSurveyDeleteDeleteId)]
+
+<DntSitePageTitle PageTitle="ارسال نظرسنجی‌"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ارسال یک نظرسنجی‌
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="WriteSurveyModel" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(WriteSurvey)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="WriteSurveyModel.Title"/>
+
+            <DntInputTextArea FieldIcon="@DntBootstrapIcons.BiCardChecklist"
+                              @bind-Value="WriteSurveyModel.VoteItems"
+                              OptionalLabel="(هر سطر یک گزینه)"/>
+
+            <DntInputCheckBox @bind-Value="WriteSurveyModel.AllowMultipleSelection"/>
+
+            <DntInputPersianDatePicker @bind-Value="WriteSurveyModel.ExpirationDate"
+                                       OptionalLabel="(اختیاری)"/>
+
+            <DntInputTime MinutesSteps="5"
+                          @bind-Hour="@WriteSurveyModel.Hour"
+                          @bind-Minute="@WriteSurveyModel.Minute"
+                          LabelName="زمان انقضاء"
+                          HourLabel="ساعت"
+                          MinuteLabel="دقیقه"
+                          FieldIcon="@DntBootstrapIcons.BiClock"
+                          OptionalLabel="(اختیاری)"/>
+
+            <DntHtmlEditor @bind-Value="WriteSurveyModel.Description"
+                           LabelName="توضیحات"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="100px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"
+                           OptionalLabel="(اختیاری)"/>
+
+            <DntInputTag
+                FieldIcon="@DntBootstrapIcons.BiTag"
+                FieldAddButtonIcon="@DntBootstrapIcons.BiPlusCircle"
+                LabelName="برچسب‌ها"
+                FieldAddButtonTitle="افزودن تگ به لیست"
+                FieldRemoveButtonTitle="حذف تگ از لیست"
+                AutoCompleteDataList="AutoCompleteDataList"
+                @bind-InputTags="WriteSurveyModel.Tags"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

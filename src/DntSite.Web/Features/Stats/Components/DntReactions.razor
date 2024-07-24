@@ -1,0 +1,105 @@
+﻿@typeparam TReactionEntity      where TReactionEntity : BaseReactionEntity<TForeignKeyEntity>, new()
+    @using DntSite.Web.Features.UserProfiles.Components
+    @typeparam TForeignKeyEntity      where TForeignKeyEntity : BaseAuditedInteractiveEntity
+
+<div class="d-flex flex-column" @attributes="AdditionalAttributes">
+    <div>
+        <EditForm Model="this" method="post"
+                  OnValidSubmit="OnValidSubmitAsync"
+                  FormName="@FormName"
+                  Enhance>
+            <input type="hidden" name="@nameof(FormId)" value="@Id"/>
+
+            <button type="submit" name="@nameof(Reaction)"
+                    value="@ReactionType.ThumbsUp" disabled="@AreReactionsDisabled"
+                    hidden="@(AreReactionsDisabled && ThumbsUpUsersCount == 0)"
+                    class="btn btn-outline-success btn-sm me-2" title="ابراز رضایتمندی">
+                <i class="@DntBootstrapIcons.BiHandThumbsUp"></i>
+                @if (ThumbsUpUsersCount > 0)
+                {
+                    <span class="ms-1">@ThumbsUpUsersCount.ToPersianNumbers()</span>
+                }
+            </button>
+
+            <button type="submit" name="@nameof(Reaction)"
+                    value="@ReactionType.ThumbsDown" disabled="@AreReactionsDisabled"
+                    hidden="@(AreReactionsDisabled && ThumbsDownUsersCount == 0)"
+                    class="btn btn-outline-danger btn-sm me-2" title="ابراز نارضایتمندی">
+                <i class="@DntBootstrapIcons.BiHandThumbsDown"></i>
+                @if (ThumbsDownUsersCount > 0)
+                {
+                    <span class="ms-1">@ThumbsDownUsersCount.ToPersianNumbers()</span>
+                }
+            </button>
+
+            @if (IsCurrentUserReacted && !AreReactionsDisabled)
+            {
+                <button type="submit" name="@nameof(Reaction)"
+                        value="@ReactionType.Cancel"
+                        class="btn btn-outline-secondary btn-sm me-2" title="لغو واکنش">
+                    <i class="@DntBootstrapIcons.BiDashCircle"></i>
+                    لغو
+                </button>
+            }
+
+            @if (TotalReactionsCount > 0)
+            {
+                <button type="submit" name="@nameof(Reaction)"
+                        value="@ReactionType.ShowList"
+                        class="btn btn-outline-info btn-sm me-2" title="مشاهده آمار واکنش‌ها"
+                        data-bs-toggle-up="@ThumbsUpId"
+                        data-bs-toggle-down="@ThumbsDownId">
+                    <i class="@DntBootstrapIcons.BiPeople"></i>
+                    <span class="ms-1">@TotalReactionsCount.ToPersianNumbers()</span>
+                </button>
+            }
+        </EditForm>
+    </div>
+    @if (HasThumbsUpUsers || HasThumbsDownUsers)
+    {
+        <div class="d-flex flex-row justify-content-around flex-wrap mt-3">
+            @if (_isLoadingList)
+            {
+                <DntSpinner Color="TextColor.Success" Size="SpinnerSize.Normal"/>
+            }
+
+            @if (HasThumbsUpUsers)
+            {
+                <div class="card shadow-sm mb-3" id="@ThumbsUpId">
+                    <div class="card-header bg-success bg-opacity-50 d-flex justify-content-start">
+                        <button type="button" class="btn-close align-self-center" data-dnt-btn-close="@ThumbsUpId">
+                        </button>
+                        <h5 class="mt-1 ms-2">رضایتمندان!</h5>
+                    </div>
+                    <div class="card-body d-flex flex-row flex-wrap justify-content-evenly">
+                        @foreach (var user in _thumbsUpUsers)
+                        {
+                            <div>
+                                <PrintUser IsNavLink="false" User="@user"/>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (HasThumbsDownUsers)
+            {
+                <div class="card shadow-sm mb-3" id="@ThumbsDownId">
+                    <div class="card-header bg-danger bg-opacity-50 d-flex justify-content-start">
+                        <button type="button" class="btn-close align-self-center" data-dnt-btn-close="@ThumbsDownId">
+                        </button>
+                        <h5 class="mt-1 ms-2">نارضایتمندان!</h5>
+                    </div>
+                    <div class="card-body d-flex flex-row flex-wrap justify-content-evenly">
+                        @foreach (var user in _thumbsDownUsers)
+                        {
+                            <div>
+                                <PrintUser IsNavLink="false" User="@user"/>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

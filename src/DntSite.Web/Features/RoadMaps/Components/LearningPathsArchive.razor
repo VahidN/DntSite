@@ -1,0 +1,50 @@
+﻿@using DntSite.Web.Features.RoadMaps.Entities
+@attribute [Route(RoadMapsRoutingConstants.LearningPaths1)]
+@attribute [Route(RoadMapsRoutingConstants.LearningPaths2)]
+@attribute [Route(RoadMapsRoutingConstants.LearningPathsPageCurrentPage)]
+@attribute [Route(RoadMapsRoutingConstants.LearningPathsFilterFilterPageCurrentPage)]
+
+<DntQueryBuilder TRecord="LearningPath"
+                 Header="جستجوی پیشرفته نقشه‌های راه"
+                 PreviousFilter="@Filter"
+                 PreviousFilterLabel="فیلتر جستجو:"
+                 StartNewSearchLabel="شروع یک جستجوی جدید"
+                 StartNewSearchUrl="@RoadMapsRoutingConstants.LearningPaths2"
+                 StartsWithLabel="شروع شده با"
+                 EndsWithLabel="خاتمه یافته با"
+                 ContainsLabel="حاوی"
+                 EqualLabel="مساوی"
+                 LessThanLabel="کوچک‌تر از"
+                 LessThanOrEqualLabel="کوچکتر یا مساوی"
+                 GreaterThanLabel="بزرگتر از"
+                 GreaterThanOrEqualLabel="بزرگتر یا مساوی"
+                 AndLabel="و"
+                 OrLabel="یا"
+                 IsLabel="هست"
+                 NotLabel="نیست"
+                 SearchButtonLabel="جستجو"
+                 AddRuleButtonLabel="افزودن یک شرط جستجوی جدید بر اساس"
+                 DeleteAllRulesButtonLabel="حذف تمام شرط‌های جستجو"
+                 ShowGridifyFilter="true"
+                 OnSearch="DoSearchAsync">
+    <DntQueryBuilderProperty Title="شماره نقشه‌ راه" ValueExpression="item => item.Id"/>
+    <DntQueryBuilderProperty Title="عنوان" ValueExpression="item => item.Title"/>
+    <DntQueryBuilderProperty Title="محتوا" ValueExpression="item => item.Description"/>
+    <DntQueryBuilderProperty Title="نام نویسنده" ValueExpression="item => item.User!.FriendlyName"/>
+    <DntQueryBuilderProperty Title="تاریخ انتشار" ValueExpression="item => item.Audit.CreatedAtPersian">
+        <QueryBuilderValueTemplate Context="rule">
+            <input class="form-control" type="text"
+                   data-dnt-date-picker
+                   dir="ltr"
+                   autocapitalize="off" autocorrect="off" autocomplete="off"
+                   name="@rule.RuleValueName"
+                   value="@rule.Value"/>
+        </QueryBuilderValueTemplate>
+    </DntQueryBuilderProperty>
+</DntQueryBuilder>
+
+<ShowLearningPathsArchiveList Posts="_posts"
+                              CurrentPage="CurrentPage"
+                              ItemsPerPage="ItemsPerPage"
+                              BasePath="@_basePath"
+                              MainTitle="آرشیو نقشه‌های راه"/>

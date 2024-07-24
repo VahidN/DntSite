@@ -1,0 +1,113 @@
+﻿@attribute [Route(UserProfilesRoutingConstants.EditProfile)]
+@attribute [Route(UserProfilesRoutingConstants.EditProfileEditUserId)]
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        @PageTitle
+    </FrameHeader>
+    <FrameBody>
+        <DntMessageBox Type="AlertType.Info" IsVisible="true">
+            <ul>
+                <li>
+                    با تغییر آدرس ایمیل، اکانت شما تا زمان تائید ایمیل جدید دریافتی فعال سازی مجدد آن، غیرفعال خواهد شد.
+                </li>
+                <li>در صورت عدم ورود تصویر، از اطلاعات قبلی استفاده خواهد شد. </li>
+                <li>
+                    اگر علاقمند نیستید که ایمیل‌های خودکار سایت را دریافت نمائید، لطفا تیک گزینه دریافت
+                    ایمیل را بردارید.
+                </li>
+                @if (!Model.IsRestricted)
+                {
+                    <li>
+                        با انتخاب گزینه‌ی جویای کار، در منوی افراد جویای کار سایت، لیست خواهید شد. در این
+                        حالت بهتر است گزینه‌ی نمایش تصویری ایمیل را نیز انتخاب نمائید.
+                    </li>
+                }
+                <li>
+                    تصاویر مجاز برای ارسال از نوع‌های png، gif و jpg هستند؛ با حداکثر اندازه 150*150
+                    پیکسل.
+                </li>
+            </ul>
+        </DntMessageBox>
+
+        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync"
+                  enctype="multipart/form-data"
+                  FormName="@nameof(EditUserProfile)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiPerson"
+                          @bind-Value="Model.UserName"
+                          OptionalLabel="(انگلیسی؛ جهت لاگین)"
+                          dir="ltr"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiPersonCircle"
+                          OptionalLabel="(فارسی؛ برای نمایش در سایت)"
+                          @bind-Value="Model.FriendlyName"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiMailbox"
+                          @bind-Value="Model.EMail"
+                          dir="ltr"/>
+
+            <DntInputCheckBox @bind-Value="Model.IsEmailPublic"/>
+
+            @if (!Model.IsRestricted)
+            {
+                <DntInputCheckBox @bind-Value="Model.IsJobsSeeker"/>
+            }
+
+            <DntInputCheckBox @bind-Value="Model.ReceiveDailyEmails"/>
+
+            <DntInputPersianDate LabelName="تاریخ تولد"
+                                 @bind-Year="Model.DateOfBirthYear"
+                                 @bind-Month="Model.DateOfBirthMonth"
+                                 @bind-Day="Model.DateOfBirthDay"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiHouse"
+                          @bind-Value="Model.Location"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiLink"
+                          dir="ltr"
+                          @bind-Value="Model.HomePageUrl"/>
+
+            <DntHtmlEditor @bind-Value="Model.Description"
+                           IsReadOnly="false"
+                           AllowUploadFile="false"
+                           UploadFileApiPath=""
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="false"
+                           UploadImageFileApiPath=""
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="false"
+                           Height="220px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Photo))
+            {
+                <div class="row">
+                    <div class="col-lg-3">تصویر فعلی</div>
+                    <div class="col-lg-9">
+                        <img alt="@Model.FriendlyName" src="@(ApiUrlsRoutingConstants.File.HttpAny.Avatar)?name=@(Uri.EscapeDataString(Model.Photo))"/>
+                    </div>
+                </div>
+            }
+            <DntInputFile @bind-Files="Model.PhotoFiles"
+                          AllowSelectingMultipleFiles="false"
+                          AcceptedFileFormats=".png,.jpg,.jpeg"/>
+
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

@@ -1,0 +1,9 @@
+@attribute [Route(PostsRoutingConstants.AllDraftsList)]
+
+<DntSitePageTitle PageTitle="تمام پیش نویس‌های منتشر نشده"/>
+
+<SimpleDraftsList Title="تمام پیش نویس‌های منتشر نشده"
+                  TitleUrl="@PostsRoutingConstants.AllDraftsList"
+                  ShowBriefDescription="true"
+                  BlogPostDrafts="_blogPostDrafts"
+                  CurrentUser="_currentUser"/>

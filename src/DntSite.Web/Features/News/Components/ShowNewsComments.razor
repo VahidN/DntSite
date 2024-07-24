@@ -1,0 +1,35 @@
+@using DntSite.Web.Features.News.Entities
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(NewsRoutingConstants.NewsComments)]
+@attribute [Route(NewsRoutingConstants.NewsCommentsPageCurrentPage)]
+@attribute [Route(NewsRoutingConstants.NewsCommentsUserFriendlyName)]
+@attribute [Route(NewsRoutingConstants.NewsCommentsUserFriendlyNamePageCurrentPage)]
+
+
+<DntSitePageTitle PageTitle="@MainTitle"/>
+
+<DntLoading IsLoading="@(_posts is null)">
+    @foreach (var comment in _posts!.Data)
+    {
+        <ShowBlogPostCommentItem
+            PostId="@comment.ParentId"
+            CommentId="@comment.Id"
+            Body="@comment.Body"
+            Reactions="@comment.Reactions"
+            RecordUser="@comment.User"
+            CreatedAt="@comment.Audit.CreatedAt"
+            CreatedByUserAgent="@comment.Audit.CreatedByUserAgent"
+            TReactionEntity="DailyNewsItemCommentReaction"
+            TForeignKeyEntity="DailyNewsItemComment"
+            ShowManageBlogPostCommentItem="false"
+            ShowPleaseVoteMessage="false"
+            PostAbsoluteUrl="@GetPostAbsoluteUrl(comment)"
+            ShowPostTitle="true"
+            PostTitle="@comment.Parent.Title"/>
+    }
+
+    <DntSimplePaginator ItemsPerPage="PostItemsPerPage"
+                        TotalItemCount="_posts!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

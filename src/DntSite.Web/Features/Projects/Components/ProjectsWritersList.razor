@@ -1,0 +1,23 @@
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(ProjectsRoutingConstants.ProjectsWriters)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsWritersPageCurrentPage)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsWritersUserFriendlyName)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsWritersUserFriendlyNamePageCurrentPage)]
+
+@if (HasUserFriendlyName)
+{
+    <ShowProjectsArchiveList Posts="_blogPosts"
+                         CurrentPage="CurrentPage"
+                         ItemsPerPage="PostItemsPerPage"
+                         BasePath="@BasePath"
+                         MainTitle="@MainTitle"/>
+}
+else
+{
+    <WritersList MainTitle="@MainTitle"
+                 CurrentPage="CurrentPage"
+                 ItemsPerPage="PostItemsPerPage"
+                 TotalItemCount="@_totalUsersCount"
+                 BasePath="@BasePath"
+                 Users="_users"/>
+}

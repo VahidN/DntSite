@@ -1,0 +1,43 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Projects.Entities
+@attribute [Route(ProjectsRoutingConstants.ProjectsReleases)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsReleasesPageCurrentPage)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsReleasesUserFriendlyName)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsReleasesUserFriendlyNamePageCurrentPage)]
+@attribute [Route(ProjectsRoutingConstants.ProjectReleasesProjectId)]
+@attribute [Route(ProjectsRoutingConstants.ProjectReleasesProjectIdPageCurrentPage)]
+
+<DntSitePageTitle PageTitle="@_pageTitle"/>
+
+<DntLoading IsLoading="@(_posts is null)">
+    @foreach (var release in _posts!.Data)
+    {
+        <ShowBlogPostCommentItem
+            PostId="@release.Id"
+            CommentId="@release.Id"
+            Body="@release.FileDescription"
+            Reactions="@release.Reactions"
+            RecordUser="@release.User"
+            CreatedAt="@release.Audit.CreatedAt"
+            CreatedByUserAgent="@release.Audit.CreatedByUserAgent"
+            TReactionEntity="ProjectReleaseReaction"
+            TForeignKeyEntity="ProjectRelease"
+            ShowManageBlogPostCommentItem="false"
+            ShowPleaseVoteMessage="false"
+            PostAbsoluteUrl="@GetPostAbsoluteUrl(release)"
+            ShowPostTitle="true"
+            PostTitle="@release.Project.Title">
+            <AdditionalBodyContent>
+                <ProjectReleaseFileUrl ProjectRelease="release"/>
+            </AdditionalBodyContent>
+            <AdditionalInfoContent>
+                <ProjectUrl Project="release.Project"/>
+            </AdditionalInfoContent>
+        </ShowBlogPostCommentItem>
+    }
+
+    <DntSimplePaginator ItemsPerPage="PostItemsPerPage"
+                        TotalItemCount="_posts!.TotalItems"
+                        BasePath="@GetBasePath()"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

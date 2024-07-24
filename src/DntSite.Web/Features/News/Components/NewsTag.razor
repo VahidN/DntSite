@@ -1,0 +1,24 @@
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(NewsRoutingConstants.NewsTag)]
+@attribute [Route(NewsRoutingConstants.NewsTagPageCurrentPage)]
+@attribute [Route(NewsRoutingConstants.NewsTagTagName)]
+@attribute [Route(NewsRoutingConstants.NewsTagTagNamePageCurrentPage)]
+
+
+@if (HasTag)
+{
+    <ShowNewsArchiveList Posts="_posts"
+                         CurrentPage="CurrentPage"
+                         ItemsPerPage="PostItemsPerPage"
+                         BasePath="@BasePath"
+                         MainTitle="@MainTitle"/>
+}
+else
+{
+    <TagsList MainTitle="@MainTitle"
+              CurrentPage="CurrentPage"
+              ItemsPerPage="TagItemsPerPage"
+              TotalItemCount="@_totalTagItemsCount"
+              BasePath="@BasePath"
+              Tags="_tags"/>
+}

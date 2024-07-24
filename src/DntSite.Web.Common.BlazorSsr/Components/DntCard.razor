@@ -1,0 +1,26 @@
+<article class="hentry" itemprop="blogPost" itemtype="http://schema.org/BlogPosting" itemscope="">
+    <div class="card mt-@MarginTop shadow-sm" @attributes="@AdditionalAttributes">
+        @if (Header is not null)
+        {
+            <div class="card-header entry-title border-light shadow-sm d-flex flex-row flex-wrap align-items-center" itemprop="headline_name">
+                @Header
+            </div>
+        }
+        @if (Body is not null)
+        {
+            <div class="card-body entry-content" itemprop="articleBody">
+                @Body
+            </div>
+        }
+        @if (ChildContent is not null)
+        {
+            @ChildContent
+        }
+        @if (Footer is not null)
+        {
+            <div class="card-footer byline border-light bg-transparent">
+                @Footer
+            </div>
+        }
+    </div>
+</article>

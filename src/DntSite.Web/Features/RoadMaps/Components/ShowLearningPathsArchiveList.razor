@@ -1,0 +1,49 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RoadMaps.Entities
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntLoading IsLoading="@(Posts is null)">
+    @foreach (var post in Posts!.Data)
+    {
+        <ShowBlogPostItem TReactionEntity="LearningPathReaction"
+                          TForeignKeyEntity="LearningPath"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate="@RoadMapsRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@RoadMapsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@RoadMapsRoutingConstants.PostTagUrlTemplate"
+                          Id="post.Id"
+                          Body="@post.Description"
+                          Reactions="post.Reactions"
+                          Tags="@GetTags(post)"
+                          Title="@post.Title"
+                          BriefDescription="@post.Description"
+                          CreatedAt="post.Audit.CreatedAt"
+                          RecordUser="post.User"
+                          NumberOfComments="post.EntityStat.NumberOfComments"
+                          NumberOfViews="post.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@post.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="post.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(post)"
+                          EditPostUrlTemplate="@RoadMapsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@RoadMapsRoutingConstants.DeletePostUrlTemplate"
+                          ShowReactions="true"
+                          ShowSocialLinks="true"
+                          ShowNumberOfViews="true"
+                          ShowNumberOfComments="false">
+            <AdditionalHeaderContent>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    }
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="Posts!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

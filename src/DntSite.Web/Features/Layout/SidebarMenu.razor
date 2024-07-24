@@ -1,0 +1,84 @@
+﻿@using DntSite.Web.Features.SideBar.Components
+<DntLoading IsLoading="@(_model is null)">
+    <ul class="row list-group list-group-flush mt-4 mb-auto ms-1 me-1">
+        <DntLinkedOrderedListNavMenuItem Title="مطالب"
+                                         GlyphIcon="@DntBootstrapIcons.BiPencil"
+                                         Url="@PostsRoutingConstants.Posts"
+                                         BadgeValue="_model!.NumberOfPosts"
+                                         IsBadgeValueVisible="@(_model!.NumberOfPosts > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="به زودی در سایت"
+                                         GlyphIcon="@DntBootstrapIcons.BiClock"
+                                         Url="@PostsRoutingConstants.ComingSoon2"
+                                         BadgeValue="_model!.NumberOfComingSoon"
+                                         IsVisible="@(_model!.NumberOfComingSoon > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="اشتراک‌ها"
+                                         GlyphIcon="@DntBootstrapIcons.BiShare"
+                                         Url="@NewsRoutingConstants.News"
+                                         BadgeValue="_model!.NumberOfLinks"
+                                         IsBadgeValueVisible="@(_model!.NumberOfLinks > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="نقشه‌های راه"
+                                         GlyphIcon="@DntBootstrapIcons.BiSignMergeRight"
+                                         Url="@RoadMapsRoutingConstants.LearningPaths2"
+                                         BadgeValue="_model!.NumberOfLearningPaths"
+                                         IsBadgeValueVisible="@(_model!.NumberOfLearningPaths > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="دوره‌ها"
+                                         GlyphIcon="@DntBootstrapIcons.BiMortarboard"
+                                         Url="@CoursesRoutingConstants.Courses"
+                                         BadgeValue="_model!.NumberOfCourses"
+                                         IsBadgeValueVisible="@(_model!.NumberOfCourses > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="پروژه‌ها"
+                                         GlyphIcon="@DntBootstrapIcons.BiPuzzle"
+                                         Url="@ProjectsRoutingConstants.Projects"
+                                         BadgeValue="_model!.NumberOfProjects"
+                                         IsBadgeValueVisible="@(_model!.NumberOfProjects > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="نظرسنجی‌ها"
+                                         GlyphIcon="@DntBootstrapIcons.BiCardChecklist"
+                                         Url="@SurveysRoutingConstants.SurveysArchive"
+                                         BadgeValue="_model!.NumberOfVotes"
+                                         IsBadgeValueVisible="@(_model!.NumberOfVotes > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="پیشنهادها"
+                                         GlyphIcon="@DntBootstrapIcons.BiListTask"
+                                         Url="@BacklogsRoutingConstants.Backlogs"
+                                         BadgeValue="_model!.NumberOfBacklogs"
+                                         IsBadgeValueVisible="@(_model!.NumberOfBacklogs > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="پرسش‌ها"
+                                         GlyphIcon="@DntBootstrapIcons.BiQuestionCircle"
+                                         Url="@QuestionsRoutingConstants.Questions"
+                                         BadgeValue="_model!.NumberOfQuestions"
+                                         IsBadgeValueVisible="@(_model!.NumberOfQuestions > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="آگهی‌ها"
+                                         GlyphIcon="@DntBootstrapIcons.BiCreditCard"
+                                         Url="@AdvertisementsRoutingConstants.Advertisements"
+                                         BadgeValue="_model!.NumberOfAds"
+                                         IsBadgeValueVisible="@(_model!.NumberOfAds > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="کاربران"
+                                         GlyphIcon="@DntBootstrapIcons.BiPeople"
+                                         Url="@UserProfilesRoutingConstants.Users"
+                                         BadgeValue="_model!.NumberOfUsers"
+                                         IsBadgeValueVisible="@(_model!.NumberOfUsers > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="تولدهای امروز"
+                                         GlyphIcon="@DntBootstrapIcons.BiCake2"
+                                         Url="@UserProfilesRoutingConstants.UsersBirthdays"
+                                         BadgeValue="_model!.NumberOfTodayBirthdays"
+                                         IsVisible="@(_model!.NumberOfTodayBirthdays > 0)"/>
+
+        <DntLinkedOrderedListNavMenuItem Title="جویای کار"
+                                         GlyphIcon="@DntBootstrapIcons.BiPersonWorkspace"
+                                         Url="@UserProfilesRoutingConstants.JobSeekers"
+                                         BadgeValue="_model!.NumberOfJobsSeekers"
+                                         IsVisible="@(_model!.NumberOfJobsSeekers > 0)"/>
+    </ul>
+
+    <RenderCustomSidebar/>
+</DntLoading>

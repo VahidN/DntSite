@@ -1,0 +1,36 @@
+@using DntSite.Web.Features.Surveys.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    نظر جدید ذیل برای نظرسنجی «
+    <a href="@PostUrl">
+        @Model.Title
+    </a>» ارسال گردیده است:
+    <br/>
+    <br/>
+    <div align="right" dir="rtl" style="font-family: Tahoma; ">
+        <strong>نام فرستنده</strong>: @Model.Username
+        <br/>
+        <strong>نظر</strong>: @Model.Body.HtmlRaw()
+        <br/>
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public VoteReplyToWritersEmailModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(SurveysRoutingConstants.SurveysArchiveDetailsBase).CombineUrl($"/{Model.VoteId}#comment-{Model.CommentId}");
+
+}

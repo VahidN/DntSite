@@ -1,0 +1,51 @@
+@using DntSite.Web.Features.Projects.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    پروژه «
+    <a href="@PostUrl">
+        @Model.Title
+    </a>» با موفقیت ایجاد گردید.
+    <br/>
+    امکان ارسال فایل‌های مرتبط، جهت مدیر پروژه در قسمت
+    <a href="@FilesUrl">
+        فایل‌های پروژه
+    </a> و همچنین تکمیل
+    <a href="@FaqsUrl">
+        راهنمای آن
+    </a> نیز هم اکنون وجود دارد.
+    <br/>
+    لطفا اگر از یک سورس کنترل برای مدیریت فایل‌های پروژه خود استفاده می‌کنید، حداقل
+    نگارش نهایی هر ارائه ویژه را در قسمت
+    <a href="@FilesUrl">
+        فایل‌های پروژه
+    </a> جاری نیز قرار دهید.
+    <br/>
+    لطفا دقت بفرمائید در حین ارسال کدهای خود، مبادا اطلاعات حساسی مانند رشته اتصالی
+    به دیتابیس آنلاین هاست خود را در فایل‌های کانفیگ پروژه قرار دهید (یا فراموش کنید
+    که آن‌ها را حذف نمائید). لطفا این اطلاعات حساس را پیش از ارسال حذف کنید یا تغییر
+    دهید.
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public NewProjectHelpEmailModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectsDetailsBase).CombineUrl(Model.Id);
+
+    private string FilesUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.WriteProjectReleaseBase).CombineUrl(Model.Id);
+
+    private string FaqsUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.WriteProjectFaqBase).CombineUrl(Model.Id);
+
+}

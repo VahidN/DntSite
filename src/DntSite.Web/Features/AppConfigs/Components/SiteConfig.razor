@@ -1,0 +1,143 @@
+﻿@attribute [Route(AppConfigsRoutingConstants.SiteConfig)]
+
+<DntSitePageTitle PageTitle="تنظیمات برنامه"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        تنظیمات برنامه
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync" FormName="@nameof(SiteConfig)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiHouse"
+                          @bind-Value="Model.BlogName"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiLink45deg"
+                          dir="ltr"
+                          @bind-Value="Model.SiteRootUri"/>
+
+            <hr/>
+
+            <DntInputCheckBox @bind-Value="Model.SiteIsActive"/>
+
+            <DntInputCheckBox @bind-Value="Model.CanUsersRegister"/>
+
+            <hr/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiMailbox"
+                          dir="ltr"
+                          @bind-Value="Model.SmtpServerSetting.Address"/>
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiPerson"
+                          dir="ltr"
+                          @bind-Value="Model.SmtpServerSetting.Username"/>
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiKey"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.SmtpServerSetting.Password"/>
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiDoorOpen"
+                            dir="ltr"
+                            @bind-Value="Model.SmtpServerSetting.Port"/>
+
+            <DntInputCheckBox @bind-Value="Model.SmtpServerSetting.UsePickupFolder"/>
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiFolder"
+                          dir="ltr"
+                          @bind-Value="Model.SmtpServerSetting.PickupFolderName"/>
+
+            <DntInputCheckBox @bind-Value="Model.SmtpServerSetting.ShouldValidateServerCertificate"/>
+
+            <hr/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiEnvelopeAt"
+                          dir="ltr"
+                          @bind-Value="Model.SiteFromEmail"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiEnvelope"
+                          @bind-Value="Model.SiteEmailsSig"/>
+
+            <hr/>
+
+
+            <DntInputTextArea FieldIcon="@DntBootstrapIcons.BiLink"
+                              dir="ltr"
+                              @bind-Value="Model.BannedUrls"/>
+
+            <DntInputTextArea FieldIcon="@DntBootstrapIcons.BiStop"
+                              dir="ltr"
+                              @bind-Value="Model.BannedSites"/>
+
+            <DntInputTextArea FieldIcon="@DntBootstrapIcons.BiFolderSymlink"
+                              dir="ltr"
+                              @bind-Value="Model.BannedReferrers"/>
+
+            <DntInputTextArea FieldIcon="@DntBootstrapIcons.BiMailbox2Flag"
+                              dir="ltr"
+                              @bind-Value="Model.BannedEmails"/>
+
+            <DntInputTextArea FieldIcon="@DntBootstrapIcons.BiKey"
+                              dir="ltr"
+                              @bind-Value="Model.BannedPasswords"/>
+
+            <hr/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiRecycle"
+                            dir="ltr"
+                            @bind-Value="Model.UsedPasswords.ChangePasswordReminderDays"/>
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiRecycle"
+                            dir="ltr"
+                            @bind-Value="Model.UsedPasswords.NotAllowedPreviouslyUsedPasswords"/>
+
+            <hr/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiCalendar"
+                            dir="ltr"
+                            @bind-Value="Model.MinimumRequiredPosts.MaxDaysToCloseATopic"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiSignRailroad"
+                            dir="ltr"
+                            @bind-Value="Model.MinimumRequiredPosts.MinPostsToCreateALearningPath"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiSignRailroadFill"
+                            dir="ltr"
+                            @bind-Value="Model.MinimumRequiredPosts.MinNumberOfLinksToCreateALearningPath"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiJournalBookmark"
+                            dir="ltr"
+                            @bind-Value="Model.MinimumRequiredPosts.MinNumberOfLinksToCreateANewBacklog"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiCartCheck"
+                            dir="ltr"
+                            @bind-Value="Model.MinimumRequiredPosts.MinNumberOfLinksCreateANewSurvey"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiMortarboard"
+                            dir="ltr"
+                            @bind-Value="Model.MinimumRequiredPosts.MinPostsToCreateANewCourse"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiFolderCheck"
+                            dir="ltr"
+                            @bind-Value="Model.MinimumRequiredPosts.MinPostsToCreateANewProject"/>
+
+            <hr/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

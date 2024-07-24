@@ -1,0 +1,62 @@
+<DntLoading IsLoading="@(Survey is null)">
+    <EditForm Model="this" method="post"
+              OnValidSubmit="OnValidSubmitAsync"
+              FormName="@FormName"
+              Enhance>
+        <input type="hidden" name="@nameof(FormId)" value="@Survey!.Id"/>
+
+        <ul class="list-unstyled">
+            @foreach (var surveyItem in Survey!.SurveyItems.Where(x => !x.IsDeleted).OrderBy(x => x.Order))
+            {
+                <li class="mt-2">
+                    @if (!IsFormReadonly)
+                    {
+                        if (Survey.AllowMultipleSelection)
+                        {
+                            <div class="form-check form-switch mb-3">
+                                <input type="checkbox"
+                                       class="form-check-input"
+                                       name="@nameof(SelectedValues)"
+                                       value="@surveyItem.Id"/>
+                                <label class="form-check-label" for="@nameof(SelectedValues)"
+                                       dir="@surveyItem.Title.GetDir()">
+                                    @surveyItem.Title
+                                </label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-check mb-3">
+                                <input type="radio"
+                                       class="form-check-input"
+                                       name="@nameof(SelectedValues)"
+                                       value="@surveyItem.Id"/>
+                                <label class="form-check-label" for="@nameof(SelectedValues)"
+                                       dir="@surveyItem.Title.GetDir()">
+                                    @surveyItem.Title
+                                </label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <span dir="@surveyItem.Title.GetDir()" class="bg-light-subtle rounded">
+                            @surveyItem.Title
+                        </span>
+                    }
+                </li>
+            }
+            <li class="mt-3">
+                <SurveyDueDate Survey="Survey"/>
+            </li>
+        </ul>
+
+        @if (!IsFormReadonly)
+        {
+            <button type="submit" class="btn btn-outline-success me-2" title="ارسال رای">
+                <i class="@DntBootstrapIcons.BiCardChecklist"></i>
+                ارسال رای
+            </button>
+        }
+    </EditForm>
+</DntLoading>

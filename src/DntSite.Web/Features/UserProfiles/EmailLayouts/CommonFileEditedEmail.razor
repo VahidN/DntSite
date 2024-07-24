@@ -1,0 +1,31 @@
+@using DntSite.Web.Features.UserProfiles.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    فایل ذیل ویرایش/حذف گردیده است. مراتبط جهت اطلاع:
+    <br/>
+    <div align="center" dir="rtl" style="font-family: Tahoma;">
+        <div align="center" dir="rtl">
+            @Model.Name
+            <br/>
+            @Model.Description
+        </div>
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public CommonFileEditedEmailModel Model { set; get; } = null!;
+
+}

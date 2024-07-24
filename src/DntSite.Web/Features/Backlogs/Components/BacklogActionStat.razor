@@ -1,0 +1,41 @@
+@using DntSite.Web.Features.UserProfiles.Components
+@if (IsTaken)
+{
+    <div class="mt-3 alert alert-primary shadow-sm d-flex flex-row align-items-center">
+        <span aria-hidden="true" class="@DntBootstrapIcons.BiPerson me-1"></span>
+        <strong class="me-2">تکمیل کننده</strong>
+        <PrintUser User="Model.TakenByUser"/>
+        @if (Model.DoneDate is not null)
+        {
+            <div>
+                <span aria-hidden="true" class="@DntBootstrapIcons.BiClock ms-2 me-1"></span>
+                <span>در</span>
+                @Model.DoneDate.ToFriendlyPersianDateTextify().ToPersianNumbers()
+            </div>
+        }
+
+        @if (Model.ConvertedBlogPostId is >= 0)
+        {
+            <div>
+                <span aria-hidden="true" class="@DntBootstrapIcons.BiPencil ms-2 me-1"></span>
+                <DntLink Url="@ConvertedBlogPostUrl" IsExternal="false">
+                    <strong>مقاله حاصل</strong>
+                </DntLink>
+            </div>
+        }
+        else
+        {
+            <div>
+                <span aria-hidden="true" class="@DntBootstrapIcons.BiCalendar ms-2"></span>
+                <strong class="ms-1 me-1">شروع در </strong>
+                @Model.StartDate.ToFriendlyPersianDateTextify().ToPersianNumbers()
+            </div>
+            <div>
+                <span aria-hidden="true" class="@DntBootstrapIcons.BiClock ms-2"></span>
+                <strong class="ms-1 me-1">تخمین تکمیل (تعداد روز):</strong>
+                @Model.DaysEstimate.ConvertNumberToText(Language.Persian)
+                <span class="ms-1">روز</span>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,14 @@
+@if (Value)
+{
+    <span class="badge bg-success">
+        <span class="@TrueValueIcon me-1"></span>
+        @TrueValueLabel
+    </span>
+}
+else
+{
+    <span class="badge bg-danger">
+        <span class="@FalseValueIcon me-1"></span>
+        @FalseValueLabel
+    </span>
+}

@@ -1,0 +1,79 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.PrivateMessages.Entities
+@attribute [Route(PrivateMessagesRoutingConstants.MyPrivateMessagePrivateMessageId)]
+
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntLoading IsLoading="@(_privateMessageComments is null || _firstPrivateMessage is null)">
+    <ShowBlogPostItem TReactionEntity="PrivateMessageReaction"
+                      TForeignKeyEntity="PrivateMessage"
+                      ShowBriefDescription="false"
+                      ShowTags="false"
+                      SiteName="@ApplicationState.AppSetting?.BlogName"
+                      ShowCommentsButton="false"
+                      CommentsUrlTemplate="@PrivateMessagesRoutingConstants.CommentsUrlTemplate"
+                      PostUrlTemplate="@PrivateMessagesRoutingConstants.PostUrlTemplate"
+                      PostTagUrlTemplate="@PrivateMessagesRoutingConstants.PostTagUrlTemplate"
+                      Id="_firstPrivateMessage!.Id"
+                      Body="@_firstPrivateMessage!.Body"
+                      Reactions="null"
+                      Tags="null"
+                      Title="@_firstPrivateMessage!.Title"
+                      BriefDescription=""
+                      CreatedAt="_firstPrivateMessage!.Audit.CreatedAt"
+                      RecordUser="_firstPrivateMessage!.User"
+                      NumberOfComments="0"
+                      NumberOfViews="0"
+                      ReadingTimeMinutes="0"
+                      CreatedByUserAgent="@_firstPrivateMessage!.Audit.CreatedByUserAgent"
+                      NumberOfViewsFromFeed="0"
+                      CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                      CanUserEditThisPost="@CanUserEditThisPost"
+                      EditPostUrlTemplate="@PrivateMessagesRoutingConstants.EditPostUrlTemplate"
+                      DeletePostUrlTemplate="@PrivateMessagesRoutingConstants.DeletePostUrlTemplate"
+                      ShowReactions="false"
+                      ShowSocialLinks="false"
+                      ShowNumberOfViews="false"
+                      ShowNumberOfComments="false"/>
+
+    <span id="comments"></span>
+
+    <ManageBlogPostCommentItem
+        IsReplyToPost="true"
+        ShowPleaseVoteMessage="false"
+        Body="@null"
+        CommentId="@null"
+        CreatedAt="@null"
+        PostId="@_firstPrivateMessage.Id"
+        RecordUser="@null"
+        UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.MessagesFilesUpload"
+        UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.MessagesImagesUpload"
+        HandleCommentAction="HandleCommentActionAsync"/>
+
+    <DntTreeView
+        TRecord="PrivateMessageComment"
+        Items="_privateMessageComments"
+        ChildrenSelector="m => m.Children"
+        style="list-style: none;">
+        <ItemTemplate Context="record">
+            <ShowBlogPostCommentItem
+                PostId="@_firstPrivateMessage.Id"
+                CommentId="@record.Id"
+                Body="@record.Body"
+                Reactions="null"
+                ShowReactions="false"
+                RecordUser="@record.User"
+                CreatedAt="@record.Audit.CreatedAt"
+                CreatedByUserAgent="@record.Audit.CreatedByUserAgent"
+                TReactionEntity="PrivateMessageCommentReaction"
+                TForeignKeyEntity="PrivateMessageComment"
+                HandleCommentAction="HandleCommentActionAsync"
+                UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.MessagesFilesUpload"
+                UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.MessagesImagesUpload"
+                ShowPleaseVoteMessage="false"/>
+        </ItemTemplate>
+        <EmptyContentTemplate>
+            <DntAuthorizedMessageBox/>
+        </EmptyContentTemplate>
+    </DntTreeView>
+</DntLoading>

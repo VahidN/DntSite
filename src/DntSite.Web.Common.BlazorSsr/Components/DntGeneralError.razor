@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="d-flex align-items-center justify-content-center vh-100 w-100">
+        <div class="alert alert-danger shadow-sm w-100" role="alert">
+            <i class="@DntBootstrapIcons.BiExclamationTriangle"></i>
+            @if (ChildContent is not null)
+            {
+                @ChildContent
+            }
+            <a class="link-primary link-offset-2 link-underline-opacity-25 d-flex justify-content-center" href="/">
+                <i class="@DntBootstrapIcons.BiArrowLeft me-2"></i>
+                بازگشت
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,133 @@
+<div class="row mb-@InputRowMarginBottom">
+    @if (ShowLabel)
+    {
+        <label class="col-form-label col-lg-@LabelColumnWidth" for="@ValueField.HtmlFieldName">
+            @if (!string.IsNullOrWhiteSpace(LabelName))
+            {
+                @LabelName
+            }
+            else
+            {
+                @ValueExpression.GetDisplayName()
+            }
+
+            @if (!string.IsNullOrWhiteSpace(OptionalLabel))
+            {
+                <span class="text-muted mx-2"> @OptionalLabel</span>
+            }
+        </label>
+    }
+    <div class="@(ShowLabel ? $"col-lg-{InputTextColumnWidth}" : "col-lg-12")">
+        <div class="alert alert-danger d-none" id="alert-@UniqueId">
+        </div>
+        <div class="progress mb-3 d-none" id="progress-@UniqueId">
+            <div id="progress-div-@UniqueId" class="progress-bar bg-success"></div>
+        </div>
+        <div class="input-group">
+            @if (!string.IsNullOrWhiteSpace(FieldIcon))
+            {
+                <div class="input-group-text">
+                    <span class="@FieldIcon" role="img" aria-label="@LabelName"></span>
+                </div>
+            }
+            <div data-dnt-html-editor="true"
+                 data-dnt-html-editor-id="@UniqueId"
+                 class="d-none w-100"
+                 dir="ltr">
+                <div id="quill-toolbar-container-@UniqueId" dir="@Direction">
+                    <span class="ql-formats">
+                        <button class="ql-direction" value="rtl" title="@DirectionTooltip"></button>
+                        <select class="ql-align" title="@AlignTooltip"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-header" value="1" title="@Header1Tooltip"></button>
+                        <button class="ql-header" value="2" title="@Header2Tooltip"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold" title="@BoldTooltip"></button>
+                        <button class="ql-italic" title="@ItalicTooltip"></button>
+                        <button class="ql-underline" title="@UnderlineTooltip"></button>
+                        <button class="ql-strike" title="@StrikeTooltip"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-code-block" title="@CodeBlockTooltip"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color" title="@ColorTooltip"></select>
+                        <select class="ql-background" title="@BackgroundTooltip"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-blockquote" title="@BlockquoteTooltip"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered" title="@OrderedListTooltip"></button>
+                        <button class="ql-list" value="bullet" title="@BulletListTooltip"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-indent" value="-1" title="@IndentMinus1Tooltip"></button>
+                        <button class="ql-indent" value="+1" title="@IndentPlus1Tooltip"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link" title="@LinkTooltip"></button>
+                        @if (AllowInsertImageUrl)
+                        {
+                            <button class="ql-insertImageUrl" title="@InsertImageUrlTooltip">
+                                <i class="@DntBootstrapIcons.BiImage"></i>
+                            </button>
+                        }
+                        @if (AllowUploadImageFile)
+                        {
+                            <button class="ql-uploadImageFile" title="@UploadImageFileTooltip">
+                                <i class="@DntBootstrapIcons.BiFiletypePng"></i>
+                            </button>
+                        }
+                        @if (AllowUploadFile)
+                        {
+                            <button class="ql-uploadFile" title="@UploadFileTooltip">
+                                <i class="@DntBootstrapIcons.BiFileArrowUp"></i>
+                            </button>
+                        }
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-clean" title="@CleanTooltip"></button>
+                    </span>
+                    @AdditionalToolbarContent
+                </div>
+                <div id="quill-editor-@UniqueId"
+                     data-dnt-html-editor-textarea-id="@UniqueId"
+                     data-dnt-html-editor-is-read-only="@IsReadOnly.ToString().ToLowerInvariant()"
+                     data-dnt-html-editor-height="@Height"
+                     data-dnt-html-editor-placeholder="@Placeholder"
+                     data-dnt-html-editor-theme="@Theme"
+                     data-dnt-html-editor-insert-image-url-label="@InsertImageUrlLabel"
+                     data-dnt-html-editor-upload-file-api-path="@UploadFileApiPath"
+                     data-dnt-html-editor-upload-image-file-api-path="@UploadImageFileApiPath"
+                     data-dnt-html-editor-upload-only-image-error-message="@UploadOnlyImageErrorMessage"
+                     data-dnt-html-editor-additional-json-data-during-image-file-upload="@AdditionalJsonDataDuringImageFileUpload"
+                     data-dnt-html-editor-additional-json-data-during-file-upload="@AdditionalJsonDataDuringFileUpload"
+                     data-dnt-html-editor-accepted-upload-image-formats="@AcceptedUploadImageFormats"
+                     data-dnt-html-editor-accepted-upload-file-formats="@AcceptedUploadFileFormats"
+                     data-dnt-html-editor-maximum-upload-image-size-in-bytes="@MaximumUploadImageSizeInBytes"
+                     data-dnt-html-editor-maximum-upload-file-size-in-bytes="@MaximumUploadFileSizeInBytes"
+                     data-dnt-html-editor-maximum-upload-image-size-error-message="@MaximumUploadImageSizeErrorMessage"
+                     data-dnt-html-editor-maximum-upload-file-size-error-message="@MaximumUploadFileSizeErrorMessage">
+                    @if (Value != null)
+                    {
+                        @((MarkupString)Value)
+                    }
+                </div>
+
+                <InputTextArea ValueExpression="@ValueExpression"
+                               Value="@Value"
+                               ValueChanged="@ValueChanged"
+                               @attributes="@AdditionalAttributes"
+                               class="form-control d-none"
+                               autocapitalize="off" autocorrect="off" autocomplete="off"/>
+            </div>
+        </div>
+        @if (ValueExpression is not null)
+        {
+            <ValidationMessage For="@ValueExpression"/>
+        }
+    </div>
+</div>

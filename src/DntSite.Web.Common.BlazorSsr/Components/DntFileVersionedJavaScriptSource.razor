@@ -1,0 +1,4 @@
+@if (!string.IsNullOrWhiteSpace(JsFilePath))
+{
+    <script src="@HttpContext.GetFileVersionedPath(JsFilePath)" type="text/javascript"></script>
+}

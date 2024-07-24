@@ -1,0 +1,30 @@
+@using DntSite.Web.Features.Backlogs.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    پیشنهاد جدیدی به سایت اضافه/ویرایش گردید:
+    <br/>
+    <strong>مسیر راه: </strong><a href="@PostUrl">@Model.Title</a>
+    <br/>
+    <strong>محتوا: </strong> @Model.Description.HtmlRaw()
+    <br/>
+    <strong>نویسنده: </strong>@Model.Author
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+</LayoutView>
+
+@code {
+
+    [Parameter] public BacklogToAdminEmailModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(BacklogsRoutingConstants.BacklogsDetailsBase).CombineUrl(Invariant($"/{Model.Id}"));
+
+}

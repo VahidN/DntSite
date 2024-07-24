@@ -1,0 +1,6 @@
+@typeparam TComponent where TComponent : IComponent
+
+@if (_cachedContent != null)
+{
+    @((MarkupString)_cachedContent)
+}

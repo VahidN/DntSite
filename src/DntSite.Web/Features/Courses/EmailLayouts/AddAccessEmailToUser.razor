@@ -1,0 +1,27 @@
+@using DntSite.Web.Features.Courses.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    دسترسی شما به دوره «<a href="@PostUrl">@Model.Title</a>»
+    تنظیم گردید.
+    <br/>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public AddAccessEmailToUserModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesDetailsBase).CombineUrl(Invariant($"/{Model.Id}"));
+
+}

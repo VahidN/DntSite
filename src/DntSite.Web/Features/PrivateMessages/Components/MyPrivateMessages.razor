@@ -1,0 +1,88 @@
+﻿@using DntSite.Web.Features.PrivateMessages.Entities
+@using DntSite.Web.Features.UserProfiles.Components
+@attribute [Route(PrivateMessagesRoutingConstants.MyPrivateMessages)]
+@attribute [Route(PrivateMessagesRoutingConstants.MyPrivateMessagesPageCurrentPage)]
+
+<DntSitePageTitle PageTitle="پیام‌های خصوصی من"/>
+
+<DntLoading IsLoading="@(_privateMessages is null)">
+    <DntSimpleTable TRecord="PrivateMessage"
+                    Records="_privateMessages!.Data"
+                    TableClass="table table-striped table-hover caption-top"
+                    HeaderClass="table-secondary"
+                    FooterRowClass="table-warning"
+                    TableResponsiveClass="row table-responsive"
+                    RowClass='record => ""'>
+        <CaptionTemplate>
+            <strong>پیام‌های خصوصی من</strong>
+        </CaptionTemplate>
+        <TableColumns>
+            <DntSimpleTableColumn HeaderTitle="عنوان"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-right align-middle"'
+                                  FooterCellClass="text-center align-middle"
+                                  width="330">
+                <CellValueTemplate Context="record">
+                    @if (CanUserDeleteThisPost(record))
+                    {
+                        <a href="@PrivateMessagesRoutingConstants.SendPrivateMessageDeleteBase/@record.Id"
+                           data-cancel-confirm-message="آیا می‌خواهید این عنوان را برای هر دو طرف، حذف کنید؟"
+                           class="btn btn-danger me-2 btn-sm">
+                            حذف
+                        </a>
+                    }
+                    <DntLink IsExternal="false" Url="@GetPostUrl(record)">
+                        <span dir="@record.Title.GetDir()">
+                            @record.Title
+                        </span>
+                    </DntLink>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="تاریخ ارسال"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    @record.Audit.CreatedAt.ToFriendlyPersianDateTextify()
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="از طرف"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    <PrintUser User="record.User"/>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="دریافت کننده"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    <div class="d-flex flex-row align-items-center">
+                        <span class="me-2 @(record.IsReadByReceiver ? DntBootstrapIcons.BiEye : DntBootstrapIcons.BiEyeSlash)"
+                              title="@(record.IsReadByReceiver ? "مشاهده شده" : "مشاهده نشده")">
+                        </span>
+                        <PrintUser User="record.ToUser"/>
+                    </div>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+        </TableColumns>
+
+        <DataSourceIsEmptyTemplate>
+            <div class="alert alert-info">
+                تا این لحظه هیچ پیام خصوصی برای شما ارسال نشده‌است.
+            </div>
+        </DataSourceIsEmptyTemplate>
+    </DntSimpleTable>
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="_privateMessages!.TotalItems"
+                        BasePath="@PrivateMessagesRoutingConstants.MyPrivateMessages"
+                        CurrentPage="CurrentPage"/>
+
+    <PrivateMessagesHelp/>
+</DntLoading>

@@ -1,0 +1,28 @@
+@using DntSite.Web.Features.Posts.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    مطلب تبدیل شده جدید ذیل به سایت اضافه شده است:
+    <br/>
+    <div dir="rtl" style="font-family: Tahoma; ">
+        <strong>عنوان :</strong><br/>
+        @Model.Source
+        <br/>
+        <strong>مطلب :</strong><br/>
+        @Model.Dest
+        <br/>
+        <br/>
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <span lang="fa" dir="ltr"> {MsgDateTime} </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public NewConvertedBlogPostModel Model { set; get; } = null!;
+
+}

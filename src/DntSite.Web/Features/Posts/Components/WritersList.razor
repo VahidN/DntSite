@@ -1,0 +1,22 @@
+@using DntSite.Web.Features.UserProfiles.Components
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntLoading IsLoading="@(Users is null)">
+    <ul class="list-group">
+        @foreach (var item in Users!)
+        {
+            <a class="list-group-item list-group-item-action d-flex align-items-center"
+               href="@GetUrl(item.User.FriendlyName)">
+                <PrintUser User="item.User" ShowAsUrl="false"/>
+                <span class="badge @BadgeValueBgColor.Value rounded-pill ms-auto">
+                    <DntToPersianNumbers Value="item.NumberOfPosts"/>
+                </span>
+            </a>
+        }
+    </ul>
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="TotalItemCount"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

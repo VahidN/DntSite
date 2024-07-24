@@ -1,0 +1,43 @@
+@attribute [Route(PrivateMessagesRoutingConstants.SendPrivateMessageToUserId)]
+@attribute [Route(PrivateMessagesRoutingConstants.SendPrivateMessageEditEditId)]
+@attribute [Route(PrivateMessagesRoutingConstants.SendPrivateMessageDeleteDeleteId)]
+
+
+<DntSitePageTitle PageTitle="ارسال پیام خصوصی"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ارسال پیام خصوصی
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync" FormName="@nameof(SendPrivateMessage)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntDisplayTextField LabelName="ارسال به" Value="@_friendlyName"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiCardText"
+                          @bind-Value="Model.Title"/>
+
+            <DntHtmlEditor @bind-Value="Model.DescriptionText"
+                           IsReadOnly="false"
+                           AllowUploadFile="false"
+                           UploadFileApiPath=""
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="false"
+                           UploadImageFileApiPath=""
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="220px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+    </FrameBody>
+</DntCardFrame>

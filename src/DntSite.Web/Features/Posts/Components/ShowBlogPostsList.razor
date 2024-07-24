@@ -1,0 +1,51 @@
+@using DntSite.Web.Features.AppConfigs.Services
+@using DntSite.Web.Features.Posts.Entities
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+<DntLoading IsLoading="@(BlogPosts is null)">
+    @foreach (var blogPost in BlogPosts!.Data)
+    {
+        if (ApplicationState.CurrentUser.CanUserViewThisPost(blogPost))
+        {
+            <ShowBlogPostItem TReactionEntity="BlogPostReaction"
+                              TForeignKeyEntity="BlogPost"
+                              ShowBriefDescription="true"
+                              ShowTags="true"
+                              SiteName="@ApplicationState.AppSetting?.BlogName"
+                              ShowCommentsButton="false"
+                              CommentsUrlTemplate="@PostsRoutingConstants.CommentsUrlTemplate"
+                              PostUrlTemplate="@PostsRoutingConstants.PostUrlTemplate"
+                              PostTagUrlTemplate="@PostsRoutingConstants.PostTagUrlTemplate"
+                              Id="blogPost.Id"
+                              Body="@blogPost.Body"
+                              Reactions="blogPost.Reactions"
+                              Tags="@GetTags(blogPost)"
+                              Title="@blogPost.Title"
+                              BriefDescription="@blogPost.BriefDescription"
+                              CreatedAt="blogPost.Audit.CreatedAt"
+                              RecordUser="blogPost.User"
+                              NumberOfComments="blogPost.EntityStat.NumberOfComments"
+                              NumberOfViews="blogPost.EntityStat.NumberOfViews"
+                              ReadingTimeMinutes="blogPost.ReadingTimeMinutes"
+                              CreatedByUserAgent="@blogPost.Audit.CreatedByUserAgent"
+                              NumberOfViewsFromFeed="blogPost.EntityStat.NumberOfViewsFromFeed"
+                              CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                              CanUserEditThisPost="@CanUserEditThisPost(blogPost)"
+                              EditPostUrlTemplate="@PostsRoutingConstants.EditPostUrlTemplate"
+                              DeletePostUrlTemplate="@PostsRoutingConstants.DeletePostUrlTemplate"
+                              ShowReactions="true"
+                              ShowSocialLinks="true"
+                              ShowNumberOfViews="true"
+                              ShowNumberOfComments="true"/>
+        }
+        else
+        {
+            <NoAccessToPost BlogPost="blogPost"/>
+        }
+    }
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="BlogPosts!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

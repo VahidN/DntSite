@@ -1,0 +1,53 @@
+﻿@attribute [Route(QuestionsRoutingConstants.WriteQuestion)]
+@attribute [Route(QuestionsRoutingConstants.WriteQuestionEditEditId)]
+@attribute [Route(QuestionsRoutingConstants.WriteQuestionDeleteDeleteId)]
+<DntSitePageTitle PageTitle="ارسال یک پرسش‌"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ارسال یک پرسش‌
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="WriteQuestionModel" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(WriteQuestion)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="WriteQuestionModel.Title"/>
+
+            <DntHtmlEditor @bind-Value="WriteQuestionModel.Description"
+                           LabelName="توضیحات"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="300px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputTag
+                FieldIcon="@DntBootstrapIcons.BiTag"
+                FieldAddButtonIcon="@DntBootstrapIcons.BiPlusCircle"
+                LabelName="برچسب‌ها"
+                FieldAddButtonTitle="افزودن تگ به لیست"
+                FieldRemoveButtonTitle="حذف تگ از لیست"
+                AutoCompleteDataList="AutoCompleteDataList"
+                @bind-InputTags="WriteQuestionModel.Tags"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+
+        <WriteQuestionHelp/>
+    </FrameBody>
+</DntCardFrame>

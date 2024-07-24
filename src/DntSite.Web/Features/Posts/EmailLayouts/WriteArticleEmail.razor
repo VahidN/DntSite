@@ -1,0 +1,37 @@
+@using DntSite.Web.Features.Posts.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    مطلب جدید ذیل به سایت اضافه/حذف/ویرایش شده است:
+    <br/>
+    <br/>
+    <div align="right" dir="rtl" style="font-family: Tahoma; ">
+        <strong>عنوان</strong>: @Model.Title
+        <br/>
+        <strong>مطلب</strong>: @Model.Body.HtmlRaw()
+        <br/>
+        <br/>
+        برای مشاهده آن
+        <a href="@PostUrl">
+            اینجا
+        </a> کلیک نمائید.
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+</LayoutView>
+
+@code {
+
+    [Parameter] public WriteArticleEmailModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(PostsRoutingConstants.PostBase).CombineUrl($"/{Model.PmId}");
+
+}

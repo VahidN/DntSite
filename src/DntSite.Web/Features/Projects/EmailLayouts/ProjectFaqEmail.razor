@@ -1,0 +1,35 @@
+@using DntSite.Web.Features.Projects.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    راهنمای پروژه ذیل به سایت اضافه شده است. مراتبط جهت اطلاع:
+    <br/>
+    <div dir="rtl" style="font-family: Tahoma; ">
+        <strong>عنوان: </strong>
+        <br/>
+        <a href="@PostUrl">@Model.Title</a>
+        <br/>
+        <strong>متن: </strong>
+        <br/>
+        @Model.Body.HtmlRaw()
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+
+        @Model.MsgDateTime
+    </span>
+    <br/>
+
+</LayoutView>
+
+@code {
+
+    [Parameter] public ProjectFaqEmailModel Model { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectFaqsBase).CombineUrl(Model.ProjectId).CombineUrl(Model.FaqId);
+
+}

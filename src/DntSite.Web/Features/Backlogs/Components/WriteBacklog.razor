@@ -1,0 +1,54 @@
+﻿@attribute [Route(BacklogsRoutingConstants.WriteBacklog)]
+@attribute [Route(BacklogsRoutingConstants.WriteBacklogEditEditId)]
+@attribute [Route(BacklogsRoutingConstants.WriteBacklogDeleteDeleteId)]
+
+<DntSitePageTitle PageTitle="ارسال پیشنهاد"/>
+
+<DntCardFrame>
+    <FrameHeader>
+        ارسال یک پیشنهاد ارائه مطلب
+    </FrameHeader>
+    <FrameBody>
+        <EditForm Model="WriteBacklogModel" method="post" OnValidSubmit="PerformAsync"
+                  FormName="@nameof(WriteBacklog)" Enhance>
+            <DataAnnotationsValidator/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiNewspaper"
+                          @bind-Value="WriteBacklogModel.Title"/>
+
+            <DntHtmlEditor @bind-Value="WriteBacklogModel.Description"
+                           LabelName="توضیحات"
+                           ShowLabel="true"
+                           IsReadOnly="false"
+                           AllowUploadFile="true"
+                           UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
+                           AcceptedUploadFileFormats=".zip,.rar,.7z"
+                           MaximumUploadFileSizeInBytes="104857600"
+                           AdditionalJsonDataDuringFileUpload=""
+                           AllowUploadImageFile="true"
+                           UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload"
+                           AcceptedUploadImageFormats="image/png, image/jpeg"
+                           MaximumUploadImageSizeInBytes="614400"
+                           AdditionalJsonDataDuringImageFileUpload=""
+                           AllowInsertImageUrl="true"
+                           Height="200px"
+                           Placeholder=""
+                           Theme="snow"
+                           Direction="rtl"/>
+
+            <DntInputTag
+                FieldIcon="@DntBootstrapIcons.BiTag"
+                FieldAddButtonIcon="@DntBootstrapIcons.BiPlusCircle"
+                LabelName="برچسب‌ها"
+                FieldAddButtonTitle="افزودن تگ به لیست"
+                FieldRemoveButtonTitle="حذف تگ از لیست"
+                AutoCompleteDataList="AutoCompleteDataList"
+                @bind-InputTags="WriteBacklogModel.Tags"/>
+
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+        </EditForm>
+
+        <WriteBacklogHelp/>
+    </FrameBody>
+</DntCardFrame>

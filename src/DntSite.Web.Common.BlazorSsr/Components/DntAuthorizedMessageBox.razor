@@ -1,0 +1,16 @@
+<DntMessageBox Type="@Type" IsVisible="true">
+    <AuthorizeView>
+        <Authorized>
+            @if (!string.IsNullOrWhiteSpace(AuthorizedMessage))
+            {
+                <span>@AuthorizedMessage</span>
+            }
+        </Authorized>
+        <NotAuthorized>
+            @if (!string.IsNullOrWhiteSpace(NotAuthorizedMessage))
+            {
+                <span>@NotAuthorizedMessage</span>
+            }
+        </NotAuthorized>
+    </AuthorizeView>
+</DntMessageBox>

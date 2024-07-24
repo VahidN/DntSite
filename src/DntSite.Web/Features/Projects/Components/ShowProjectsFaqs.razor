@@ -1,0 +1,40 @@
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Projects.Entities
+@attribute [Route(ProjectsRoutingConstants.ProjectsFaqs)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsFaqsPageCurrentPage)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsFaqsUserFriendlyName)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsFaqsUserFriendlyNamePageCurrentPage)]
+@attribute [Route(ProjectsRoutingConstants.ProjectFaqsProjectId)]
+@attribute [Route(ProjectsRoutingConstants.ProjectFaqsProjectIdPageCurrentPage)]
+
+<DntSitePageTitle PageTitle="@_pageTitle"/>
+
+<DntLoading IsLoading="@(_posts is null)">
+    @foreach (var faq in _posts!.Data)
+    {
+        <ShowBlogPostCommentItem
+            PostId="@faq.Id"
+            CommentId="@faq.Id"
+            Body="@faq.Description"
+            Reactions="@faq.Reactions"
+            RecordUser="@faq.User"
+            CreatedAt="@faq.Audit.CreatedAt"
+            CreatedByUserAgent="@faq.Audit.CreatedByUserAgent"
+            TReactionEntity="ProjectFaqReaction"
+            TForeignKeyEntity="ProjectFaq"
+            ShowManageBlogPostCommentItem="false"
+            ShowPleaseVoteMessage="false"
+            PostAbsoluteUrl="@GetPostAbsoluteUrl(faq)"
+            ShowPostTitle="true"
+            PostTitle="@faq.Title">
+            <AdditionalInfoContent>
+                <ProjectUrl Project="faq.Project"/>
+            </AdditionalInfoContent>
+        </ShowBlogPostCommentItem>
+    }
+
+    <DntSimplePaginator ItemsPerPage="PostItemsPerPage"
+                        TotalItemCount="_posts!.TotalItems"
+                        BasePath="@GetBasePath()"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>
