@@ -9,7 +9,7 @@ public static class SecurityHeadersBuilder
             .AddContentTypeOptionsNoSniff()
             .AddReferrerPolicyStrictOriginWhenCrossOrigin()
             .AddCrossOriginOpenerPolicy(builder => builder.SameOrigin())
-            .AddCrossOriginResourcePolicy(builder => builder.SameOrigin())
+            //.AddCrossOriginResourcePolicy(builder => builder.SameOrigin())
             .AddCrossOriginEmbedderPolicy(builder => builder.RequireCorp())
             .AddContentSecurityPolicy(builder =>
             {
