@@ -17,7 +17,7 @@ var webApp = builder.Build();
 ConfigureMiddlewares(webApp, webApp.Environment);
 ConfigureEndpoints(webApp);
 InitApplication(webApp);
-await RunAsync(webApp);
+await RunAsync(webApp, webApp.Environment);
 
 void ConfigureServices(IServiceCollection services, IWebHostEnvironment environment, IConfiguration configuration)
 {
@@ -89,23 +89,12 @@ void InitApplication(IHost app)
     app.InitializeDb();
 }
 
-Task RunAsync(WebApplication webApplication)
+Task RunAsync(WebApplication webApplication, IHostEnvironment env)
 {
-    var runTask = webApplication.RunAsync();
-
     if (!Debugger.IsAttached)
     {
-        var server = webApplication.Services.GetRequiredService<IServer>();
-        var addresses = server.Features.Get<IServerAddressesFeature>()?.Addresses;
-
-        if (addresses is null || addresses.Count == 0)
-        {
-            addresses = ["-> http://localhost:5000"];
-        }
-
-        WriteLine(Invariant(
-            $"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp.RunAsync() @ {string.Join(separator: ", ", addresses)}"));
+        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp.RunAsync() with IsDevelopment:{env.IsDevelopment()} @ http://localhost:5000"));
     }
 
-    return runTask;
+    return webApplication.RunAsync();
 }
