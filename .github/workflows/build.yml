@@ -14,4 +14,4 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Build the project
-      run: dotnet Build ./src/DntSite.Web/DntSite.Web.csproj
+      run: dotnet build --project ./src/DntSite.Web/DntSite.Web.csproj
