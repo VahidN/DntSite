@@ -10,13 +10,16 @@ public static class NewsRoutingConstants
 
     public const string NewsRedirectBase = "/news/redirect";
     public const string NewsRedirectRedirectId = $"{NewsRedirectBase}/{{RedirectId:int}}";
+    public const string NewsArchiveNewsRedirectId = "/newsarchive/news/{RedirectId:int}";
 
     public const string NewsDetailsBase = "/news/details";
     public const string NewsDetailsNewsId = $"{NewsDetailsBase}/{{NewsId:int}}";
+    public const string NewsArchiveDetailsNewsId = "/newsarchive/details/{NewsId:int}";
 
     public const string NewsTag = "/news-tag";
     public const string NewsTagPageCurrentPage = "/news-tag/page/{CurrentPage:int}";
     public const string NewsTagTagName = "/news-tag/{TagName}";
+    public const string NewsTagOldTagName = "/newstag/{TagName}";
     public const string NewsTagTagNamePageCurrentPage = "/news-tag/{TagName}/page/{CurrentPage:int}";
     public const string NewsWriters = "/news-writers";
     public const string NewsWritersPageCurrentPage = "/news-writers/page/{CurrentPage:int}";

@@ -1,6 +1,7 @@
 @using DntSite.Web.Features.News.Entities
 @using DntSite.Web.Features.Posts.Components
 @attribute [Route(NewsRoutingConstants.NewsDetailsNewsId)]
+@attribute [Route(NewsRoutingConstants.NewsArchiveDetailsNewsId)]
 
 <DntLoading IsLoading="@(_news is null || CurrentPost is null || _newsComments is null)">
     <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
