@@ -22,26 +22,26 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y%m%d%H%M%S')"
 
     - name: Publish the project
-        shell: bash
-        run: |
-          release_name="release-${{ steps.date.outputs.date }}"
+      shell: bash
+      run: |
+        release_name="release-${{ steps.date.outputs.date }}"
 
-          # Build everything
-          dotnet publish /src/DntSite.Web/DntSite.Web.csproj -c Release -o "$release_name"
+        # Build everything
+        dotnet publish /src/DntSite.Web/DntSite.Web.csproj -c Release -o "$release_name"
 
-          # Pack files
-          if [ "${{ matrix.target }}" == "win-x64" ]; then
+        # Pack files
+        if [ "${{ matrix.target }}" == "win-x64" ]; then
             7z a -tzip "${release_name}.zip" "./${release_name}/*"
-          else
+        else
             tar czvf "${release_name}.tar.gz" "$release_name"
-          fi
+        fi
 
-          # Delete output directory
-          rm -r "$release_name"
+        # Delete output directory
+        rm -r "$release_name"
 
     - name: Create a release artifact
-        uses: softprops/action-gh-release@v2
-        with:
-          files: "release*"
-        env:
+      uses: softprops/action-gh-release@v2
+      with:
+        files: "release*"
+      env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
