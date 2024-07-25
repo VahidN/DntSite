@@ -1,5 +1,6 @@
 <Project>
     <PropertyGroup>
+        <Copyright>DNT Site $([System.DateTime]::UtcNow.ToString("yyyy.MM.dd.HH.mm"))</Copyright>
         <LangVersion>latest</LangVersion>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>

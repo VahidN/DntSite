@@ -93,7 +93,7 @@ Task RunAsync(WebApplication webApplication, IHostEnvironment env)
     if (!Debugger.IsAttached)
     {
         WriteLine(Invariant(
-            $"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp.RunAsync() with IsDevelopment:{env.IsDevelopment()} @ http://localhost:5000"));
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp[V{Assembly.GetExecutingAssembly().GetBuildDateTime()}].RunAsync() with IsDevelopment:{env.IsDevelopment()} @ http://localhost:5000"));
     }
 
     return webApplication.RunAsync();

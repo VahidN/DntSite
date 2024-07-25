@@ -18,4 +18,6 @@ public partial class ServerInfo
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([AppConfigsBreadCrumbs.ServerInfoBreadCrumb]);
+
+    private static string? GetVersionInfo() => Assembly.GetExecutingAssembly().GetBuildDateTime();
 }

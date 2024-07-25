@@ -1,5 +1,4 @@
-﻿@using DntSite.Web.Features.AppConfigs.RoutingConstants
-@attribute [Route(AppConfigsRoutingConstants.ServerInfo)]
+﻿@attribute [Route(AppConfigsRoutingConstants.ServerInfo)]
 
 <DntSitePageTitle PageTitle="مشخصات سرور"/>
 
@@ -7,6 +6,7 @@
     <DntCardFrame MarginTop="1">
         <FrameHeader>
             مشخصات پروسه‌ی برنامه
+            <span dir="ltr">[@@ @Invariant($"{DateTime.UtcNow:yyyy-MM-dd, HH:mm:ss}"), V @GetVersionInfo()]</span>
         </FrameHeader>
         <FrameBody>
             <div>
@@ -145,7 +145,7 @@
             </div>
             <div>
                 <label>نگارش برنامه: </label>
-                <span dir="ltr">@_webServerInfo!.Runtime.InformationalVersion</span>
+                <span dir="ltr">@_webServerInfo!.Runtime.InformationalVersion, @GetVersionInfo()</span>
             </div>
         </FrameBody>
     </DntCardFrame>

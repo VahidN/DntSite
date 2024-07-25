@@ -3,6 +3,11 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+        <AssemblyAttribute Include="DNTCommon.Web.Core.BuildDateAttribute">
+            <_Parameter1>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HH.mm"))</_Parameter1>
+        </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
     <Using Include="Microsoft.EntityFrameworkCore"/>
     <Using Include="Microsoft.EntityFrameworkCore.Metadata.Builders"/>
     <Using Include="Microsoft.EntityFrameworkCore.ChangeTracking"/>
