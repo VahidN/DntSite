@@ -39,6 +39,6 @@
 
     private string UserUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.Users).CombineUrl($"/{Uri.EscapeDataString(Model.FriendlyName)}");
 
-    private string ImageUrl => Model.SiteRootUri.CombineUrl(ApiUrlsRoutingConstants.File.HttpAny.Avatar).CombineUrl(Uri.EscapeDataString(Model.Photo));
+    private string ImageUrl => $"{Model.SiteRootUri.CombineUrl(ApiUrlsRoutingConstants.File.HttpAny.Avatar)}?name={Uri.EscapeDataString(Model.Photo)}";
 
 }
