@@ -8,7 +8,6 @@ namespace DntSite.Web.Features.ServicesConfigs;
 
 public static class DbContextConfig
 {
-    private static readonly string[] NamesToIgnoreForUpdates = ["EntityStat_", "Rating_"];
     private static readonly string[] NamesToIgnoreForAllCommands = [nameof(AppLogItem)];
 
     public static IServiceCollection AddConfiguredDbContext(this IServiceCollection services,
@@ -69,15 +68,10 @@ public static class DbContextConfig
                 typeof(AppLogItem))
             .SkipCachingCommands(commandText
                 => commandText.Contains(value: "NEWID()", StringComparison.InvariantCultureIgnoreCase))
-            .SkipCacheInvalidationCommands(commandText
-                => ShouldIgnoreUpdateCommands(commandText) || ShouldIgnoreForAllCommands(commandText))
+            .SkipCacheInvalidationCommands(ShouldIgnoreForAllCommands)
             .UseDbCallsIfCachingProviderIsDown(TimeSpan.FromMinutes(value: 1)));
 
     private static bool ShouldIgnoreForAllCommands(string commandText)
         => NamesToIgnoreForAllCommands.Any(item
             => commandText.Contains(item, StringComparison.InvariantCultureIgnoreCase));
-
-    private static bool ShouldIgnoreUpdateCommands(string commandText)
-        => commandText.Contains(value: "update ", StringComparison.InvariantCultureIgnoreCase) &&
-           NamesToIgnoreForUpdates.Any(item => commandText.Contains(item, StringComparison.InvariantCultureIgnoreCase));
 }
