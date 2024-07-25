@@ -15,11 +15,11 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Build the project
-      run: dotnet build ./src/DntSite.Web/DntSite.Web.csproj
+      run: dotnet build ./src/DntSite.Web/DntSite.Web.csproj -c Release
 
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%Y%m%d%H%M%S')"
+      run: echo "date=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
     - name: Publish the project
       shell: bash
@@ -27,7 +27,7 @@ jobs:
         release_name="release-${{ steps.date.outputs.date }}"
 
         # Build everything
-        dotnet publish /src/DntSite.Web/DntSite.Web.csproj -c Release -o "$release_name"
+        dotnet publish ./src/DntSite.Web/DntSite.Web.csproj -c Release -o "$release_name"
 
         # Pack files
         if [ "${{ matrix.target }}" == "win-x64" ]; then
