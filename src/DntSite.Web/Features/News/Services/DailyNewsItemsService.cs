@@ -64,20 +64,8 @@ public class DailyNewsItemsService(
             return;
         }
 
-        item.EntityStat.NumberOfViews++;
-
-        if (fromFeed)
-        {
-            item.EntityStat.NumberOfViewsFromFeed++;
-        }
-
-        var now = DateTime.UtcNow;
-
-        if (item.LastHttpStatusCodeCheckDateTime is null || item.LastHttpStatusCodeCheckDateTime.Value.Day != now.Day)
-        {
-            item.LastHttpStatusCodeCheckDateTime = now;
-            item.LastHttpStatusCode = await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(item.Url);
-        }
+        UpdateNumberOfViews(fromFeed, item);
+        await UpdateLastHttpStatusCodeAsync(item);
 
         await uow.SaveChangesAsync();
     }
@@ -509,5 +497,30 @@ public class DailyNewsItemsService(
         }
 
         return OperationStat.Succeeded;
+    }
+
+    private static void UpdateNumberOfViews(bool fromFeed, DailyNewsItem item)
+    {
+        item.EntityStat.NumberOfViews++;
+
+        if (fromFeed)
+        {
+            item.EntityStat.NumberOfViewsFromFeed++;
+        }
+    }
+
+    private async Task UpdateLastHttpStatusCodeAsync(DailyNewsItem item)
+    {
+        var now = DateTime.UtcNow;
+
+        if (item.LastHttpStatusCodeCheckDateTime is null ||
+            item.LastHttpStatusCodeCheckDateTime.Value.ToDateOnly() != now.ToDateOnly() ||
+            item.LastHttpStatusCode is null)
+        {
+            item.LastHttpStatusCodeCheckDateTime = now;
+
+            item.LastHttpStatusCode = await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(item.Url) ??
+                                      HttpStatusCode.RequestTimeout;
+        }
     }
 }
