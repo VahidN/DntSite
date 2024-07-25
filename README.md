@@ -6,7 +6,7 @@
   </a>
 </p>
 
-این پروژه، سورس کامل و در حال استفاده‌ی وب‌سایت «https://www.dntips.ir» است که بر اساس [فناوری‌هایی](https://github.com/VahidN/DntSite/Directory.Packages.props) مانند دات‌نت 8، Blazor SSR ،EF-Core و بانک اطلاعاتی SQLite توسعه یافته‌است.
+این پروژه، سورس کامل و در حال استفاده‌ی وب‌سایت «[https://www.dntips.ir](https://www.dntips.ir)» است که بر اساس [فناوری‌هایی](https://github.com/VahidN/DntSite/blob/main/Directory.Packages.props) مانند دات‌نت 8، Blazor SSR ،EF-Core و بانک اطلاعاتی SQLite توسعه یافته‌است.
 
 
 # نحوه‌ی استفاده
