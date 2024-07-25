@@ -42,6 +42,7 @@ jobs:
     - name: Create a release artifact
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: ${{ steps.date.outputs.date }}
         files: "release*"
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
