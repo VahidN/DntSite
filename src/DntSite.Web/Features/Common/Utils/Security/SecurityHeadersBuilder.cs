@@ -2,15 +2,12 @@ namespace DntSite.Web.Features.Common.Utils.Security;
 
 public static class SecurityHeadersBuilder
 {
-    public static HeaderPolicyCollection GetCsp(bool isDevelopment)
+    public static HeaderPolicyCollection GetCsp(bool isDevelopment, bool enableCrossOriginPolicy)
     {
         var policy = new HeaderPolicyCollection().AddFrameOptionsDeny()
             .AddXssProtectionBlock()
             .AddContentTypeOptionsNoSniff()
-            .AddReferrerPolicyStrictOriginWhenCrossOrigin()
-            .AddCrossOriginOpenerPolicy(builder => builder.SameOrigin())
-            //.AddCrossOriginResourcePolicy(builder => builder.SameOrigin())
-            .AddCrossOriginEmbedderPolicy(builder => builder.RequireCorp())
+            .EnableCrossOriginPolicy(enableCrossOriginPolicy)
             .AddContentSecurityPolicy(builder =>
             {
                 builder.AddBaseUri().Self();
@@ -66,4 +63,15 @@ public static class SecurityHeadersBuilder
 
         return policy;
     }
+
+    /// <summary>
+    ///     Note: enabling it will prevent us from using images and icons from the other sites
+    /// </summary>
+    private static HeaderPolicyCollection EnableCrossOriginPolicy(this HeaderPolicyCollection policies, bool enable)
+        => enable
+            ? policies.AddReferrerPolicyStrictOriginWhenCrossOrigin()
+                .AddCrossOriginOpenerPolicy(builder => builder.SameOrigin())
+                .AddCrossOriginResourcePolicy(builder => builder.SameOrigin())
+                .AddCrossOriginEmbedderPolicy(builder => builder.RequireCorp())
+            : policies;
 }

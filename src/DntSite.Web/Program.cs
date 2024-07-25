@@ -4,8 +4,6 @@ using DntSite.Web.Features.DbLogger.Services;
 using DntSite.Web.Features.DbSeeder.Services;
 using DntSite.Web.Features.ServicesConfigs;
 using DntSite.Web.Features.UserProfiles.Endpoints;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 
@@ -52,7 +50,8 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
 
     app.UseExceptionHandler(errorHandlingPath: "/Error", createScopeForErrors: true);
 
-    var headerPolicyCollection = SecurityHeadersBuilder.GetCsp(env.IsDevelopment());
+    var headerPolicyCollection = SecurityHeadersBuilder.GetCsp(env.IsDevelopment(), enableCrossOriginPolicy: false);
+
     app.UseSecurityHeaders(headerPolicyCollection);
 
     if (!env.IsDevelopment())
@@ -93,7 +92,8 @@ Task RunAsync(WebApplication webApplication, IHostEnvironment env)
 {
     if (!Debugger.IsAttached)
     {
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp.RunAsync() with IsDevelopment:{env.IsDevelopment()} @ http://localhost:5000"));
+        WriteLine(Invariant(
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp.RunAsync() with IsDevelopment:{env.IsDevelopment()} @ http://localhost:5000"));
     }
 
     return webApplication.RunAsync();
