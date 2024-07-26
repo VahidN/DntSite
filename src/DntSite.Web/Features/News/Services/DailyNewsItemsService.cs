@@ -260,7 +260,7 @@ public class DailyNewsItemsService(
             {
                 var url = item.Url;
                 item.LastHttpStatusCodeCheckDateTime = DateTime.UtcNow;
-                item.LastHttpStatusCode = await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url);
+                item.LastHttpStatusCode = await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, logger);
                 await uow.SaveChangesAsync();
 
                 await Task.Delay(TimeSpan.FromSeconds(value: 3));
@@ -519,7 +519,7 @@ public class DailyNewsItemsService(
         {
             item.LastHttpStatusCodeCheckDateTime = now;
 
-            item.LastHttpStatusCode = await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(item.Url) ??
+            item.LastHttpStatusCode = await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(item.Url, logger) ??
                                       HttpStatusCode.RequestTimeout;
         }
     }
