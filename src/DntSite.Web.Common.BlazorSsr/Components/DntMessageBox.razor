@@ -1,7 +1,9 @@
 @if (IsVisible && ChildContent is not null)
 {
     <div id="@AlertDivId" class="alert @Type.Value fade show mb-@MarginBottom mt-@MarginTop shadow-sm dnt-messagebox"
-         role="alert" @attributes="@AdditionalAttributes">
+         role="alert"
+         data-enhance-nav="false"
+         @attributes="@AdditionalAttributes">
         @if (ShowCloseButton)
         {
             <button type="button"
