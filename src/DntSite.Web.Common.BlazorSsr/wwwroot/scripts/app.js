@@ -1286,6 +1286,9 @@ window.DntSyntaxHighlighter = {
 
 window.DntReportErrors = {
     postError: errorMessage => {
+        if (!errorMessage || errorMessage.toLowerCase().includes("s2/favicons")) {
+            return;
+        }
         fetch("/api/JavaScriptErrorsReport/Log", {
             method: "POST",
             body: JSON.stringify(errorMessage),
