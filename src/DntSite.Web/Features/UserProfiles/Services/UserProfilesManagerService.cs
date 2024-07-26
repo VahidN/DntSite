@@ -400,8 +400,9 @@ public class UserProfilesManagerService(
         }
 
         var user = await AddUserAsync(model);
-        await usersManagerEmailsService.UserProfileEditedEmailToAdminAsync(user);
         await UpdateUserImageFromGravatarAsync(user);
+
+        await usersManagerEmailsService.UserProfileEditedEmailToAdminAsync(user);
 
         return (
             " ثبت نام شما با موفقیت انجام شد! " + "ایمیل فعال سازی اکانت شما پس از بررسی مدیریت سایت، ارسال می‌گردد. " +
@@ -589,9 +590,10 @@ public class UserProfilesManagerService(
             OriginalPassword = ""
         }, user); // sends to the new address
 
-        await usersManagerEmailsService.UserProfileEditedEmailToAdminAsync(user);
         await SendActivateYourAccountEmailAgainAsync(user);
         await UpdateUserImageFromGravatarAsync(user);
+
+        await usersManagerEmailsService.UserProfileEditedEmailToAdminAsync(user);
 
         return OperationStat.Succeeded;
     }
