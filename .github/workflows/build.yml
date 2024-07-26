@@ -31,9 +31,9 @@ jobs:
 
         # Pack files
         if [ "${{ matrix.target }}" == "win-x64" ]; then
-            7z a -tzip "${release_name}.zip" "./${release_name}/publish/*"
+            7z a -tzip "${release_name}.zip" "./${release_name}/publish/"*
         else
-            zip "${release_name}.zip" "./${release_name}/publish/*" -r
+            zip "${release_name}.zip" "./${release_name}/publish/"* -r
         fi
 
         # Delete output directory
