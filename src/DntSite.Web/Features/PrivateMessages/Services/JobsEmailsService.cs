@@ -17,11 +17,11 @@ public class JobsEmailsService(
         var emails = users.Select(x => x.EMail).ToList();
 
         return emailsFactoryService.SendEmailToAllUsersAsync<DailyNewsletterEmail, DailyNewsletterEmailModel>(emails,
-            "DailyNewsletter", "", "DailyNewsletter", new DailyNewsletterEmailModel
+            messageId: "DailyNewsletter", inReplyTo: "", references: "DailyNewsletter", new DailyNewsletterEmailModel
             {
                 BaseUrl = url,
                 Body = content
-            }, $"خلاصه مطالب {yesterday.ToLongPersianDateString()}", false);
+            }, $"خلاصه مطالب {yesterday.ToLongPersianDateString()}", addIp: false);
     }
 
     public async Task SendNewPersianYearEmailsAsync()
@@ -29,14 +29,20 @@ public class JobsEmailsService(
         var emails = (await commonService.AllValidatedEmailsUsersAsync()).Select(x => x.EMail).ToList();
 
         await emailsFactoryService.SendEmailToAllUsersAsync<NewPersianYear, NewPersianYearModel>(emails,
-            "NewPersianYear", "", "NewPersianYear", new NewPersianYearModel(), "سال نو مبارک", false);
+            messageId: "NewPersianYear", inReplyTo: "", references: "NewPersianYear", new NewPersianYearModel(),
+            emailSubject: "سال نو مبارک", addIp: false);
     }
 
     public async Task SendDailyBirthDatesEmailAsync()
     {
         var emails = (await statService.GetTodayBirthdayListAsync()).Select(x => x.EMail).ToList();
 
-        await emailsFactoryService.SendEmailToAllUsersAsync<Birthday, BirthdayModel>(emails, "DailyBirthDates",
-            "DailyBirthDates", "DailyBirthDates", new BirthdayModel(), "سال روز تولدتان مبارک", false);
+        await emailsFactoryService.SendEmailToAllUsersAsync<Birthday, BirthdayModel>(emails,
+            messageId: "DailyBirthDates", inReplyTo: "DailyBirthDates", references: "DailyBirthDates",
+            new BirthdayModel(), emailSubject: "سال روز تولدتان مبارک", addIp: false);
+
+        await emailsFactoryService.SendEmailToAllAdminsAsync<Birthday, BirthdayModel>(messageId: "DailyBirthDates",
+            inReplyTo: "DailyBirthDates", references: "DailyBirthDates", new BirthdayModel(),
+            emailSubject: "سال روز تولدتان مبارک");
     }
 }
