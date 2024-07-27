@@ -21,7 +21,7 @@ public class JobsEmailsService(
             {
                 BaseUrl = url,
                 Body = content
-            }, $"خلاصه مطالب {yesterday.ToLongPersianDateString()}", addIp: false);
+            }, $"خلاصه مطالب {yesterday.ToPersianDateTextify()}", addIp: false);
     }
 
     public async Task SendNewPersianYearEmailsAsync()
