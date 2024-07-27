@@ -42,7 +42,7 @@ public class DailyNewsletter(
         return _data.ToString();
     }
 
-    private static string FixDirection(string data)
+    private static string WrapContentWithCorrectDirection(string data)
     {
         if (string.IsNullOrWhiteSpace(data))
         {
@@ -80,12 +80,12 @@ public class DailyNewsletter(
             var finalUrl = url.CombineUrl(BacklogsRoutingConstants.BacklogsDetailsBase)
                 .CombineUrl(post.Id.ToString(CultureInfo.InvariantCulture));
 
-            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a href='{0}'><b>{1}</b></a><br/>", finalUrl,
-                post.Title);
+            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a dir='{2}' href='{0}'><b>{1}</b></a><br/>",
+                finalUrl, post.Title, post.Title.GetDir());
 
             _data.Append(post.User!.FriendlyName);
             _data.AppendFormat(CultureInfo.InvariantCulture, format: "{0}<br/>", Hr);
-            _data.Append(FixDirection(post.Description.GetBriefDescription(charLength: 200)));
+            _data.Append(WrapContentWithCorrectDirection(post.Description.GetBriefDescription(charLength: 200)));
             _data.Append(value: "<br/><br/>");
             _data.Append(value: "</li>");
         }
@@ -114,12 +114,12 @@ public class DailyNewsletter(
                 .CombineUrl(post.CourseId.ToString(CultureInfo.InvariantCulture))
                 .CombineUrl(post.DisplayId.ToString(format: "D"));
 
-            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a href='{0}'><b>{1}</b></a><br/>", finalUrl,
-                post.Title);
+            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a dir='{2}' href='{0}'><b>{1}</b></a><br/>",
+                finalUrl, post.Title, post.Title.GetDir());
 
             _data.Append(post.User!.FriendlyName);
             _data.AppendFormat(CultureInfo.InvariantCulture, format: "{0}<br/>", Hr);
-            _data.Append(FixDirection(post.Body.GetBriefDescription(charLength: 200)));
+            _data.Append(WrapContentWithCorrectDirection(post.Body.GetBriefDescription(charLength: 200)));
             _data.Append(value: "<br/><br/>");
             _data.Append(value: "</li>");
         }
@@ -147,12 +147,12 @@ public class DailyNewsletter(
             var finalUrl = url.CombineUrl(RoadMapsRoutingConstants.LearningPathsDetailsBase)
                 .CombineUrl(post.Id.ToString(CultureInfo.InvariantCulture));
 
-            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a href='{0}'><b>{1}</b></a><br/>", finalUrl,
-                post.Title);
+            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a dir='{2}' href='{0}'><b>{1}</b></a><br/>",
+                finalUrl, post.Title, post.Title.GetDir());
 
             _data.Append(post.User!.FriendlyName);
             _data.AppendFormat(CultureInfo.InvariantCulture, format: "{0}<br/>", Hr);
-            _data.Append(FixDirection(post.Description.GetBriefDescription(charLength: 200)));
+            _data.Append(WrapContentWithCorrectDirection(post.Description.GetBriefDescription(charLength: 200)));
             _data.Append(value: "<br/><br/>");
             _data.Append(value: "</li>");
         }
@@ -180,15 +180,15 @@ public class DailyNewsletter(
             var finalUrl = url.CombineUrl(NewsRoutingConstants.NewsDetailsBase)
                 .CombineUrl(post.Id.ToString(CultureInfo.InvariantCulture));
 
-            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a href='{0}'><b>{1}</b></a><br/>", finalUrl,
-                post.Title);
+            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a dir='{2}' href='{0}'><b>{1}</b></a><br/>",
+                finalUrl, post.Title, post.Title.GetDir());
 
             _data.Append(post.User!.FriendlyName);
             _data.Append(value: "<br/><br/>");
 
             if (!string.IsNullOrWhiteSpace(post.BriefDescription))
             {
-                _data.Append(FixDirection(post.BriefDescription));
+                _data.Append(WrapContentWithCorrectDirection(post.BriefDescription));
                 _data.Append(value: "<br/>");
             }
 
@@ -217,12 +217,12 @@ public class DailyNewsletter(
             var finalUrl = url.CombineUrl(PostsRoutingConstants.PostBase)
                 .CombineUrl(post.Id.ToString(CultureInfo.InvariantCulture));
 
-            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a href='{0}'><b>{1}</b></a><br/>", finalUrl,
-                post.Title);
+            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a dir='{2}' href='{0}'><b>{1}</b></a><br/>",
+                finalUrl, post.Title, post.Title.GetDir());
 
             _data.Append(post.User!.FriendlyName);
             _data.AppendFormat(CultureInfo.InvariantCulture, format: "{0}<br/>", Hr);
-            _data.Append(FixDirection(post.Body));
+            _data.Append(WrapContentWithCorrectDirection(post.Body));
             _data.Append(value: "<br/><br/>");
             _data.Append(value: "</li>");
         }
@@ -250,12 +250,12 @@ public class DailyNewsletter(
             var finalUrl = url.CombineUrl(ProjectsRoutingConstants.ProjectsDetailsBase)
                 .CombineUrl(post.Id.ToString(CultureInfo.InvariantCulture));
 
-            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a href='{0}'><b>{1}</b></a><br/>", finalUrl,
-                post.Title);
+            _data.AppendFormat(CultureInfo.InvariantCulture, format: "<a dir='{2}' href='{0}'><b>{1}</b></a><br/>",
+                finalUrl, post.Title, post.Title.GetDir());
 
             _data.Append(post.User!.FriendlyName);
             _data.AppendFormat(CultureInfo.InvariantCulture, format: "{0}<br/>", Hr);
-            _data.Append(FixDirection(post.Description.GetBriefDescription(charLength: 200)));
+            _data.Append(WrapContentWithCorrectDirection(post.Description.GetBriefDescription(charLength: 200)));
             _data.Append(value: "<br/><br/>");
             _data.Append(value: "</li>");
         }
@@ -288,8 +288,8 @@ public class DailyNewsletter(
             _data.Append(value: "<li style='margin-top:12px'>");
 
             _data.AppendFormat(CultureInfo.InvariantCulture,
-                format: "<a dir='ltr' href='{0}questions/details/{1}'><b>{2}</b></a><br/>", url, question.Id,
-                question.Title);
+                format: "<a dir='{3}' href='{0}questions/details/{1}'><b>{2}</b></a><br/>", url, question.Id,
+                question.Title, question.Title.GetDir());
 
             var name = question.User is null
                 ? SharedConstants.GuestUserName
@@ -297,7 +297,7 @@ public class DailyNewsletter(
 
             _data.Append(name);
             _data.AppendFormat(CultureInfo.InvariantCulture, format: "{0}<br/>", Hr);
-            _data.Append(FixDirection(question.Description.GetBriefDescription(charLength: 200)));
+            _data.Append(WrapContentWithCorrectDirection(question.Description.GetBriefDescription(charLength: 200)));
             _data.Append(value: "<br/><br/>");
             _data.Append(value: "</li>");
         }
