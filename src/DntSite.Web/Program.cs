@@ -90,11 +90,15 @@ void InitApplication(IHost app)
 
 Task RunAsync(WebApplication webApplication, IHostEnvironment env)
 {
+    var runTask = webApplication.RunAsync();
+
     if (!Debugger.IsAttached)
     {
+        var hostEndPoints = string.Join(separator: ", ", webApplication.GetKestrelListeningAddresses());
+
         WriteLine(Invariant(
-            $"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp[V{Assembly.GetExecutingAssembly().GetBuildDateTime()}].RunAsync() with IsDevelopment:{env.IsDevelopment()} @ http://localhost:5000"));
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp[V{Assembly.GetExecutingAssembly().GetBuildDateTime()}].RunAsync() with IsDevelopment:{env.IsDevelopment()} @ {hostEndPoints}"));
     }
 
-    return webApplication.RunAsync();
+    return runTask;
 }
