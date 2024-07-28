@@ -12,6 +12,8 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
 {
     private readonly DbSet<AppSetting> _blogConfigs = uow.DbSet<AppSetting>();
 
+    private AppSetting? _appSetting;
+
     public async Task<bool> IsBannedReferrerAsync(string url)
     {
         ArgumentNullException.ThrowIfNull(url);
@@ -107,7 +109,12 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
         return false;
     }
 
-    public Task<AppSetting?> GetAppSettingsAsync() => _blogConfigs.OrderBy(x => x.Id).FirstOrDefaultAsync();
+    public async Task<AppSetting?> GetAppSettingsAsync()
+    {
+        _appSetting ??= await _blogConfigs.OrderBy(x => x.Id).FirstOrDefaultAsync();
+
+        return _appSetting;
+    }
 
     public AppSetting AddAppSetting(AppSetting data) => _blogConfigs.Add(data).Entity;
 

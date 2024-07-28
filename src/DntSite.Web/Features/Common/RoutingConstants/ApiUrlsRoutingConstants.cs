@@ -2,6 +2,14 @@ namespace DntSite.Web.Features.Common.RoutingConstants;
 
 internal static class ApiUrlsRoutingConstants
 {
+    internal static class Feed
+    {
+        internal static class HttpAny
+        {
+            internal const string Index = "/rss.xml";
+        }
+    }
+
     internal static class OpenSearch
     {
         internal static class HttpGet
