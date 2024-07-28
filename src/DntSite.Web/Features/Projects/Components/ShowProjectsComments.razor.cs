@@ -1,4 +1,4 @@
-﻿using DntSite.Web.Common.BlazorSsr.Utils;
+using DntSite.Web.Common.BlazorSsr.Utils;
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Projects.Entities;
