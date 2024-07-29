@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.Common.Utils.WebToolkit;
 
 public static class UriExtensions
 {
-    public const string FromFeedKey = "updated";
+    public const string FromFeedKey = "utm_source";
 
     public static bool IsFromFeed(this NavigationManager navigationManager)
     {
