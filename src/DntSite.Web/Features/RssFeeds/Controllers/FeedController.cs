@@ -19,12 +19,12 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     public async Task<IActionResult> Posts() => new FeedResult(await feedsService.GetPostsAsync());
 
     [OutputCache(Duration = Min15)]
-    [Microsoft.AspNetCore.Mvc.Route(template: "/feeds/posts/{name}")]
-    public async Task<IActionResult> UserPosts(string name)
+    [Microsoft.AspNetCore.Mvc.Route(template: "/feeds/posts/{name?}")]
+    public async Task<IActionResult> UserPosts(string? name = null)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            return BadRequest();
+            return RedirectToActionPermanent(nameof(Posts));
         }
 
         return await Posts();
@@ -34,12 +34,12 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     public async Task<IActionResult> Comments() => new FeedResult(await feedsService.GetCommentsAsync());
 
     [OutputCache(Duration = Min15)]
-    [Microsoft.AspNetCore.Mvc.Route(template: "/feeds/comments/{name}")]
-    public async Task<IActionResult> UserComments(string name)
+    [Microsoft.AspNetCore.Mvc.Route(template: "/feeds/comments/{name?}")]
+    public async Task<IActionResult> UserComments(string? name = null)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            return BadRequest();
+            return RedirectToActionPermanent(nameof(Comments));
         }
 
         return await Comments();
@@ -49,24 +49,24 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     public async Task<IActionResult> News() => new FeedResult(await feedsService.GetNewsAsync());
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
-    [Microsoft.AspNetCore.Mvc.Route(template: "{id}")]
-    public async Task<IActionResult> Tag(string id)
+    [Microsoft.AspNetCore.Mvc.Route(template: "{id?}")]
+    public async Task<IActionResult> Tag(string? id = null)
     {
         if (string.IsNullOrWhiteSpace(id))
         {
-            return BadRequest();
+            return NotFound();
         }
 
         return new FeedResult(await feedsService.GetTagAsync(id));
     }
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
-    [Microsoft.AspNetCore.Mvc.Route(template: "{id}")]
-    public async Task<IActionResult> Author(string id)
+    [Microsoft.AspNetCore.Mvc.Route(template: "{id?}")]
+    public async Task<IActionResult> Author(string? id = null)
     {
         if (string.IsNullOrWhiteSpace(id))
         {
-            return BadRequest();
+            return NotFound();
         }
 
         return new FeedResult(await feedsService.GetAuthorAsync(id));
@@ -76,12 +76,12 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     public async Task<IActionResult> NewsComments() => new FeedResult(await feedsService.GetNewsCommentsAsync());
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
-    [Microsoft.AspNetCore.Mvc.Route(template: "{id}")]
-    public async Task<IActionResult> NewsAuthor(string id)
+    [Microsoft.AspNetCore.Mvc.Route(template: "{id?}")]
+    public async Task<IActionResult> NewsAuthor(string? id = null)
     {
         if (string.IsNullOrWhiteSpace(id))
         {
-            return BadRequest();
+            return NotFound();
         }
 
         return new FeedResult(await feedsService.GetNewsAuthorAsync(id));

@@ -31,56 +31,56 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
     public async Task<IActionResult> ProjectsFaqs() => new FeedResult(await feedsService.GetProjectsFaqsAsync());
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
-    [Microsoft.AspNetCore.Mvc.Route(template: "{id:int}")]
-    public async Task<IActionResult> ProjectFaqs(int? id)
+    [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
+    public async Task<IActionResult> ProjectFaqs(int? id = null)
     {
         var (items, _) = await feedsService.GetProjectFaqsAsync(id);
 
         if (items is null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
         return new FeedResult(items);
     }
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
-    [Microsoft.AspNetCore.Mvc.Route(template: "{id:int}")]
-    public async Task<IActionResult> ProjectFiles(int? id)
+    [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
+    public async Task<IActionResult> ProjectFiles(int? id = null)
     {
         var (items, _) = await feedsService.GetProjectFilesAsync(id);
 
         if (items is null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
         return new FeedResult(items);
     }
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
-    [Microsoft.AspNetCore.Mvc.Route(template: "{id:int}")]
-    public async Task<IActionResult> ProjectIssues(int? id)
+    [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
+    public async Task<IActionResult> ProjectIssues(int? id = null)
     {
         var (items, _) = await feedsService.GetProjectIssuesAsync(id);
 
         if (items is null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
         return new FeedResult(items);
     }
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
-    [Microsoft.AspNetCore.Mvc.Route(template: "{id:int}")]
-    public async Task<IActionResult> ProjectIssuesReplies(int? id)
+    [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
+    public async Task<IActionResult> ProjectIssuesReplies(int? id = null)
     {
         var (items, _) = await feedsService.GetProjectIssuesRepliesAsync(id);
 
         if (items is null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
         return new FeedResult(items);
