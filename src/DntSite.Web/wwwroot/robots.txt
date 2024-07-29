@@ -3,3 +3,4 @@ Sitemap: http://www.dntips.ir/Sitemap
 Disallow: /Login/
 Disallow: /Register/
 Disallow: /AdminMenu/
+Disallow: /send-private-message/
