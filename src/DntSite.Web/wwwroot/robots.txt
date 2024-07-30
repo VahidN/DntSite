@@ -4,3 +4,5 @@ Disallow: /Login/
 Disallow: /Register/
 Disallow: /AdminMenu/
 Disallow: /send-private-message/
+Disallow: /news/redirect/
+Disallow: /newsarchive/news/
