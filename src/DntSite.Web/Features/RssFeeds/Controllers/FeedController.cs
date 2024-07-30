@@ -1,5 +1,6 @@
 using DntSite.Web.Features.RssFeeds.Services.Contracts;
 using Microsoft.AspNetCore.OutputCaching;
+using DntSite.Web.Features.RssFeeds.Models;
 
 namespace DntSite.Web.Features.RssFeeds.Controllers;
 
@@ -96,7 +97,7 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     [Microsoft.AspNetCore.Mvc.Route(template: "/rss")]
     public Task<IActionResult> SiteFeed() => LatestChanges();
 
-    private Task<FeedChannel> GetLatestChangesAsync() => feedsService.GetLatestChangesAsync();
+    private Task<WhatsNewFeedChannel> GetLatestChangesAsync() => feedsService.GetLatestChangesAsync();
 
     [OutputCache(Duration = Min15)]
     public async Task<IActionResult> Courses() => new FeedResult(await feedsService.GetAllCoursesAsync());

@@ -1,64 +1,65 @@
 ﻿using DntSite.Web.Features.Projects.Entities;
+using DntSite.Web.Features.RssFeeds.Models;
 
 namespace DntSite.Web.Features.RssFeeds.Services.Contracts;
 
 public interface IFeedsService : IScopedService
 {
-    Task<FeedChannel> GetLatestChangesAsync(int take = 30);
+    Task<WhatsNewFeedChannel> GetLatestChangesAsync(int take = 30);
 
-    Task<FeedChannel> GetBacklogsAsync();
+    Task<WhatsNewFeedChannel> GetBacklogsAsync();
 
-    Task<FeedChannel> GetQuestionsFeedItemsAsync();
+    Task<WhatsNewFeedChannel> GetQuestionsFeedItemsAsync();
 
-    Task<FeedChannel> GetQuestionsCommentsFeedItemsAsync();
+    Task<WhatsNewFeedChannel> GetQuestionsCommentsFeedItemsAsync();
 
-    Task<FeedChannel> GetLearningPathsAsync();
+    Task<WhatsNewFeedChannel> GetLearningPathsAsync();
 
-    Task<FeedChannel> GetAllCoursesTopicsAsync();
+    Task<WhatsNewFeedChannel> GetAllCoursesTopicsAsync();
 
-    Task<FeedChannel> GetAllCoursesAsync();
+    Task<WhatsNewFeedChannel> GetAllCoursesAsync();
 
-    Task<FeedChannel> GetAllVotesAsync();
+    Task<WhatsNewFeedChannel> GetAllVotesAsync();
 
-    Task<FeedChannel> GetAllAdvertisementsAsync();
+    Task<WhatsNewFeedChannel> GetAllAdvertisementsAsync();
 
-    Task<FeedChannel> GetAllDraftsAsync();
+    Task<WhatsNewFeedChannel> GetAllDraftsAsync();
 
-    Task<FeedChannel> GetProjectsNewsAsync();
+    Task<WhatsNewFeedChannel> GetProjectsNewsAsync();
 
-    Task<FeedChannel> GetProjectsFilesAsync();
+    Task<WhatsNewFeedChannel> GetProjectsFilesAsync();
 
-    Task<FeedChannel> GetProjectsIssuesAsync();
+    Task<WhatsNewFeedChannel> GetProjectsIssuesAsync();
 
-    Task<FeedChannel> GetProjectsIssuesRepliesAsync();
+    Task<WhatsNewFeedChannel> GetProjectsIssuesRepliesAsync();
 
-    Task<FeedChannel> GetVotesRepliesAsync();
+    Task<WhatsNewFeedChannel> GetVotesRepliesAsync();
 
-    Task<FeedChannel> GetAdvertisementCommentsAsync();
+    Task<WhatsNewFeedChannel> GetAdvertisementCommentsAsync();
 
-    Task<FeedChannel> GetProjectsFaqsAsync();
+    Task<WhatsNewFeedChannel> GetProjectsFaqsAsync();
 
-    Task<(FeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? id);
+    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? id);
 
-    Task<(FeedChannel? Items, Project? Project)> GetProjectFilesAsync(int? id);
+    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFilesAsync(int? id);
 
-    Task<(FeedChannel? Items, Project? Project)> GetProjectIssuesAsync(int? id);
+    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesAsync(int? id);
 
-    Task<(FeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? id);
+    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? id);
 
-    Task<FeedChannel> GetPostsAsync();
+    Task<WhatsNewFeedChannel> GetPostsAsync();
 
-    Task<FeedChannel> GetCommentsAsync();
+    Task<WhatsNewFeedChannel> GetCommentsAsync();
 
-    Task<FeedChannel> GetNewsAsync();
+    Task<WhatsNewFeedChannel> GetNewsAsync();
 
-    Task<FeedChannel> GetTagAsync(string id);
+    Task<WhatsNewFeedChannel> GetTagAsync(string id);
 
-    Task<FeedChannel> GetAuthorAsync(string id);
+    Task<WhatsNewFeedChannel> GetAuthorAsync(string id);
 
-    Task<FeedChannel> GetNewsCommentsAsync();
+    Task<WhatsNewFeedChannel> GetNewsCommentsAsync();
 
-    Task<FeedChannel> GetNewsAuthorAsync(string id);
+    Task<WhatsNewFeedChannel> GetNewsAuthorAsync(string id);
 
-    Task<FeedChannel> GetCourseTopicsRepliesAsync();
+    Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync();
 }

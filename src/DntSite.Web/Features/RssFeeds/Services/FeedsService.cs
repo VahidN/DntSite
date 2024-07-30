@@ -16,6 +16,7 @@ using DntSite.Web.Features.Projects.RoutingConstants;
 using DntSite.Web.Features.Projects.Services.Contracts;
 using DntSite.Web.Features.RoadMaps.RoutingConstants;
 using DntSite.Web.Features.RoadMaps.Services.Contracts;
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.RssFeeds.Services.Contracts;
 using DntSite.Web.Features.StackExchangeQuestions.RoutingConstants;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
@@ -48,9 +49,9 @@ public class FeedsService(
     IQuestionsService stackExchangeService,
     IQuestionsCommentsService questionsCommentsService) : IFeedsService
 {
-    public async Task<FeedChannel> GetLatestChangesAsync(int take = 30)
+    public async Task<WhatsNewFeedChannel> GetLatestChangesAsync(int take = 30)
     {
-        var result = new List<FeedItem>();
+        var result = new List<WhatsNewItemModel>();
         result.AddRange((await GetProjectsNewsAsync()).RssItems);
         result.AddRange((await GetProjectsFilesAsync()).RssItems);
         result.AddRange((await GetProjectsIssuesAsync()).RssItems);
@@ -76,7 +77,7 @@ public class FeedsService(
         var rssItems = result.OrderByDescending(x => x.PublishDate).Take(take).ToList();
         var appSetting = await GetAppSettingsAsync();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید کلی آخرین نظرات، مطالب، اشتراک‌ها و پروژه‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -84,15 +85,16 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetQuestionsCommentsFeedItemsAsync()
+    public async Task<WhatsNewFeedChannel> GetQuestionsCommentsFeedItemsAsync()
     {
         var list =
             await questionsCommentsService.GetLastPagedStackExchangeQuestionCommentsAsNoTrackingAsync(pageNumber: 0);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -102,11 +104,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"پاسخ به پرسش: {item.Parent.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{item.ParentId}#comment-{item.Id}"))
+                    Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
+                Categories = ["پاسخ به پرسش‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید پاسخ‌های پرسش‌های  {appSetting.BlogName}",
             RssItems = rssItems,
@@ -114,14 +117,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetBacklogsAsync()
+    public async Task<WhatsNewFeedChannel> GetBacklogsAsync()
     {
         var list = await backlogsService.GetBacklogsAsync(pageNumber: 0);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Description,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -131,11 +135,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"پیشنهاد: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    BacklogsRoutingConstants.PostUrlTemplate, item.Id))
+                    BacklogsRoutingConstants.PostUrlTemplate, item.Id)),
+                Categories = ["پیشنهادها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید پیشنهادهای {appSetting.BlogName}",
             RssItems = rssItems,
@@ -143,14 +148,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetQuestionsFeedItemsAsync()
+    public async Task<WhatsNewFeedChannel> GetQuestionsFeedItemsAsync()
     {
         var list = await stackExchangeService.GetStackExchangeQuestionsAsync(pageNumber: 0);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Description,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -160,11 +166,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"پرسش: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    QuestionsRoutingConstants.PostUrlTemplate, item.Id))
+                    QuestionsRoutingConstants.PostUrlTemplate, item.Id)),
+                Categories = ["پرسش‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید پرسش‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -172,14 +179,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetLearningPathsAsync()
+    public async Task<WhatsNewFeedChannel> GetLearningPathsAsync()
     {
         var list = await learningPathService.GetLearningPathsAsync(pageNumber: 0);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Description,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -189,11 +197,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"مسیر راه: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    RoadMapsRoutingConstants.PostUrlTemplate, item.Id))
+                    RoadMapsRoutingConstants.PostUrlTemplate, item.Id)),
+                Categories = ["مسیرراه‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید مسیرهای راه {appSetting.BlogName}",
             RssItems = rssItems,
@@ -201,14 +210,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetAllCoursesTopicsAsync()
+    public async Task<WhatsNewFeedChannel> GetAllCoursesTopicsAsync()
     {
         var list = await courseTopicsService.GetPagedAllActiveCoursesTopicsAsync();
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new FeedItem
+        var rssItems = list.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body.GetBriefDescription(charLength: 200),
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -218,11 +228,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{item.CourseId}/{item.DisplayId:D}"))
+                    Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{item.CourseId}/{item.DisplayId:D}")),
+                Categories = ["مطالب دوره‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید مطالب دوره‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -230,14 +241,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetAllCoursesAsync()
+    public async Task<WhatsNewFeedChannel> GetAllCoursesAsync()
     {
         var list = await coursesService.GetPagedCourseItemsIncludeUserAndTagsAsync(pageNumber: 0);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Description,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -247,11 +259,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"دوره جدید: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    CoursesRoutingConstants.PostUrlTemplate, item.Id))
+                    CoursesRoutingConstants.PostUrlTemplate, item.Id)),
+                Categories = ["دوره‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید دوره‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -259,14 +272,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetAllVotesAsync()
+    public async Task<WhatsNewFeedChannel> GetAllVotesAsync()
     {
         var list = await votesService.GetVotesListAsync(pageNumber: 0, recordsPerPage: 20);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content =
                     item.SurveyItems.Where(x => !x.IsDeleted)
@@ -279,11 +293,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"نظر سنجی: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    SurveysRoutingConstants.PostUrlTemplate, item.Id))
+                    SurveysRoutingConstants.PostUrlTemplate, item.Id)),
+                Categories = ["نظرسنجی‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید نظرسنجی‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -291,14 +306,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetAllAdvertisementsAsync()
+    public async Task<WhatsNewFeedChannel> GetAllAdvertisementsAsync()
     {
         var list = await advertisementsService.GetAnnouncementsListAsync(pageNumber: 0, recordsPerPage: 20);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -308,11 +324,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"آگهی: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    AdvertisementsRoutingConstants.PostUrlTemplate, item.Id))
+                    AdvertisementsRoutingConstants.PostUrlTemplate, item.Id)),
+                Categories = ["آگهی‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید آگهی‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -320,13 +337,14 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetAllDraftsAsync()
+    public async Task<WhatsNewFeedChannel> GetAllDraftsAsync()
     {
         var list = await blogPostDraftsService.ComingSoonItemsAsync();
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new FeedItem
+        var rssItems = list.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = "به زودی ...",
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -335,11 +353,12 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"به زودی: {item.Title}",
-                Url = appSetting.SiteRootUri.CombineUrl(PostsRoutingConstants.ComingSoon2)
+                Url = appSetting.SiteRootUri.CombineUrl(PostsRoutingConstants.ComingSoon2),
+                Categories = ["مقالات آتی"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید پیش‌نویس‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -347,13 +366,14 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetProjectsNewsAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsNewsAsync()
     {
         var list = await projectsService.GetPagedProjectItemsIncludeUserAndTagsAsync(pageNumber: 0);
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Description,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -363,11 +383,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"پروژه جدید: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    ProjectsRoutingConstants.PostUrlTemplate, item.Id))
+                    ProjectsRoutingConstants.PostUrlTemplate, item.Id)),
+                Categories = ["پروژه‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید پروژه‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -375,13 +396,14 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetProjectsFilesAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsFilesAsync()
     {
         var list = await projectReleases.GetAllProjectsReleasesIncludeProjectsAsync(pageNumber: 0);
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.FileDescription,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -391,11 +413,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"فایل جدید: {item.FileName}",
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}"))
+                    Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
+                Categories = ["فایل‌های پروژه‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید فایل‌های پروژه‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -403,13 +426,14 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetProjectsIssuesAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsIssuesAsync()
     {
         var list = await projectIssuesService.GetLastPagedAllProjectsIssuesAsNoTrackingAsync(pageNumber: 0);
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Description,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -419,11 +443,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}"))
+                    Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
+                Categories = ["بازخوردهای پروژه‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید بازخورد‌های پروژه‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -431,14 +456,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetProjectsIssuesRepliesAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsIssuesRepliesAsync()
     {
         var list = await projectIssueCommentsService.GetLastIssueCommentsIncludeBlogPostAndUserAsync(count: 15);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new FeedItem
+        var rssItems = list.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -448,11 +474,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.Parent.ProjectId}/{item.ParentId}#comment-{item.Id}"))
+                    $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.Parent.ProjectId}/{item.ParentId}#comment-{item.Id}")),
+                Categories = ["پاسخ به بازخورد‌های پروژه‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید پاسخ به بازخورد‌های پروژه‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -460,14 +487,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetVotesRepliesAsync()
+    public async Task<WhatsNewFeedChannel> GetVotesRepliesAsync()
     {
         var list = await voteCommentsService.GetLastVoteCommentsIncludeBlogPostAndUserAsync(count: 15);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new FeedItem
+        var rssItems = list.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -477,11 +505,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{item.ParentId}#comment-{item.Id}"))
+                    $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{item.ParentId}#comment-{item.Id}")),
+                Categories = ["نظرات نظرسنجی‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید نظرات نظرسنجی‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -489,15 +518,16 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetAdvertisementCommentsAsync()
+    public async Task<WhatsNewFeedChannel> GetAdvertisementCommentsAsync()
     {
         var list = await advertisementCommentsService.GetLastPagedAdvertisementCommentsAsNoTrackingAsync(pageNumber: 0,
             recordsPerPage: 15);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new FeedItem
+        var rssItems = list.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -507,11 +537,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{AdvertisementsRoutingConstants.AdvertisementsDetailsBase}/{item.ParentId}#comment-{item.Id}"))
+                    $"{AdvertisementsRoutingConstants.AdvertisementsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
+                Categories = ["نظرات آگهی‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید نظرات آگهی‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -519,14 +550,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetProjectsFaqsAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsFaqsAsync()
     {
         var list = await projectFaqsService.GetAllLastPagedProjectFaqsAsync();
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new FeedItem
+        var rssItems = list.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Description,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -536,11 +568,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}"))
+                    Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
+                Categories = ["راهنماهای پروژه‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید راهنماهای پروژه‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -548,7 +581,7 @@ public class FeedsService(
         };
     }
 
-    public async Task<(FeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? id)
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? id)
     {
         if (id is null)
         {
@@ -566,8 +599,9 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Description,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -577,13 +611,14 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}"))
+                    Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
+                Categories = ["راهنماهای پروژه‌ها"]
             })
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید راهنمای پروژه {0}", project.Title);
 
-        return (new FeedChannel
+        return (new WhatsNewFeedChannel
         {
             FeedTitle = $"{feedTitle} {appSetting.BlogName}",
             RssItems = rssItems,
@@ -591,7 +626,7 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<(FeedChannel? Items, Project? Project)> GetProjectFilesAsync(int? id)
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFilesAsync(int? id)
     {
         if (id is null)
         {
@@ -609,8 +644,9 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.FileDescription,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -620,13 +656,14 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.FileName,
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}"))
+                    Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
+                Categories = ["فایل‌های پروژه‌ها"]
             })
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید فایل‌های پروژه‌ {0}", project.Title);
 
-        return (new FeedChannel
+        return (new WhatsNewFeedChannel
         {
             FeedTitle = $"{feedTitle} {appSetting.BlogName}",
             RssItems = rssItems,
@@ -634,7 +671,7 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<(FeedChannel? Items, Project? Project)> GetProjectIssuesAsync(int? id)
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesAsync(int? id)
     {
         if (id is null)
         {
@@ -652,8 +689,9 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new FeedItem
+        var rssItems = list.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Description,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -663,13 +701,14 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}"))
+                    Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
+                Categories = ["بازخورد‌های پروژه‌ها"]
             })
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید بازخورد‌های پروژه {0}", project.Title);
 
-        return (new FeedChannel
+        return (new WhatsNewFeedChannel
         {
             FeedTitle = $"{feedTitle} {appSetting.BlogName}",
             RssItems = rssItems,
@@ -677,7 +716,7 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<(FeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? id)
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? id)
     {
         if (id is null)
         {
@@ -696,8 +735,9 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new FeedItem
+        var rssItems = list.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -707,14 +747,15 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{id.Value}/{item.ParentId}#comment-{item.Id}"))
+                    $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{id.Value}/{item.ParentId}#comment-{item.Id}")),
+                Categories = ["پاسخ ‌به بازخورد‌های پروژه‌ها"]
             })
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید پاسخ ‌به بازخورد‌های پروژه‌ {0}",
             project.Title);
 
-        return (new FeedChannel
+        return (new WhatsNewFeedChannel
         {
             FeedTitle = $"{feedTitle} {appSetting.BlogName}",
             RssItems = rssItems,
@@ -722,15 +763,16 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<FeedChannel> GetPostsAsync()
+    public async Task<WhatsNewFeedChannel> GetPostsAsync()
     {
         var items = await blogPostsService.GetLastBlogPostsIncludeAuthorTagsAsync(count: 15);
 
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Where(item => !IsPrivate(item))
-            .Select(item => new FeedItem
+            .Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -740,11 +782,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    PostsRoutingConstants.PostUrlTemplate, item.Id))
+                    PostsRoutingConstants.PostUrlTemplate, item.Id)),
+                Categories = ["مطالب"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید مطالب {appSetting.BlogName}",
             RssItems = rssItems,
@@ -752,15 +795,16 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetCommentsAsync()
+    public async Task<WhatsNewFeedChannel> GetCommentsAsync()
     {
         var items = await blogCommentsService.GetLastBlogCommentsIncludeBlogPostAndUserAsync(count: 15);
 
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Where(item => !IsPrivateComment(item))
-            .Select(item => new FeedItem
+            .Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -770,11 +814,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{PostsRoutingConstants.PostBase}/{item.ParentId}#comment-{item.Id}"))
+                    Invariant($"{PostsRoutingConstants.PostBase}/{item.ParentId}#comment-{item.Id}")),
+                Categories = ["نظرات مطالب"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید نظرات مطالب {appSetting.BlogName}",
             RssItems = rssItems,
@@ -782,14 +827,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetNewsAsync()
+    public async Task<WhatsNewFeedChannel> GetNewsAsync()
     {
         var list = await dailyNewsItemsService.GetLastDailyNewsItemsIncludeUserAsync(count: 15);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new FeedItem
+        var rssItems = list.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.BriefDescription ?? "",
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -799,11 +845,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    NewsRoutingConstants.PostUrlTemplate, item.Id))
+                    NewsRoutingConstants.PostUrlTemplate, item.Id)),
+                Categories = ["اشتراک‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید خلاصه اشتراک‌های {appSetting.BlogName}",
             RssItems = rssItems,
@@ -811,15 +858,16 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetTagAsync(string id)
+    public async Task<WhatsNewFeedChannel> GetTagAsync(string id)
     {
         var items = await blogPostsService.GetLastBlogPostsByTagIncludeAuthorAsync(id, pageNumber: 0);
 
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Data.Where(item => !IsPrivate(item))
-            .Select(item => new FeedItem
+            .Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -828,13 +876,14 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}"))
+                Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}")),
+                Categories = ["گروه‌ها"]
             })
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید گروه {0}", id);
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"{feedTitle} {appSetting.BlogName}",
             RssItems = rssItems,
@@ -842,15 +891,16 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetAuthorAsync(string id)
+    public async Task<WhatsNewFeedChannel> GetAuthorAsync(string id)
     {
         var items = await blogPostsService.GetLastBlogPostsByAuthorIncludeAuthorTagsAsync(id, pageNumber: 0);
 
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Data.Where(item => !IsPrivate(item))
-            .Select(item => new FeedItem
+            .Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -859,13 +909,14 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}"))
+                Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}")),
+                Categories = ["نویسنده‌ها"]
             })
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید مطالب {0}", id);
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"{feedTitle} {appSetting.BlogName}",
             RssItems = rssItems,
@@ -873,14 +924,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetNewsCommentsAsync()
+    public async Task<WhatsNewFeedChannel> GetNewsCommentsAsync()
     {
         var items = await dailyNewsItemCommentsService.GetLastBlogNewsCommentsIncludeBlogPostAndUserAsync(count: 15);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = items.Select(item => new FeedItem
+        var rssItems = items.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body,
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -890,11 +942,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.ParentId}#comment-{item.Id}"))
+                    Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
+                Categories = ["نظرات اشتراک‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید نظرات اشتراک‌ها {appSetting.BlogName}",
             RssItems = rssItems,
@@ -902,15 +955,16 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetNewsAuthorAsync(string id)
+    public async Task<WhatsNewFeedChannel> GetNewsAuthorAsync(string id)
     {
         var items = await dailyNewsItemsService.GetLastPagedDailyNewsItemsIncludeUserAndTagAsync(id, pageNumber: 0,
             recordsPerPage: 20);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = items.Data.Select(item => new FeedItem
+        var rssItems = items.Data.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.BriefDescription ?? "",
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -919,13 +973,14 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.Id}"))
+                Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.Id}")),
+                Categories = ["اشتراک‌های اشخاص"]
             })
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید اشتراک‌های {0}", id);
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"{feedTitle} {appSetting.BlogName}",
             RssItems = rssItems,
@@ -933,14 +988,15 @@ public class FeedsService(
         };
     }
 
-    public async Task<FeedChannel> GetCourseTopicsRepliesAsync()
+    public async Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync()
     {
         var list = await courseTopicCommentsService.GetLastTopicCommentsIncludePostAndUserAsync(count: 15);
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new FeedItem
+        var rssItems = list.Select(item => new WhatsNewItemModel
             {
+                User = item.User,
                 AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
                 Content = item.Body.GetBriefDescription(charLength: 200),
                 PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
@@ -950,11 +1006,12 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"پاسخ به: {item.Parent.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{CoursesRoutingConstants.CoursesTopicBase}/{item.Parent.CourseId}/{item.Parent.DisplayId:D}#comment-{item.Id}"))
+                    $"{CoursesRoutingConstants.CoursesTopicBase}/{item.Parent.CourseId}/{item.Parent.DisplayId:D}#comment-{item.Id}")),
+                Categories = ["بازخوردهای دوره‌ها"]
             })
             .ToList();
 
-        return new FeedChannel
+        return new WhatsNewFeedChannel
         {
             FeedTitle = $"فید بازخوردهای دوره‌های {appSetting.BlogName}",
             RssItems = rssItems,

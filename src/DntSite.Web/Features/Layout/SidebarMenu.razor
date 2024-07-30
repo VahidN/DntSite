@@ -1,6 +1,10 @@
 ﻿@using DntSite.Web.Features.SideBar.Components
 <DntLoading IsLoading="@(_model is null)">
     <ul class="row list-group list-group-flush mt-4 mb-auto ms-1 me-1">
+        <DntLinkedOrderedListNavMenuItem Title="تازه چه‌خبر"
+                                         GlyphIcon="@DntBootstrapIcons.BiNewspaper"
+                                         Url="@RssFeedsRoutingConstants.WhatsNew"/>
+
         <DntLinkedOrderedListNavMenuItem Title="مطالب"
                                          GlyphIcon="@DntBootstrapIcons.BiPencil"
                                          Url="@PostsRoutingConstants.Posts"

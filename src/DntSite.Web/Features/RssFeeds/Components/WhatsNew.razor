@@ -1,0 +1,53 @@
+@using DntSite.Web.Features.News.Entities
+@using DntSite.Web.Features.Posts.Components
+@using Microsoft.AspNetCore.OutputCaching
+@attribute [Route(RssFeedsRoutingConstants.WhatsNew)]
+
+@attribute [OutputCache(Duration = TimeConstants.Minute * 5)]
+
+<DntSitePageTitle PageTitle="تازه چه‌خبر"/>
+
+<DntLoading IsLoading="@(_posts is null)">
+    @foreach (var post in _posts!)
+    {
+        <ShowBlogPostItem TReactionEntity="DailyNewsItemReaction"
+                          TForeignKeyEntity="DailyNewsItem"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          SiteName=""
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate=""
+                          PostUrlTemplate="@post.Url"
+                          PostTagUrlTemplate=""
+                          Id="0"
+                          Body="@post.Content"
+                          Reactions="null"
+                          Tags="null"
+                          Title="@post.Title"
+                          BriefDescription="@post.Content"
+                          CreatedAt="post.PublishDate.UtcDateTime"
+                          RecordUser="post.User"
+                          NumberOfComments="0"
+                          NumberOfViews="0"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent=""
+                          NumberOfViewsFromFeed="0"
+                          CanUserDeleteThisPost="false"
+                          CanUserEditThisPost="false"
+                          EditPostUrlTemplate=""
+                          DeletePostUrlTemplate=""
+                          ShowReactions="false"
+                          ShowSocialLinks="false"
+                          ShowNumberOfViews="false"
+                          ShowNumberOfComments="false">
+            <AdditionalInfoContent>
+                <span class="badge bg-secondary me-2">
+                    <i class="@DntBootstrapIcons.BiTag me-1"></i>
+                    @post.Categories.FirstOrDefault()
+                </span>
+            </AdditionalInfoContent>
+            <AdditionalBodyContent>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    }
+</DntLoading>
