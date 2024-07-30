@@ -17,9 +17,9 @@ public class DailyNewsItem : BaseInteractiveEntity<DailyNewsItem, DailyNewsItemV
 
     public string? PageThumbnail { set; get; }
 
-    public bool PingbackSent { set; get; }
+    [IgnoreAudit] public bool PingbackSent { set; get; }
 
-    public HttpStatusCode? LastHttpStatusCode { set; get; }
+    [IgnoreAudit] public HttpStatusCode? LastHttpStatusCode { set; get; }
 
-    public DateTime? LastHttpStatusCodeCheckDateTime { set; get; }
+    [IgnoreAudit] public DateTime? LastHttpStatusCodeCheckDateTime { set; get; }
 }
