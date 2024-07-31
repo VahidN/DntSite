@@ -6,36 +6,29 @@ namespace DntSite.Web.Features.RssFeeds.Controllers;
 
 [ApiController]
 [AllowAnonymous]
+[OutputCache(Duration = TimeConstants.Minute * 15, PolicyName = AlwaysCachePolicy.Name)]
 [Microsoft.AspNetCore.Mvc.Route(template: "[controller]/[action]")]
 public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBase
 {
-    private const int Min15 = TimeConstants.Minute * 15;
+    public Task<IActionResult> Index() => ProjectsNews();
 
-    [OutputCache(Duration = Min15)] public Task<IActionResult> Index() => ProjectsNews();
+    public Task<IActionResult> Get() => ProjectsNews();
 
-    [OutputCache(Duration = Min15)] public Task<IActionResult> Get() => ProjectsNews();
-
-    [OutputCache(Duration = Min15)]
     public async Task<IActionResult> ProjectsNews()
         => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsNewsAsync());
 
-    [OutputCache(Duration = Min15)]
     public async Task<IActionResult> ProjectsFiles()
         => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsFilesAsync());
 
-    [OutputCache(Duration = Min15)]
     public async Task<IActionResult> ProjectsIssues()
         => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsIssuesAsync());
 
-    [OutputCache(Duration = Min15)]
     public async Task<IActionResult> ProjectsIssuesReplies()
         => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsIssuesRepliesAsync());
 
-    [OutputCache(Duration = Min15)]
     public async Task<IActionResult> ProjectsFaqs()
         => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsFaqsAsync());
 
-    [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
     public async Task<IActionResult> ProjectFaqs(int? id = null)
     {
@@ -49,7 +42,6 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
         return new FeedResult<WhatsNewItemModel>(items);
     }
 
-    [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
     public async Task<IActionResult> ProjectFiles(int? id = null)
     {
@@ -63,7 +55,6 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
         return new FeedResult<WhatsNewItemModel>(items);
     }
 
-    [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
     public async Task<IActionResult> ProjectIssues(int? id = null)
     {
@@ -77,7 +68,6 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
         return new FeedResult<WhatsNewItemModel>(items);
     }
 
-    [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
     public async Task<IActionResult> ProjectIssuesReplies(int? id = null)
     {
