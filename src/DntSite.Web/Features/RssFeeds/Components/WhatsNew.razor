@@ -2,8 +2,7 @@
 @using DntSite.Web.Features.Posts.Components
 @using Microsoft.AspNetCore.OutputCaching
 @attribute [Route(RssFeedsRoutingConstants.WhatsNew)]
-
-@attribute [OutputCache(Duration = TimeConstants.Minute * 5)]
+@attribute [OutputCache(Duration = TimeConstants.Minute * 5, PolicyName = AlwaysCachePolicy.Name)]
 
 <DntSitePageTitle PageTitle="تازه چه‌خبر"/>
 

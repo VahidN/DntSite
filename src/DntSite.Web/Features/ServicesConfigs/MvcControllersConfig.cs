@@ -8,7 +8,7 @@ public static class MvcControllersConfig
     public static IMvcBuilder AddCustomizedControllers(this IServiceCollection services)
         => services.AddProblemDetails()
             .AddLargeFilesUploadSupport()
-            .AddOutputCache()
+            .AddOutputCache(options => { options.AddPolicy(AlwaysCachePolicy.Name, AlwaysCachePolicy.Instance); })
             .AddControllers(options => { options.Filters.Add(typeof(ApplyCorrectYeKeFilterAttribute)); })
             .AddJsonOptions(AddCustomJsonOptions);
 
