@@ -1,6 +1,6 @@
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.RssFeeds.Services.Contracts;
 using Microsoft.AspNetCore.OutputCaching;
-using DntSite.Web.Features.RssFeeds.Models;
 
 namespace DntSite.Web.Features.RssFeeds.Controllers;
 
@@ -17,7 +17,7 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     public Task<IActionResult> Index() => Posts();
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> Posts() => new FeedResult(await feedsService.GetPostsAsync());
+    public async Task<IActionResult> Posts() => new FeedResult<WhatsNewItemModel>(await feedsService.GetPostsAsync());
 
     [OutputCache(Duration = Min15)]
     [Microsoft.AspNetCore.Mvc.Route(template: "/feeds/posts/{name?}")]
@@ -32,7 +32,8 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     }
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> Comments() => new FeedResult(await feedsService.GetCommentsAsync());
+    public async Task<IActionResult> Comments()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetCommentsAsync());
 
     [OutputCache(Duration = Min15)]
     [Microsoft.AspNetCore.Mvc.Route(template: "/feeds/comments/{name?}")]
@@ -47,7 +48,7 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     }
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> News() => new FeedResult(await feedsService.GetNewsAsync());
+    public async Task<IActionResult> News() => new FeedResult<WhatsNewItemModel>(await feedsService.GetNewsAsync());
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "{id?}")]
@@ -58,7 +59,7 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
             return NotFound();
         }
 
-        return new FeedResult(await feedsService.GetTagAsync(id));
+        return new FeedResult<WhatsNewItemModel>(await feedsService.GetTagAsync(id));
     }
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
@@ -70,11 +71,12 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
             return NotFound();
         }
 
-        return new FeedResult(await feedsService.GetAuthorAsync(id));
+        return new FeedResult<WhatsNewItemModel>(await feedsService.GetAuthorAsync(id));
     }
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> NewsComments() => new FeedResult(await feedsService.GetNewsCommentsAsync());
+    public async Task<IActionResult> NewsComments()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetNewsCommentsAsync());
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "{id?}")]
@@ -85,11 +87,12 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
             return NotFound();
         }
 
-        return new FeedResult(await feedsService.GetNewsAuthorAsync(id));
+        return new FeedResult<WhatsNewItemModel>(await feedsService.GetNewsAuthorAsync(id));
     }
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> LatestChanges() => new FeedResult(await GetLatestChangesAsync());
+    public async Task<IActionResult> LatestChanges()
+        => new FeedResult<WhatsNewItemModel>(await GetLatestChangesAsync());
 
     [OutputCache(Duration = Min15)]
     [Microsoft.AspNetCore.Mvc.Route(template: "/rss.xml")]
@@ -100,18 +103,22 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     private Task<WhatsNewFeedChannel> GetLatestChangesAsync() => feedsService.GetLatestChangesAsync();
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> Courses() => new FeedResult(await feedsService.GetAllCoursesAsync());
+    public async Task<IActionResult> Courses()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllCoursesAsync());
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> CoursesTopics() => new FeedResult(await feedsService.GetAllCoursesTopicsAsync());
+    public async Task<IActionResult> CoursesTopics()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllCoursesTopicsAsync());
 
     [OutputCache(Duration = Min15)]
     public async Task<IActionResult> CoursesComments()
-        => new FeedResult(await feedsService.GetCourseTopicsRepliesAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetCourseTopicsRepliesAsync());
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> Surveys() => new FeedResult(await feedsService.GetAllVotesAsync());
+    public async Task<IActionResult> Surveys()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllVotesAsync());
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> Announcements() => new FeedResult(await feedsService.GetAllAdvertisementsAsync());
+    public async Task<IActionResult> Announcements()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllAdvertisementsAsync());
 }

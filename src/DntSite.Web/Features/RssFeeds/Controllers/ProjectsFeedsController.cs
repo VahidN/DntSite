@@ -1,3 +1,4 @@
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.RssFeeds.Services.Contracts;
 using Microsoft.AspNetCore.OutputCaching;
 
@@ -15,20 +16,24 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
     [OutputCache(Duration = Min15)] public Task<IActionResult> Get() => ProjectsNews();
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> ProjectsNews() => new FeedResult(await feedsService.GetProjectsNewsAsync());
+    public async Task<IActionResult> ProjectsNews()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsNewsAsync());
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> ProjectsFiles() => new FeedResult(await feedsService.GetProjectsFilesAsync());
+    public async Task<IActionResult> ProjectsFiles()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsFilesAsync());
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> ProjectsIssues() => new FeedResult(await feedsService.GetProjectsIssuesAsync());
+    public async Task<IActionResult> ProjectsIssues()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsIssuesAsync());
 
     [OutputCache(Duration = Min15)]
     public async Task<IActionResult> ProjectsIssuesReplies()
-        => new FeedResult(await feedsService.GetProjectsIssuesRepliesAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsIssuesRepliesAsync());
 
     [OutputCache(Duration = Min15)]
-    public async Task<IActionResult> ProjectsFaqs() => new FeedResult(await feedsService.GetProjectsFaqsAsync());
+    public async Task<IActionResult> ProjectsFaqs()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsFaqsAsync());
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
@@ -41,7 +46,7 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
             return NotFound();
         }
 
-        return new FeedResult(items);
+        return new FeedResult<WhatsNewItemModel>(items);
     }
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
@@ -55,7 +60,7 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
             return NotFound();
         }
 
-        return new FeedResult(items);
+        return new FeedResult<WhatsNewItemModel>(items);
     }
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
@@ -69,7 +74,7 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
             return NotFound();
         }
 
-        return new FeedResult(items);
+        return new FeedResult<WhatsNewItemModel>(items);
     }
 
     [OutputCache(Duration = Min15, VaryByQueryKeys = ["*"])]
@@ -83,6 +88,6 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
             return NotFound();
         }
 
-        return new FeedResult(items);
+        return new FeedResult<WhatsNewItemModel>(items);
     }
 }

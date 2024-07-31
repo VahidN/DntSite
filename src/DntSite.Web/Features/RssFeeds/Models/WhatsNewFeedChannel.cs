@@ -1,6 +1,5 @@
 ﻿namespace DntSite.Web.Features.RssFeeds.Models;
 
-public class WhatsNewFeedChannel : FeedChannel
+public class WhatsNewFeedChannel : FeedChannel<WhatsNewItemModel>
 {
-    public new IEnumerable<WhatsNewItemModel> RssItems { set; get; } = [];
 }

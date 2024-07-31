@@ -52,37 +52,34 @@ public class FeedsService(
     public async Task<WhatsNewFeedChannel> GetLatestChangesAsync(int take = 30)
     {
         var result = new List<WhatsNewItemModel>();
-        result.AddRange((await GetProjectsNewsAsync()).RssItems);
-        result.AddRange((await GetProjectsFilesAsync()).RssItems);
-        result.AddRange((await GetProjectsIssuesAsync()).RssItems);
-        result.AddRange((await GetProjectsIssuesRepliesAsync()).RssItems);
-        result.AddRange((await GetProjectsFaqsAsync()).RssItems);
-        result.AddRange((await GetPostsAsync()).RssItems);
-        result.AddRange((await GetCommentsAsync()).RssItems);
-        result.AddRange((await GetNewsAsync()).RssItems);
-        result.AddRange((await GetNewsCommentsAsync()).RssItems);
-        result.AddRange((await GetAllDraftsAsync()).RssItems);
-        result.AddRange((await GetAllVotesAsync()).RssItems);
-        result.AddRange((await GetVotesRepliesAsync()).RssItems);
-        result.AddRange((await GetAllAdvertisementsAsync()).RssItems);
-        result.AddRange((await GetAdvertisementCommentsAsync()).RssItems);
-        result.AddRange((await GetAllCoursesAsync()).RssItems);
-        result.AddRange((await GetAllCoursesTopicsAsync()).RssItems);
-        result.AddRange((await GetCourseTopicsRepliesAsync()).RssItems);
-        result.AddRange((await GetLearningPathsAsync()).RssItems);
-        result.AddRange((await GetBacklogsAsync()).RssItems);
-        result.AddRange((await GetQuestionsFeedItemsAsync()).RssItems);
-        result.AddRange((await GetQuestionsCommentsFeedItemsAsync()).RssItems);
+        result.AddRange((await GetProjectsNewsAsync()).RssItems ?? []);
+        result.AddRange((await GetProjectsFilesAsync()).RssItems ?? []);
+        result.AddRange((await GetProjectsIssuesAsync()).RssItems ?? []);
+        result.AddRange((await GetProjectsIssuesRepliesAsync()).RssItems ?? []);
+        result.AddRange((await GetProjectsFaqsAsync()).RssItems ?? []);
+        result.AddRange((await GetPostsAsync()).RssItems ?? []);
+        result.AddRange((await GetCommentsAsync()).RssItems ?? []);
+        result.AddRange((await GetNewsAsync()).RssItems ?? []);
+        result.AddRange((await GetNewsCommentsAsync()).RssItems ?? []);
+        result.AddRange((await GetAllDraftsAsync()).RssItems ?? []);
+        result.AddRange((await GetAllVotesAsync()).RssItems ?? []);
+        result.AddRange((await GetVotesRepliesAsync()).RssItems ?? []);
+        result.AddRange((await GetAllAdvertisementsAsync()).RssItems ?? []);
+        result.AddRange((await GetAdvertisementCommentsAsync()).RssItems ?? []);
+        result.AddRange((await GetAllCoursesAsync()).RssItems ?? []);
+        result.AddRange((await GetAllCoursesTopicsAsync()).RssItems ?? []);
+        result.AddRange((await GetCourseTopicsRepliesAsync()).RssItems ?? []);
+        result.AddRange((await GetLearningPathsAsync()).RssItems ?? []);
+        result.AddRange((await GetBacklogsAsync()).RssItems ?? []);
+        result.AddRange((await GetQuestionsFeedItemsAsync()).RssItems ?? []);
+        result.AddRange((await GetQuestionsCommentsFeedItemsAsync()).RssItems ?? []);
 
         var rssItems = result.OrderByDescending(x => x.PublishDate).Take(take).ToList();
         var appSetting = await GetAppSettingsAsync();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید کلی آخرین نظرات، مطالب، اشتراک‌ها و پروژه‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید کلی آخرین نظرات، مطالب، اشتراک‌ها و پروژه‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetQuestionsCommentsFeedItemsAsync()
@@ -109,12 +106,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید پاسخ‌های پرسش‌های  {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید پاسخ‌های پرسش‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetBacklogsAsync()
@@ -140,12 +134,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید پیشنهادهای {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید پیشنهادهای";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetQuestionsFeedItemsAsync()
@@ -171,12 +162,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید پرسش‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید پرسش‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetLearningPathsAsync()
@@ -202,12 +190,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید مسیرهای راه {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید مسیرهای راه";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetAllCoursesTopicsAsync()
@@ -233,12 +218,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید مطالب دوره‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید مطالب دوره‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetAllCoursesAsync()
@@ -264,12 +246,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید دوره‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید دوره‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetAllVotesAsync()
@@ -298,12 +277,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید نظرسنجی‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید نظرسنجی‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetAllAdvertisementsAsync()
@@ -329,12 +305,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید آگهی‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید آگهی‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetAllDraftsAsync()
@@ -358,12 +331,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید پیش‌نویس‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید پیش‌نویس‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetProjectsNewsAsync()
@@ -388,12 +358,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید پروژه‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید پروژه‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetProjectsFilesAsync()
@@ -418,12 +385,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید فایل‌های پروژه‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید فایل‌های پروژه‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetProjectsIssuesAsync()
@@ -448,12 +412,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید بازخورد‌های پروژه‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید بازخورد‌های پروژه‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetProjectsIssuesRepliesAsync()
@@ -479,12 +440,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید پاسخ به بازخورد‌های پروژه‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید پاسخ به بازخورد‌های پروژه‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetVotesRepliesAsync()
@@ -510,12 +468,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید نظرات نظرسنجی‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید نظرات نظرسنجی‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetAdvertisementCommentsAsync()
@@ -542,12 +497,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید نظرات آگهی‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید نظرات آگهی‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetProjectsFaqsAsync()
@@ -573,12 +525,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید راهنماهای پروژه‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید راهنماهای پروژه‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? id)
@@ -787,12 +736,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید مطالب {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید مطالب";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetCommentsAsync()
@@ -819,12 +765,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید نظرات مطالب {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید نظرات مطالب";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetNewsAsync()
@@ -850,12 +793,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید خلاصه اشتراک‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید خلاصه اشتراک‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetTagAsync(string id)
@@ -881,14 +821,9 @@ public class FeedsService(
             })
             .ToList();
 
-        var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید گروه {0}", id);
+        var title = string.Format(CultureInfo.InvariantCulture, format: "فید گروه {0}", id);
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"{feedTitle} {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetAuthorAsync(string id)
@@ -914,14 +849,9 @@ public class FeedsService(
             })
             .ToList();
 
-        var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید مطالب {0}", id);
+        var title = string.Format(CultureInfo.InvariantCulture, format: "فید مطالب {0}", id);
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"{feedTitle} {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetNewsCommentsAsync()
@@ -947,12 +877,9 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید نظرات اشتراک‌ها {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید نظرات اشتراک‌ها";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetNewsAuthorAsync(string id)
@@ -978,14 +905,9 @@ public class FeedsService(
             })
             .ToList();
 
-        var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید اشتراک‌های {0}", id);
+        var title = string.Format(CultureInfo.InvariantCulture, format: "فید اشتراک‌های {0}", id);
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"{feedTitle} {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        return GetFeedChannel(title, appSetting, rssItems);
     }
 
     public async Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync()
@@ -1011,13 +933,21 @@ public class FeedsService(
             })
             .ToList();
 
-        return new WhatsNewFeedChannel
-        {
-            FeedTitle = $"فید بازخوردهای دوره‌های {appSetting.BlogName}",
-            RssItems = rssItems,
-            CultureName = "fa-IR"
-        };
+        var title = "فید بازخوردهای دوره‌های";
+
+        return GetFeedChannel(title, appSetting, rssItems);
     }
+
+    private static WhatsNewFeedChannel GetFeedChannel(string title,
+        AppSetting appSetting,
+        List<WhatsNewItemModel> rssItems)
+        => new()
+        {
+            FeedTitle = $"{title} {appSetting.BlogName}",
+            RssItems = rssItems,
+            CultureName = "fa-IR",
+            FeedCopyright = $"© {appSetting.BlogName}"
+        };
 
     private async Task<AppSetting> GetAppSettingsAsync()
         => await appSettingsService.GetAppSettingsAsync() ?? new AppSetting
