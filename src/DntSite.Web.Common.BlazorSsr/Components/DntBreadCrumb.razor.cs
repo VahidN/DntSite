@@ -18,8 +18,8 @@ public partial class DntBreadCrumb
     ///     Additional user attributes
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } =
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, object?> AdditionalAttributes { get; set; } =
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     /// <summary>
     ///     The list of BreadCrumbs to display.

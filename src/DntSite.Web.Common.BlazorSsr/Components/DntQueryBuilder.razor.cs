@@ -239,8 +239,8 @@ public partial class DntQueryBuilder<TRecord>
     ///     Defines the rest of the custom attributes.
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } =
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, object?> AdditionalAttributes { get; set; } =
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     /// <summary>
     ///     The CSS class of the fieldset box.

@@ -9,8 +9,8 @@ public partial class DntInputTime
     ///     Additional user attributes
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } =
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, object?> AdditionalAttributes { get; set; } =
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     /// <summary>
     ///     The optional label name of the custom InputText
@@ -66,7 +66,7 @@ public partial class DntInputTime
     [Parameter]
     public string MinuteLabel { set; get; } = "Minute";
 
-    private string UniqueId { get; } = Guid.NewGuid().ToString("N");
+    private string UniqueId { get; } = Guid.NewGuid().ToString(format: "N");
 
     [Parameter] public Expression<Func<int?>>? HourExpression { get; set; }
 

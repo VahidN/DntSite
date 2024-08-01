@@ -3,8 +3,8 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 public partial class DntLinkedOrderedListNavMenuItem
 {
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } =
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, object?> AdditionalAttributes { get; set; } =
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     [EditorRequired] [Parameter] public required string Title { set; get; }
 

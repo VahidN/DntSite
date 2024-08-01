@@ -13,8 +13,8 @@ public partial class DntTreeView<TRecord>
     ///     Additional user attributes. HTML attributes appended to the root ul node.
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } =
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, object?> AdditionalAttributes { get; set; } =
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     /// <summary>
     ///     HTML attributes appended to the li nodes. HTML attributes appended to the children items.

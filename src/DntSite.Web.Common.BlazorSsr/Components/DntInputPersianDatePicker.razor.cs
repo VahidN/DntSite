@@ -3,14 +3,14 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 public partial class DntInputPersianDatePicker<T>
 {
     private BlazorHtmlField<T?> ValueField
-        => new(ValueExpression ?? throw new InvalidOperationException("Please use @bind-Value here."));
+        => new(ValueExpression ?? throw new InvalidOperationException(message: "Please use @bind-Value here."));
 
     /// <summary>
     ///     Additional user attributes
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } =
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, object?> AdditionalAttributes { get; set; } =
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     [Parameter] public int BeginningOfCentury { set; get; } = 1400;
 
@@ -92,6 +92,7 @@ public partial class DntInputPersianDatePicker<T>
         if (!Value.IsDateTimeOrDateTimeOffsetType())
         {
             throw new InvalidOperationException(
+                message:
                 "The `Value` type is not a supported `date` type. DateTime, DateTime?, DateTimeOffset and DateTimeOffset? are supported.");
         }
     }

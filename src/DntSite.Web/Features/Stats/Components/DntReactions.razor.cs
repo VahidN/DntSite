@@ -46,8 +46,8 @@ public partial class DntReactions<TReactionEntity, TForeignKeyEntity>
     [Parameter] [EditorRequired] public int Id { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } =
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, object?> AdditionalAttributes { get; set; } =
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     [InjectComponentScoped] internal IUserRatingsService UserRatingsService { set; get; } = null!;
 

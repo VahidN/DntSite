@@ -5,14 +5,14 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 /// </summary>
 public partial class DntButton
 {
-    private string SubmittingDivId { get; } = Guid.NewGuid().ToString("N");
+    private string SubmittingDivId { get; } = Guid.NewGuid().ToString(format: "N");
 
     /// <summary>
     ///     Additional user attributes
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } =
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, object?> AdditionalAttributes { get; set; } =
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     /// <summary>
     ///     A custom UI content

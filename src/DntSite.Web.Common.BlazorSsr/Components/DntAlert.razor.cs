@@ -8,12 +8,12 @@ public partial class DntAlert
     private string? _title;
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } =
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, object?> AdditionalAttributes { get; set; } =
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    private string MainDivId { get; } = Guid.NewGuid().ToString("N");
+    private string MainDivId { get; } = Guid.NewGuid().ToString(format: "N");
 
     private int Hash => HashCode.Combine(_alertType, _title, _message);
 
