@@ -104,7 +104,7 @@ public partial class DntReactions<TReactionEntity, TForeignKeyEntity>
 
         if (userId is null)
         {
-            ApplicationState.HttpContext.SsrRedirectTo(UserProfilesRoutingConstants.Login);
+            ApplicationState.NavigateTo(UserProfilesRoutingConstants.Login);
 
             return;
         }

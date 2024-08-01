@@ -41,7 +41,7 @@ public partial class EditUserSocialNetworks
 
             if (userSocialNetwork is null)
             {
-                ApplicationState.HttpContext.SsrRedirectTo(UserProfilesRoutingConstants.Login);
+                ApplicationState.NavigateTo(UserProfilesRoutingConstants.Login);
 
                 return;
             }

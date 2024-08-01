@@ -35,7 +35,7 @@ public partial class EditUserProfile
 
         if (currentUser is null)
         {
-            ApplicationState.HttpContext.SsrRedirectTo(UserProfilesRoutingConstants.Login);
+            ApplicationState.NavigateTo(UserProfilesRoutingConstants.Login);
 
             return;
         }

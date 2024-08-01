@@ -32,11 +32,9 @@ public partial class ApplicationState
         CurrentUser = await CurrentUserService.GetCurrentUserAsync();
     }
 
-    public void NavigateToUnauthorizedPage()
-        => HttpContext.SsrRedirectTo(redirectionUrl: "/error/401", StatusCodes.Status401Unauthorized);
+    public void NavigateToUnauthorizedPage() => NavigateTo(uri: "/error/401");
 
-    public void NavigateToNotFoundPage()
-        => HttpContext.SsrRedirectTo(redirectionUrl: "/error/404", StatusCodes.Status404NotFound);
+    public void NavigateToNotFoundPage() => NavigateTo(uri: "/error/404");
 
     public void NavigateTo([StringSyntax(syntax: "Uri")] string uri, bool forceLoad = false, bool replace = false)
         => NavigationManager.NavigateTo(uri, forceLoad, replace);
