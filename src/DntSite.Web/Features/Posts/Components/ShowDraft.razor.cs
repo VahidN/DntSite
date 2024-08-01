@@ -32,7 +32,7 @@ public partial class ShowDraft
 
         _currentUser = ApplicationState.CurrentUser;
 
-        var draft = await BlogPostDraftsService.FindBlogPostDraftAsync(ShowId.Value);
+        var draft = await BlogPostDraftsService.FindBlogPostDraftIncludeUserAsync(ShowId.Value);
 
         if (!_currentUser.CanUserEditThisDraft(draft))
         {

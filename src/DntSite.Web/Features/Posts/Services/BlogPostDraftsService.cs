@@ -111,7 +111,7 @@ public class BlogPostDraftsService(
     {
         ArgumentNullException.ThrowIfNull(data);
 
-        var draft = await FindBlogPostDraftAsync(draftId);
+        var draft = await FindBlogPostDraftIncludeUserAsync(draftId);
 
         if (draft is null)
         {

@@ -99,7 +99,7 @@ public partial class WriteDraft
 
     private async Task<BlogPostDraft?> GetUserDraftAsync(int id)
     {
-        var draft = await BlogPostDraftsService.FindBlogPostDraftAsync(id);
+        var draft = await BlogPostDraftsService.FindBlogPostDraftIncludeUserAsync(id);
 
         if (!ApplicationState.CurrentUser.CanUserEditThisDraft(draft))
         {
