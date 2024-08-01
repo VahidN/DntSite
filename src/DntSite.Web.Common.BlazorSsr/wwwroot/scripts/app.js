@@ -911,6 +911,10 @@ window.DntAddIconsToExternalLinks = {
         const mySite = window.location.host;
         const googleFavIco = "https://www.google.com/s2/favicons?domain=";
         document.querySelectorAll("a").forEach(link => {
+            if (link?.parentElement?.parentElement?.getAttribute("contenteditable")) {
+                return;
+            }
+
             if (link.title && link.title.toLowerCase().startsWith("share")) {
                 return;
             }
@@ -919,7 +923,10 @@ window.DntAddIconsToExternalLinks = {
                 return;
             }
 
-            if (link.href.match("^https?://") && !link.href.match(mySite) && link.getAttribute("itemprop") !== "social") {
+            if (link && link.href &&
+                link.href.match("^https?://") &&
+                !link.href.match(mySite) &&
+                link.getAttribute("itemprop") !== "social") {
                 const domain = link.href.replace(/<\S[^><]*>/g, "").split('/')[2];
                 link.style.background = `url(${googleFavIco}${domain}) center right no-repeat`;
                 link.style.paddingRight = "20px";
