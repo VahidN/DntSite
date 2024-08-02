@@ -13,7 +13,7 @@ public partial class EditUserSocialNetworks
 {
     private string? _userFriendlyName;
 
-    [Parameter] public int? EditUserId { set; get; }
+    [Parameter] public string? EditUserId { set; get; }
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
@@ -33,7 +33,7 @@ public partial class EditUserSocialNetworks
 
     protected override async Task OnInitializedAsync()
     {
-        var currentUser = await CurrentUserService.GetCurrentImpersonatedUserAsync(EditUserId);
+        var currentUser = await CurrentUserService.GetCurrentImpersonatedUserAsync(EditUserId.ToInt());
 
         if (ApplicationState.HttpContext.IsGetRequest())
         {
@@ -67,7 +67,7 @@ public partial class EditUserSocialNetworks
 
     private async Task PerformAsync()
     {
-        var operationResult = await UserProfilesManagerService.EditUserSocialNetworksAsync(EditUserId, Model);
+        var operationResult = await UserProfilesManagerService.EditUserSocialNetworksAsync(EditUserId.ToInt(), Model);
 
         switch (operationResult.Stat)
         {

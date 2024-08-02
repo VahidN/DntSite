@@ -20,10 +20,16 @@ public partial class ProjectFaqDetails
     private string PostUrlTemplate => Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{ProjectId}/{FaqId}");
 
     private string EditPostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectFaqEditBase}/{ProjectId}/{FaqId}");
+        => Invariant($"{ProjectsRoutingConstants.WriteProjectFaqEditBase}/{ProjectId}/{EncryptedFaqId}");
 
     private string DeletePostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectFaqDeleteBase}/{ProjectId}/{FaqId}");
+        => Invariant($"{ProjectsRoutingConstants.WriteProjectFaqDeleteBase}/{ProjectId}/{EncryptedFaqId}");
+
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
+    private string EncryptedFaqId => FaqId.HasValue
+        ? ProtectionProvider.Encrypt(FaqId.Value.ToString(CultureInfo.InvariantCulture))
+        : "";
 
     private ProjectFaq? CurrentPost => _faqs?.CurrentItem;
 

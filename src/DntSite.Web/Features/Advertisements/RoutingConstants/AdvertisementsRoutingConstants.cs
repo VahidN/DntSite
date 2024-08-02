@@ -42,10 +42,16 @@ public static class AdvertisementsRoutingConstants
     public const string WriteSpecialAdvertisement = $"{WriteAdvertisementTypeBase}/Special";
     public const string WriteAdvertisementType = $"{WriteAdvertisementTypeBase}/{{AdvertisementKind}}";
     public const string WriteAdvertisementEditBase = $"{WriteAdvertisementBase}/edit";
-    public const string WriteAdvertisementEdit = $"{WriteAdvertisementEditBase}/{{EditId:int}}";
+
+    public const string WriteAdvertisementEdit =
+        $"{WriteAdvertisementEditBase}/{{EditId:{EncryptedRouteConstraint.Name}}}";
+
     public const string EditPostUrlTemplate = $"{WriteAdvertisementEditBase}/{{0}}";
 
     public const string WriteAdvertisementDeleteBase = $"{WriteAdvertisementBase}/delete";
-    public const string WriteAdvertisementDelete = $"{WriteAdvertisementDeleteBase}/{{DeleteId:int}}";
+
+    public const string WriteAdvertisementDelete =
+        $"{WriteAdvertisementDeleteBase}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
+
     public const string DeletePostUrlTemplate = $"{WriteAdvertisementDeleteBase}/{{0}}";
 }

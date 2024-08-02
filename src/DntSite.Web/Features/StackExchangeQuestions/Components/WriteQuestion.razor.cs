@@ -21,9 +21,9 @@ public partial class WriteQuestion
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IQuestionsService QuestionsService { set; get; } = null!;
 
@@ -46,12 +46,12 @@ public partial class WriteQuestion
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var question = await GetStackExchangeQuestionAsync(DeleteId.Value);
+        var question = await GetStackExchangeQuestionAsync(DeleteId.ToInt());
         await QuestionsService.MarkAsDeletedAsync(question);
         await QuestionsService.NotifyDeleteChangesAsync(question, ApplicationState.CurrentUser?.User);
 
@@ -62,12 +62,12 @@ public partial class WriteQuestion
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetStackExchangeQuestionAsync(EditId.Value);
+        var item = await GetStackExchangeQuestionAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -97,9 +97,9 @@ public partial class WriteQuestion
 
         StackExchangeQuestion? question;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            question = await GetStackExchangeQuestionAsync(EditId.Value);
+            question = await GetStackExchangeQuestionAsync(EditId.ToInt());
             await QuestionsService.UpdateQuestionsItemAsync(question, WriteQuestionModel, user);
         }
         else

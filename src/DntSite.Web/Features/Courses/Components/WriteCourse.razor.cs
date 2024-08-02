@@ -21,9 +21,9 @@ public partial class WriteCourse
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal ICoursesService CoursesService { set; get; } = null!;
 
@@ -72,12 +72,12 @@ public partial class WriteCourse
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var course = await GetCourseItemAsync(DeleteId.Value);
+        var course = await GetCourseItemAsync(DeleteId.ToInt());
         await CoursesService.MarkAsDeletedAsync(course);
         await CoursesService.NotifyDeleteChangesAsync(course);
 
@@ -91,12 +91,12 @@ public partial class WriteCourse
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetCourseItemAsync(EditId.Value);
+        var item = await GetCourseItemAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -126,9 +126,9 @@ public partial class WriteCourse
 
         Course? course;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            course = await GetCourseItemAsync(EditId.Value);
+            course = await GetCourseItemAsync(EditId.ToInt());
             await CoursesService.UpdateCourseItemAsync(course, WriteCourseModel);
         }
         else

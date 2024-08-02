@@ -24,8 +24,10 @@ public static class BacklogsRoutingConstants
         "/backlogs-writers/{UserFriendlyName}/page/{CurrentPage:int}";
 
     public const string WriteBacklog = "/write-backlog";
-    public const string WriteBacklogEditEditId = "/write-backlog/edit/{EditId:int}";
-    public const string WriteBacklogDeleteDeleteId = "/write-backlog/delete/{DeleteId:int}";
+    public const string WriteBacklogEditEditId = $"/write-backlog/edit/{{EditId:{EncryptedRouteConstraint.Name}}}";
+
+    public const string WriteBacklogDeleteDeleteId =
+        $"/write-backlog/delete/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string CommentsUrlTemplate = $"{BacklogsDetailsBase}/{{0}}#comments";
     public const string PostUrlTemplate = $"{BacklogsDetailsBase}/{{0}}";

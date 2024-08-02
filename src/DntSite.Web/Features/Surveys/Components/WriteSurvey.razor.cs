@@ -21,9 +21,9 @@ public partial class WriteSurvey
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IVotesService SurveysService { set; get; } = null!;
 
@@ -58,12 +58,12 @@ public partial class WriteSurvey
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var surveyItem = await GetUserSurveyAsync(DeleteId.Value);
+        var surveyItem = await GetUserSurveyAsync(DeleteId.ToInt());
         await SurveysService.MarkAsDeletedAsync(surveyItem);
         await SurveysService.NotifyDeleteChangesAsync(surveyItem, ApplicationState.CurrentUser?.User);
 
@@ -74,12 +74,12 @@ public partial class WriteSurvey
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetUserSurveyAsync(EditId.Value);
+        var item = await GetUserSurveyAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -110,9 +110,9 @@ public partial class WriteSurvey
 
         Survey? surveyItem;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            surveyItem = await GetUserSurveyAsync(EditId.Value);
+            surveyItem = await GetUserSurveyAsync(EditId.ToInt());
             await SurveysService.UpdateSurveyAsync(surveyItem, WriteSurveyModel, user);
         }
         else

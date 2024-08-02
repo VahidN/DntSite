@@ -60,7 +60,7 @@ public class CurrentUserService(
 
     public async Task<User?> GetCurrentImpersonatedUserAsync(int? impersonatedUserId)
     {
-        if (impersonatedUserId.HasValue)
+        if (impersonatedUserId is > 0)
         {
             return !await IsCurrentUserAdminAsync() ? null : await usersService.FindUserAsync(impersonatedUserId.Value);
         }

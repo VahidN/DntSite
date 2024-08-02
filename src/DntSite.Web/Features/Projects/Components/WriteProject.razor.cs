@@ -21,9 +21,9 @@ public partial class WriteProject
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IProjectsService ProjectsService { set; get; } = null!;
 
@@ -58,12 +58,12 @@ public partial class WriteProject
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var project = await GetProjectAsync(DeleteId.Value);
+        var project = await GetProjectAsync(DeleteId.ToInt());
         await ProjectsService.MarkAsDeletedAsync(project);
         await ProjectsService.NotifyDeleteChangesAsync(project, ApplicationState.CurrentUser?.User);
 
@@ -74,12 +74,12 @@ public partial class WriteProject
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetProjectAsync(EditId.Value);
+        var item = await GetProjectAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -109,9 +109,9 @@ public partial class WriteProject
 
         Project? project;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            project = await GetProjectAsync(EditId.Value);
+            project = await GetProjectAsync(EditId.ToInt());
             await ProjectsService.UpdateProjectAsync(project, WriteProjectModel);
         }
         else

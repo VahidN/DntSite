@@ -40,9 +40,9 @@ public partial class WriteDraft
 
     public IList<string>? AutoCompleteDataList { get; set; }
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
@@ -69,12 +69,12 @@ public partial class WriteDraft
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var draft = await GetUserDraftAsync(DeleteId.Value);
+        var draft = await GetUserDraftAsync(DeleteId.ToInt());
         await BlogPostDraftsService.MarkAsDeletedAsync(draft);
 
         ApplicationState.NavigateTo(PostsRoutingConstants.MyDrafts);
@@ -82,12 +82,12 @@ public partial class WriteDraft
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var draft = await GetUserDraftAsync(EditId.Value);
+        var draft = await GetUserDraftAsync(EditId.ToInt());
 
         if (draft is null)
         {
@@ -113,7 +113,7 @@ public partial class WriteDraft
 
     private async Task PerformAsync()
     {
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
             await UpdateDraftAsync();
         }
@@ -125,12 +125,12 @@ public partial class WriteDraft
 
     private async Task UpdateDraftAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var draft = await GetUserDraftAsync(EditId.Value);
+        var draft = await GetUserDraftAsync(EditId.ToInt());
 
         if (draft is null)
         {
@@ -151,7 +151,7 @@ public partial class WriteDraft
 
     private async Task AddDraftAsync()
     {
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
@@ -170,7 +170,7 @@ public partial class WriteDraft
 
     private async Task PerformConvertToLinkAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             ApplicationState.NavigateToNotFoundPage();
 
@@ -184,7 +184,7 @@ public partial class WriteDraft
             return;
         }
 
-        var draft = await GetUserDraftAsync(EditId.Value);
+        var draft = await GetUserDraftAsync(EditId.ToInt());
 
         if (draft is null)
         {
@@ -215,7 +215,7 @@ public partial class WriteDraft
 
     private async Task PerformConvertToCommentAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             ApplicationState.NavigateToNotFoundPage();
 
@@ -229,7 +229,7 @@ public partial class WriteDraft
             return;
         }
 
-        var draft = await GetUserDraftAsync(EditId.Value);
+        var draft = await GetUserDraftAsync(EditId.ToInt());
 
         if (draft is null)
         {

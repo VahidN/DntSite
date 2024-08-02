@@ -23,6 +23,11 @@ public partial class UserProfileManager
 
     [Parameter] [EditorRequired] public User? User { set; get; }
 
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
+    private string EncryptedUserId
+        => User is null ? "" : ProtectionProvider.Encrypt(User.Id.ToString(CultureInfo.InvariantCulture));
+
     private async Task PerformAsync()
     {
         if (ApplicationState.CurrentUser?.IsAdmin == false)

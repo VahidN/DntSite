@@ -13,7 +13,7 @@ public partial class EditUserProfile
 {
     private string? _userFriendlyName;
 
-    [Parameter] public int? EditUserId { set; get; }
+    [Parameter] public string? EditUserId { set; get; }
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
@@ -31,7 +31,7 @@ public partial class EditUserProfile
 
     protected override async Task OnInitializedAsync()
     {
-        var currentUser = await CurrentUserService.GetCurrentImpersonatedUserAsync(EditUserId);
+        var currentUser = await CurrentUserService.GetCurrentImpersonatedUserAsync(EditUserId.ToInt());
 
         if (currentUser is null)
         {
@@ -63,7 +63,7 @@ public partial class EditUserProfile
 
     private async Task PerformAsync()
     {
-        var operationResult = await UserProfilesManagerService.EditUserProfileAsync(Model, EditUserId);
+        var operationResult = await UserProfilesManagerService.EditUserProfileAsync(Model, EditUserId.ToInt());
 
         switch (operationResult.Stat)
         {
@@ -73,7 +73,7 @@ public partial class EditUserProfile
                 break;
             case OperationStat.Succeeded:
                 ApplicationState.NavigationManager.NavigateTo(
-                    $"{UserProfilesRoutingConstants.Users}/{Uri.EscapeDataString(_userFriendlyName ?? "")}");
+                    $"{UserProfilesRoutingConstants.Users}/{Uri.EscapeDataString(Model.FriendlyName ?? _userFriendlyName ?? "")}");
 
                 break;
         }

@@ -13,9 +13,9 @@ public partial class SendPrivateMessage
 
     [Parameter] public int? ToUserId { set; get; }
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IUsersInfoService UsersService { set; get; } = null!;
 
@@ -34,16 +34,16 @@ public partial class SendPrivateMessage
             return;
         }
 
-        if (DeleteId.HasValue)
+        if (!string.IsNullOrWhiteSpace(DeleteId))
         {
-            await TryDeletePrivateMessageAsync(DeleteId.Value);
+            await TryDeletePrivateMessageAsync(DeleteId.ToInt());
 
             return;
         }
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            await TryInitEditDataAsync(EditId.Value);
+            await TryInitEditDataAsync(EditId.ToInt());
 
             return;
         }
@@ -100,9 +100,9 @@ public partial class SendPrivateMessage
 
     private async Task PerformAsync()
     {
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            await EditPrivateMessageAsync(EditId.Value);
+            await EditPrivateMessageAsync(EditId.ToInt());
         }
         else
         {

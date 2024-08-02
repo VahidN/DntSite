@@ -15,11 +15,13 @@ public partial class ChangeUserPassword
 
     [SupplyParameterFromForm] public ChangeUserPasswordModel Model { get; set; } = new();
 
-    [Parameter] public int? UserId { set; get; }
+    [Parameter] public string? UserId { set; get; }
 
     private string PageTitle => $"تغییر کلمه عبور «{_userFriendlyName ?? "کاربر"}»";
 
     [InjectComponentScoped] internal IUsersInfoService UsersService { set; get; } = null!;
+
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
     [InjectComponentScoped] internal IUserProfilesManagerService UserProfilesManagerService { set; get; } = null!;
 
@@ -27,9 +29,11 @@ public partial class ChangeUserPassword
 
     [InjectComponentScoped] internal IUsersManagerEmailsService UsersManagerEmailsService { set; get; } = null!;
 
+    private string EncryptedUserId => ProtectionProvider.Encrypt(UserId.ToInt().ToString(CultureInfo.InvariantCulture));
+
     protected override async Task OnInitializedAsync()
     {
-        var user = await UsersService.FindUserAsync(UserId);
+        var user = await UsersService.FindUserAsync(UserId.ToInt());
 
         if (user is null)
         {
@@ -53,7 +57,7 @@ public partial class ChangeUserPassword
             return;
         }
 
-        var user = await UsersService.FindUserAsync(UserId);
+        var user = await UsersService.FindUserAsync(UserId.ToInt());
 
         if (user is null)
         {
@@ -93,7 +97,7 @@ public partial class ChangeUserPassword
             UserProfilesBreadCrumbs.Users, new BreadCrumb
             {
                 Title = "تغییر کلمه‌ی عبور کاربر",
-                Url = Invariant($"{UserProfilesRoutingConstants.ChangeUserPasswordBase}/{UserId}"),
+                Url = Invariant($"{UserProfilesRoutingConstants.ChangeUserPasswordBase}/{EncryptedUserId}"),
                 GlyphIcon = DntBootstrapIcons.BiPerson
             }
         ]);

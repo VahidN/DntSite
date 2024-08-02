@@ -37,8 +37,13 @@ public static class CoursesRoutingConstants
         $"{CourseCommentsBase}/{{CourseId:int}}/page/{{CurrentPage:int}}";
 
     public const string WriteCourse = "/write-course";
-    public const string WriteCourseEditEditId = $"{WriteCourse}/edit/{{EditId:int}}";
-    public const string WriteCourseDeleteDeleteId = $"{WriteCourse}/delete/{{DeleteId:int}}";
+    public const string WriteCourseEditEditId = $"{WriteCourse}/edit/{{EditId:{EncryptedRouteConstraint.Name}}}";
+
+    public const string WriteCourseDeleteDeleteId =
+        $"{WriteCourse}/delete/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
+
+    public const string EditPostUrlTemplate = $"{WriteCourse}/edit/{{0}}";
+    public const string DeletePostUrlTemplate = $"{WriteCourse}/delete/{{0}}";
 
     public const string WriteCourseTopicBase = "/write-course-topic";
     public const string WriteCourseTopicCourseId = $"{WriteCourseTopicBase}/{{CourseId:int}}";
@@ -46,16 +51,14 @@ public static class CoursesRoutingConstants
     public const string WriteCourseTopicEditBase = $"{WriteCourseTopicBase}/edit";
 
     public const string WriteCourseTopicEditCourseIdEditId =
-        $"{WriteCourseTopicEditBase}/{{CourseId:int}}/{{EditId:guid}}";
+        $"{WriteCourseTopicEditBase}/{{CourseId:int}}/{{EditId:{EncryptedRouteConstraint.Name}}}";
 
     public const string WriteCourseTopicDeleteBase = $"{WriteCourseTopicBase}/delete";
 
     public const string WriteCourseTopicDeleteCourseIdDeleteId =
-        $"{WriteCourseTopicDeleteBase}/{{CourseId:int}}/{{DeleteId:guid}}";
+        $"{WriteCourseTopicDeleteBase}/{{CourseId:int}}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string CommentsUrlTemplate = $"{CourseCommentsBase}/{{0}}";
     public const string PostUrlTemplate = $"{CoursesDetailsBase}/{{0}}";
     public const string PostTagUrlTemplate = $"{CoursesTag}/{{0}}";
-    public const string EditPostUrlTemplate = $"{WriteCourse}/edit/{{0}}";
-    public const string DeletePostUrlTemplate = $"{WriteCourse}/delete/{{0}}";
 }

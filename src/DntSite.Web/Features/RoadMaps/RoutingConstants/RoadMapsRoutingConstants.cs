@@ -34,10 +34,14 @@ public static class RoadMapsRoutingConstants
     public const string WriteLearningPath = "/write-learning-path";
 
     public const string WriteLearningPathEditBase = $"{WriteLearningPath}/edit";
-    public const string WriteLearningPathEditEditId = $"{WriteLearningPathEditBase}/{{EditId:int}}";
+
+    public const string WriteLearningPathEditEditId =
+        $"{WriteLearningPathEditBase}/{{EditId:{EncryptedRouteConstraint.Name}}}";
 
     public const string WriteLearningPathDeleteBase = $"{WriteLearningPath}/delete";
-    public const string WriteLearningPathDeleteDeleteId = $"{WriteLearningPathDeleteBase}/{{DeleteId:int}}";
+
+    public const string WriteLearningPathDeleteDeleteId =
+        $"{WriteLearningPathDeleteBase}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string CommentsUrlTemplate = $"{LearningPathsDetailsBase}/{{0}}#comments";
     public const string PostUrlTemplate = $"{LearningPathsDetailsBase}/{{0}}";

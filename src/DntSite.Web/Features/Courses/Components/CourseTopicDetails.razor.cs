@@ -59,10 +59,15 @@ public partial class CourseTopicDetails
         => Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{_courseTopic!.NextTopic?.DisplayId:D}");
 
     private string EditPostUrlTemplate
-        => Invariant($"{CoursesRoutingConstants.WriteCourseTopicEditBase}/{CourseId}/{DisplayId:D}");
+        => Invariant($"{CoursesRoutingConstants.WriteCourseTopicEditBase}/{CourseId}/{EncryptedDisplayId}");
 
     private string DeletePostUrlTemplate
-        => Invariant($"{CoursesRoutingConstants.WriteCourseTopicDeleteBase}/{CourseId}/{DisplayId:D}");
+        => Invariant($"{CoursesRoutingConstants.WriteCourseTopicDeleteBase}/{CourseId}/{EncryptedDisplayId}");
+
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
+    private string EncryptedDisplayId
+        => DisplayId.HasValue ? ProtectionProvider.Encrypt(DisplayId.Value.ToString(format: "D")) : "";
 
     private List<string> GetTags() => CurrentPost?.Tags.Select(x => x.Name).ToList() ?? [];
 

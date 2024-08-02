@@ -78,7 +78,7 @@
     </FrameBody>
 </DntCardFrame>
 
-@if (ApplicationState.CurrentUser?.IsAdmin == true && EditId.HasValue)
+@if (ApplicationState.CurrentUser?.IsAdmin == true && !string.IsNullOrWhiteSpace(EditId))
 {
     <DntCardFrame MarginTop="3">
         <FrameHeader>

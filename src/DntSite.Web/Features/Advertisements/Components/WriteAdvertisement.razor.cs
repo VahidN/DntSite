@@ -25,11 +25,11 @@ public partial class WriteAdvertisement
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
     [Parameter] public string? AdvertisementKind { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IAdvertisementsService AdvertisementsService { set; get; } = null!;
 
@@ -65,12 +65,12 @@ public partial class WriteAdvertisement
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var advertisement = await GetUserAdvertisementAsync(DeleteId.Value);
+        var advertisement = await GetUserAdvertisementAsync(DeleteId.ToInt());
         await AdvertisementsService.MarkAsDeletedAsync(advertisement);
         await AdvertisementsService.NotifyDeleteChangesAsync(advertisement);
 
@@ -82,12 +82,12 @@ public partial class WriteAdvertisement
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetUserAdvertisementAsync(EditId.Value);
+        var item = await GetUserAdvertisementAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -118,9 +118,9 @@ public partial class WriteAdvertisement
 
         Advertisement? advertisement;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            advertisement = await GetUserAdvertisementAsync(EditId.Value);
+            advertisement = await GetUserAdvertisementAsync(EditId.ToInt());
             await AdvertisementsService.UpdateAdvertisementAsync(advertisement, model);
         }
         else

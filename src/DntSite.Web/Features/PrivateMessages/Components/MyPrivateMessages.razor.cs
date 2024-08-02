@@ -16,6 +16,8 @@ public partial class MyPrivateMessages
 
     [InjectComponentScoped] internal IPrivateMessagesService PrivateMessagesService { set; get; } = null!;
 
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [Parameter] public int? CurrentPage { set; get; }
@@ -45,7 +47,8 @@ public partial class MyPrivateMessages
     }
 
     private string GetPostUrl(PrivateMessage record)
-        => Invariant($"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{record.Id}");
+        => Invariant(
+            $"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture))}");
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([

@@ -22,9 +22,9 @@ public partial class WriteNews
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IDailyNewsItemsService DailyNewsItemsService { set; get; } = null!;
 
@@ -50,12 +50,12 @@ public partial class WriteNews
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var newsItem = await GetUserDailyNewsItemAsync(DeleteId.Value);
+        var newsItem = await GetUserDailyNewsItemAsync(DeleteId.ToInt());
         await DailyNewsItemsService.MarkAsDeletedAsync(newsItem);
         await DailyNewsItemsService.NotifyDeleteChangesAsync(newsItem, ApplicationState.CurrentUser?.User);
 
@@ -81,12 +81,12 @@ public partial class WriteNews
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetUserDailyNewsItemAsync(EditId.Value);
+        var item = await GetUserDailyNewsItemAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -112,7 +112,7 @@ public partial class WriteNews
 
     private async Task PerformAsync()
     {
-        var checkUrlHashResult = await DailyNewsItemsService.CheckUrlHashAsync(WriteNewsModel.Url, EditId,
+        var checkUrlHashResult = await DailyNewsItemsService.CheckUrlHashAsync(WriteNewsModel.Url, EditId.ToInt(),
             ApplicationState.CurrentUser?.IsAdmin == true);
 
         if (checkUrlHashResult.Stat == OperationStat.Failed)
@@ -126,9 +126,9 @@ public partial class WriteNews
 
         DailyNewsItem? newsItem;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            newsItem = await GetUserDailyNewsItemAsync(EditId.Value);
+            newsItem = await GetUserDailyNewsItemAsync(EditId.ToInt());
             await DailyNewsItemsService.UpdateNewsItemAsync(newsItem, WriteNewsModel);
         }
         else

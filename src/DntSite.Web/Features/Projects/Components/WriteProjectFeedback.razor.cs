@@ -21,9 +21,9 @@ public partial class WriteProjectFeedback
     [SupplyParameterFromForm(FormName = nameof(WriteProjectFeedback))]
     public IssueModel IssueModel { get; set; } = new();
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IProjectIssuesService ProjectIssuesService { set; get; } = null!;
 
@@ -88,12 +88,12 @@ public partial class WriteProjectFeedback
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var projectIssue = await GetProjectIssueAsync(DeleteId.Value);
+        var projectIssue = await GetProjectIssueAsync(DeleteId.ToInt());
         await ProjectIssuesService.MarkAsDeletedAsync(projectIssue);
         await ProjectIssuesService.NotifyDeleteChangesAsync(projectIssue, ApplicationState.CurrentUser?.User);
 
@@ -105,12 +105,12 @@ public partial class WriteProjectFeedback
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetProjectIssueAsync(EditId.Value);
+        var item = await GetProjectIssueAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -148,9 +148,9 @@ public partial class WriteProjectFeedback
 
         ProjectIssue? projectIssue;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            projectIssue = await GetProjectIssueAsync(EditId.Value);
+            projectIssue = await GetProjectIssueAsync(EditId.ToInt());
             await ProjectIssuesService.UpdateProjectIssueAsync(projectIssue, IssueModel);
         }
         else

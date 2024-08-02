@@ -18,9 +18,9 @@ public partial class WriteProjectFaq
     [SupplyParameterFromForm(FormName = nameof(WriteProjectFaq))]
     public ProjectFaqFormModel WriteProjectFaqFormModel { get; set; } = new();
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IProjectFaqsService ProjectFaqsService { set; get; } = null!;
 
@@ -60,12 +60,12 @@ public partial class WriteProjectFaq
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var projectFaq = await GetProjectFaqAsync(DeleteId.Value);
+        var projectFaq = await GetProjectFaqAsync(DeleteId.ToInt());
         await ProjectFaqsService.MarkAsDeletedAsync(projectFaq);
         await ProjectFaqsService.NotifyDeleteChangesAsync(projectFaq, ApplicationState.CurrentUser?.User);
 
@@ -77,12 +77,12 @@ public partial class WriteProjectFaq
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetProjectFaqAsync(EditId.Value);
+        var item = await GetProjectFaqAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -120,9 +120,9 @@ public partial class WriteProjectFaq
 
         ProjectFaq? projectFaq;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            projectFaq = await GetProjectFaqAsync(EditId.Value);
+            projectFaq = await GetProjectFaqAsync(EditId.ToInt());
             await ProjectFaqsService.UpdateProjectFaqAsync(projectFaq, WriteProjectFaqFormModel);
         }
         else

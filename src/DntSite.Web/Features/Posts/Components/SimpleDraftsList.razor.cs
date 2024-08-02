@@ -16,6 +16,8 @@ public partial class SimpleDraftsList
 
     [Parameter] [EditorRequired] public bool ShowBriefDescription { set; get; }
 
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
     private static string GetShowDraftLink(int itemId) => Invariant($"{PostsRoutingConstants.ShowDraftBase}/{itemId}");
 
     private static string GetTagUrl(string tagName) => $"{PostsRoutingConstants.Tag}/{Uri.EscapeDataString(tagName)}";

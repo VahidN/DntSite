@@ -31,7 +31,12 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
 
     [Parameter] [EditorRequired] public required string PostUrlTemplate { set; get; }
 
-    private string PostUrl => string.Format(CultureInfo.InvariantCulture, PostUrlTemplate, Id);
+    private string PostUrl => !EncryptPostUrl
+        ? string.Format(CultureInfo.InvariantCulture, PostUrlTemplate, Id)
+        : string.Format(CultureInfo.InvariantCulture, PostUrlTemplate,
+            ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)));
+
+    [Parameter] public bool EncryptPostUrl { set; get; }
 
     [Parameter] [EditorRequired] public required string PostTagUrlTemplate { set; get; }
 
@@ -65,7 +70,12 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
 
     [Parameter] [EditorRequired] public required string DeletePostUrlTemplate { set; get; }
 
-    private string DeletePostUrl => string.Format(CultureInfo.InvariantCulture, DeletePostUrlTemplate, Id);
+    [Parameter] [EditorRequired] public bool EncryptEditDeleteIDs { set; get; }
+
+    private string DeletePostUrl => !EncryptEditDeleteIDs
+        ? string.Format(CultureInfo.InvariantCulture, DeletePostUrlTemplate, Id)
+        : string.Format(CultureInfo.InvariantCulture, DeletePostUrlTemplate,
+            ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)));
 
     [Parameter] [EditorRequired] public required string EditPostUrlTemplate { set; get; }
 
@@ -81,7 +91,12 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
 
     [Parameter] public RenderFragment? AfterFooterContent { set; get; }
 
-    private string EditPostUrl => string.Format(CultureInfo.InvariantCulture, EditPostUrlTemplate, Id);
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
+    private string EditPostUrl => !EncryptEditDeleteIDs
+        ? string.Format(CultureInfo.InvariantCulture, EditPostUrlTemplate, Id)
+        : string.Format(CultureInfo.InvariantCulture, EditPostUrlTemplate,
+            ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)));
 
     private string TextToShow => !ShowBriefDescription ? Body : BriefDescription ?? "";
 

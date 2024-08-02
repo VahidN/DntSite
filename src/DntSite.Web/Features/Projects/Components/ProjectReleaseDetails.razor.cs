@@ -25,10 +25,16 @@ public partial class ProjectReleaseDetails
         => Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}/{ReleaseId}");
 
     private string EditPostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectReleaseEditBase}/{ProjectId}/{ReleaseId}");
+        => Invariant($"{ProjectsRoutingConstants.WriteProjectReleaseEditBase}/{ProjectId}/{EncryptedReleaseId}");
 
     private string DeletePostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectReleaseDeleteBase}/{ProjectId}/{ReleaseId}");
+        => Invariant($"{ProjectsRoutingConstants.WriteProjectReleaseDeleteBase}/{ProjectId}/{EncryptedReleaseId}");
+
+    private string EncryptedReleaseId => ReleaseId.HasValue
+        ? ProtectionProvider.Encrypt(ReleaseId.Value.ToString(CultureInfo.InvariantCulture))
+        : "";
+
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
     private ProjectRelease? CurrentPost => _releases?.CurrentItem;
 

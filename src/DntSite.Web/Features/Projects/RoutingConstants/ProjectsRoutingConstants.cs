@@ -41,10 +41,12 @@ public static class ProjectsRoutingConstants
     public const string WriteProject = "/write-project";
 
     public const string WriteProjectEditBase = $"{WriteProject}/edit";
-    public const string WriteProjectEditEditId = $"{WriteProjectEditBase}/{{EditId:int}}";
+    public const string WriteProjectEditEditId = $"{WriteProjectEditBase}/{{EditId:{EncryptedRouteConstraint.Name}}}";
 
     public const string WriteProjectDeleteBase = $"{WriteProject}/delete";
-    public const string WriteProjectDeleteDeleteId = $"{WriteProjectDeleteBase}/{{DeleteId:int}}";
+
+    public const string WriteProjectDeleteDeleteId =
+        $"{WriteProjectDeleteBase}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string FeedbacksUrlTemplate = $"{ProjectFeedbacksBase}/{{0}}#comments";
     public const string CommentsUrlTemplate = $"{ProjectCommentsBase}/{{0}}#comments";
@@ -73,12 +75,14 @@ public static class ProjectsRoutingConstants
     public const string WriteProjectFaq = $"{WriteProjectFaqBase}/{{ProjectId:int}}";
 
     public const string WriteProjectFaqEditBase = $"{WriteProjectFaqBase}/edit";
-    public const string WriteProjectFaqEditEditId = $"{WriteProjectFaqEditBase}/{{ProjectId:int}}/{{EditId:int}}";
+
+    public const string WriteProjectFaqEditEditId =
+        $"{WriteProjectFaqEditBase}/{{ProjectId:int}}/{{EditId:{EncryptedRouteConstraint.Name}}}";
 
     public const string WriteProjectFaqDeleteBase = $"{WriteProjectFaqBase}/delete";
 
     public const string WriteProjectFaqDeleteDeleteId =
-        $"{WriteProjectFaqDeleteBase}/{{ProjectId:int}}/{{DeleteId:int}}";
+        $"{WriteProjectFaqDeleteBase}/{{ProjectId:int}}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string EditProjectFaqUrlTemplate = $"{WriteProjectFaqEditBase}/{{0}}";
     public const string DeleteProjectFaqUrlTemplate = $"{WriteProjectFaqDeleteBase}/{{0}}";
@@ -89,12 +93,12 @@ public static class ProjectsRoutingConstants
     public const string WriteProjectFeedbackEditBase = $"{WriteProjectFeedbackBase}/edit";
 
     public const string WriteProjectFeedbackEditEditId =
-        $"{WriteProjectFeedbackEditBase}/{{ProjectId:int}}/{{EditId:int}}";
+        $"{WriteProjectFeedbackEditBase}/{{ProjectId:int}}/{{EditId:{EncryptedRouteConstraint.Name}}}";
 
     public const string WriteProjectFeedbackDeleteBase = $"{WriteProjectFeedbackBase}/delete";
 
     public const string WriteProjectFeedbackDeleteDeleteId =
-        $"{WriteProjectFeedbackDeleteBase}/{{ProjectId:int}}/{{DeleteId:int}}";
+        $"{WriteProjectFeedbackDeleteBase}/{{ProjectId:int}}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string WriteProjectReleaseBase = "/write-project-release";
     public const string WriteProjectRelease = $"{WriteProjectReleaseBase}/{{ProjectId:int}}";
@@ -102,12 +106,12 @@ public static class ProjectsRoutingConstants
     public const string WriteProjectReleaseEditBase = $"{WriteProjectReleaseBase}/edit";
 
     public const string WriteProjectReleaseEditEditId =
-        $"{WriteProjectReleaseEditBase}/{{ProjectId:int}}/{{EditId:int}}";
+        $"{WriteProjectReleaseEditBase}/{{ProjectId:int}}/{{EditId:{EncryptedRouteConstraint.Name}}}";
 
     public const string WriteProjectReleaseDeleteBase = $"{WriteProjectReleaseBase}/delete";
 
     public const string WriteProjectReleaseDeleteDeleteId =
-        $"{WriteProjectReleaseDeleteBase}/{{ProjectId:int}}/{{DeleteId:int}}";
+        $"{WriteProjectReleaseDeleteBase}/{{ProjectId:int}}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string EditProjectReleaseUrlTemplate = $"{WriteProjectReleaseEditBase}/{{0}}";
     public const string DeleteProjectReleaseUrlTemplate = $"{WriteProjectReleaseDeleteBase}/{{0}}";

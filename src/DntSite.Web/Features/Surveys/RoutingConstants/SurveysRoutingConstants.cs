@@ -36,10 +36,12 @@ public static class SurveysRoutingConstants
     public const string WriteSurvey = "/write-survey";
 
     public const string WriteSurveyEditBase = $"{WriteSurvey}/edit";
-    public const string WriteSurveyEditEditId = $"{WriteSurveyEditBase}/{{EditId:int}}";
+    public const string WriteSurveyEditEditId = $"{WriteSurveyEditBase}/{{EditId:{EncryptedRouteConstraint.Name}}}";
 
     public const string WriteSurveyDeleteBase = $"{WriteSurvey}/delete";
-    public const string WriteSurveyDeleteDeleteId = $"{WriteSurveyDeleteBase}/{{DeleteId:int}}";
+
+    public const string WriteSurveyDeleteDeleteId =
+        $"{WriteSurveyDeleteBase}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string CommentsUrlTemplate = $"{SurveysArchiveDetailsBase}/{{0}}#comments";
     public const string PostUrlTemplate = $"{SurveysArchiveDetailsBase}/{{0}}";

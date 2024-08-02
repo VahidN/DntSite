@@ -8,13 +8,17 @@ public static class UserProfilesRoutingConstants
     public const string ChangePassword = "/change-password";
 
     public const string ChangeUserPasswordBase = "/change-user-password";
-    public const string ChangeUserPasswordUserId = $"{ChangeUserPasswordBase}/{{UserId:int}}";
+
+    public const string ChangeUserPasswordUserId =
+        $"{ChangeUserPasswordBase}/{{UserId:{EncryptedRouteConstraint.Name}}}";
 
     public const string EditProfile = "/edit-profile";
-    public const string EditProfileEditUserId = $"{EditProfile}/{{EditUserId:int}}";
+    public const string EditProfileEditUserId = $"{EditProfile}/{{EditUserId:{EncryptedRouteConstraint.Name}}}";
 
     public const string EditSocialNetworks = "/edit-social-networks";
-    public const string EditSocialNetworksEditUserId = $"{EditSocialNetworks}/{{EditUserId:int}}";
+
+    public const string EditSocialNetworksEditUserId =
+        $"{EditSocialNetworks}/{{EditUserId:{EncryptedRouteConstraint.Name}}}";
 
     public const string ForgottenPassword = "/forgotten-password";
     public const string ForgottenPasswordResetBase = $"{ForgottenPassword}/reset";

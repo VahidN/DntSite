@@ -21,9 +21,9 @@ public partial class WriteLearningPaths
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal ILearningPathService LearningPathService { set; get; } = null!;
 
@@ -58,12 +58,12 @@ public partial class WriteLearningPaths
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var learningPathItem = await GetUserLearningPathItemAsync(DeleteId.Value);
+        var learningPathItem = await GetUserLearningPathItemAsync(DeleteId.ToInt());
         await LearningPathService.MarkAsDeletedAsync(learningPathItem);
         await LearningPathService.NotifyDeleteChangesAsync(learningPathItem);
 
@@ -74,12 +74,12 @@ public partial class WriteLearningPaths
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetUserLearningPathItemAsync(EditId.Value);
+        var item = await GetUserLearningPathItemAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -110,9 +110,9 @@ public partial class WriteLearningPaths
 
         LearningPath? learningPathItem;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            learningPathItem = await GetUserLearningPathItemAsync(EditId.Value);
+            learningPathItem = await GetUserLearningPathItemAsync(EditId.ToInt());
             await LearningPathService.UpdateLearningPathAsync(learningPathItem, WriteLearningPathModel);
         }
         else

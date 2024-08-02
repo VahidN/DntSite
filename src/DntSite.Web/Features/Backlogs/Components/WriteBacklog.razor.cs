@@ -21,9 +21,9 @@ public partial class WriteBacklog
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IBacklogsService BacklogsService { set; get; } = null!;
 
@@ -58,12 +58,12 @@ public partial class WriteBacklog
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var backlog = await GetUserBacklogAsync(DeleteId.Value);
+        var backlog = await GetUserBacklogAsync(DeleteId.ToInt());
         await BacklogsService.MarkAsDeletedAsync(backlog);
         await BacklogsService.NotifyDeleteChangesAsync(backlog, new BacklogModel());
 
@@ -74,12 +74,12 @@ public partial class WriteBacklog
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetUserBacklogAsync(EditId.Value);
+        var item = await GetUserBacklogAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -109,9 +109,9 @@ public partial class WriteBacklog
 
         Backlog? backlog;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            backlog = await GetUserBacklogAsync(EditId.Value);
+            backlog = await GetUserBacklogAsync(EditId.ToInt());
             await BacklogsService.UpdateBacklogAsync(backlog, WriteBacklogModel);
         }
         else

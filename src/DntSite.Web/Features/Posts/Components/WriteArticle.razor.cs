@@ -11,9 +11,9 @@ namespace DntSite.Web.Features.Posts.Components;
 
 public partial class WriteArticle
 {
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
@@ -42,7 +42,7 @@ public partial class WriteArticle
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
@@ -52,7 +52,7 @@ public partial class WriteArticle
             return;
         }
 
-        var post = await BlogPostsService.FindBlogPostIncludeTagsAsync(EditId.Value);
+        var post = await BlogPostsService.FindBlogPostIncludeTagsAsync(EditId.ToInt());
 
         if (post is null || !ApplicationState.CanCurrentUserEditThisItem(post.UserId, post.Audit.CreatedAt))
         {
@@ -66,7 +66,7 @@ public partial class WriteArticle
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
@@ -83,18 +83,18 @@ public partial class WriteArticle
             return;
         }
 
-        await BlogPostsService.PerformPossibleDeleteAsync(DeleteId.Value);
+        await BlogPostsService.PerformPossibleDeleteAsync(DeleteId.ToInt());
         ApplicationState.NavigateTo(PostsRoutingConstants.Root);
     }
 
     private async Task PerformAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        await BlogPostsService.PerformEditAsync(EditId, WriteArticleModel, ApplicationState);
+        await BlogPostsService.PerformEditAsync(EditId.ToInt(), WriteArticleModel, ApplicationState);
 
         ApplicationState.NavigateTo(Invariant($"{PostsRoutingConstants.PostBase}/{EditId}"));
     }

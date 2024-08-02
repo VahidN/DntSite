@@ -18,9 +18,9 @@ public partial class WriteProjectRelease
     [SupplyParameterFromForm(FormName = nameof(WriteProjectRelease))]
     public ProjectPostFileModel ProjectPostFileModel { get; set; } = new();
 
-    [Parameter] public int? EditId { set; get; }
+    [Parameter] public string? EditId { set; get; }
 
-    [Parameter] public int? DeleteId { set; get; }
+    [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IProjectReleasesService ProjectReleasesService { set; get; } = null!;
 
@@ -60,12 +60,12 @@ public partial class WriteProjectRelease
 
     private async Task PerformPossibleDeleteAsync()
     {
-        if (!DeleteId.HasValue)
+        if (string.IsNullOrWhiteSpace(DeleteId))
         {
             return;
         }
 
-        var projectRelease = await GetProjectReleaseAsync(DeleteId.Value);
+        var projectRelease = await GetProjectReleaseAsync(DeleteId.ToInt());
         await ProjectReleasesService.MarkAsDeletedAsync(projectRelease);
         await ProjectReleasesService.NotifyDeleteChangesAsync(projectRelease, ApplicationState.CurrentUser?.User);
 
@@ -77,12 +77,12 @@ public partial class WriteProjectRelease
 
     private async Task FillPossibleEditFormAsync()
     {
-        if (!EditId.HasValue)
+        if (string.IsNullOrWhiteSpace(EditId))
         {
             return;
         }
 
-        var item = await GetProjectReleaseAsync(EditId.Value);
+        var item = await GetProjectReleaseAsync(EditId.ToInt());
 
         if (item is null)
         {
@@ -119,9 +119,9 @@ public partial class WriteProjectRelease
 
         ProjectRelease? projectRelease;
 
-        if (EditId.HasValue)
+        if (!string.IsNullOrWhiteSpace(EditId))
         {
-            projectRelease = await GetProjectReleaseAsync(EditId.Value);
+            projectRelease = await GetProjectReleaseAsync(EditId.ToInt());
             await ProjectReleasesService.UpdateProjectReleaseAsync(projectRelease, ProjectPostFileModel);
         }
         else

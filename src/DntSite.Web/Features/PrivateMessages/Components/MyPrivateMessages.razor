@@ -25,7 +25,7 @@
                 <CellValueTemplate Context="record">
                     @if (CanUserDeleteThisPost(record))
                     {
-                        <a href="@PrivateMessagesRoutingConstants.SendPrivateMessageDeleteBase/@record.Id"
+                        <a href="@PrivateMessagesRoutingConstants.SendPrivateMessageDeleteBase/@ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture))"
                            data-cancel-confirm-message="آیا می‌خواهید این عنوان را برای هر دو طرف، حذف کنید؟"
                            class="btn btn-danger me-2 btn-sm">
                             حذف

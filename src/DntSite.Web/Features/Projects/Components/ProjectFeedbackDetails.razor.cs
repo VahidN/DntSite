@@ -55,10 +55,16 @@ public partial class ProjectFeedbackDetails
         => Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{_issueTopic!.NextItem?.Id}");
 
     private string EditPostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectFeedbackEditBase}/{ProjectId}/{FeedbackId}");
+        => Invariant($"{ProjectsRoutingConstants.WriteProjectFeedbackEditBase}/{ProjectId}/{EncryptedFeedbackId}");
 
     private string DeletePostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectFeedbackDeleteBase}/{ProjectId}/{FeedbackId}");
+        => Invariant($"{ProjectsRoutingConstants.WriteProjectFeedbackDeleteBase}/{ProjectId}/{EncryptedFeedbackId}");
+
+    private string EncryptedFeedbackId => FeedbackId.HasValue
+        ? ProtectionProvider.Encrypt(FeedbackId.Value.ToString(CultureInfo.InvariantCulture))
+        : "";
+
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
     private List<string> GetTags() => CurrentPost?.Tags.Select(x => x.Name).ToList() ?? [];
 

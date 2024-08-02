@@ -35,10 +35,12 @@ public static class QuestionsRoutingConstants
     public const string WriteQuestion = "/write-question";
 
     public const string WriteQuestionEditBase = $"{WriteQuestion}/edit";
-    public const string WriteQuestionEditEditId = $"{WriteQuestionEditBase}/{{EditId:int}}";
+    public const string WriteQuestionEditEditId = $"{WriteQuestionEditBase}/{{EditId:{EncryptedRouteConstraint.Name}}}";
 
     public const string WriteQuestionDeleteBase = $"{WriteQuestion}/delete";
-    public const string WriteQuestionDeleteDeleteId = $"{WriteQuestionDeleteBase}/{{DeleteId:int}}";
+
+    public const string WriteQuestionDeleteDeleteId =
+        $"{WriteQuestionDeleteBase}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string CommentsUrlTemplate = $"{QuestionsDetailsBase}/{{0}}#comments";
     public const string PostUrlTemplate = $"{QuestionsDetailsBase}/{{0}}";
