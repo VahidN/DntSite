@@ -19,6 +19,8 @@ public partial class MyPrivateMessage
 
     [InjectComponentScoped] internal IPrivateMessagesService PrivateMessagesService { set; get; } = null!;
 
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [Parameter] public string? PrivateMessageId { set; get; }
@@ -28,6 +30,9 @@ public partial class MyPrivateMessage
     private bool CanUserEditThisPost => ApplicationState.CanCurrentUserEditThisItem(PrivateMessageId.ToInt());
 
     [InjectComponentScoped] internal IPrivateMessageCommentsService PrivateMessageCommentsService { set; get; } = null!;
+
+    private string EncryptedId
+        => string.IsNullOrWhiteSpace(PrivateMessageId) ? "" : ProtectionProvider.Encrypt(PrivateMessageId);
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,7 +77,7 @@ public partial class MyPrivateMessage
             PrivateMessagesBreadCrumbs.Users, PrivateMessagesBreadCrumbs.MyPrivateMessages, new BreadCrumb
             {
                 Title = PageTitle,
-                Url = Invariant($"/{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{PrivateMessageId}"),
+                Url = Invariant($"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{EncryptedId}"),
                 GlyphIcon = DntBootstrapIcons.BiInbox
             }
         ]);
