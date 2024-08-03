@@ -159,12 +159,7 @@ public static class AppSecurityTrimmingsService
             return true;
         }
 
-        if (IsTheSameAuthor(user, itemUserId))
-        {
-            return true;
-        }
-
-        if (PostIsNotTooOld(createdAt, daysToClose))
+        if (IsTheSameAuthor(user, itemUserId) && PostIsNotTooOld(createdAt, daysToClose))
         {
             return true;
         }
