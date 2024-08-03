@@ -667,7 +667,7 @@ public class FeedsService(
 
     public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? id)
     {
-        if (id is null)
+        if (!id.HasValue)
         {
             return (null, null);
         }

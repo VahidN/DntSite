@@ -87,32 +87,18 @@ public class UserRatingsService(IUnitOfWork uow) : IUserRatingsService
 
     public async Task<List<SectionFavUserRating>> GetBlogPostsFavItemsRatingsAsync(DateTime? date, int count = 100)
     {
-        IList<SectionFavUserRating> favItems;
-
-        if (date.HasValue)
-        {
-            favItems = await GetSectionFavItemsRatingsAsync<BlogPostReaction, BlogPost>(date.Value, count);
-        }
-        else
-        {
-            favItems = await GetSectionAllFavItemsRatingsAsync<BlogPostReaction, BlogPost>(count);
-        }
+        IList<SectionFavUserRating> favItems = date.HasValue
+            ? await GetSectionFavItemsRatingsAsync<BlogPostReaction, BlogPost>(date.Value, count)
+            : await GetSectionAllFavItemsRatingsAsync<BlogPostReaction, BlogPost>(count);
 
         return await GetBlogPostsFavItemsRatingsAsync(date, favItems);
     }
 
     public async Task<List<SectionFavUserRating>> GetNewsFavItemsRatingsAsync(DateTime? date, int count = 100)
     {
-        IList<SectionFavUserRating> favItems;
-
-        if (date.HasValue)
-        {
-            favItems = await GetSectionFavItemsRatingsAsync<DailyNewsItemReaction, DailyNewsItem>(date.Value, count);
-        }
-        else
-        {
-            favItems = await GetSectionAllFavItemsRatingsAsync<DailyNewsItemReaction, DailyNewsItem>(count);
-        }
+        IList<SectionFavUserRating> favItems = date.HasValue
+            ? await GetSectionFavItemsRatingsAsync<DailyNewsItemReaction, DailyNewsItem>(date.Value, count)
+            : await GetSectionAllFavItemsRatingsAsync<DailyNewsItemReaction, DailyNewsItem>(count);
 
         return await GetNewsFavItemsRatingsAsync(date, favItems);
     }

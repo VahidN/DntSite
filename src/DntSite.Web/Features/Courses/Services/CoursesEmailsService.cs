@@ -81,12 +81,9 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
 
         var question = comment.Parent;
 
-        if (comment.UserId.HasValue)
+        if (comment.UserId.HasValue && IsCourseQuestionCommentatorAuthorOfIssue(comment, question))
         {
-            if (IsCourseQuestionCommentatorAuthorOfIssue(comment, question))
-            {
-                return; //don't send emails to me again.
-            }
+            return; //don't send emails to me again.
         }
 
         var replyToComment = await commonService.FindCourseQuestionCommentAsync(replyId.Value);
@@ -285,12 +282,9 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
 
         var topic = comment.Parent;
 
-        if (comment.UserId.HasValue)
+        if (comment.UserId.HasValue && IsTopicCommentatorAuthorOfIssue(comment, topic))
         {
-            if (IsTopicCommentatorAuthorOfIssue(comment, topic))
-            {
-                return; //don't send emails to me again.
-            }
+            return; //don't send emails to me again.
         }
 
         if (topic.UserId is not null)

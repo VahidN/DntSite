@@ -227,8 +227,8 @@ public class UsersInfoService(
     public Task<PagedResultModel<User>> GetPagedLinksWritersListAsync(int pageNumber, int recordsPerPage)
     {
         var query = _users.AsNoTracking()
-            .Where(x => x.IsActive && x.UserStat.NumberOfCourses > 0)
-            .OrderByDescending(x => x.UserStat.NumberOfCourses)
+            .Where(x => x.IsActive && x.UserStat.NumberOfLinks > 0)
+            .OrderByDescending(x => x.UserStat.NumberOfLinks)
             .ThenBy(x => x.FriendlyName);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);

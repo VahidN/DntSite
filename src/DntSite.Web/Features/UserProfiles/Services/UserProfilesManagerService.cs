@@ -141,7 +141,7 @@ public class UserProfilesManagerService(
             return user.Id;
         }
 
-        var password = $"GeneralAdvertisementUser{passwordHasherService.CreateCryptographicallySecureGuid()}";
+        var password = $"{passwordHasherService.CreateCryptographicallySecureGuid()}";
 
         user = usersInfoService.AddUser(new User
         {

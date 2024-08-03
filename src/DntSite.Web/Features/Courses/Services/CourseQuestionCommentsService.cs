@@ -57,8 +57,6 @@ public class CourseQuestionCommentsService(IUnitOfWork uow, IUserRatingsService 
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var skipRecords = pageNumber * recordsPerPage;
-
         var query = _courseQuestionComments.AsNoTracking()
             .Where(x => x.IsDeleted != onlyActives && x.Parent.CourseId == courseId)
             .Include(x => x.Parent)

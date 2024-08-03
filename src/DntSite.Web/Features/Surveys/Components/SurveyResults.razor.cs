@@ -13,7 +13,7 @@ public partial class SurveyResults
             return 0;
         }
 
-        return (double)(item.TotalSurveys * 100) / Survey.TotalRaters;
+        return (double)item.TotalSurveys * 100 / Survey.TotalRaters;
     }
 
     private string GetProgressBarType(double percent)

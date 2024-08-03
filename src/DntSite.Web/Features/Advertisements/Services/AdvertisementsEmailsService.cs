@@ -61,12 +61,9 @@ public class AdvertisementsEmailsService(ICommonService commonService, IEmailsFa
 
         var advertisement = comment.Parent;
 
-        if (comment.UserId.HasValue)
+        if (comment.UserId.HasValue && IsAdvertisementCommentatorAuthorOfIssue(comment, advertisement))
         {
-            if (IsAdvertisementCommentatorAuthorOfIssue(comment, advertisement))
-            {
-                return; //don't send emails to me again.
-            }
+            return; //don't send emails to me again.
         }
 
         var replyToComment = await commonService.FindAdvertisementCommentAsync(replyId.Value);
