@@ -27,6 +27,8 @@ public partial class SendPrivateMessage
 
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
     protected override async Task OnInitializedAsync()
     {
         if (!ApplicationState.HttpContext.IsGetRequest())
@@ -113,7 +115,10 @@ public partial class SendPrivateMessage
     private async Task EditPrivateMessageAsync(int id)
     {
         await PrivateMessagesService.EditFirstPrivateMessageAsync(id, ApplicationState.CurrentUser?.UserId, Model);
-        ApplicationState.NavigateTo(Invariant($"/{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{id}#main"));
+        var encryptedId = ProtectionProvider.Encrypt(id.ToString(CultureInfo.InvariantCulture));
+
+        ApplicationState.NavigateTo(
+            Invariant($"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{encryptedId}#main"));
     }
 
     private async Task AddPrivateMessageAsync()

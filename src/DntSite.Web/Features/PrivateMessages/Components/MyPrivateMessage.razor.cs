@@ -21,26 +21,27 @@ public partial class MyPrivateMessage
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
-    [Parameter] public int? PrivateMessageId { set; get; }
+    [Parameter] public string? PrivateMessageId { set; get; }
 
     private bool CanUserDeleteThisPost => CanUserEditThisPost;
 
-    private bool CanUserEditThisPost => ApplicationState.CanCurrentUserEditThisItem(PrivateMessageId);
+    private bool CanUserEditThisPost => ApplicationState.CanCurrentUserEditThisItem(PrivateMessageId.ToInt());
 
     [InjectComponentScoped] internal IPrivateMessageCommentsService PrivateMessageCommentsService { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        if (!PrivateMessageId.HasValue)
+        if (string.IsNullOrWhiteSpace(PrivateMessageId))
         {
             ApplicationState.NavigateToNotFoundPage();
 
             return;
         }
 
-        await InitFirstPrivateMessageAsync(PrivateMessageId.Value);
-        await GetCommentsAsync(PrivateMessageId.Value);
-        await MarkMainMessageAsReadAsync(PrivateMessageId.Value);
+        var id = PrivateMessageId.ToInt();
+        await InitFirstPrivateMessageAsync(id);
+        await GetCommentsAsync(id);
+        await MarkMainMessageAsReadAsync(id);
 
         AddBreadCrumbs();
     }
