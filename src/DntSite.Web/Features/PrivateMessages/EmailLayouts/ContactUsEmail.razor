@@ -35,6 +35,10 @@
 
     [Parameter] public ContactUsEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(PrivateMessagesRoutingConstants.MyPrivateMessageBase).CombineUrl($"/{Uri.EscapeDataString(Model.PmId)}");
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
+    private string PostUrl => Model.SiteRootUri.CombineUrl(PrivateMessagesRoutingConstants.MyPrivateMessageBase).CombineUrl(EncryptedId);
+
+    private string EncryptedId => ProtectionProvider.Encrypt(Model.PmId);
 
 }
