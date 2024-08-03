@@ -10,12 +10,12 @@ public partial class MarkQuestionCommentAsAnswer
 {
     private string FormName => Invariant($"MarkQuestionCommentAsAnswer_{QuestionComment?.Id}");
 
-    private bool CanCurrentUserMarkAsAnswer => ApplicationState.CurrentUser?.UserId == QuestionComment?.UserId ||
+    private bool CanCurrentUserMarkAsAnswer => ApplicationState.CurrentUser?.UserId == QuestionComment?.Parent.UserId ||
                                                ApplicationState.CurrentUser?.IsAdmin == true;
 
     private bool IsThisCommentAnswer => QuestionComment?.IsAnswer == true;
 
-    [SupplyParameterFromForm] public MarkAsAnswerAction Reaction { set; get; }
+    [SupplyParameterFromForm] public MarkAsAnswerAction AnswerReaction { set; get; }
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
@@ -32,7 +32,7 @@ public partial class MarkQuestionCommentAsAnswer
             return;
         }
 
-        switch (Reaction)
+        switch (AnswerReaction)
         {
             case MarkAsAnswerAction.ThumbsUp:
                 await QuestionsCommentsService.MarkQuestionCommentAsAnswerAsync(QuestionComment, isAnswer: true);

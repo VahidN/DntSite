@@ -11,7 +11,7 @@
             {
                 if (IsThisCommentAnswer)
                 {
-                    <button type="submit" name="@nameof(Reaction)"
+                    <button type="submit" name="@nameof(AnswerReaction)"
                             value="@MarkAsAnswerAction.Cancel"
                             class="btn btn-outline-secondary btn-sm me-2" title="لغو واکنش">
                         <i class="@DntBootstrapIcons.BiDashCircle"></i>
@@ -21,7 +21,7 @@
             }
             else
             {
-                <button type="submit" name="@nameof(Reaction)"
+                <button type="submit" name="@nameof(AnswerReaction)"
                         value="@MarkAsAnswerAction.ThumbsUp"
                         class="btn btn-outline-success btn-sm me-2" title="ابراز رضایتمندی">
                     <i class="@DntBootstrapIcons.BiCheckCircle"></i>

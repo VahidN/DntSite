@@ -63,14 +63,19 @@ public partial class QuestionsArchiveDetails
             return;
         }
 
-        await UpdateStatAsync();
-
         await GetCommentsAsync(QuestionId.Value);
+        await UpdateStatAsync();
     }
 
     private async Task UpdateStatAsync()
-        => await QuestionsService.UpdateStatAsync(_details?.CurrentItem,
-            ApplicationState.NavigationManager.IsFromFeed());
+    {
+        if (ApplicationState.HttpContext.IsPostRequest())
+        {
+            return;
+        }
+
+        await QuestionsService.UpdateStatAsync(_details?.CurrentItem, ApplicationState.NavigationManager.IsFromFeed());
+    }
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..QuestionsBreadCrumbs.DefaultBreadCrumbs]);
 

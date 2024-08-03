@@ -67,6 +67,7 @@ public class QuestionsCommentsService(
         bool showDeletedItems = false)
     {
         var comments = await _questionComments.AsNoTracking()
+            .Include(x => x.Parent)
             .Include(x => x.Reactions)
             .Include(x => x.User)
             .Where(x => x.ParentId == postId && x.IsDeleted == showDeletedItems && !x.Parent.IsDeleted)
