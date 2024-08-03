@@ -31,6 +31,19 @@
     <DntQueryBuilderProperty Title="نام کاربری" ValueExpression="user => user.UserName"/>
     <DntQueryBuilderProperty Title="نام مستعار" ValueExpression="user => user.FriendlyName"/>
     <DntQueryBuilderProperty Title="آدرس ایمیل" ValueExpression="user => user.EMail"/>
+    <DntQueryBuilderProperty Title="آدرس صفحه خانگی" ValueExpression="user => user.HomePageUrl"/>
+    <DntQueryBuilderProperty Title="محل اقامت" ValueExpression="user => user.Location"/>
+    <DntQueryBuilderProperty Title="امضاء" ValueExpression="user => user.Description"/>
+    <DntQueryBuilderProperty Title="آخرین تاریخ مراجعه" ValueExpression="user => user.LastVisitDateTime">
+        <QueryBuilderValueTemplate Context="rule">
+            <input class="form-control" type="text"
+                   data-dnt-date-picker
+                   dir="ltr"
+                   autocapitalize="off" autocorrect="off" autocomplete="off"
+                   name="@rule.RuleValueName"
+                   value="@rule.Value"/>
+        </QueryBuilderValueTemplate>
+    </DntQueryBuilderProperty>
 </DntQueryBuilder>
 
 @if (_users is not null)

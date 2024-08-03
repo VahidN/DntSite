@@ -50,9 +50,11 @@ public partial class UsersManager
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([UserProfilesBreadCrumbs.Users, UserProfilesBreadCrumbs.UsersManager]);
 
-    private async Task DoSearchAsync(string gridifyFilter)
+    private Task DoSearchAsync(string gridifyFilter)
     {
-        await ShowUsersListAsync(gridifyFilter);
-        StateHasChanged();
+        ApplicationState.NavigateTo(
+            $"{UserProfilesRoutingConstants.UsersManagerFilterBase}/{Uri.EscapeDataString(gridifyFilter ?? "*")}/page/1");
+
+        return Task.CompletedTask;
     }
 }

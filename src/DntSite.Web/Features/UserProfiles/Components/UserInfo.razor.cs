@@ -57,10 +57,12 @@ public partial class UserInfo
         });
     }
 
-    private async Task DoSearchAsync(string gridifyFilter)
+    private Task DoSearchAsync(string gridifyFilter)
     {
-        await ShowUsersListAsync(gridifyFilter);
-        StateHasChanged();
+        ApplicationState.NavigateTo(
+            $"{UserProfilesRoutingConstants.UsersFilterBase}/{Uri.EscapeDataString(gridifyFilter ?? "*")}/page/1");
+
+        return Task.CompletedTask;
     }
 
     private async Task ShowUserProfileAsync(string name)
