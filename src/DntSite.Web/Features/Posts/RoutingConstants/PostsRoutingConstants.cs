@@ -16,6 +16,8 @@ public static class PostsRoutingConstants
     public const string Posts = "/posts";
     public const string PostsPageCurrentPage = $"{Posts}/page/{{CurrentPage:int}}";
 
+    public const string Search = "/search";
+
     public const string PostsFilterFilterBase = $"{Posts}/filter";
 
     public const string PostsFilterFilterPageCurrentPage =

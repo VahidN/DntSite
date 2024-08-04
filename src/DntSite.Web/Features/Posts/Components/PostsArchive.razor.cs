@@ -22,10 +22,25 @@ public partial class PostsArchive
 
     [Parameter] public string? Filter { set; get; }
 
+    [Parameter] [SupplyParameterFromQuery] public string? Term { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        await ShowBlogPostsListAsync(Filter);
-        AddBreadCrumbs();
+        if (!string.IsNullOrWhiteSpace(Term))
+        {
+            ActivateOldSearchPattern();
+        }
+        else
+        {
+            await ShowBlogPostsListAsync(Filter);
+            AddBreadCrumbs();
+        }
+    }
+
+    private void ActivateOldSearchPattern()
+    {
+        var searchFilter = Uri.EscapeDataString($"(Title =* {Term})");
+        ApplicationState.NavigateTo($"{PostsRoutingConstants.PostsFilterFilterBase}/{searchFilter}/page/1#main");
     }
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..PostsBreadCrumbs.DefaultBreadCrumbs]);
