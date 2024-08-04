@@ -234,6 +234,16 @@ public class UsersInfoService(
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
     }
 
+    public Task<PagedResultModel<User>> GetPagedCoursesWritersListAsync(int pageNumber, int recordsPerPage)
+    {
+        var query = _users.AsNoTracking()
+            .Where(x => x.IsActive && x.UserStat.NumberOfCourses > 0)
+            .OrderByDescending(x => x.UserStat.NumberOfCourses)
+            .ThenBy(x => x.FriendlyName);
+
+        return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
+    }
+
     public Task<PagedResultModel<User>> GetPagedProjectsWritersListAsync(int pageNumber, int recordsPerPage)
     {
         var query = _users.AsNoTracking()

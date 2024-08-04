@@ -49,6 +49,8 @@ public interface IUsersInfoService : IScopedService
 
     Task<PagedResultModel<User>> GetPagedLinksWritersListAsync(int pageNumber, int recordsPerPage);
 
+    Task<PagedResultModel<User>> GetPagedCoursesWritersListAsync(int pageNumber, int recordsPerPage);
+
     Task<PagedResultModel<User>> GetPagedProjectsWritersListAsync(int pageNumber, int recordsPerPage);
 
     Task<PagedResultModel<User>> GetPagedQuestionsWritersListAsync(int pageNumber, int recordsPerPage);

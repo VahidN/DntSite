@@ -57,7 +57,7 @@ public partial class CoursesWritersList
     {
         CurrentPage ??= 1;
 
-        var results = await UsersService.GetPagedLinksWritersListAsync(CurrentPage.Value - 1, PostItemsPerPage);
+        var results = await UsersService.GetPagedCoursesWritersListAsync(CurrentPage.Value - 1, PostItemsPerPage);
 
         _users = results.Data.Select(user => (user, user.UserStat.NumberOfCourses)).ToList();
         _totalUsersCount = results.TotalItems;
