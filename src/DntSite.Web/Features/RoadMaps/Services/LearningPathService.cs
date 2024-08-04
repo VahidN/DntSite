@@ -144,8 +144,6 @@ public class LearningPathService(
         => userRatingsService.SaveRatingAsync<LearningPathReaction, LearningPath>(fkId, reactionType, fromUserId);
 
     public async Task<LearningPathDetailsModel> LearningPathDetailsAsync(int id, bool showDeletedItems = false)
-
-        // این شماره‌ها پشت سر هم نیستند
         => new()
         {
             CurrentItem =

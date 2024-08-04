@@ -63,8 +63,7 @@ public partial class LearningPathsArchiveDetails
     }
 
     private bool IsLearningPathPublic()
-        => _learningPath?.CurrentItem is not null && !_learningPath.CurrentItem.IsDeleted &&
-           ApplicationState.CanCurrentUserEditThisItem(_learningPath.CurrentItem.UserId);
+        => _learningPath?.CurrentItem is not null && !_learningPath.CurrentItem.IsDeleted;
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..RoadMapsBreadCrumbs.DefaultBreadCrumbs]);
 }
