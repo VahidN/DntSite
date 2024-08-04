@@ -75,11 +75,12 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
     app.UseOutputCache();
 }
 
-void ConfigureEndpoints(IEndpointRouteBuilder app)
+void ConfigureEndpoints(WebApplication app)
 {
     app.MapControllers();
     app.AddChangePasswordEndpoint();
     app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+    app.UseRequestTimeouts();
 }
 
 void InitApplication(IHost app)
