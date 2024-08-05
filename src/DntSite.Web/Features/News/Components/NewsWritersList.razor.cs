@@ -17,7 +17,7 @@ public partial class NewsWritersList
 
     private PagedResultModel<DailyNewsItem>? _blogPosts;
     private int _totalUsersCount;
-    private IList<(User User, int NumberOfPosts)>? _users;
+    private IList<(User User, string NumberOfPosts)>? _users;
 
     [MemberNotNullWhen(returnValue: true, nameof(UserFriendlyName))]
     private bool HasUserFriendlyName => !string.IsNullOrWhiteSpace(UserFriendlyName);
@@ -59,7 +59,9 @@ public partial class NewsWritersList
 
         var results = await UsersService.GetPagedLinksWritersListAsync(CurrentPage.Value - 1, PostItemsPerPage);
 
-        _users = results.Data.Select(user => (user, user.UserStat.NumberOfLinks)).ToList();
+        _users = results.Data.Select(user => (user, user.UserStat.NumberOfLinks.ToString(CultureInfo.InvariantCulture)))
+            .ToList();
+
         _totalUsersCount = results.TotalItems;
 
         AddUsersListBreadCrumbs();

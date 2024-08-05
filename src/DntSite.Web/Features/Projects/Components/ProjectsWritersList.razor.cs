@@ -17,7 +17,7 @@ public partial class ProjectsWritersList
 
     private PagedResultModel<Project>? _blogPosts;
     private int _totalUsersCount;
-    private IList<(User User, int NumberOfPosts)>? _users;
+    private IList<(User User, string NumberOfPosts)>? _users;
 
     [MemberNotNullWhen(returnValue: true, nameof(UserFriendlyName))]
     private bool HasUserFriendlyName => !string.IsNullOrWhiteSpace(UserFriendlyName);
@@ -59,7 +59,10 @@ public partial class ProjectsWritersList
 
         var results = await UsersService.GetPagedProjectsWritersListAsync(CurrentPage.Value - 1, PostItemsPerPage);
 
-        _users = results.Data.Select(user => (user, user.UserStat.NumberOfProjects)).ToList();
+        _users = results.Data
+            .Select(user => (user, user.UserStat.NumberOfProjects.ToString(CultureInfo.InvariantCulture)))
+            .ToList();
+
         _totalUsersCount = results.TotalItems;
 
         AddUsersListBreadCrumbs();

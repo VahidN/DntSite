@@ -17,7 +17,7 @@ public partial class AdvertisementsWritersList
 
     private PagedResultModel<Advertisement>? _blogPosts;
     private int _totalUsersCount;
-    private IList<(User User, int NumberOfPosts)>? _users;
+    private IList<(User User, string NumberOfPosts)>? _users;
 
     [MemberNotNullWhen(returnValue: true, nameof(UserFriendlyName))]
     private bool HasUserFriendlyName => !string.IsNullOrWhiteSpace(UserFriendlyName);
@@ -60,7 +60,10 @@ public partial class AdvertisementsWritersList
         var results =
             await UsersService.GetPagedAdvertisementsWritersListAsync(CurrentPage.Value - 1, PostItemsPerPage);
 
-        _users = results.Data.Select(user => (user, user.UserStat.NumberOfAdvertisements)).ToList();
+        _users = results.Data
+            .Select(user => (user, user.UserStat.NumberOfAdvertisements.ToString(CultureInfo.InvariantCulture)))
+            .ToList();
+
         _totalUsersCount = results.TotalItems;
 
         AddUsersListBreadCrumbs();

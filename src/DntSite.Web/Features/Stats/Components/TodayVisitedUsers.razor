@@ -1,0 +1,11 @@
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(StatsRoutingConstants.TodayVisitedUsers)]
+@attribute [Route(StatsRoutingConstants.TodayVisitedUsersPageCurrentPage)]
+
+<WritersList MainTitle="مراجعات امروز"
+             CurrentPage="CurrentPage"
+             ItemsPerPage="PostItemsPerPage"
+             TotalItemCount="@_totalUsersCount"
+             BasePath="@StatsRoutingConstants.TodayVisitedUsers"
+             BaseUsersPath="@UserProfilesRoutingConstants.Users"
+             Users="_users"/>

@@ -12,5 +12,13 @@ public static class StatsBreadCrumbs
         AllowAnonymous = false
     };
 
+    public static readonly BreadCrumb TodayVisitedUsers = new()
+    {
+        Title = "مراجعات امروز",
+        Url = StatsRoutingConstants.TodayVisitedUsers,
+        GlyphIcon = DntBootstrapIcons.BiCalendar2Range,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs = [RecalculatePostsCount];
 }

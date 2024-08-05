@@ -17,7 +17,7 @@ public partial class LearningPathsWritersList
 
     private PagedResultModel<LearningPath>? _blogPosts;
     private int _totalUsersCount;
-    private IList<(User User, int NumberOfPosts)>? _users;
+    private IList<(User User, string NumberOfPosts)>? _users;
 
     [MemberNotNullWhen(returnValue: true, nameof(UserFriendlyName))]
     private bool HasUserFriendlyName => !string.IsNullOrWhiteSpace(UserFriendlyName);
@@ -59,7 +59,10 @@ public partial class LearningPathsWritersList
 
         var results = await UsersService.GetPagedLearningPathWritersListAsync(CurrentPage.Value - 1, PostItemsPerPage);
 
-        _users = results.Data.Select(user => (user, user.UserStat.NumberOfLearningPaths)).ToList();
+        _users = results.Data
+            .Select(user => (user, user.UserStat.NumberOfLearningPaths.ToString(CultureInfo.InvariantCulture)))
+            .ToList();
+
         _totalUsersCount = results.TotalItems;
 
         AddUsersListBreadCrumbs();

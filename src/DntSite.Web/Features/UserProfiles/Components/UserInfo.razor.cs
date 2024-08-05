@@ -2,6 +2,7 @@
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Stats.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
@@ -80,7 +81,10 @@ public partial class UserInfo
         _user = user;
     }
 
-    private void AddUsersBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([UserProfilesBreadCrumbs.Users]);
+    private void AddUsersBreadCrumbs()
+        => ApplicationState.BreadCrumbs.AddRange([
+            UserProfilesBreadCrumbs.UsersBirthdays, StatsBreadCrumbs.TodayVisitedUsers, UserProfilesBreadCrumbs.Users
+        ]);
 
     private void AddUserBreadCrumbs(string name)
     {

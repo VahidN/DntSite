@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.Posts.Components;
 
 public partial class WritersList
 {
-    [Parameter] [EditorRequired] public IList<(User User, int NumberOfPosts)>? Users { set; get; }
+    [Parameter] [EditorRequired] public IList<(User User, string BadgeValue)>? Users { set; get; }
 
     private string PageTitle => Invariant($"{MainTitle}، صفحه: {CurrentPage ?? 1}");
 
@@ -22,7 +22,12 @@ public partial class WritersList
 
     [Parameter] [EditorRequired] public required string BasePath { set; get; }
 
+    [Parameter] public string? BaseUsersPath { set; get; }
+
     [Parameter] [EditorRequired] public int TotalItemCount { set; get; }
 
-    private string GetUrl(string name) => $"{BasePath.TrimEnd('/')}/{Uri.EscapeDataString(name)}";
+    private string GetUrl(string name)
+        => string.IsNullOrWhiteSpace(BaseUsersPath)
+            ? BasePath.CombineUrl(Uri.EscapeDataString(name))
+            : BaseUsersPath.CombineUrl(Uri.EscapeDataString(name));
 }

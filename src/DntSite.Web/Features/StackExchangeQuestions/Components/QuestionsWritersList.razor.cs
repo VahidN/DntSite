@@ -17,7 +17,7 @@ public partial class QuestionsWritersList
 
     private PagedResultModel<StackExchangeQuestion>? _blogPosts;
     private int _totalUsersCount;
-    private IList<(User User, int NumberOfPosts)>? _users;
+    private IList<(User User, string NumberOfPosts)>? _users;
 
     [MemberNotNullWhen(returnValue: true, nameof(UserFriendlyName))]
     private bool HasUserFriendlyName => !string.IsNullOrWhiteSpace(UserFriendlyName);
@@ -59,7 +59,10 @@ public partial class QuestionsWritersList
 
         var results = await UsersService.GetPagedQuestionsWritersListAsync(CurrentPage.Value - 1, PostItemsPerPage);
 
-        _users = results.Data.Select(user => (user, user.UserStat.NumberOfStackExchangeQuestions)).ToList();
+        _users = results.Data.Select(user
+                => (user, user.UserStat.NumberOfStackExchangeQuestions.ToString(CultureInfo.InvariantCulture)))
+            .ToList();
+
         _totalUsersCount = results.TotalItems;
 
         AddUsersListBreadCrumbs();
