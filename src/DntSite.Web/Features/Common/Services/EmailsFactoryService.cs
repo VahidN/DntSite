@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Models;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.EmailLayouts;
 using DntSite.Web.Features.UserProfiles.Models;
+using DntSite.Web.Features.UserProfiles.RoutingConstants;
 
 namespace DntSite.Web.Features.Common.Services;
 
@@ -106,7 +107,8 @@ public class EmailsFactoryService(
         {
             InReplyTo = inReplyTo,
             MessageId = messageId,
-            References = references
+            References = references,
+            UnSubscribeUrl = appSetting.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.EditProfile)
         }, shouldValidateServerCertificate: smtpServerSetting.ShouldValidateServerCertificate);
     }
 
