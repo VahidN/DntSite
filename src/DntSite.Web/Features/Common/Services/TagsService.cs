@@ -38,42 +38,48 @@ public class TagsService(IUnitOfWork uow) : ITagsService
     public async Task<List<string>> GetTagNamesArrayAsync(int count)
     {
         var array1 = await _tags.AsNoTracking()
-            .OrderBy(x => x.Name)
+            .OrderByDescending(x => x.InUseCount)
+            .ThenBy(x => x.Name)
             .Take(count)
             .Select(x => x.Name)
             .Distinct()
             .ToArrayAsync();
 
         var array2 = await _dailyNewsItemTag.AsNoTracking()
-            .OrderBy(x => x.Name)
+            .OrderByDescending(x => x.InUseCount)
+            .ThenBy(x => x.Name)
             .Take(count)
             .Select(x => x.Name)
             .Distinct()
             .ToArrayAsync();
 
         var array3 = await _projectTags.AsNoTracking()
-            .OrderBy(x => x.Name)
+            .OrderByDescending(x => x.InUseCount)
+            .ThenBy(x => x.Name)
             .Take(count)
             .Select(x => x.Name)
             .Distinct()
             .ToArrayAsync();
 
         var array5 = await _voteTags.AsNoTracking()
-            .OrderBy(x => x.Name)
+            .OrderByDescending(x => x.InUseCount)
+            .ThenBy(x => x.Name)
             .Take(count)
             .Select(x => x.Name)
             .Distinct()
             .ToArrayAsync();
 
         var array6 = await _advertisementTags.AsNoTracking()
-            .OrderBy(x => x.Name)
+            .OrderByDescending(x => x.InUseCount)
+            .ThenBy(x => x.Name)
             .Take(count)
             .Select(x => x.Name)
             .Distinct()
             .ToArrayAsync();
 
         var array7 = await _courseTags.AsNoTracking()
-            .OrderBy(x => x.Name)
+            .OrderByDescending(x => x.InUseCount)
+            .ThenBy(x => x.Name)
             .Take(count)
             .Select(x => x.Name)
             .Distinct()
@@ -81,8 +87,6 @@ public class TagsService(IUnitOfWork uow) : ITagsService
 
         return array1.Union(array2)
             .Union(array3)
-
-            //.Union(array4)
             .Union(array5)
             .Union(array6)
             .Union(array7)
