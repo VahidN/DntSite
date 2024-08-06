@@ -43,7 +43,9 @@ public static class AuthenticationConfig
                     ? CookieSecurePolicy.SameAsRequest
                     : CookieSecurePolicy.Always;
 
-                options.Cookie.SameSite = SameSiteMode.Strict;
+                // A cookie with "SameSite=Lax" will be sent with a same-site request,
+                // or a cross-site top-level navigation with a "safe" HTTP method.
+                options.Cookie.SameSite = SameSiteMode.Lax;
 
                 options.SlidingExpiration = false;
 
