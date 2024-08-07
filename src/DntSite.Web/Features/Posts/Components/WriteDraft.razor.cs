@@ -103,7 +103,7 @@ public partial class WriteDraft
 
         if (!ApplicationState.CurrentUser.CanUserEditThisDraft(draft))
         {
-            ApplicationState.NavigateToUnauthorizedPage();
+            ApplicationState.NavigateToNotFoundPage();
 
             return null;
         }
@@ -233,6 +233,15 @@ public partial class WriteDraft
 
         if (draft is null)
         {
+            return;
+        }
+
+        var blogPost = await BlogCommentsService.FindCommentPostAsync(ConvertToCommentModel.ReplyPostId);
+
+        if (blogPost is null || blogPost.IsDeleted)
+        {
+            Alert.ShowAlert(AlertType.Danger, title: "خطا!", message: "شماره مطلب وارد شده وجود خارجي ندارد.");
+
             return;
         }
 

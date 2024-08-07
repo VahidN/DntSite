@@ -73,7 +73,10 @@
 
             <DntInputCheckBox @bind-Value="WriteDraftModel.IsReady"/>
 
-            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">
+                <i class="@DntBootstrapIcons.BiSave"></i>
+                ذخیره تغییرات
+            </DntButton>
         </EditForm>
     </FrameBody>
 </DntCardFrame>
@@ -93,7 +96,10 @@
                               FieldIcon="@DntBootstrapIcons.BiLink"
                               @bind-Value="ConvertToLinkModel.Url"/>
 
-                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">
+                    <i class="@DntBootstrapIcons.BiShare"></i>
+                    تبدیل به لینک اشتراکی
+                </DntButton>
             </EditForm>
         </FrameBody>
     </DntCardFrame>
@@ -111,7 +117,10 @@
                                 FieldIcon="@DntBootstrapIcons.BiNewspaper"
                                 @bind-Value="ConvertToCommentModel.ReplyPostId"/>
 
-                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
+                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">
+                    <i class="@DntBootstrapIcons.BiChat"></i>
+                    تبدیل به نظر تکمیلی
+                </DntButton>
             </EditForm>
         </FrameBody>
     </DntCardFrame>

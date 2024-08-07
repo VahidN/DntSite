@@ -56,7 +56,8 @@ public static class AppSecurityTrimmingsService
         return currentUser?.User?.UserStat.NumberOfPosts >= minNumberOfPosts;
     }
 
-    public static bool CanUserViewThisPost(this CurrentUserModel? user, [NotNullWhen(returnValue: true)] BlogPost? post)
+    public static bool CanUserViewThisPost(this CurrentUserModel? userModel,
+        [NotNullWhen(returnValue: true)] BlogPost? post)
     {
         if (post is null)
         {
@@ -68,32 +69,32 @@ public static class AppSecurityTrimmingsService
             return true;
         }
 
-        if (user?.UserId is null || user.User is null)
+        if (userModel?.UserId is null || userModel.User is null)
         {
             return false;
         }
 
-        if (!user.IsAuthenticated)
+        if (!userModel.IsAuthenticated)
         {
             return false;
         }
 
-        if (user.IsAdmin)
+        if (userModel.IsAdmin)
         {
             return true;
         }
 
-        if (IsTheSameAuthor(user, post.UserId))
+        if (IsTheSameAuthor(userModel, post.UserId))
         {
             return true;
         }
 
-        if (!user.User.IsActive)
+        if (!userModel.User.IsActive)
         {
             return false;
         }
 
-        if (user.User.UserStat.NumberOfPosts >= post.NumberOfRequiredPoints.Value)
+        if (userModel.User.UserStat.NumberOfPosts >= post.NumberOfRequiredPoints.Value)
         {
             return true;
         }
@@ -101,7 +102,7 @@ public static class AppSecurityTrimmingsService
         return false;
     }
 
-    public static bool CanUserViewThisPost(this CurrentUserModel? user,
+    public static bool CanUserViewThisPost(this CurrentUserModel? userModel,
         [NotNullWhen(returnValue: true)] DailyNewsItem? post)
     {
         if (post is null)
@@ -109,27 +110,27 @@ public static class AppSecurityTrimmingsService
             return false;
         }
 
-        if (user?.UserId is null || user.User is null)
+        if (userModel?.UserId is null || userModel.User is null)
         {
             return false;
         }
 
-        if (!user.IsAuthenticated)
+        if (!userModel.IsAuthenticated)
         {
             return false;
         }
 
-        if (user.IsAdmin)
+        if (userModel.IsAdmin)
         {
             return true;
         }
 
-        if (IsTheSameAuthor(user, post.UserId))
+        if (IsTheSameAuthor(userModel, post.UserId))
         {
             return true;
         }
 
-        if (!user.User.IsActive)
+        if (!userModel.User.IsActive)
         {
             return false;
         }
@@ -218,7 +219,7 @@ public static class AppSecurityTrimmingsService
     private static bool PostIsNotTooOld(DateTime? createdAt, int daysToClose)
         => createdAt.HasValue && DateTime.UtcNow.AddDays(-daysToClose) < createdAt.Value;
 
-    public static bool CanUserEditThisDraft(this CurrentUserModel? user,
+    public static bool CanUserEditThisDraft(this CurrentUserModel? userModel,
         [NotNullWhen(returnValue: true)] BlogPostDraft? post)
     {
         if (post is null)
@@ -226,22 +227,17 @@ public static class AppSecurityTrimmingsService
             return false;
         }
 
-        if (user?.UserId is null || user.User is null)
+        if (userModel?.UserId is null || userModel.User is null)
         {
             return false;
         }
 
-        if (!user.IsAuthenticated)
+        if (!userModel.IsAuthenticated)
         {
             return false;
         }
 
-        if (user.IsAdmin)
-        {
-            return true;
-        }
-
-        if (!user.User.IsActive)
+        if (!userModel.User.IsActive)
         {
             return false;
         }
@@ -251,7 +247,12 @@ public static class AppSecurityTrimmingsService
             return false;
         }
 
-        if (IsTheSameAuthor(user, post.UserId))
+        if (IsTheSameAuthor(userModel, post.UserId))
+        {
+            return true;
+        }
+
+        if (userModel.IsAdmin)
         {
             return true;
         }
