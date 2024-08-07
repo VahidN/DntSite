@@ -23,4 +23,17 @@ public static class ImageMimeType
             _ => Jpg
         };
     }
+
+    public static bool IsImageFileUrl(this string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return false;
+        }
+
+        string[] extensions = [".jpg", ".gif", ".png", ".bmp", ".jpeg"];
+        var fileExt = Path.GetExtension(url);
+
+        return extensions.Any(ext => string.Equals(fileExt, ext, StringComparison.OrdinalIgnoreCase));
+    }
 }
