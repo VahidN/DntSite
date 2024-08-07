@@ -14,6 +14,7 @@ public static class PostsRoutingConstants
     public const string Root = "/";
     public const string PageCurrentPage = "/page/{CurrentPage:int}";
     public const string Posts = "/posts";
+    public const string PostsArchive = "/PostsArchive";
     public const string PostsPageCurrentPage = $"{Posts}/page/{{CurrentPage:int}}";
 
     public const string Search = "/search";
