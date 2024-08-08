@@ -8,7 +8,8 @@ namespace DntSite.Web.Features.Common.Controllers;
 [Microsoft.AspNetCore.Mvc.Route(template: "api/[controller]")]
 public class JavaScriptErrorsReportController(
     ILogger<JavaScriptErrorsReportController> logger,
-    IAntiXssService antiXssService) : ControllerBase
+    IAntiXssService antiXssService,
+    ICacheService cacheService) : ControllerBase
 {
     [HttpPost(template: "[action]")]
     [IgnoreAntiforgeryToken]
@@ -19,7 +20,13 @@ public class JavaScriptErrorsReportController(
             return BadRequest();
         }
 
-        logger.LogError(message: "{ErrorMessage}", antiXssService.GetSanitizedHtml(errorMessage));
+        cacheService.GetOrAdd(errorMessage.Md5Hash(), () =>
+        {
+            logger.LogError(message: "Content Security Policy Error: {Body}, {Request}",
+                antiXssService.GetSanitizedHtml(errorMessage), HttpContext.Request.LogRequest(responseCode: 200));
+
+            return errorMessage;
+        }, DateTimeOffset.UtcNow.AddMinutes(minutes: 7));
 
         return Ok();
     }
