@@ -159,11 +159,13 @@
                     </DntLink>
                 </DntListGroupItem>
 
-                <DntListGroupItem GlyphIcon="@DntBootstrapIcons.BiChat" LeftAlignChildContent="@false">
-                    <DntLink Url="@GetEscapedUrl(PrivateMessagesRoutingConstants.SendPrivateMessageBase, User.Id)">
-                        ارسال پیام خصوصی
-                    </DntLink>
-                </DntListGroupItem>
+                <DntSecurityTrim AllowAnonymous="false">
+                    <DntListGroupItem GlyphIcon="@DntBootstrapIcons.BiChat" LeftAlignChildContent="@false">
+                        <DntLink Url="@GetEscapedUrl(PrivateMessagesRoutingConstants.SendPrivateMessageBase, User.Id)">
+                            ارسال پیام خصوصی
+                        </DntLink>
+                    </DntListGroupItem>
+                </DntSecurityTrim>
 
                 <DntListGroupItem LeftAlignChildContent="@false"
                                   IsVisible="@(!string.IsNullOrWhiteSpace(User.UserSocialNetwork?.CoffeebedeId))">
