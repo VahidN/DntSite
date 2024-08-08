@@ -22,6 +22,7 @@ public class DailyNewsEmailsService(ICommonService commonService, IEmailsFactory
             Invariant($"DailyNewsItem/Id/{result.Id}"), inReplyTo: "", Invariant($"DailyNewsItem/Id/{result.Id}"),
             new DailyLinksToAdminsEmailsModel
             {
+                NewsId = result.Id,
                 Url = result.Url,
                 Title = result.Title,
                 Body = result.BriefDescription ?? "",

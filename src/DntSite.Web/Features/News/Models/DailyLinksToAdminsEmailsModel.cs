@@ -13,4 +13,6 @@ public class DailyLinksToAdminsEmailsModel : BaseEmailModel
     public required string Body { get; set; }
 
     public required string Stat { get; set; }
+
+    public required int NewsId { get; set; }
 }

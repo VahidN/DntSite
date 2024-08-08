@@ -39,6 +39,6 @@
 
     [Parameter] public DailyLinksToAdminsEmailsModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(NewsRoutingConstants.News);
+    private string PostUrl => Model.SiteRootUri.CombineUrl(NewsRoutingConstants.NewsDetailsBase).CombineUrl(Model.NewsId.ToString(CultureInfo.InvariantCulture));
 
 }
