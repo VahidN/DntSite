@@ -261,14 +261,19 @@ public class DailyNewsItemsService(
                 var url = item.Url;
                 item.LastHttpStatusCodeCheckDateTime = DateTime.UtcNow;
                 item.LastHttpStatusCode = await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, logger);
-                await uow.SaveChangesAsync();
-
-                await Task.Delay(TimeSpan.FromSeconds(value: 3));
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, message: "UpdateAllNewsPageThumbnails({Id}, {Url}): ", item.Id, item.Url);
+
+                if (IsOutdatedLink(ex))
+                {
+                    item.IsDeleted = true;
+                }
             }
+
+            await uow.SaveChangesAsync();
+            await Task.Delay(TimeSpan.FromSeconds(value: 3));
         }
     }
 
@@ -497,6 +502,22 @@ public class DailyNewsItemsService(
         }
 
         return OperationStat.Succeeded;
+    }
+
+    private static bool IsOutdatedLink(Exception exception)
+    {
+        if (exception.Message.Contains(value: "Name or service not known", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (exception.Message.Contains(value: "The SSL connection could not be established",
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private static void UpdateNumberOfViews(bool fromFeed, DailyNewsItem item)
