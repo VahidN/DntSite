@@ -7,7 +7,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.7" />
-    <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.8" />
+    <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.9" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="8.0.7" />
@@ -24,7 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="5.9.1" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="5.9.2" />
     <PackageVersion Include="DNTPersianUtils.Core" Version="6.3.1" />
     <PackageVersion Include="EFCoreSecondLevelCacheInterceptor" Version="4.6.0" />
     <PackageVersion Include="AutoMapper" Version="13.0.1" />
@@ -39,7 +39,7 @@
   <ItemGroup>
     <PackageVersion Include="Meziantou.Analyzer" Version="2.0.163" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.30.0.95878" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.31.0.96804" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="8.0.7" />
   </ItemGroup>
 </Project>
