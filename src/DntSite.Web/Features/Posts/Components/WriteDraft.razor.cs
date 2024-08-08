@@ -240,7 +240,7 @@ public partial class WriteDraft
 
         if (blogPost is null || blogPost.IsDeleted)
         {
-            Alert.ShowAlert(AlertType.Danger, title: "خطا!", message: "شماره مطلب وارد شده وجود خارجي ندارد.");
+            Alert.ShowAlert(AlertType.Danger, title: "خطا!", message: "شماره مطلب وارد شده وجود خارجی ندارد.");
 
             return;
         }
