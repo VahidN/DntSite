@@ -3,6 +3,7 @@ using DntSite.Web.Features.UserProfiles.Models;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -63,6 +64,8 @@ public static class AuthenticationConfig
                     }
                 };
             });
+
+        services.Configure<AntiforgeryOptions>(opts => { opts.Cookie.SameSite = SameSiteMode.Lax; });
 
         return services;
     }
