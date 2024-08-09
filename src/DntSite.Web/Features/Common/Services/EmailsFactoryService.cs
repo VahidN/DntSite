@@ -14,8 +14,7 @@ public class EmailsFactoryService(
     IBlazorStaticRendererService rendererService,
     IWebMailService webMailService,
     IHttpContextAccessor httpContextAccessor,
-    IAppFoldersService appFoldersService,
-    ICurrentUserService currentUserService) : IEmailsFactoryService
+    IAppFoldersService appFoldersService) : IEmailsFactoryService
 {
     private const string DefaultPickupFolderName = "SmtpPickup";
     private readonly TimeSpan _delayDelivery = TimeSpan.FromSeconds(value: 7);
@@ -225,14 +224,20 @@ public class EmailsFactoryService(
 
     private async Task<string> GetUserInfoAsync()
     {
-        var ip = httpContextAccessor.HttpContext?.GetIP();
+        if (httpContextAccessor.HttpContext is null)
+        {
+            return string.Empty;
+        }
+
+        var ip = httpContextAccessor.HttpContext.GetIP();
 
         if (string.IsNullOrWhiteSpace(ip))
         {
             return string.Empty;
         }
 
-        var user = await currentUserService.GetCurrentUserAsync();
+        var user = await httpContextAccessor.HttpContext.RequestServices.GetRequiredService<ICurrentUserService>()
+            .GetCurrentUserAsync();
 
         return Invariant(
             $"<br/><hr/><div align='center' dir='ltr'>Sent from IP: {ip} / {user.FriendlyName} / {user.UserId}</div>");
