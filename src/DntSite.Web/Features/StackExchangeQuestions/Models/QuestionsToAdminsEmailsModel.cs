@@ -11,4 +11,6 @@ public class QuestionsToAdminsEmailsModel : BaseEmailModel
     public required string Body { get; set; }
 
     public required string Stat { get; set; }
+
+    public required int QuestionId { get; set; }
 }

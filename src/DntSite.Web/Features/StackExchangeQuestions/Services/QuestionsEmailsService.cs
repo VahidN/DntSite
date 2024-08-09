@@ -20,7 +20,8 @@ public class QuestionsEmailsService(ICommonService commonService, IEmailsFactory
                 Title = result.Title,
                 Body = result.Description,
                 FriendlyName = friendlyName,
-                Stat = "عمومی"
+                Stat = "عمومی",
+                QuestionId = result.Id
             }, $"پرسش جدید ارسالی:  {result.Title}");
     }
 

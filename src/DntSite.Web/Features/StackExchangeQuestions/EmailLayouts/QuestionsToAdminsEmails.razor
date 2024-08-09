@@ -37,6 +37,6 @@
 
     [Parameter] public QuestionsToAdminsEmailsModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(QuestionsRoutingConstants.Questions);
+    private string PostUrl => Model.SiteRootUri.CombineUrl(QuestionsRoutingConstants.QuestionsDetailsBase).CombineUrl(Model.QuestionId.ToString(CultureInfo.InvariantCulture));
 
 }
