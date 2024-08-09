@@ -10,6 +10,8 @@ public static class SurveysRoutingConstants
         $"{SurveysComments}/{{UserFriendlyName}}/page/{{CurrentPage:int}}";
 
     public const string Votes = "/Votes";
+    public const string VotesDetailsSurveyId = $"{Votes}/details/{{SurveyId:int}}";
+
     public const string SurveysArchive = "/surveys";
     public const string SurveysArchivePageCurrentPage = $"{SurveysArchive}/page/{{CurrentPage:int}}";
 
@@ -25,6 +27,7 @@ public static class SurveysRoutingConstants
     public const string SurveysTagPageCurrentPage = $"{SurveysTag}/page/{{CurrentPage:int}}";
     public const string SurveysTagTagName = $"{SurveysTag}/{{TagName}}";
     public const string SurveysTagTagNamePageCurrentPage = $"{SurveysTag}/{{TagName}}/page/{{CurrentPage:int}}";
+    public const string VotesTagTagName = $"{Votes}/tag/{{TagName}}";
 
     public const string SurveysWriters = "/surveys-writers";
     public const string SurveysWritersPageCurrentPage = $"{SurveysWriters}/page/{{CurrentPage:int}}";

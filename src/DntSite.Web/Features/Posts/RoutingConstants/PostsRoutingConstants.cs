@@ -16,8 +16,6 @@ public static class PostsRoutingConstants
     public const string PostsArchive = "/PostsArchive";
     public const string PostsPageCurrentPage = $"{Posts}/page/{{CurrentPage:int}}";
 
-    public const string Search = "/search";
-
     public const string PostsFilterFilterBase = $"{Posts}/filter";
 
     public const string PostsFilterFilterPageCurrentPage =
@@ -27,6 +25,9 @@ public static class PostsRoutingConstants
     public const string PostsWritersPageCurrentPage = $"{PostsWriters}/page/{{CurrentPage:int}}";
     public const string PostsWritersUserFriendlyName = $"{PostsWriters}/{{UserFriendlyName}}";
 
+    public const string PostsWritersOld = "/writer";
+    public const string PostsWritersOldUserFriendlyName = $"{PostsWritersOld}/{{UserFriendlyName}}";
+
     public const string PostsWritersUserFriendlyNamePageCurrentPage =
         $"{PostsWriters}/{{UserFriendlyName}}/page/{{CurrentPage:int}}";
 
@@ -34,6 +35,8 @@ public static class PostsRoutingConstants
     public const string PostsComments = "/posts-comments";
     public const string PostsCommentsPageCurrentPage = $"{PostsComments}/page/{{CurrentPage:int}}";
     public const string PostsCommentsUserFriendlyName = $"{PostsComments}/{{UserFriendlyName}}";
+
+    public const string PostsCommentsOld = "/commentsarchive";
 
     public const string PostsCommentsUserFriendlyNamePageCurrentPage =
         $"{PostsComments}/{{UserFriendlyName}}/page/{{CurrentPage:int}}";
@@ -45,6 +48,9 @@ public static class PostsRoutingConstants
     public const string TagPageCurrentPage = $"{Tag}/page/{{CurrentPage:int}}";
     public const string TagTagName = $"{Tag}/{{TagName}}";
     public const string TagTagNamePageCurrentPage = $"{Tag}/{{TagName}}/page/{{CurrentPage:int}}";
+
+    public const string Search = "/search";
+    public const string SearchLabelTagName = $"{Search}/label/{{TagName}}";
 
     public const string WriteArticleEditBase = "/write-article/edit";
     public const string WriteArticleEditEditId = $"{WriteArticleEditBase}/{{EditId:{EncryptedRouteConstraint.Name}}}";

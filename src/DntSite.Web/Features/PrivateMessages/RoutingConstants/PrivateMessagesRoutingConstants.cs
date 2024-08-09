@@ -15,6 +15,7 @@ public static class PrivateMessagesRoutingConstants
 
     public const string PublicContactUs1 = "/PublicContactUs";
     public const string PublicContactUs2 = "/public-contact-us";
+    public const string PublicContactUs3 = "/contactus";
 
     public const string SendPrivateMessageBase = "/send-private-message";
     public const string SendPrivateMessageToUserId = $"{SendPrivateMessageBase}/{{ToUserId:int}}";
