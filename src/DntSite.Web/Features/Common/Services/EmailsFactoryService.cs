@@ -5,6 +5,7 @@ using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.EmailLayouts;
 using DntSite.Web.Features.UserProfiles.Models;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
+using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.Common.Services;
 
@@ -13,7 +14,8 @@ public class EmailsFactoryService(
     IBlazorStaticRendererService rendererService,
     IWebMailService webMailService,
     IHttpContextAccessor httpContextAccessor,
-    IAppFoldersService appFoldersService) : IEmailsFactoryService
+    IAppFoldersService appFoldersService,
+    ICurrentUserService currentUserService) : IEmailsFactoryService
 {
     private const string DefaultPickupFolderName = "SmtpPickup";
     private readonly TimeSpan _delayDelivery = TimeSpan.FromSeconds(value: 7);
@@ -45,7 +47,7 @@ public class EmailsFactoryService(
             }
         });
 
-        var userIp = GetUserIp();
+        var userIp = await GetUserInfoAsync();
 
         if (addIp && !html.Contains(userIp, StringComparison.OrdinalIgnoreCase))
         {
@@ -221,13 +223,19 @@ public class EmailsFactoryService(
 
     private Task<AppSetting?> GetAppSettingsAsync() => commonService.GetBlogConfigAsync();
 
-    private string GetUserIp()
+    private async Task<string> GetUserInfoAsync()
     {
         var ip = httpContextAccessor.HttpContext?.GetIP();
 
-        return string.IsNullOrWhiteSpace(ip)
-            ? string.Empty
-            : Invariant($"<br/><hr/><div align='center' dir='ltr'>Sent from IP: {ip}</div>");
+        if (string.IsNullOrWhiteSpace(ip))
+        {
+            return string.Empty;
+        }
+
+        var user = await currentUserService.GetCurrentUserAsync();
+
+        return Invariant(
+            $"<br/><hr/><div align='center' dir='ltr'>Sent from IP: {ip} / {user.FriendlyName} / {user.UserId}</div>");
     }
 
     private async Task InitEmailModelAsync<TLayoutModel>(TLayoutModel model)
