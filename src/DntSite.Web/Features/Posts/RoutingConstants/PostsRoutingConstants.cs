@@ -9,9 +9,8 @@ public static class PostsRoutingConstants
 
     public const string PostBase = "/post";
     public const string PostId = $"{PostBase}/{{Id:int}}";
-
     public const string PostIdSlug = $"{PostBase}/{{Id:int}}/{{Slug}}";
-    public const string Root = "/";
+
     public const string PageCurrentPage = "/page/{CurrentPage:int}";
     public const string Posts = "/posts";
     public const string PostsArchive = "/PostsArchive";

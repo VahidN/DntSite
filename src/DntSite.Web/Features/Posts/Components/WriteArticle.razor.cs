@@ -84,7 +84,7 @@ public partial class WriteArticle
         }
 
         await BlogPostsService.PerformPossibleDeleteAsync(DeleteId.ToInt());
-        ApplicationState.NavigateTo(PostsRoutingConstants.Root);
+        ApplicationState.NavigateTo(PostsRoutingConstants.Posts);
     }
 
     private async Task PerformAsync()
