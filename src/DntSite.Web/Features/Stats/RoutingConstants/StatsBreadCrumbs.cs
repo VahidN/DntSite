@@ -14,7 +14,7 @@ public static class StatsBreadCrumbs
 
     public static readonly BreadCrumb TodayVisitedUsers = new()
     {
-        Title = "مراجعات امروز",
+        Title = "مراجعان امروز",
         Url = StatsRoutingConstants.TodayVisitedUsers,
         GlyphIcon = DntBootstrapIcons.BiCalendar2Range,
         AllowAnonymous = false

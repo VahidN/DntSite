@@ -19,6 +19,8 @@ public partial class TodayVisitedUsers
 
     [InjectComponentScoped] internal ISiteStatService SiteStatService { set; get; } = null!;
 
+    [Inject] internal IOnlineVisitorsService OnlineVisitorsService { set; get; } = null!;
+
     protected override async Task OnInitializedAsync() => await ShowUsersListAsync();
 
     private async Task ShowUsersListAsync()

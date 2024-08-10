@@ -3,6 +3,7 @@ using DntSite.Web.Features.Common.Utils.Security;
 using DntSite.Web.Features.DbLogger.Services;
 using DntSite.Web.Features.DbSeeder.Services;
 using DntSite.Web.Features.ServicesConfigs;
+using DntSite.Web.Features.Stats.Middlewares;
 using DntSite.Web.Features.UserProfiles.Endpoints;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
@@ -47,6 +48,8 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
         });
     }
+
+    app.UseMiddleware<OnlineVisitorsMiddleware>();
 
     app.UseExceptionHandler(errorHandlingPath: "/Error", createScopeForErrors: true);
 
