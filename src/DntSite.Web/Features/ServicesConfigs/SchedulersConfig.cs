@@ -45,7 +45,7 @@ public static class SchedulersConfig
                 => GetNowIranTime(utcNow) is { Hour: 8, Minute: 59, Second: 1 });
 
             options.AddScheduledTask<EmptyPMsJob>(utcNow
-                => GetNowIranTime(utcNow) is { DayOfWeek: DayOfWeek.Friday, Hour: 3, Minute: 1, Second: 1 });
+                => GetNowIranTime(utcNow) is { Hour: 3, Minute: 1, Second: 1 });
         });
 
     private static DateTime GetNowIranTime(DateTime utcNow) => utcNow.AddHours(value: 3.5);
