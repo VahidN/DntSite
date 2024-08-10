@@ -13,6 +13,8 @@ public static class ProjectsRoutingConstants
     public const string ProjectsDetailsBase = "/project/details";
     public const string ProjectsDetailsProjectId = $"{ProjectsDetailsBase}/{{ProjectId:int}}";
 
+    public const string ProjectsDetailsOldProjectId = "/projects/details/{ProjectId:int}";
+
     public const string ProjectsTag = "/projects-tag";
     public const string ProjectsTagPageCurrentPage = $"{ProjectsTag}/page/{{CurrentPage:int}}";
     public const string ProjectsTagTagName = $"{ProjectsTag}/{{TagName}}";
@@ -65,11 +67,16 @@ public static class ProjectsRoutingConstants
     public const string ProjectFeedbacksBase = "/project-feedbacks";
     public const string ProjectFeedbacksProjectId = $"{ProjectFeedbacksBase}/{{ProjectId:int}}";
 
+    public const string ProjectFeedbacksOldProjectId = "/projectissues/project/{ProjectId:int}";
+
     public const string ProjectFeedbacksProjectIdPageCurrentPage =
         $"{ProjectFeedbacksBase}/{{ProjectId:int}}/page/{{CurrentPage:int}}";
 
     public const string ProjectFeedbacksProjectIdFeedbackId =
         $"{ProjectFeedbacksBase}/{{ProjectId:int}}/{{FeedbackId:int}}";
+
+    public const string ProjectFeedbacksOldProjectIdFeedbackId =
+        "/projectissue/details/{ProjectId:int}/{FeedbackId:int}";
 
     public const string WriteProjectFaqBase = "/write-project-faq";
     public const string WriteProjectFaq = $"{WriteProjectFaqBase}/{{ProjectId:int}}";
@@ -130,6 +137,8 @@ public static class ProjectsRoutingConstants
         $"{ProjectFaqsBase}/{{ProjectId:int}}/page/{{CurrentPage:int}}";
 
     public const string ProjectFaqsProjectIdFaqId = $"{ProjectFaqsBase}/{{ProjectId:int}}/{{FaqId:int}}";
+
+    public const string ProjectFaqsOldProjectIdFaqId = "/projectfaq/faq/{ProjectId:int}/{FaqId:int}";
 
     public const string ProjectsReleases = "/projects-releases";
     public const string ProjectsReleasesPageCurrentPage = $"{ProjectsReleases}/page/{{CurrentPage:int}}";

@@ -1,6 +1,7 @@
 ﻿@using DntSite.Web.Features.Posts.Components
 @using DntSite.Web.Features.Projects.Entities
 @attribute [Route(ProjectsRoutingConstants.ProjectFeedbacksProjectIdFeedbackId)]
+@attribute [Route(ProjectsRoutingConstants.ProjectFeedbacksOldProjectIdFeedbackId)]
 
 <DntLoading IsLoading="@(_issueTopic is null || CurrentPost is null || _issueComments is null)">
     <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>

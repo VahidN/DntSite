@@ -13,6 +13,8 @@ public static class QuestionsRoutingConstants
     public const string QuestionsDetailsBase = $"{Questions}/details";
     public const string QuestionsDetailsQuestionId = $"{QuestionsDetailsBase}/{{QuestionId:int}}";
 
+    public const string QuestionsDetailsOldQuestionId = "/questions/question/{QuestionId:int}";
+
     public const string QuestionsTag = "/questions-tag";
     public const string QuestionsTagPageCurrentPage = $"{QuestionsTag}/page/{{CurrentPage:int}}";
     public const string QuestionsTagTagName = $"{QuestionsTag}/{{TagName}}";

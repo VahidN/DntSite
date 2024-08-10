@@ -18,6 +18,10 @@ public static class CoursesRoutingConstants
     public const string CoursesWritersPageCurrentPage = "/courses-writers/page/{CurrentPage:int}";
     public const string CoursesWritersUserFriendlyName = "/courses-writers/{UserFriendlyName}";
 
+    public const string CoursesTagOldTagName = "/courses/tag/{TagName}";
+
+    public const string CoursesDetailsOldCourseId = "/courses/additionaltopics/{CourseId:int}";
+
     public const string CoursesWritersUserFriendlyNamePageCurrentPage =
         "/courses-writers/{UserFriendlyName}/page/{CurrentPage:int}";
 

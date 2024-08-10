@@ -1,6 +1,7 @@
 @using DntSite.Web.Features.Posts.Components
 @using DntSite.Web.Features.StackExchangeQuestions.Entities
 @attribute [Route(QuestionsRoutingConstants.QuestionsDetailsQuestionId)]
+@attribute [Route(QuestionsRoutingConstants.QuestionsDetailsOldQuestionId)]
 
 <DntLoading IsLoading="@(_details is null || CurrentPost is null || _questionComments is null)">
     <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>

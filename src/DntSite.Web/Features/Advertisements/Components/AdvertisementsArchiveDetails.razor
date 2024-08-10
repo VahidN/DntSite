@@ -1,6 +1,7 @@
 @using DntSite.Web.Features.Advertisements.Entities
 @using DntSite.Web.Features.Posts.Components
 @attribute [Route(AdvertisementsRoutingConstants.AdvertisementsDetails)]
+@attribute [Route(AdvertisementsRoutingConstants.AdvertisementsOldDetails)]
 
 <DntLoading IsLoading="@(_advertisements is null || CurrentPost is null || _advertisementComments is null)">
     <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>

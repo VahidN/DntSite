@@ -2,6 +2,7 @@
 @using DntSite.Web.Features.Posts.Components
 @attribute [Route(CoursesRoutingConstants.CoursesDetailsCourseId)]
 @attribute [Route(CoursesRoutingConstants.CoursesCourseId)]
+@attribute [Route(CoursesRoutingConstants.CoursesDetailsOldCourseId)]
 
 <DntLoading IsLoading="@(_courseModel is null || CurrentPost is null)">
     <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>

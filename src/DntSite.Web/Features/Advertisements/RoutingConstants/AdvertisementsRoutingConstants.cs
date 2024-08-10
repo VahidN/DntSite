@@ -15,6 +15,8 @@ public static class AdvertisementsRoutingConstants
     public const string CommentsUrlTemplate = $"{AdvertisementsDetailsBase}/{{0}}#comments";
     public const string PostUrlTemplate = $"{AdvertisementsDetailsBase}/{{0}}";
 
+    public const string AdvertisementsOldDetails = "/announcements/details/{AdvertisementId:int}";
+
     public const string AdvertisementsTag = "/advertisements-tag";
     public const string PostTagUrlTemplate = $"{AdvertisementsTag}/{{0}}";
     public const string AdvertisementsTagPage = $"{AdvertisementsTag}/page/{{CurrentPage:int}}";
