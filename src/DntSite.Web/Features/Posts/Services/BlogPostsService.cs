@@ -43,9 +43,11 @@ public class BlogPostsService(
     public Task<BlogPost?> GetFirstBlogPostAsync()
         => _blogPosts.AsNoTracking().OrderBy(x => x.Id).FirstOrDefaultAsync();
 
-    public Task<BlogPost?> FindBlogPostAsync(string oldUrl, bool showDeletedItems = false)
-        => _blogPosts.OrderBy(x => x.Id)
-            .FirstOrDefaultAsync(x => x.OldUrl == oldUrl && x.IsDeleted == showDeletedItems);
+    public Task<BlogPost?> FindBlogPostAsync(string? oldUrl, bool showDeletedItems = false)
+        => string.IsNullOrWhiteSpace(oldUrl)
+            ? Task.FromResult<BlogPost?>(result: null)
+            : _blogPosts.OrderBy(x => x.Id)
+                .FirstOrDefaultAsync(x => x.OldUrl == oldUrl && x.IsDeleted == showDeletedItems);
 
     public async Task<BlogPost?> FindBlogPostAsync(int id, bool showDeletedItems = false)
     {

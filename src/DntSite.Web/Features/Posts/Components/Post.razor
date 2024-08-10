@@ -1,6 +1,7 @@
 @using DntSite.Web.Features.Posts.Entities
 @attribute [Route(PostsRoutingConstants.PostId)]
 @attribute [Route(PostsRoutingConstants.PostIdSlug)]
+@attribute [Route(PostsRoutingConstants.OldBloggerPostUrls)]
 
 <DntLoading IsLoading="@(_blogPost is null || CurrentPost is null || _postComments is null)">
     <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>

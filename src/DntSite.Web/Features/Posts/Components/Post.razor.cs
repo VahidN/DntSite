@@ -35,6 +35,16 @@ public partial class Post
 
     [Parameter] public string? Slug { set; get; }
 
+    [Parameter] public string? PublishYear { set; get; }
+
+    [Parameter] public string? PublishMonth { set; get; }
+
+    [Parameter] public string? OldTitle { set; get; }
+
+    private bool IsOldBloggerPostUrl => !string.IsNullOrWhiteSpace(PublishYear) &&
+                                        !string.IsNullOrWhiteSpace(PublishMonth) &&
+                                        !string.IsNullOrWhiteSpace(OldTitle);
+
     private bool CanUserViewThisPost => ApplicationState.CurrentUser.CanUserViewThisPost(CurrentPost);
 
     private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
@@ -46,6 +56,13 @@ public partial class Post
 
     protected override async Task OnInitializedAsync()
     {
+        if (IsOldBloggerPostUrl)
+        {
+            await ManageOldBloggerLinksAsync();
+
+            return;
+        }
+
         AddBreadCrumbs();
 
         if (!Id.HasValue)
@@ -66,6 +83,21 @@ public partial class Post
 
         await GetCommentsAsync(Id.Value);
         await UpdateStatAsync(Id.Value);
+    }
+
+    private async Task ManageOldBloggerLinksAsync()
+    {
+        var oldUrl = ApplicationState.AppSetting?.SiteRootUri.CombineUrl(PublishYear.ToEnglishNumbers())
+            .CombineUrl(PublishMonth.ToEnglishNumbers())
+            .CombineUrl(OldTitle);
+
+        var post = await BlogPostsService.FindBlogPostAsync(oldUrl.ToEnglishNumbers());
+
+        if (post is not null)
+        {
+            ApplicationState.NavigateTo(
+                PostsRoutingConstants.PostBase.CombineUrl(post.Id.ToString(CultureInfo.InvariantCulture)));
+        }
     }
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..PostsBreadCrumbs.DefaultBreadCrumbs]);

@@ -61,7 +61,7 @@ public interface IBlogPostsService : IScopedService
 
     Task<BlogPost> SaveBlogPostAsync(BlogPost blogPost, IList<BlogPostTag> listOfActualTags, bool isEditForm = false);
 
-    Task<BlogPost?> FindBlogPostAsync(string oldUrl, bool showDeletedItems = false);
+    Task<BlogPost?> FindBlogPostAsync(string? oldUrl, bool showDeletedItems = false);
 
     Task<BlogPost?> FindBlogPostAsync(int id, bool showDeletedItems = false);
 
