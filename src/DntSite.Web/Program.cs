@@ -11,18 +11,21 @@ using Microsoft.AspNetCore.StaticFiles;
 var builder = WebApplication.CreateBuilder(args);
 
 ConfigureLogging(builder.Logging, builder.Environment, builder.Configuration);
-ConfigureServices(builder.Services, builder.Environment, builder.Configuration);
+ConfigureServices(builder.Host, builder.Services, builder.Environment, builder.Configuration);
 var webApp = builder.Build();
 ConfigureMiddlewares(webApp, webApp.Environment);
 ConfigureEndpoints(webApp);
 InitApplication(webApp);
 await RunAsync(webApp, webApp.Environment);
 
-void ConfigureServices(IServiceCollection services, IWebHostEnvironment environment, IConfiguration configuration)
+void ConfigureServices(IHostBuilder host,
+    IServiceCollection services,
+    IWebHostEnvironment environment,
+    IConfiguration configuration)
 {
     services.AddRazorComponents().AddInteractiveServerComponents();
     services.AddControllers();
-    services.AddCustomizedServices(configuration, environment);
+    services.AddCustomizedServices(host, configuration, environment);
 }
 
 void ConfigureLogging(ILoggingBuilder logging, IHostEnvironment env, IConfiguration configuration)

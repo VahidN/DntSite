@@ -8,9 +8,12 @@ namespace DntSite.Web.Features.ServicesConfigs;
 public static class ServicesRegistry
 {
     public static void AddCustomizedServices(this IServiceCollection services,
+        IHostBuilder host,
         IConfiguration configuration,
         IWebHostEnvironment environment)
     {
+        host.AlwaysValidateScopes();
+
         services.AddOptions(configuration);
         services.AddHttpContextAccessor();
         services.AddIPrincipal();
@@ -25,6 +28,13 @@ public static class ServicesRegistry
         services.AddCustomizedControllers();
         services.AddCustomizedAuthentication(siteSettings, environment);
     }
+
+    private static void AlwaysValidateScopes(this IHostBuilder host)
+        => host.UseDefaultServiceProvider(options =>
+        {
+            options.ValidateScopes = true;
+            options.ValidateOnBuild = true;
+        });
 
     private static void AddIPrincipal(this IServiceCollection services)
         => services.AddScoped<IPrincipal>(provider
