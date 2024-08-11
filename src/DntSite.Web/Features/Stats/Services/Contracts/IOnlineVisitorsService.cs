@@ -2,7 +2,9 @@
 
 public interface IOnlineVisitorsService : ISingletonService, IDisposable
 {
-    int OnlineVisitorsCount { get; }
+    int TotalOnlineVisitorsCount { get; }
+
+    int OnlineSpidersCount { get; }
 
     void UpdateStat(HttpContext context);
 }

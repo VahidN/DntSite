@@ -2,12 +2,7 @@
 @attribute [Route(StatsRoutingConstants.TodayVisitedUsers)]
 @attribute [Route(StatsRoutingConstants.TodayVisitedUsersPageCurrentPage)]
 
-<DntMessageBox Type="AlertType.Info" IsVisible="true">
-    <span class="@DntBootstrapIcons.BiPeople ms-2 me-1"></span>
-    تعداد کل کاربران آنلاین (منجمله مهمان‌ها) در طی پنج دقیقه قبل:
-    <DntToPersianNumbers Value="OnlineVisitorsService.OnlineVisitorsCount"/>
-    نفر
-</DntMessageBox>
+<ShowOnlineVisitorsInfo/>
 
 <WritersList MainTitle="مراجعان امروز"
              CurrentPage="CurrentPage"

@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.Timers;
+using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.Services.Contracts;
+using UAParser;
 using Timer = System.Timers.Timer;
 
 namespace DntSite.Web.Features.Stats.Services;
@@ -11,12 +13,14 @@ public class OnlineVisitorsService : IOnlineVisitorsService
     private const int ReleaseInterval = Interval * 60 * 1000; // 5 minutes
     private readonly Timer _timer = new();
 
-    private readonly ConcurrentDictionary<string, DateTime> _visitors = new(StringComparer.Ordinal);
+    private readonly ConcurrentDictionary<string, OnlineVisitorInfoModel> _visitors = new(StringComparer.Ordinal);
     private bool _isDisposed;
 
     public OnlineVisitorsService() => CreateTimer();
 
-    public int OnlineVisitorsCount => _visitors.Count;
+    public int OnlineSpidersCount => _visitors.Select(x => x.Value).Count(x => x.IsSpider);
+
+    public int TotalOnlineVisitorsCount => _visitors.Count;
 
     public void UpdateStat(HttpContext context)
     {
@@ -24,10 +28,18 @@ public class OnlineVisitorsService : IOnlineVisitorsService
 
         var ip = context.GetIP();
 
-        if (!string.IsNullOrWhiteSpace(ip))
+        if (string.IsNullOrWhiteSpace(ip))
         {
-            _visitors[ip] = DateTime.UtcNow;
+            return;
         }
+
+        var ua = context.GetUserAgent() ?? "unknown";
+
+        _visitors[ip] = new OnlineVisitorInfoModel
+        {
+            VisitTime = DateTime.UtcNow,
+            IsSpider = Parser.GetDefault().Parse(ua).Device.IsSpider
+        };
     }
 
     public void Dispose()
@@ -50,7 +62,7 @@ public class OnlineVisitorsService : IOnlineVisitorsService
             return;
         }
 
-        var oldItems = _visitors.Where(x => x.Value < DateTime.UtcNow.AddMinutes(-Interval)).ToList();
+        var oldItems = _visitors.Where(x => x.Value.VisitTime < DateTime.UtcNow.AddMinutes(-Interval)).ToList();
 
         foreach (var item in oldItems)
         {
