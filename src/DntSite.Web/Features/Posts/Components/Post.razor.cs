@@ -98,6 +98,10 @@ public partial class Post
             ApplicationState.NavigateTo(
                 PostsRoutingConstants.PostBase.CombineUrl(post.Id.ToString(CultureInfo.InvariantCulture)));
         }
+        else
+        {
+            ApplicationState.NavigateToNotFoundPage();
+        }
     }
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..PostsBreadCrumbs.DefaultBreadCrumbs]);
