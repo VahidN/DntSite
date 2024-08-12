@@ -22,7 +22,7 @@ public class JavaScriptErrorsReportController(
 
         cacheService.GetOrAdd(errorMessage.Md5Hash(), () =>
         {
-            logger.LogError(message: "Content Security Policy Error: {Body}, {Request}",
+            logger.LogError(message: "JavaScript Error -> {Body}, {Request}",
                 antiXssService.GetSanitizedHtml(errorMessage), HttpContext.Request.LogRequest(responseCode: 200));
 
             return errorMessage;
