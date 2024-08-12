@@ -20,5 +20,13 @@ public static class StatsBreadCrumbs
         AllowAnonymous = false
     };
 
+    public static readonly BreadCrumb SiteReferrers = new()
+    {
+        Title = "ارجاع دهنده‌ها",
+        Url = StatsRoutingConstants.SiteReferrers,
+        GlyphIcon = DntBootstrapIcons.BiSignpost,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs = [RecalculatePostsCount];
 }

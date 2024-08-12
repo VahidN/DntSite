@@ -12,6 +12,7 @@ using DntSite.Web.Features.RoadMaps.Entities;
 using DntSite.Web.Features.Searches.Entities;
 using DntSite.Web.Features.SideBar.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
+using DntSite.Web.Features.Stats.Entities;
 using DntSite.Web.Features.Surveys.Entities;
 
 namespace DntSite.Web.Features.UserProfiles.Entities;
@@ -685,4 +686,6 @@ public class User : BaseInteractiveEntity<User, UserProfileVisitor, UserProfileB
 
     public virtual ICollection<AdvertisementCommentReaction> AdvertisementCommentReactionsForUsers { get; set; } =
         new List<AdvertisementCommentReaction>();
+
+    public virtual ICollection<SiteReferrer> SiteReferrers { get; set; } = new List<SiteReferrer>();
 }

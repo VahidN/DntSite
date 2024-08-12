@@ -83,7 +83,8 @@ public partial class UserInfo
 
     private void AddUsersBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([
-            UserProfilesBreadCrumbs.UsersBirthdays, StatsBreadCrumbs.TodayVisitedUsers, UserProfilesBreadCrumbs.Users
+            UserProfilesBreadCrumbs.UsersBirthdays, StatsBreadCrumbs.TodayVisitedUsers, StatsBreadCrumbs.SiteReferrers,
+            UserProfilesBreadCrumbs.Users
         ]);
 
     private void AddUserBreadCrumbs(string name)

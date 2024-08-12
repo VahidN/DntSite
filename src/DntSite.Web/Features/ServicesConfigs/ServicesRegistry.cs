@@ -64,7 +64,15 @@ public static class ServicesRegistry
             .WithScopedLifetime()
             .AddClasses(classes => classes.AssignableTo<ITransientService>())
             .AsImplementedInterfaces()
-            .WithTransientLifetime());
+            .WithTransientLifetime()
+            .AddClasses(classes => classes.Where(type =>
+            {
+                var allInterfaces = type.GetInterfaces();
+
+                return allInterfaces.Contains(typeof(IMiddleware)) && allInterfaces.Contains(typeof(ISingletonService));
+            }))
+            .AsSelf()
+            .WithSingletonLifetime());
 
         WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished ScanAllServices"));
     }

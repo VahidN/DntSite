@@ -1,0 +1,87 @@
+﻿@using DntSite.Web.Features.Stats.Entities
+@attribute [Route(StatsRoutingConstants.SiteReferrers)]
+@attribute [Route(StatsRoutingConstants.SiteReferrerPageCurrentPage)]
+@attribute [Route(StatsRoutingConstants.SiteReferrersDeleteDeleteId)]
+
+<DntSitePageTitle PageTitle="ارجاع دهنده‌ها"/>
+
+<DntLoading IsLoading="@(_items is null)">
+    <DntSimpleTable TRecord="SiteReferrer"
+                    Records="_items!.Data"
+                    TableClass="table table-striped table-hover caption-top"
+                    HeaderClass="table-secondary"
+                    FooterRowClass="table-warning"
+                    TableResponsiveClass="row table-responsive"
+                    RowClass='record => ""'>
+        <CaptionTemplate>
+            <strong>ارجاع دهنده‌ها</strong>
+        </CaptionTemplate>
+        <TableColumns>
+            <DntSimpleTableColumn HeaderTitle="منبع"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-right align-middle"'
+                                  FooterCellClass="text-center align-middle"
+                                  width="330">
+                <CellValueTemplate Context="record">
+                    @if (ApplicationState.CurrentUser?.IsAdmin == true)
+                    {
+                        <a href="@StatsRoutingConstants.SiteReferrersDeleteBase/@ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture))"
+                           data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"
+                           class="btn btn-danger me-2 btn-sm">
+                            حذف
+                        </a>
+                    }
+
+                    <DntLink IsExternal="true" Url="@record.ReferrerUrl">
+                        <span dir="@record.ReferrerTitle.GetDir()">
+                            @record.ReferrerTitle
+                        </span>
+                    </DntLink>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="مقصد"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-right align-middle"'
+                                  FooterCellClass="text-center align-middle"
+                                  width="330">
+                <CellValueTemplate Context="record">
+                    <DntLink IsExternal="true" Url="@record.DestinationUrl">
+                        <span dir="@record.DestinationTitle.GetDir()">
+                            @record.DestinationTitle
+                        </span>
+                    </DntLink>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="آخرین مراجعه"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    @record.LastVisitTime.ToFriendlyPersianDateTextify()
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="تعداد مراجعه"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    @record.VisitsCount.ToPersianNumbers()
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+        </TableColumns>
+
+        <DataSourceIsEmptyTemplate>
+            <div class="alert alert-info">
+                اطلاعاتی برای نمایش یافت نشد.
+            </div>
+        </DataSourceIsEmptyTemplate>
+    </DntSimpleTable>
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="_items!.TotalItems"
+                        BasePath="@StatsRoutingConstants.SiteReferrers"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

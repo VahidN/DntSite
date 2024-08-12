@@ -52,7 +52,7 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
         });
     }
 
-    app.UseMiddleware<OnlineVisitorsMiddleware>();
+    app.UseOnlineVisitorsMiddleware();
 
     app.UseExceptionHandler(errorHandlingPath: "/Error", createScopeForErrors: true);
 
@@ -87,6 +87,8 @@ void ConfigureEndpoints(WebApplication app)
     app.AddChangePasswordEndpoint();
     app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
     app.UseRequestTimeouts();
+
+    app.UseSiteReferrersMiddleware();
 }
 
 void InitApplication(IHost app)
