@@ -9,7 +9,7 @@ public static class PagingUtils
         this IOrderedQueryable<TEntity> query,
         int pageNumber,
         int recordsPerPage)
-        where TEntity : BaseAuditedEntity
+        where TEntity : BaseEntity
         => new()
         {
             TotalItems = await query.CountAsync(),
@@ -23,7 +23,7 @@ public static class PagingUtils
         PagerSortBy sortBy,
         bool isAscending,
         IDictionary<PagerSortBy, Expression<Func<TEntity, object?>>> customOrders)
-        where TEntity : BaseAuditedEntity
+        where TEntity : BaseEntity
     {
         ArgumentNullException.ThrowIfNull(customOrders);
 
@@ -40,7 +40,7 @@ public static class PagingUtils
         PagerSortBy sortBy,
         bool isAscending,
         IDictionary<PagerSortBy, Expression<Func<TEntity, object?>>> customOrders)
-        where TEntity : BaseAuditedEntity
+        where TEntity : BaseEntity
     {
         if (customOrders.TryGetValue(sortBy, out var orderBy))
         {
@@ -57,7 +57,7 @@ public static class PagingUtils
     private static IQueryable<TEntity> ApplyPaging<TEntity>(this IQueryable<TEntity> query,
         int pageNumber,
         int recordsPerPage)
-        where TEntity : BaseAuditedEntity
+        where TEntity : BaseEntity
     {
         var skipRecords = pageNumber * recordsPerPage;
         query = query.Skip(skipRecords).Take(recordsPerPage);

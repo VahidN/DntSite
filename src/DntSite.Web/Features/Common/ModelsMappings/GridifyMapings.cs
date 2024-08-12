@@ -6,7 +6,7 @@ namespace DntSite.Web.Features.Common.ModelsMappings;
 public static class GridifyMapings
 {
     public static IList<GridifyMap<TEntity>> GetDefaultMappings<TEntity>()
-        where TEntity : BaseAuditedEntity
+        where TEntity : BaseEntity
         =>
         [
             new GridifyMap<TEntity>

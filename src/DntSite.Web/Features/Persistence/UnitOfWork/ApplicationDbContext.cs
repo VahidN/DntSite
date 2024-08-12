@@ -69,8 +69,8 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
             typeof(ParentUserFileEntity)
         ];
 
-        modelBuilder.RegisterAllDerivedEntities<BaseAuditedEntity>(tphBaseTypes);
-        modelBuilder.MakeAllDerivedTableNamesPluralized<BaseAuditedEntity>(tphBaseTypes);
+        modelBuilder.RegisterAllDerivedEntities<BaseEntity>(tphBaseTypes);
+        modelBuilder.MakeAllDerivedTableNamesPluralized<BaseEntity>(tphBaseTypes);
         modelBuilder.ApplyBaseEntityConfigurationToAllDerivedEntities();
         modelBuilder.ConfigureTph(tphBaseTypes);
         modelBuilder.SetCaseInsensitiveSearchesForSqLite();
