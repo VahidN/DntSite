@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
 using System.Timers;
+using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.Services.Contracts;
-using UAParser;
 using Timer = System.Timers.Timer;
 
 namespace DntSite.Web.Features.Stats.Services;
@@ -33,12 +33,10 @@ public class OnlineVisitorsService : IOnlineVisitorsService
             return;
         }
 
-        var ua = context.GetUserAgent() ?? "unknown";
-
         _visitors[ip] = new OnlineVisitorInfoModel
         {
             VisitTime = DateTime.UtcNow,
-            IsSpider = Parser.GetDefault().Parse(ua).Device.IsSpider
+            IsSpider = context.IsSpiderClient()
         };
     }
 
