@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Timers;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using Timer = System.Timers.Timer;
@@ -12,17 +11,22 @@ public class OnlineVisitorsService : IOnlineVisitorsService
     private const int Interval = 5; // 5 minutes
     private const int ReleaseInterval = Interval * 60 * 1000; // 5 minutes
     private readonly Timer _timer = new();
+    private readonly IUAParserService _uaParserService;
 
     private readonly ConcurrentDictionary<string, OnlineVisitorInfoModel> _visitors = new(StringComparer.Ordinal);
     private bool _isDisposed;
 
-    public OnlineVisitorsService() => CreateTimer();
+    public OnlineVisitorsService(IUAParserService uaParserService)
+    {
+        _uaParserService = uaParserService;
+        CreateTimer();
+    }
 
     public int OnlineSpidersCount => _visitors.Select(x => x.Value).Count(x => x.IsSpider);
 
     public int TotalOnlineVisitorsCount => _visitors.Count;
 
-    public void UpdateStat(HttpContext context)
+    public async Task UpdateStatAsync(HttpContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -36,7 +40,7 @@ public class OnlineVisitorsService : IOnlineVisitorsService
         _visitors[ip] = new OnlineVisitorInfoModel
         {
             VisitTime = DateTime.UtcNow,
-            IsSpider = context.IsSpiderClient()
+            IsSpider = await _uaParserService.IsSpiderClientAsync(context)
         };
     }
 

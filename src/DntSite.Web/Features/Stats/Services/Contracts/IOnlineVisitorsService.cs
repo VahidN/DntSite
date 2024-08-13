@@ -6,5 +6,5 @@ public interface IOnlineVisitorsService : ISingletonService, IDisposable
 
     int OnlineSpidersCount { get; }
 
-    void UpdateStat(HttpContext context);
+    Task UpdateStatAsync(HttpContext context);
 }

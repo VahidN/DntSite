@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Stats.Middlewares;
@@ -15,12 +14,16 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
 
     private readonly Task _outputTask;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IUAParserService _uaParserService;
 
     private bool _isDisposed;
 
-    public SiteReferrersMiddleware(IServiceProvider serviceProvider, ILogger<SiteReferrersMiddleware> logger)
+    public SiteReferrersMiddleware(IServiceProvider serviceProvider,
+        IUAParserService uaParserService,
+        ILogger<SiteReferrersMiddleware> logger)
     {
         _serviceProvider = serviceProvider;
+        _uaParserService = uaParserService;
         _logger = logger;
         _outputTask = Task.Run(ProcessItemsQueueAsync);
     }
@@ -31,7 +34,7 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
         GC.SuppressFinalize(this);
     }
 
-    public Task InvokeAsync(HttpContext context, RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
@@ -42,7 +45,7 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
 
         try
         {
-            if (!ShouldSkipThisRequest(context, referrerUrl, destinationUrl, rootUrl))
+            if (!await ShouldSkipThisRequestAsync(context, referrerUrl, destinationUrl, rootUrl))
             {
                 AddSiteReferrerItemToQueue(new SiteReferrerItem(referrerUrl, destinationUrl));
             }
@@ -55,14 +58,14 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
                 rootUrl, referrerUrl, destinationUrl, context.Request.LogRequest(responseCode: 500));
         }
 
-        return next(context);
+        await next(context);
     }
 
-    private static bool
-        ShouldSkipThisRequest(HttpContext context, string referrerUrl, string destinationUrl, string rootUrl)
-        => string.IsNullOrEmpty(referrerUrl) || context.IsSpiderClient() ||
+    private async Task<bool>
+        ShouldSkipThisRequestAsync(HttpContext context, string referrerUrl, string destinationUrl, string rootUrl)
+        => string.IsNullOrEmpty(referrerUrl) || await _uaParserService.IsSpiderClientAsync(context) ||
            !destinationUrl.IsReferrerToThisSite(rootUrl) || referrerUrl.IsLocalReferrer(destinationUrl) ||
-           context.IsProtectedRoute();
+           context.IsProtectedRoute() || destinationUrl.IsStaticFileUrl();
 
     private async Task ProcessItemsQueueAsync()
     {

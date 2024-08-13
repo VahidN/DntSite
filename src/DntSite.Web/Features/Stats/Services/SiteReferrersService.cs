@@ -22,10 +22,6 @@ public class SiteReferrersService(
         try
         {
             var referrerUrlHtmlContent = await baseHttpClient.HttpClient.GetStringAsync(referrerUrl);
-            var referrerTitle = htmlHelperService.GetHtmlPageTitle(referrerUrlHtmlContent);
-
-            var destinationUrlHtmlContent = await baseHttpClient.HttpClient.GetStringAsync(destinationUrl);
-            var destinationTitle = htmlHelperService.GetHtmlPageTitle(destinationUrlHtmlContent);
 
             if (!await IsValidReferrerAsync(referrerUrl, destinationUrl, referrerUrlHtmlContent))
             {
@@ -36,6 +32,8 @@ public class SiteReferrersService(
                 hasherService.GetSha1Hash(Invariant($"{referrerUrl}_{destinationUrl}").ToUpperInvariant());
 
             var siteReferrer = await FindSiteReferrerAsync(referrerHash);
+            var destinationTitle = await GetDestinationTitleAsync(destinationUrl);
+            var referrerTitle = GetReferrerTitle(referrerUrl, referrerUrlHtmlContent);
 
             if (siteReferrer is null)
             {
@@ -97,6 +95,21 @@ public class SiteReferrersService(
 
         item.IsDeleted = true;
         await uow.SaveChangesAsync();
+    }
+
+    private string GetReferrerTitle(string referrerUrl, string referrerUrlHtmlContent)
+    {
+        var title = htmlHelperService.GetHtmlPageTitle(referrerUrlHtmlContent);
+
+        return string.IsNullOrWhiteSpace(title) ? referrerUrl : title;
+    }
+
+    private async Task<string> GetDestinationTitleAsync(string destinationUrl)
+    {
+        var destinationUrlHtmlContent = await baseHttpClient.HttpClient.GetStringAsync(destinationUrl);
+        var title = htmlHelperService.GetHtmlPageTitle(destinationUrlHtmlContent);
+
+        return string.IsNullOrWhiteSpace(title) ? destinationUrl : title;
     }
 
     private async Task<bool>

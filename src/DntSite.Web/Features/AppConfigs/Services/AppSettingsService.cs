@@ -28,7 +28,7 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
             return false;
         }
 
-        var bannedReferrers = config.BannedReferrers ?? new List<string>();
+        var bannedReferrers = config.BannedReferrers ?? [];
 
         return bannedReferrers.Any(pattern => url.Contains(pattern, StringComparison.OrdinalIgnoreCase));
     }
@@ -52,7 +52,7 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
             return false;
         }
 
-        var urls = config.BannedUrls ?? new List<string>();
+        var urls = config.BannedUrls ?? [];
 
         foreach (var bannedUrl in urls)
         {
@@ -89,7 +89,7 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
             return false;
         }
 
-        var urls = config.BannedSites ?? new List<string>();
+        var urls = config.BannedSites ?? [];
 
         foreach (var bannedUrl in urls)
         {

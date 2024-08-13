@@ -50,8 +50,7 @@
     <PackageReference Include="Humanizer.Core"/>
     <PackageReference Include="Scrutor"/>
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders"/>
-    <PackageReference Include="EFCoreSecondLevelCacheInterceptor"/>
-    <PackageReference Include="UAParser"/>
+    <PackageReference Include="EFCoreSecondLevelCacheInterceptor"/>    
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DntSite.Web.Common.BlazorSsr\DntSite.Web.Common.BlazorSsr.csproj" />
