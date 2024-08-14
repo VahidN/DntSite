@@ -16,16 +16,14 @@ public static class StatsBreadCrumbs
     {
         Title = "مراجعان امروز",
         Url = StatsRoutingConstants.TodayVisitedUsers,
-        GlyphIcon = DntBootstrapIcons.BiCalendar2Range,
-        AllowAnonymous = false
+        GlyphIcon = DntBootstrapIcons.BiCalendar2Range
     };
 
     public static readonly BreadCrumb SiteReferrers = new()
     {
         Title = "ارجاع دهنده‌ها",
         Url = StatsRoutingConstants.SiteReferrers,
-        GlyphIcon = DntBootstrapIcons.BiSignpost,
-        AllowAnonymous = false
+        GlyphIcon = DntBootstrapIcons.BiSignpost
     };
 
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs = [RecalculatePostsCount];

@@ -20,8 +20,7 @@
             <DntSimpleTableColumn HeaderTitle="منبع"
                                   HeaderCellClass="text-center"
                                   RowCellClass='record => "text-right align-middle"'
-                                  FooterCellClass="text-center align-middle"
-                                  width="330">
+                                  FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
                     @if (ApplicationState.CurrentUser?.IsAdmin == true)
                     {
@@ -43,8 +42,7 @@
             <DntSimpleTableColumn HeaderTitle="مقصد"
                                   HeaderCellClass="text-center"
                                   RowCellClass='record => "text-right align-middle"'
-                                  FooterCellClass="text-center align-middle"
-                                  width="330">
+                                  FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
                     <DntLink IsExternal="true" Url="@record.DestinationUrl">
                         <span dir="@record.DestinationTitle.GetDir()">
