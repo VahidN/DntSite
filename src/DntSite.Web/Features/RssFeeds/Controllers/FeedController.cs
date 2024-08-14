@@ -85,6 +85,13 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     [Microsoft.AspNetCore.Mvc.Route(template: "/rss.xml")]
     [Microsoft.AspNetCore.Mvc.Route(template: "/atom.xml")]
     [Microsoft.AspNetCore.Mvc.Route(template: "/rss")]
+    [Microsoft.AspNetCore.Mvc.Route(template: "/rss2.xml")]
+    [Microsoft.AspNetCore.Mvc.Route(template: "/feed")]
+    [Microsoft.AspNetCore.Mvc.Route(template: "/feed.xml")]
+    [Microsoft.AspNetCore.Mvc.Route(template: "/feed/rss")]
+    [Microsoft.AspNetCore.Mvc.Route(template: "/feed/atom")]
+    [Microsoft.AspNetCore.Mvc.Route(template: "/blog/feed")]
+    [Microsoft.AspNetCore.Mvc.Route(template: "/blog/rss.xml")]
     public Task<IActionResult> SiteFeed() => LatestChanges();
 
     private Task<WhatsNewFeedChannel> GetLatestChangesAsync() => feedsService.GetLatestChangesAsync();
