@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
-
 ConfigureLogging(builder.Logging, builder.Environment, builder.Configuration);
 ConfigureServices(builder.Host, builder.Services, builder.Environment, builder.Configuration);
 var webApp = builder.Build();
@@ -57,7 +56,6 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
     app.UseExceptionHandler(errorHandlingPath: "/Error", createScopeForErrors: true);
 
     var headerPolicyCollection = SecurityHeadersBuilder.GetCsp(env.IsDevelopment(), enableCrossOriginPolicy: false);
-
     app.UseSecurityHeaders(headerPolicyCollection);
 
     if (!env.IsDevelopment())

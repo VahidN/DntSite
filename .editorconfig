@@ -194,6 +194,7 @@ dotnet_diagnostic.MA0142.severity = error
 
 dotnet_diagnostic.S101.severity = suggestion
 dotnet_diagnostic.S1066.severity = suggestion
+dotnet_diagnostic.S2325.severity = suggestion
 dotnet_diagnostic.S1075.severity = suggestion
 dotnet_diagnostic.S1135.severity = suggestion
 dotnet_diagnostic.S125.severity = suggestion

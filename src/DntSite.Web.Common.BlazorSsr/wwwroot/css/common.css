@@ -1,3 +1,14 @@
+legend {
+    float: none !important;
+    padding: inherit;
+}
+
+.dnt-messagebox {
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: 210px;
+}
+
 @keyframes slideIn {
     0% {
         transform: translateY(1rem);
@@ -32,4 +43,24 @@
     animation-name: slideOut;
     animation-duration: 0.2s;
     animation-fill-mode: both;
+}
+
+.small-spinner {
+    width: 1rem;
+    height: 1rem;
+}
+
+.normal-spinner {
+    width: 2rem;
+    height: 2rem;
+}
+
+.medium-spinner {
+    width: 5rem;
+    height: 5rem;
+}
+
+.large-spinner {
+    width: 7rem;
+    height: 7rem;
 }
