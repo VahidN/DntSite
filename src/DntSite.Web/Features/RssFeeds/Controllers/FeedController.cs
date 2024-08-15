@@ -86,7 +86,6 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     [Microsoft.AspNetCore.Mvc.Route(template: "/atom.xml")]
     [Microsoft.AspNetCore.Mvc.Route(template: "/rss")]
     [Microsoft.AspNetCore.Mvc.Route(template: "/rss2.xml")]
-    [Microsoft.AspNetCore.Mvc.Route(template: "/feed")]
     [Microsoft.AspNetCore.Mvc.Route(template: "/feed.xml")]
     [Microsoft.AspNetCore.Mvc.Route(template: "/feed/rss")]
     [Microsoft.AspNetCore.Mvc.Route(template: "/feed/atom")]
