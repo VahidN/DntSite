@@ -49,7 +49,7 @@ public static class NewsRoutingConstants
 
     public const string CommentsUrlTemplate = $"{News}/details/{{0}}#comments";
     public const string PostUrlTemplate = $"{News}/details/{{0}}";
-    public const string PostTagUrlTemplate = "news-tag/{0}";
+    public const string PostTagUrlTemplate = "/news-tag/{0}";
 
     public const string EditPostUrlTemplate = $"{WriteNews}/edit/{{0}}";
     public const string DeletePostUrlTemplate = $"{WriteNews}/delete/{{0}}";
