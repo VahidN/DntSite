@@ -260,11 +260,13 @@ public class DailyNewsItemsService(
             {
                 var url = item.Url;
                 item.LastHttpStatusCodeCheckDateTime = DateTime.UtcNow;
-                item.LastHttpStatusCode = await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, logger);
+
+                item.LastHttpStatusCode =
+                    await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, throwOnException: true);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, message: "UpdateAllNewsPageThumbnails({Id}, {Url}): ", item.Id, item.Url);
+                logger.LogError(ex, message: "UpdateAllNewsLastHttpStatusCodeAsync({Id}, {Url}): ", item.Id, item.Url);
 
                 if (IsOutdatedLink(ex))
                 {
@@ -506,18 +508,16 @@ public class DailyNewsItemsService(
 
     private static bool IsOutdatedLink(Exception exception)
     {
-        if (exception.Message.Contains(value: "Name or service not known", StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
+        string[] errors =
+        [
+            "Name or service not known", "The SSL connection could not be established",
+            "The request was canceled due to the configured HttpClient.Timeout", "Connection refused",
+            "The remote certificate is invalid because of errors in the certificate chain"
+        ];
 
-        if (exception.Message.Contains(value: "The SSL connection could not be established",
-                StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
+        var message = exception.ToString();
 
-        return false;
+        return errors.Any(error => message.Contains(error, StringComparison.OrdinalIgnoreCase));
     }
 
     private static void UpdateNumberOfViews(bool fromFeed, DailyNewsItem item)
@@ -540,8 +540,9 @@ public class DailyNewsItemsService(
         {
             item.LastHttpStatusCodeCheckDateTime = now;
 
-            item.LastHttpStatusCode = await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(item.Url, logger) ??
-                                      HttpStatusCode.RequestTimeout;
+            item.LastHttpStatusCode =
+                await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(item.Url, throwOnException: false) ??
+                HttpStatusCode.RequestTimeout;
         }
     }
 }
