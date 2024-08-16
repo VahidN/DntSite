@@ -9,6 +9,7 @@ using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
@@ -125,8 +126,13 @@ public class ProjectsService(
             .Include(blogPost => blogPost.Reactions)
             .AsNoTracking();
 
-        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Project.Id),
-            [.. GridifyMapings.GetDefaultMappings<Project>()]);
+        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Project.Id), [
+            .. GridifyMapings.GetDefaultMappings<Project>(), new GridifyMap<Project>
+            {
+                From = ProjectsMappingsProfiles.ProjectTags,
+                To = entity => entity.Tags.Select(tag => tag.Name)
+            }
+        ]);
     }
 
     public async Task<ProjectsModel> GetProjectsLastAndNextAsync(int id, bool showDeletedItems = false)

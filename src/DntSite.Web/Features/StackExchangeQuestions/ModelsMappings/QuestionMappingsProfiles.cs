@@ -6,6 +6,8 @@ namespace DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 
 public class QuestionMappingsProfiles : Profile
 {
+    public const string StackExchangeQuestionTags = $"{nameof(StackExchangeQuestion)}_Tags";
+
     public QuestionMappingsProfiles()
     {
         MapQuestionToModel();

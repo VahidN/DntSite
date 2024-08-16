@@ -6,6 +6,8 @@ namespace DntSite.Web.Features.Posts.ModelsMappings;
 
 public class PostsMappingsProfiles : Profile
 {
+    public const string BlogPostTags = $"{nameof(BlogPost)}_Tags";
+
     public PostsMappingsProfiles()
     {
         MapDraftToModel();

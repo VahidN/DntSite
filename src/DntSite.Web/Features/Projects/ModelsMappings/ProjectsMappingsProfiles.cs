@@ -6,6 +6,8 @@ namespace DntSite.Web.Features.Projects.ModelsMappings;
 
 public class ProjectsMappingsProfiles : Profile
 {
+    public const string ProjectTags = $"{nameof(Project)}_Tags";
+
     public ProjectsMappingsProfiles()
     {
         MapProjectToModel();

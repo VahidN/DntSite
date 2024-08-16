@@ -1,4 +1,5 @@
 ﻿@using DntSite.Web.Features.Courses.Entities
+@using DntSite.Web.Features.Courses.ModelsMappings
 @attribute [Route(CoursesRoutingConstants.Courses)]
 @attribute [Route(CoursesRoutingConstants.CoursesPageCurrentPage)]
 @attribute [Route(CoursesRoutingConstants.CoursesFilterFilterPageCurrentPage)]
@@ -29,6 +30,9 @@
     <DntQueryBuilderProperty Title="شماره دوره" ValueExpression="item => item.Id"/>
     <DntQueryBuilderProperty Title="عنوان" ValueExpression="item => item.Title"/>
     <DntQueryBuilderProperty Title="خلاصه محتوا" ValueExpression="item => item.Description"/>
+    <DntQueryBuilderProperty Title="گروه"
+                             PropertyPath="@CoursesProfiles.CourseTags"
+                             PropertyType="System.String"/>
     <DntQueryBuilderProperty Title="نام نویسنده" ValueExpression="item => item.User!.FriendlyName"/>
     <DntQueryBuilderProperty Title="تاریخ انتشار" ValueExpression="item => item.Audit.CreatedAtPersian">
         <QueryBuilderValueTemplate Context="rule">

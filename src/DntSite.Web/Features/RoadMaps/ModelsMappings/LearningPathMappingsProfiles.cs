@@ -6,6 +6,8 @@ namespace DntSite.Web.Features.RoadMaps.ModelsMappings;
 
 public class LearningPathMappingsProfiles : Profile
 {
+    public const string LearningPathTags = $"{nameof(LearningPath)}_Tags";
+
     public LearningPathMappingsProfiles()
     {
         MapLearningPathToModel();

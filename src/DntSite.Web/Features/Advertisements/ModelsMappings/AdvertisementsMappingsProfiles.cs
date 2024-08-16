@@ -6,6 +6,8 @@ namespace DntSite.Web.Features.Advertisements.ModelsMappings;
 
 public class AdvertisementsMappingsProfiles : Profile
 {
+    public const string AdvertisementTags = $"{nameof(Advertisement)}_Tags";
+
     public AdvertisementsMappingsProfiles()
     {
         MapAdvertisementToModel();

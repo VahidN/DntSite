@@ -6,6 +6,8 @@ namespace DntSite.Web.Features.Surveys.ModelsMappings;
 
 public class SurveysProfiles : Profile
 {
+    public const string SurveyTags = $"{nameof(Survey)}_Tags";
+
     public SurveysProfiles()
     {
         MapSurveyToModel();

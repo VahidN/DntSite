@@ -7,6 +7,7 @@ using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.Surveys.Entities;
 using DntSite.Web.Features.Surveys.Models;
+using DntSite.Web.Features.Surveys.ModelsMappings;
 using DntSite.Web.Features.Surveys.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 
@@ -172,8 +173,13 @@ public class VotesService(
             .Include(x => x.SurveyItems)
             .AsNoTracking();
 
-        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Survey.Id),
-            [.. GridifyMapings.GetDefaultMappings<Survey>()]);
+        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Survey.Id), [
+            .. GridifyMapings.GetDefaultMappings<Survey>(), new GridifyMap<Survey>
+            {
+                From = SurveysProfiles.SurveyTags,
+                To = entity => entity.Tags.Select(tag => tag.Name)
+            }
+        ]);
     }
 
     public Task<PagedResultModel<Survey>> GetUserVotesListAsync(int pageNumber,

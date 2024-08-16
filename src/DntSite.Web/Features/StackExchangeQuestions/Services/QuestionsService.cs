@@ -7,6 +7,7 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.Models;
+using DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
@@ -140,8 +141,13 @@ public class QuestionsService(
             .Include(blogPost => blogPost.Reactions)
             .AsNoTracking();
 
-        return query.ApplyQueryableDntGridFilterAsync(state, nameof(StackExchangeQuestion.Id),
-            [.. GridifyMapings.GetDefaultMappings<StackExchangeQuestion>()]);
+        return query.ApplyQueryableDntGridFilterAsync(state, nameof(StackExchangeQuestion.Id), [
+            .. GridifyMapings.GetDefaultMappings<StackExchangeQuestion>(), new GridifyMap<StackExchangeQuestion>
+            {
+                From = QuestionMappingsProfiles.StackExchangeQuestionTags,
+                To = entity => entity.Tags.Select(tag => tag.Name)
+            }
+        ]);
     }
 
     public Task<PagedResultModel<StackExchangeQuestion>> GetStackExchangeQuestionsByTagNameAsync(string tagName,

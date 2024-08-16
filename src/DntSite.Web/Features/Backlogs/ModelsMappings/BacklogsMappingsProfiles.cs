@@ -6,6 +6,8 @@ namespace DntSite.Web.Features.Backlogs.ModelsMappings;
 
 public class BacklogsMappingsProfiles : Profile
 {
+    public const string BacklogTags = $"{nameof(Backlog)}_Tags";
+
     public BacklogsMappingsProfiles()
     {
         MapBacklogToModel();

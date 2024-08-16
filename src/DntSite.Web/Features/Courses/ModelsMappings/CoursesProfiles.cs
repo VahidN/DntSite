@@ -6,6 +6,8 @@ namespace DntSite.Web.Features.Courses.ModelsMappings;
 
 public class CoursesProfiles : Profile
 {
+    public const string CourseTags = $"{nameof(Course)}_Tags";
+
     public CoursesProfiles()
     {
         MapCourseToModel();

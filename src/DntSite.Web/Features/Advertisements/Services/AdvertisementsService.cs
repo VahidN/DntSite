@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DntSite.Web.Features.Advertisements.Entities;
 using DntSite.Web.Features.Advertisements.Models;
+using DntSite.Web.Features.Advertisements.ModelsMappings;
 using DntSite.Web.Features.Advertisements.Services.Contracts;
 using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
@@ -271,8 +272,13 @@ public class AdvertisementsService(
             .Include(blogPost => blogPost.Reactions)
             .AsNoTracking();
 
-        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Advertisement.Id),
-            [.. GridifyMapings.GetDefaultMappings<Advertisement>()]);
+        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Advertisement.Id), [
+            .. GridifyMapings.GetDefaultMappings<Advertisement>(), new GridifyMap<Advertisement>
+            {
+                From = AdvertisementsMappingsProfiles.AdvertisementTags,
+                To = entity => entity.Tags.Select(tag => tag.Name)
+            }
+        ]);
     }
 
     public async Task UpdateAdvertisementAsync(Advertisement? advertisement,

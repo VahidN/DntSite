@@ -1,4 +1,5 @@
 ﻿@using DntSite.Web.Features.Posts.Entities
+@using DntSite.Web.Features.Posts.ModelsMappings
 @attribute [Route(PostsRoutingConstants.PageCurrentPage)]
 @attribute [Route(PostsRoutingConstants.Posts)]
 @attribute [Route(PostsRoutingConstants.PostsArchive)]
@@ -32,6 +33,9 @@
     <DntQueryBuilderProperty Title="عنوان" ValueExpression="blogPost => blogPost.Title"/>
     <DntQueryBuilderProperty Title="خلاصه محتوا" ValueExpression="blogPost => blogPost.BriefDescription"/>
     <DntQueryBuilderProperty Title="محتوا" ValueExpression="blogPost => blogPost.Body"/>
+    <DntQueryBuilderProperty Title="گروه"
+                             PropertyPath="@PostsMappingsProfiles.BlogPostTags"
+                             PropertyType="System.String"/>
     <DntQueryBuilderProperty Title="نام نویسنده" ValueExpression="blogPost => blogPost.User!.FriendlyName"/>
     <DntQueryBuilderProperty Title="تاریخ انتشار" ValueExpression="blogPost => blogPost.Audit.CreatedAtPersian">
         <QueryBuilderValueTemplate Context="rule">

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DntSite.Web.Features.Backlogs.Entities;
 using DntSite.Web.Features.Backlogs.Models;
+using DntSite.Web.Features.Backlogs.ModelsMappings;
 using DntSite.Web.Features.Backlogs.Services.Contracts;
 using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
@@ -223,8 +224,13 @@ public class BacklogsService(
             .Include(blogPost => blogPost.Reactions)
             .AsNoTracking();
 
-        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Backlog.Id),
-            [.. GridifyMapings.GetDefaultMappings<Backlog>()]);
+        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Backlog.Id), [
+            .. GridifyMapings.GetDefaultMappings<Backlog>(), new GridifyMap<Backlog>
+            {
+                From = BacklogsMappingsProfiles.BacklogTags,
+                To = entity => entity.Tags.Select(tag => tag.Name)
+            }
+        ]);
     }
 
     public Task<PagedResultModel<Backlog>> GetLastPagedBacklogsAsync(string name,

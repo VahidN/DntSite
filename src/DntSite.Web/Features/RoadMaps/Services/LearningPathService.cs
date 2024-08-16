@@ -7,6 +7,7 @@ using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.RoadMaps.Entities;
 using DntSite.Web.Features.RoadMaps.Models;
+using DntSite.Web.Features.RoadMaps.ModelsMappings;
 using DntSite.Web.Features.RoadMaps.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
@@ -136,8 +137,13 @@ public class LearningPathService(
             query = query.Where(x => !x.IsDeleted);
         }
 
-        return query.ApplyQueryableDntGridFilterAsync(state, nameof(LearningPath.Id),
-            [.. GridifyMapings.GetDefaultMappings<LearningPath>()]);
+        return query.ApplyQueryableDntGridFilterAsync(state, nameof(LearningPath.Id), [
+            .. GridifyMapings.GetDefaultMappings<LearningPath>(), new GridifyMap<LearningPath>
+            {
+                From = LearningPathMappingsProfiles.LearningPathTags,
+                To = entity => entity.Tags.Select(tag => tag.Name)
+            }
+        ]);
     }
 
     public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId)

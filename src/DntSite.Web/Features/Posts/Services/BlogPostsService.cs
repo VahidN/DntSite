@@ -12,6 +12,7 @@ using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
+using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
@@ -451,8 +452,13 @@ public class BlogPostsService(
             .Include(blogPost => blogPost.Reactions)
             .AsNoTracking();
 
-        return query.ApplyQueryableDntGridFilterAsync(state, nameof(BlogPost.Id),
-            [.. GridifyMapings.GetDefaultMappings<BlogPost>()]);
+        return query.ApplyQueryableDntGridFilterAsync(state, nameof(BlogPost.Id), [
+            .. GridifyMapings.GetDefaultMappings<BlogPost>(), new GridifyMap<BlogPost>
+            {
+                From = PostsMappingsProfiles.BlogPostTags,
+                To = entity => entity.Tags.Select(tag => tag.Name)
+            }
+        ]);
     }
 
     public async Task PerformPossibleDeleteAsync(int? deleteId)

@@ -1,4 +1,5 @@
 ﻿@using DntSite.Web.Features.RoadMaps.Entities
+@using DntSite.Web.Features.RoadMaps.ModelsMappings
 @attribute [Route(RoadMapsRoutingConstants.LearningPaths1)]
 @attribute [Route(RoadMapsRoutingConstants.LearningPaths2)]
 @attribute [Route(RoadMapsRoutingConstants.LearningPathsPageCurrentPage)]
@@ -30,6 +31,9 @@
     <DntQueryBuilderProperty Title="شماره نقشه‌ راه" ValueExpression="item => item.Id"/>
     <DntQueryBuilderProperty Title="عنوان" ValueExpression="item => item.Title"/>
     <DntQueryBuilderProperty Title="محتوا" ValueExpression="item => item.Description"/>
+    <DntQueryBuilderProperty Title="گروه"
+                             PropertyPath="@LearningPathMappingsProfiles.LearningPathTags"
+                             PropertyType="System.String"/>
     <DntQueryBuilderProperty Title="نام نویسنده" ValueExpression="item => item.User!.FriendlyName"/>
     <DntQueryBuilderProperty Title="تاریخ انتشار" ValueExpression="item => item.Audit.CreatedAtPersian">
         <QueryBuilderValueTemplate Context="rule">

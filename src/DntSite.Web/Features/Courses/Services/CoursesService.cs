@@ -5,6 +5,7 @@ using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.Models;
+using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -364,8 +365,13 @@ public class CoursesService(
             query = query.Where(x => x.IsReadyToPublish == showOnlyFinished);
         }
 
-        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Course.Id),
-            [.. GridifyMapings.GetDefaultMappings<Course>()]);
+        return query.ApplyQueryableDntGridFilterAsync(state, nameof(Course.Id), [
+            .. GridifyMapings.GetDefaultMappings<Course>(), new GridifyMap<Course>
+            {
+                From = CoursesProfiles.CourseTags,
+                To = entity => entity.Tags.Select(tag => tag.Name)
+            }
+        ]);
     }
 
     public async Task<CourseItemModel> GetCurrentCourseLastAndNextAsync(int id,
