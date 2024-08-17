@@ -1,0 +1,11 @@
+﻿@attribute [Route(CommonRoutingConstants.CatchAllPhpRequests)]
+
+<DntSitePageTitle PageTitle="خطایی رخ داده‌است"/>
+
+<DntMessageBox Type="AlertType.Info" IsVisible="true">
+    <span class="@DntBootstrapIcons.BiSignStop ms-2 me-1"></span>
+    این سایت با PHP تهیه نشده‌است!
+    <a dir="ltr" target="_blank" data-enhance-nav="false" href="https://github.com/VahidN/DntSite">
+        اطلاعات بیشتر
+    </a>
+</DntMessageBox>
