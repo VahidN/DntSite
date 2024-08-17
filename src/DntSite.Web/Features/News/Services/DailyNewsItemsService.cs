@@ -263,6 +263,8 @@ public class DailyNewsItemsService(
 
                 item.LastHttpStatusCode =
                     await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, throwOnException: true);
+
+                item.IsDeleted = item.LastHttpStatusCode == HttpStatusCode.NotFound;
             }
             catch (Exception ex)
             {
@@ -543,6 +545,8 @@ public class DailyNewsItemsService(
             item.LastHttpStatusCode =
                 await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(item.Url, throwOnException: false) ??
                 HttpStatusCode.RequestTimeout;
+
+            item.IsDeleted = item.LastHttpStatusCode == HttpStatusCode.NotFound;
         }
     }
 }
