@@ -15,9 +15,9 @@ public static class SecurityHeadersBuilder
                 builder.AddObjectSrc().Self().From(uri: "blob:");
                 builder.AddBlockAllMixedContent();
                 builder.AddImgSrc().Self().From(uri: "data:").From(uri: "blob:").From(uri: "https:");
-                builder.AddFontSrc().Self().From(uri: "https://fonts.gstatic.com");
+                builder.AddFontSrc().Self();
 
-                builder.AddStyleSrc().UnsafeInline().Self().From(uri: "https://fonts.googleapis.com");
+                builder.AddStyleSrc().UnsafeInline().Self();
 
                 builder.AddFrameAncestors().None();
                 builder.AddFrameSrc().Self();
