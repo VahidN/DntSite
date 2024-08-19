@@ -2,6 +2,7 @@ using DntSite.Web.Features.Common.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.EfConfig;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.Utils;
+using DntSite.Web.Features.UserProfiles.Services;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DntSite.Web.Features.Persistence.Interceptors;
@@ -130,7 +131,7 @@ public class AuditableEntitiesInterceptor(
         }
 
         var displayName =
-            _httpContextAccessor.HttpContext?.User.GetDisplayName(claimType: "DisplayName", defaultValue: "");
+            _httpContextAccessor.HttpContext?.User.GetDisplayName(UserRolesService.DisplayNameClaim, defaultValue: "");
 
         return !string.IsNullOrWhiteSpace(displayName) ? displayName : SharedConstants.GuestUserName;
     }

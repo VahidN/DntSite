@@ -1,8 +1,22 @@
-<DntMessageBox Type="AlertType.Info" IsVisible="true">
-    <span class="@DntBootstrapIcons.BiPeople ms-2 me-1"></span>
-    تعداد کل کاربران آنلاین (منجمله مهمان‌ها و خزنده‌ها) در طی پنج دقیقه قبل،
-    <DntToPersianNumbers Value="OnlineVisitorsService.TotalOnlineVisitorsCount"/>
-    مورد است که در بین آن‌ها
-    <DntToPersianNumbers Value="OnlineVisitorsService.OnlineSpidersCount"/>
-    عدد خزنده هستند.
-</DntMessageBox>
+<DntLoading IsLoading="@(_visitorsInfo is null)">
+    <DntMessageBox Type="AlertType.Info" IsVisible="true" ShowCloseButton="false">
+        <span class="@DntBootstrapIcons.BiPeople ms-2 me-1"></span>
+        تعداد کل کاربران آنلاین در طی ده دقیقه قبل، <span>@_visitorsInfo!.TotalOnlineVisitorsCount.ToPersianNumbers()</span> مورد است:
+        <ul>
+            <li>
+                <strong>کاربران سایت: </strong>
+                <span>@_visitorsInfo!.TotalOnlineAuthenticatedUsersCount.ToPersianNumbers()</span>
+            </li>
+            <li>
+                <strong>مهمان‌ها: </strong>
+                <span>@_visitorsInfo!.TotalOnlineGuestUsersCount.ToPersianNumbers()</span>
+
+            </li>
+            <li>
+                <strong>خزنده‌ها: </strong>
+                <span>@_visitorsInfo!.OnlineSpidersCount.ToPersianNumbers()</span>
+
+            </li>
+        </ul>
+    </DntMessageBox>
+</DntLoading>

@@ -1,4 +1,5 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -13,7 +14,8 @@ public class SiteReferrersService(
     IAppSettingsService appSettingsService,
     IHtmlHelperService htmlHelperService,
     ILogger<SiteReferrersService> logger,
-    IPasswordHasherService hasherService) : ISiteReferrersService
+    IPasswordHasherService hasherService,
+    ISitePageTitlesCacheService sitePageTitlesCacheService) : ISiteReferrersService
 {
     private readonly DbSet<SiteReferrer> _referrers = uow.DbSet<SiteReferrer>();
 
@@ -32,7 +34,10 @@ public class SiteReferrersService(
                 hasherService.GetSha1Hash(Invariant($"{referrerUrl}_{destinationUrl}").ToUpperInvariant());
 
             var siteReferrer = await FindSiteReferrerAsync(referrerHash);
-            var destinationTitle = await GetDestinationTitleAsync(destinationUrl);
+
+            var destinationTitle =
+                await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(destinationUrl, fetchUrl: true);
+
             var referrerTitle = GetReferrerTitle(referrerUrl, referrerUrlHtmlContent);
 
             if (siteReferrer is null)
@@ -100,16 +105,9 @@ public class SiteReferrersService(
     private string GetReferrerTitle(string referrerUrl, string referrerUrlHtmlContent)
     {
         var title = htmlHelperService.GetHtmlPageTitle(referrerUrlHtmlContent);
+        sitePageTitlesCacheService.AddSitePageTitle(referrerUrl, title);
 
         return string.IsNullOrWhiteSpace(title) ? referrerUrl : title;
-    }
-
-    private async Task<string> GetDestinationTitleAsync(string destinationUrl)
-    {
-        var destinationUrlHtmlContent = await baseHttpClient.HttpClient.GetStringAsync(destinationUrl);
-        var title = htmlHelperService.GetHtmlPageTitle(destinationUrlHtmlContent);
-
-        return string.IsNullOrWhiteSpace(title) ? destinationUrl : title;
     }
 
     private async Task<bool>

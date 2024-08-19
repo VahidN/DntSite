@@ -12,6 +12,8 @@ public class UserRolesService(
     IEmailsFactoryService emailsFactoryService,
     IDeviceDetectionService deviceDetectionService) : IUserRolesService
 {
+    public const string DisplayNameClaim = "DisplayName";
+
     private readonly DbSet<Role> _roles = uow.DbSet<Role>();
 
     public async Task<ClaimsPrincipal> CreateCookieClaimsAsync(User user)
@@ -21,7 +23,7 @@ public class UserRolesService(
         var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
         identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString(CultureInfo.InvariantCulture)));
         identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
-        identity.AddClaim(new Claim(type: "DisplayName", user.FriendlyName ?? ""));
+        identity.AddClaim(new Claim(DisplayNameClaim, user.FriendlyName ?? ""));
 
         // to invalidate the cookie
         identity.AddClaim(new Claim(ClaimTypes.SerialNumber, user.SerialNumber ?? ""));

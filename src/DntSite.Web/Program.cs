@@ -51,8 +51,6 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
         });
     }
 
-    app.UseOnlineVisitorsMiddleware();
-
     app.UseExceptionHandler(errorHandlingPath: "/Error", createScopeForErrors: true);
 
     var headerPolicyCollection = SecurityHeadersBuilder.GetCsp(env.IsDevelopment(), enableCrossOriginPolicy: false);
@@ -86,6 +84,7 @@ void ConfigureEndpoints(WebApplication app)
     app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
     app.UseRequestTimeouts();
 
+    app.UseOnlineVisitorsMiddleware();
     app.UseSiteReferrersMiddleware();
 }
 

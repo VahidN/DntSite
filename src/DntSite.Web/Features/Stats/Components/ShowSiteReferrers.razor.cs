@@ -3,7 +3,6 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Stats.Entities;
 using DntSite.Web.Features.Stats.RoutingConstants;
 using DntSite.Web.Features.Stats.Services.Contracts;
-using DntSite.Web.Features.UserProfiles.RoutingConstants;
 
 namespace DntSite.Web.Features.Stats.Components;
 
@@ -49,8 +48,5 @@ public partial class ShowSiteReferrers
     }
 
     private void AddBreadCrumbs()
-        => ApplicationState.BreadCrumbs.AddRange([
-            UserProfilesBreadCrumbs.UsersBirthdays, StatsBreadCrumbs.TodayVisitedUsers, StatsBreadCrumbs.SiteReferrers,
-            UserProfilesBreadCrumbs.Users
-        ]);
+        => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.OnlineUsersStatsBreadCrumbs]);
 }

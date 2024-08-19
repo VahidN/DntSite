@@ -1,30 +1,41 @@
 using System.Collections.Concurrent;
-using System.Timers;
+using DntSite.Web.Features.Common.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.Services.Contracts;
-using Timer = System.Timers.Timer;
+using DntSite.Web.Features.UserProfiles.Services;
 
 namespace DntSite.Web.Features.Stats.Services;
 
 public class OnlineVisitorsService : IOnlineVisitorsService
 {
-    private const int Interval = 5; // 5 minutes
-    private const int ReleaseInterval = Interval * 60 * 1000; // 5 minutes
-    private readonly Timer _timer = new();
+    public const int PurgeInterval = 10; // 10 minutes
+
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private readonly List<OnlineVisitorInfoModel> _currentBatch = [];
+
+    private readonly TimeSpan _interval = TimeSpan.FromSeconds(value: 7);
+    private readonly ILogger<OnlineVisitorsService> _logger;
+
+    private readonly BlockingCollection<OnlineVisitorInfoModel> _messageQueue =
+        new(new ConcurrentQueue<OnlineVisitorInfoModel>());
+
+    private readonly Task _outputTask;
+    private readonly ISitePageTitlesCacheService _sitePageTitlesCacheService;
     private readonly IUAParserService _uaParserService;
 
-    private readonly ConcurrentDictionary<string, OnlineVisitorInfoModel> _visitors = new(StringComparer.Ordinal);
+    private readonly List<OnlineVisitorInfoModel> _visitors = [];
     private bool _isDisposed;
 
-    public OnlineVisitorsService(IUAParserService uaParserService)
+    public OnlineVisitorsService(IUAParserService uaParserService,
+        ISitePageTitlesCacheService sitePageTitlesCacheService,
+        ILogger<OnlineVisitorsService> logger)
     {
         _uaParserService = uaParserService;
-        CreateTimer();
+        _sitePageTitlesCacheService = sitePageTitlesCacheService;
+        _logger = logger;
+        _outputTask = Task.Run(ProcessItemsQueueAsync);
     }
-
-    public int OnlineSpidersCount => _visitors.Select(x => x.Value).Count(x => x.IsSpider);
-
-    public int TotalOnlineVisitorsCount => _visitors.Count;
 
     public async Task UpdateStatAsync(HttpContext context)
     {
@@ -37,11 +48,25 @@ public class OnlineVisitorsService : IOnlineVisitorsService
             return;
         }
 
-        _visitors[ip] = new OnlineVisitorInfoModel
+        var ua = context.GetUserAgent() ?? "Unknown";
+        var isSpider = await _uaParserService.IsSpiderClientAsync(ua);
+        var clientInfo = await _uaParserService.GetClientInfoAsync(context);
+        var referrerUrl = context.GetReferrerUrl();
+
+        AddItemToQueue(new OnlineVisitorInfoModel
         {
+            Ip = ip,
             VisitTime = DateTime.UtcNow,
-            IsSpider = await _uaParserService.IsSpiderClientAsync(context)
-        };
+            IsSpider = isSpider,
+            UserAgent = ua,
+            ReferrerUrl = referrerUrl,
+            ReferrerUrlTitle = referrerUrl,
+            VisitedUrl = context.GetRawUrl(),
+            IsProtectedPage = context.IsProtectedRoute(),
+            RootUrl = context.GetBaseUrl(),
+            ClientInfo = clientInfo,
+            DisplayName = context.User.GetFirstUserClaimValue(UserRolesService.DisplayNameClaim)
+        });
     }
 
     public void Dispose()
@@ -50,26 +75,155 @@ public class OnlineVisitorsService : IOnlineVisitorsService
         GC.SuppressFinalize(this);
     }
 
-    private void CreateTimer()
+    public PagedResultModel<OnlineVisitorInfoModel> GetPagedOnlineVisitorsList(int pageNumber,
+        int recordsPerPage,
+        bool isSpider)
     {
-        _timer.Interval = ReleaseInterval;
-        _timer.Start();
-        _timer.Elapsed += TimerElapsed;
+        var skipRecords = pageNumber * recordsPerPage;
+
+        var query = _visitors.Where(x
+                => x.IsSpider == isSpider && x is
+                {
+                    IsStaticFileUrl: false, IsProtectedPage: false, HasMissingVisitedUrlTitle: false
+                })
+            .ToList();
+
+        var items = query.OrderByDescending(x => x.VisitTime).Skip(skipRecords).Take(recordsPerPage).ToList();
+
+        return new PagedResultModel<OnlineVisitorInfoModel>
+        {
+            TotalItems = query.Count,
+            Data = items
+        };
     }
 
-    private void TimerElapsed(object? sender, ElapsedEventArgs e)
+    public OnlineVisitorsInfoModel GetOnlineVisitorsInfo()
+        => new()
+        {
+            TotalOnlineAuthenticatedUsersCount =
+                _visitors.Where(x => !string.IsNullOrWhiteSpace(x.DisplayName) && !x.IsSpider)
+                    .DistinctBy(x => x.Ip)
+                    .Count(),
+            TotalOnlineGuestUsersCount =
+                _visitors.Where(x => string.IsNullOrWhiteSpace(x.DisplayName) && !x.IsSpider)
+                    .DistinctBy(x => x.Ip)
+                    .Count(),
+            OnlineSpidersCount = _visitors.Where(x => x.IsSpider).DistinctBy(x => x.Ip).Count(),
+            TotalOnlineVisitorsCount = _visitors.DistinctBy(x => x.Ip).Count()
+        };
+
+    private async Task ProcessItemsQueueAsync()
     {
-        if (_visitors.IsEmpty)
+        while (!_cancellationTokenSource.IsCancellationRequested)
+        {
+            while (_messageQueue.TryTake(out var message))
+            {
+                try
+                {
+                    _currentBatch.Add(message);
+                }
+                catch
+                {
+                    //cancellation token canceled or CompleteAdding called
+                }
+            }
+
+            await ProcessItemsAsync(_currentBatch, _cancellationTokenSource.Token);
+            _currentBatch.Clear();
+
+            await Task.Delay(_interval, _cancellationTokenSource.Token);
+        }
+    }
+
+    private async Task ProcessItemsAsync(List<OnlineVisitorInfoModel> items, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await AddNewItemsAsync(items, cancellationToken);
+            RemoveOldItems();
+            TryFixMissingLocalUrlsTitles();
+            TryFixMissingReferrerUrlsTitles();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, message: "ProcessItemsAsync");
+        }
+    }
+
+    private void TryFixMissingReferrerUrlsTitles()
+    {
+        if (_visitors.Count == 0)
         {
             return;
         }
 
-        var oldItems = _visitors.Where(x => x.Value.VisitTime < DateTime.UtcNow.AddMinutes(-Interval)).ToList();
-
-        foreach (var item in oldItems)
+        foreach (var visitor in _visitors.Where(visitor => visitor.HasMissingReferrerUrlTitle))
         {
-            _visitors.TryRemove(item.Key, out _);
+            visitor.ReferrerUrlTitle = _sitePageTitlesCacheService.GetPageTitle(visitor.ReferrerUrl);
         }
+    }
+
+    private void TryFixMissingLocalUrlsTitles()
+    {
+        if (_visitors.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var visitor in _visitors.Where(visitor => visitor.HasMissingVisitedUrlTitle))
+        {
+            visitor.VisitedUrlTitle = _sitePageTitlesCacheService.GetPageTitle(visitor.VisitedUrl);
+        }
+    }
+
+    private async Task AddNewItemsAsync(List<OnlineVisitorInfoModel> items, CancellationToken cancellationToken)
+    {
+        foreach (var item in items)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+
+            item.VisitedUrlTitle =
+                await _sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(item.VisitedUrl, fetchUrl: false);
+
+            _visitors.Add(item);
+        }
+    }
+
+    private void Stop()
+    {
+        _cancellationTokenSource.Cancel();
+        _messageQueue.CompleteAdding();
+
+        try
+        {
+            _outputTask.Wait(_interval);
+        }
+        catch
+        {
+            // don't throw exceptions from logger
+        }
+    }
+
+    private void AddItemToQueue(OnlineVisitorInfoModel item)
+    {
+        if (!_messageQueue.IsAddingCompleted)
+        {
+            _messageQueue.Add(item, _cancellationTokenSource.Token);
+        }
+    }
+
+    private void RemoveOldItems()
+    {
+        if (_visitors.Count == 0)
+        {
+            return;
+        }
+
+        var purgeDateTime = DateTime.UtcNow.AddMinutes(-PurgeInterval);
+        _visitors.RemoveAll(visitor => visitor.VisitTime < purgeDateTime);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -86,9 +240,9 @@ public class OnlineVisitorsService : IOnlineVisitorsService
                 return;
             }
 
-            _timer.Enabled = false;
-            _timer.Stop();
-            _timer.Dispose();
+            Stop();
+            _messageQueue.Dispose();
+            _cancellationTokenSource.Dispose();
         }
         finally
         {

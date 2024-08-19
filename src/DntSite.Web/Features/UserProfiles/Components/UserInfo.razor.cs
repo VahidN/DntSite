@@ -16,6 +16,8 @@ public partial class UserInfo
     private User? _user;
     private PagedResultModel<User>? _users;
 
+    private string PageTitle => _user?.FriendlyName ?? "کاربران";
+
     [Parameter] public string? Name { get; set; }
 
     [Parameter] public string? Filter { set; get; }
@@ -82,10 +84,7 @@ public partial class UserInfo
     }
 
     private void AddUsersBreadCrumbs()
-        => ApplicationState.BreadCrumbs.AddRange([
-            UserProfilesBreadCrumbs.UsersBirthdays, StatsBreadCrumbs.TodayVisitedUsers, StatsBreadCrumbs.SiteReferrers,
-            UserProfilesBreadCrumbs.Users
-        ]);
+        => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.OnlineUsersStatsBreadCrumbs]);
 
     private void AddUserBreadCrumbs(string name)
     {

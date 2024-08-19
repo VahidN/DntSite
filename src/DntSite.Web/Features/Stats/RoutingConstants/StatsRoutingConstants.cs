@@ -13,4 +13,11 @@ public static class StatsRoutingConstants
 
     public const string SiteReferrersDeleteDeleteId =
         $"{SiteReferrersDeleteBase}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
+
+    public const string OnlineVisitors = "/online-visitors";
+    public const string OnlineVisitorsPageCurrentPage = $"{OnlineVisitors}/page/{{CurrentPage:int}}";
+
+    public const string OnlineSpiderVisitors = $"{OnlineVisitors}/{{CategoryName}}";
+    public const string OnlineSpiderVisitorsUrl = $"{OnlineVisitors}/spider";
+    public const string OnlineSpiderVisitorsPageCurrentPage = $"{OnlineSpiderVisitors}/page/{{CurrentPage:int}}";
 }

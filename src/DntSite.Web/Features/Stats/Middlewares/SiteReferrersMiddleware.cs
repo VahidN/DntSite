@@ -63,7 +63,7 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
 
     private async Task<bool>
         ShouldSkipThisRequestAsync(HttpContext context, string referrerUrl, string destinationUrl, string rootUrl)
-        => string.IsNullOrEmpty(referrerUrl) || !referrerUrl.IsValidUrl() ||
+        => string.IsNullOrEmpty(referrerUrl) || !referrerUrl.IsValidUrl() || context.IsProtectedRoute() ||
            await _uaParserService.IsSpiderClientAsync(context) || !destinationUrl.IsReferrerToThisSite(rootUrl) ||
            referrerUrl.IsLocalReferrer(destinationUrl) || destinationUrl.IsStaticFileUrl();
 

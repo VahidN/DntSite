@@ -1,4 +1,5 @@
-using DntSite.Web.Common.BlazorSsr.Utils;
+﻿using DntSite.Web.Common.BlazorSsr.Utils;
+using DntSite.Web.Features.UserProfiles.RoutingConstants;
 
 namespace DntSite.Web.Features.Stats.RoutingConstants;
 
@@ -26,5 +27,25 @@ public static class StatsBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiSignpost
     };
 
+    public static readonly BreadCrumb OnlineVisitors = new()
+    {
+        Title = "کاربران آنلاین",
+        Url = StatsRoutingConstants.OnlineVisitors,
+        GlyphIcon = DntBootstrapIcons.BiPeopleFill
+    };
+
+    public static readonly BreadCrumb OnlineSpiders = new()
+    {
+        Title = "خزنده‌های آنلاین",
+        Url = StatsRoutingConstants.OnlineSpiderVisitorsUrl,
+        GlyphIcon = DntBootstrapIcons.BiBug
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs = [RecalculatePostsCount];
+
+    public static readonly IList<BreadCrumb> OnlineUsersStatsBreadCrumbs =
+    [
+        UserProfilesBreadCrumbs.UsersBirthdays, TodayVisitedUsers, OnlineVisitors, OnlineSpiders, SiteReferrers,
+        UserProfilesBreadCrumbs.Users
+    ];
 }
