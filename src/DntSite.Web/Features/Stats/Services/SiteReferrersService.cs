@@ -25,7 +25,7 @@ public class SiteReferrersService(
         {
             var referrerUrlHtmlContent = await baseHttpClient.HttpClient.GetStringAsync(referrerUrl);
 
-            if (!await IsValidReferrerAsync(referrerUrl, destinationUrl, referrerUrlHtmlContent))
+            if (!await IsValidReferrerAsync(referrerUrl, referrerUrlHtmlContent))
             {
                 return false;
             }
@@ -110,14 +110,10 @@ public class SiteReferrersService(
         return string.IsNullOrWhiteSpace(title) ? referrerUrl : title;
     }
 
-    private async Task<bool>
-        IsValidReferrerAsync(string referrerUrl, string destinationUrl, string referrerUrlHtmlContent)
-        => !IsSpam(referrerUrlHtmlContent, destinationUrl) &&
-           !await appSettingsService.IsBannedReferrerAsync(referrerUrl);
+    private async Task<bool> IsValidReferrerAsync(string referrerUrl, string referrerUrlHtmlContent)
+        => !IsSpam(referrerUrlHtmlContent) && !await appSettingsService.IsBannedReferrerAsync(referrerUrl);
 
-    private static bool IsSpam(string? referrerUrlHtmlContent, string destinationUrl)
+    private static bool IsSpam(string? referrerUrlHtmlContent)
         => string.IsNullOrWhiteSpace(referrerUrlHtmlContent) ||
-           referrerUrlHtmlContent.Contains(value: "<iframe", StringComparison.OrdinalIgnoreCase) ||
-           !referrerUrlHtmlContent.Contains(destinationUrl.GetHostWithoutSubDomain(),
-               StringComparison.OrdinalIgnoreCase);
+           referrerUrlHtmlContent.Contains(value: "<iframe", StringComparison.OrdinalIgnoreCase);
 }
