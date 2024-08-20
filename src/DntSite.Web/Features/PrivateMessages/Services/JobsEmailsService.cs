@@ -16,12 +16,14 @@ public class JobsEmailsService(
     {
         var emails = users.Select(x => x.EMail).ToList();
 
+        var emailSubject = $"خلاصه مطالب {yesterday.ToPersianDateTextify()}";
+
         return emailsFactoryService.SendEmailToAllUsersAsync<DailyNewsletterEmail, DailyNewsletterEmailModel>(emails,
             messageId: "DailyNewsletter", inReplyTo: "", references: "DailyNewsletter", new DailyNewsletterEmailModel
             {
                 BaseUrl = url,
-                Body = content
-            }, $"خلاصه مطالب {yesterday.ToPersianDateTextify()}", addIp: false);
+                Body = $"<b>{emailSubject}<b><br/><br/>{content}"
+            }, emailSubject, addIp: false);
     }
 
     public async Task SendNewPersianYearEmailsAsync()

@@ -8,6 +8,9 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
 {
     private const string Hr = "<hr style='border:none;border-bottom:solid #EEEEFF 1.0pt;padding:0'>";
 
+    private const string GroupStyle =
+        "style='background: grey;color: white;border-radius: 4px;padding: 2px;margin-left: 5px;'";
+
     // It runs in a http context less environment.
     public async Task<string> GetEmailContentAsync(string url, DateTime yesterday)
     {
@@ -28,7 +31,7 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
 
             if (!string.IsNullOrWhiteSpace(group))
             {
-                data.AppendFormat(CultureInfo.InvariantCulture, format: "<b>{0}</b><br/>", group);
+                data.AppendFormat(CultureInfo.InvariantCulture, format: "<b {1}>{0}</b>", group, GroupStyle);
             }
 
             data.AppendFormat(CultureInfo.InvariantCulture, format: "<a dir='{2}' href='{0}'><b>{1}</b></a><br/>",
