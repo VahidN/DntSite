@@ -224,6 +224,11 @@
                                           BadgeValueBgColor="TextBgColor.Success"
                                           IsVisible="@(User.UserStat.NumberOfLearningPaths > 0)"/>
 
+                <DntLinkedOrderedListItem Title="پرسش‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(QuestionsRoutingConstants.QuestionsWriters, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfStackExchangeQuestions"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfStackExchangeQuestions > 0)"/>
             </ul>
         </div>
         <div class="col-md-6">
@@ -269,6 +274,12 @@
                                           BadgeValue="User.UserStat.NumberOfAdvertisementComments"
                                           BadgeValueBgColor="TextBgColor.Success"
                                           IsVisible="@(User.UserStat.NumberOfAdvertisementComments > 0)"/>
+
+                <DntLinkedOrderedListItem Title="پاسخ‌های پرسش‌ها" GlyphIcon=""
+                                          Url="@GetEscapedUrl(QuestionsRoutingConstants.QuestionsComments, User.FriendlyName)"
+                                          BadgeValue="User.UserStat.NumberOfStackExchangeQuestionsComments"
+                                          BadgeValueBgColor="TextBgColor.Success"
+                                          IsVisible="@(User.UserStat.NumberOfStackExchangeQuestionsComments > 0)"/>
             </ul>
         </div>
     </div>
