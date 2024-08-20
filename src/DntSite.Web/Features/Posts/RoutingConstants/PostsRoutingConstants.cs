@@ -42,6 +42,7 @@ public static class PostsRoutingConstants
     public const string OldPostsCommentsUserFriendlyName = "/comments/{UserFriendlyName}";
 
     public const string PostsCommentsOld = "/commentsarchive";
+    public const string PostsCommentsWithIndexOld = $"{PostsCommentsOld}/index/{{CurrentPage:int}}";
 
     public const string PostsCommentsUserFriendlyNamePageCurrentPage =
         $"{PostsComments}/{{UserFriendlyName}}/page/{{CurrentPage:int}}";
