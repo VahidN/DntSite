@@ -98,19 +98,23 @@ public class OnlineVisitorsService : IOnlineVisitorsService
     }
 
     public OnlineVisitorsInfoModel GetOnlineVisitorsInfo()
-        => new()
+    {
+        var localVisitors = _visitors.ToList();
+
+        return new OnlineVisitorsInfoModel
         {
             TotalOnlineAuthenticatedUsersCount =
-                _visitors.Where(x => !string.IsNullOrWhiteSpace(x.DisplayName) && !x.IsSpider)
+                localVisitors.Where(x => !string.IsNullOrWhiteSpace(x.DisplayName) && !x.IsSpider)
                     .DistinctBy(x => x.Ip)
                     .Count(),
             TotalOnlineGuestUsersCount =
-                _visitors.Where(x => string.IsNullOrWhiteSpace(x.DisplayName) && !x.IsSpider)
+                localVisitors.Where(x => string.IsNullOrWhiteSpace(x.DisplayName) && !x.IsSpider)
                     .DistinctBy(x => x.Ip)
                     .Count(),
-            OnlineSpidersCount = _visitors.Where(x => x.IsSpider).DistinctBy(x => x.Ip).Count(),
-            TotalOnlineVisitorsCount = _visitors.DistinctBy(x => x.Ip).Count()
+            OnlineSpidersCount = localVisitors.Where(x => x.IsSpider).DistinctBy(x => x.Ip).Count(),
+            TotalOnlineVisitorsCount = localVisitors.DistinctBy(x => x.Ip).Count()
         };
+    }
 
     private async Task ProcessItemsQueueAsync()
     {

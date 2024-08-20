@@ -29,31 +29,32 @@
                     {
                         <span class="@DntBootstrapIcons.BiBug ms-2 me-1"></span>
                     }
+                    else if (!string.IsNullOrWhiteSpace(record.DisplayName))
+                    {
+                        <span class="@DntBootstrapIcons.BiPersonGear ms-2 me-1"></span>
+                        <span class="badge bg-light-subtle me-1">
+                            <a href="@GetUserUrl(record.DisplayName)">@record.DisplayName</a>
+                        </span>
+                    }
                     else
                     {
-                        <span class="@DntBootstrapIcons.BiPeople ms-2 me-1"></span>
-                    }
-
-                    <span class="badge bg-light-subtle me-1">
-                        @if (!string.IsNullOrWhiteSpace(record.DisplayName))
-                        {
-                            <a href="@GetUserUrl(record.DisplayName)">@record.DisplayName</a>
-                        }
-                        else
-                        {
+                        <span class="@DntBootstrapIcons.BiPersonExclamation ms-2 me-1"></span>
+                        <span class="badge bg-dark me-1">
                             <span>مهمان</span>
-                        }
-                    </span>
+                        </span>
+                    }
 
                     @if (record.ClientInfo is not null)
                     {
                         <span title="OS" class="badge bg-primary me-1">@record.ClientInfo.OS</span>
                         <span title="Device" class="badge bg-secondary me-1">@record.ClientInfo.Device</span>
-                        <span title="UA" class="badge bg-warning me-1">@record.ClientInfo.UA</span>
+                        <span title="@record.UserAgent" class="badge bg-warning me-1">@record.ClientInfo.UA</span>
                     }
                     else
                     {
-                        <span title="UA" dir="ltr" class="badge bg-primary me-1 text-wrap text-break">@record.UserAgent</span>
+                        <span title="@record.UserAgent" dir="ltr" class="badge bg-primary me-1 text-wrap text-break">
+                            @record.UserAgent
+                        </span>
                     }
 
                     <span dir="rtl" class="badge bg-success me-1">@record.VisitTime.ToFriendlyPersianDateTextify()</span>
