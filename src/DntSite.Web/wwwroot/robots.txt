@@ -1,8 +1,13 @@
 User-agent: *
 Sitemap: http://www.dntips.ir/Sitemap
 Disallow: /Login/
+Disallow: /login/
+Disallow: /login
 Disallow: /Register/
+Disallow: /register/
+Disallow: /register
 Disallow: /AdminMenu/
 Disallow: /send-private-message/
+Disallow: /send-private-message
 Disallow: /news/redirect/
 Disallow: /newsarchive/news/
