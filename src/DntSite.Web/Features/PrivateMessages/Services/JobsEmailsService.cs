@@ -22,7 +22,7 @@ public class JobsEmailsService(
             messageId: "DailyNewsletter", inReplyTo: "", references: "DailyNewsletter", new DailyNewsletterEmailModel
             {
                 BaseUrl = url,
-                Body = $"<b>{emailSubject}<b><br/><br/>{content}"
+                Body = $"<b>{emailSubject}</b><br/><br/>{content}"
             }, emailSubject, addIp: false);
     }
 

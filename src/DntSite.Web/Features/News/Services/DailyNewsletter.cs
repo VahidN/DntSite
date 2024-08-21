@@ -39,8 +39,10 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
 
             data.AppendFormat(CultureInfo.InvariantCulture, format: "<b>{0}</b>{1}<br/>", post.User!.FriendlyName, Hr);
 
-            data.AppendFormat(CultureInfo.InvariantCulture, format: "<div dir='{0}'>{1}</div>", post.Content.GetDir(),
-                post.Content);
+            var contentDir = post.Content.GetDir();
+            var contentAlign = string.Equals(contentDir, "ltr", StringComparison.OrdinalIgnoreCase) ? "align='left'" : "align='right'";
+            data.AppendFormat(CultureInfo.InvariantCulture, format: "<div {2} dir='{0}'>{1}</div>", contentDir,
+                post.Content, contentAlign);
 
             data.AppendFormat(CultureInfo.InvariantCulture, format: "<br>{0}<br><br>", Hr);
         }
