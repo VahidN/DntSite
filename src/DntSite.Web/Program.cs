@@ -98,13 +98,26 @@ Task RunAsync(WebApplication webApplication, IHostEnvironment env)
 {
     var runTask = webApplication.RunAsync();
 
-    if (!Debugger.IsAttached)
-    {
-        var hostEndPoints = string.Join(separator: ", ", webApplication.GetKestrelListeningAddresses());
-
-        WriteLine(Invariant(
-            $"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp[V{Assembly.GetExecutingAssembly().GetBuildDateTime()}].RunAsync() with IsDevelopment:{env.IsDevelopment()} @ {hostEndPoints}"));
-    }
+    LogStartupMessage();
 
     return runTask;
+
+    void LogStartupMessage()
+    {
+        if (Debugger.IsAttached)
+        {
+            return;
+        }
+
+        var hostEndPoints = string.Join(separator: ", ", webApplication.GetKestrelListeningAddresses());
+
+        var startupMessage = Invariant(
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp[V{Assembly.GetExecutingAssembly().GetBuildDateTime()}].RunAsync() with IsDevelopment:{env.IsDevelopment()} @ {hostEndPoints}");
+
+        webApplication.Services.GetRequiredService<ILoggerFactory>()
+            .CreateLogger(nameof(Program))
+            .LogWarning(message: "{Message}", startupMessage);
+
+        WriteLine(startupMessage);
+    }
 }
