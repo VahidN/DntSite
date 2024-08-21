@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Projects.Entities;
+﻿using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.RssFeeds.Models;
 
 namespace DntSite.Web.Features.RssFeeds.Services.Contracts;
@@ -7,59 +8,145 @@ public interface IFeedsService : IScopedService
 {
     Task<WhatsNewFeedChannel> GetLatestChangesAsync(int take = 30);
 
-    Task<WhatsNewFeedChannel> GetBacklogsAsync();
+    Task<WhatsNewFeedChannel> GetBacklogsAsync(int pageNumber = 0,
+        int? userId = null,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false,
+        bool isNewItems = false,
+        bool isDone = false,
+        bool isInProgress = false);
 
-    Task<WhatsNewFeedChannel> GetQuestionsFeedItemsAsync();
+    Task<WhatsNewFeedChannel> GetQuestionsFeedItemsAsync(int pageNumber = 0,
+        int? userId = null,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false,
+        bool isNewItems = false,
+        bool isDone = false);
 
-    Task<WhatsNewFeedChannel> GetQuestionsCommentsFeedItemsAsync();
+    Task<WhatsNewFeedChannel> GetQuestionsCommentsFeedItemsAsync(int pageNumber = 0,
+        int recordsPerPage = 8,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<WhatsNewFeedChannel> GetLearningPathsAsync();
+    Task<WhatsNewFeedChannel> GetLearningPathsAsync(int pageNumber = 0,
+        int? userId = null,
+        int recordsPerPage = 15,
+        bool showAll = false,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
     Task<WhatsNewFeedChannel> GetAllCoursesTopicsAsync();
 
-    Task<WhatsNewFeedChannel> GetAllCoursesAsync();
+    Task<WhatsNewFeedChannel> GetAllCoursesAsync(int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool onlyActive = true,
+        bool showOnlyFinished = true,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<WhatsNewFeedChannel> GetAllVotesAsync();
+    Task<WhatsNewFeedChannel> GetAllVotesAsync(int pageNumber = 0,
+        int recordsPerPage = 20,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<WhatsNewFeedChannel> GetAllAdvertisementsAsync();
+    Task<WhatsNewFeedChannel> GetAllAdvertisementsAsync(int pageNumber = 0,
+        int recordsPerPage = 20,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
     Task<WhatsNewFeedChannel> GetAllDraftsAsync();
 
-    Task<WhatsNewFeedChannel> GetProjectsNewsAsync();
+    Task<WhatsNewFeedChannel> GetProjectsNewsAsync(int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<WhatsNewFeedChannel> GetProjectsFilesAsync();
+    Task<WhatsNewFeedChannel> GetProjectsFilesAsync(int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<WhatsNewFeedChannel> GetProjectsIssuesAsync();
+    Task<WhatsNewFeedChannel> GetProjectsIssuesAsync(int pageNumber = 0,
+        int recordsPerPage = 8,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<WhatsNewFeedChannel> GetProjectsIssuesRepliesAsync();
+    Task<WhatsNewFeedChannel> GetProjectsIssuesRepliesAsync(int count = 15, bool showDeletedItems = false);
 
-    Task<WhatsNewFeedChannel> GetVotesRepliesAsync();
+    Task<WhatsNewFeedChannel> GetVotesRepliesAsync(int count = 15, bool showDeletedItems = false);
 
-    Task<WhatsNewFeedChannel> GetAdvertisementCommentsAsync();
+    Task<WhatsNewFeedChannel> GetAdvertisementCommentsAsync(int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false);
 
-    Task<WhatsNewFeedChannel> GetProjectsFaqsAsync();
+    Task<WhatsNewFeedChannel> GetProjectsFaqsAsync(int pageNumber = 0,
+        int recordsPerPage = 10,
+        bool showDeletedItems = false);
 
-    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? id);
+    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? projectId,
+        int pageNumber = 0,
+        int recordsPerPage = 10,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFilesAsync(int? id);
+    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFilesAsync(int? projectId,
+        int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesAsync(int? id);
+    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesAsync(int? projectId,
+        int pageNumber = 0,
+        int recordsPerPage = 8,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? id);
+    Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? projectId,
+        int count = 15,
+        bool showDeletedItems = false);
 
-    Task<WhatsNewFeedChannel> GetPostsAsync();
+    Task<WhatsNewFeedChannel> GetPostsAsync(int count = 15, bool showDeletedItems = false);
 
-    Task<WhatsNewFeedChannel> GetCommentsAsync();
+    Task<WhatsNewFeedChannel> GetCommentsAsync(int count = 15, bool showDeletedItems = false);
 
-    Task<WhatsNewFeedChannel> GetNewsAsync();
+    Task<WhatsNewFeedChannel> GetNewsAsync(int count = 15, bool showDeletedItems = false);
 
-    Task<WhatsNewFeedChannel> GetTagAsync(string id);
+    Task<WhatsNewFeedChannel> GetTagAsync(string tag,
+        int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<WhatsNewFeedChannel> GetAuthorAsync(string id);
+    Task<WhatsNewFeedChannel> GetAuthorAsync(string authorName,
+        int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<WhatsNewFeedChannel> GetNewsCommentsAsync();
+    Task<WhatsNewFeedChannel> GetNewsCommentsAsync(int count = 15, bool showDeletedItems = false);
 
-    Task<WhatsNewFeedChannel> GetNewsAuthorAsync(string id);
+    Task<WhatsNewFeedChannel> GetNewsAuthorAsync(string name,
+        int pageNumber = 0,
+        int recordsPerPage = 20,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync();
+    Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync(int count = 15, bool onlyActives = true);
 }

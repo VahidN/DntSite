@@ -4,6 +4,7 @@ using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Backlogs.RoutingConstants;
 using DntSite.Web.Features.Backlogs.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Courses.RoutingConstants;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.News.RoutingConstants;
@@ -82,10 +83,14 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetQuestionsCommentsFeedItemsAsync()
+    public async Task<WhatsNewFeedChannel> GetQuestionsCommentsFeedItemsAsync(int pageNumber = 0,
+        int recordsPerPage = 8,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var list =
-            await questionsCommentsService.GetLastPagedStackExchangeQuestionCommentsAsNoTrackingAsync(pageNumber: 0);
+        var list = await questionsCommentsService.GetLastPagedStackExchangeQuestionCommentsAsNoTrackingAsync(pageNumber,
+            recordsPerPage, showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -111,9 +116,18 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetBacklogsAsync()
+    public async Task<WhatsNewFeedChannel> GetBacklogsAsync(int pageNumber = 0,
+        int? userId = null,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false,
+        bool isNewItems = false,
+        bool isDone = false,
+        bool isInProgress = false)
     {
-        var list = await backlogsService.GetBacklogsAsync(pageNumber: 0);
+        var list = await backlogsService.GetBacklogsAsync(pageNumber, userId, recordsPerPage, showDeletedItems,
+            pagerSortBy, isAscending, isNewItems, isDone, isInProgress);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -139,9 +153,17 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetQuestionsFeedItemsAsync()
+    public async Task<WhatsNewFeedChannel> GetQuestionsFeedItemsAsync(int pageNumber = 0,
+        int? userId = null,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false,
+        bool isNewItems = false,
+        bool isDone = false)
     {
-        var list = await stackExchangeService.GetStackExchangeQuestionsAsync(pageNumber: 0);
+        var list = await stackExchangeService.GetStackExchangeQuestionsAsync(pageNumber, userId, recordsPerPage,
+            showDeletedItems, pagerSortBy, isAscending, isNewItems, isDone);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -167,9 +189,16 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetLearningPathsAsync()
+    public async Task<WhatsNewFeedChannel> GetLearningPathsAsync(int pageNumber = 0,
+        int? userId = null,
+        int recordsPerPage = 15,
+        bool showAll = false,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var list = await learningPathService.GetLearningPathsAsync(pageNumber: 0);
+        var list = await learningPathService.GetLearningPathsAsync(pageNumber, userId, recordsPerPage, showAll,
+            showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -223,9 +252,15 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAllCoursesAsync()
+    public async Task<WhatsNewFeedChannel> GetAllCoursesAsync(int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool onlyActive = true,
+        bool showOnlyFinished = true,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var list = await coursesService.GetPagedCourseItemsIncludeUserAndTagsAsync(pageNumber: 0);
+        var list = await coursesService.GetPagedCourseItemsIncludeUserAndTagsAsync(pageNumber, recordsPerPage,
+            onlyActive, showOnlyFinished, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -251,9 +286,14 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAllVotesAsync()
+    public async Task<WhatsNewFeedChannel> GetAllVotesAsync(int pageNumber = 0,
+        int recordsPerPage = 20,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var list = await votesService.GetVotesListAsync(pageNumber: 0, recordsPerPage: 20);
+        var list = await votesService.GetVotesListAsync(pageNumber, recordsPerPage, showDeletedItems, pagerSortBy,
+            isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -282,9 +322,14 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAllAdvertisementsAsync()
+    public async Task<WhatsNewFeedChannel> GetAllAdvertisementsAsync(int pageNumber = 0,
+        int recordsPerPage = 20,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var list = await advertisementsService.GetAnnouncementsListAsync(pageNumber: 0, recordsPerPage: 20);
+        var list = await advertisementsService.GetAnnouncementsListAsync(pageNumber, recordsPerPage, showDeletedItems,
+            pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -336,9 +381,15 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsNewsAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsNewsAsync(int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var list = await projectsService.GetPagedProjectItemsIncludeUserAndTagsAsync(pageNumber: 0);
+        var list = await projectsService.GetPagedProjectItemsIncludeUserAndTagsAsync(pageNumber, recordsPerPage,
+            showDeletedItems, pagerSortBy, isAscending);
+
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = list.Data.Select(item => new WhatsNewItemModel
@@ -363,9 +414,15 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsFilesAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsFilesAsync(int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var list = await projectReleases.GetAllProjectsReleasesIncludeProjectsAsync(pageNumber: 0);
+        var list = await projectReleases.GetAllProjectsReleasesIncludeProjectsAsync(pageNumber, recordsPerPage,
+            showDeletedItems, pagerSortBy, isAscending);
+
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = list.Data.Select(item => new WhatsNewItemModel
@@ -390,9 +447,15 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsIssuesAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsIssuesAsync(int pageNumber = 0,
+        int recordsPerPage = 8,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var list = await projectIssuesService.GetLastPagedAllProjectsIssuesAsNoTrackingAsync(pageNumber: 0);
+        var list = await projectIssuesService.GetLastPagedAllProjectsIssuesAsNoTrackingAsync(pageNumber, recordsPerPage,
+            showDeletedItems, pagerSortBy, isAscending);
+
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = list.Data.Select(item => new WhatsNewItemModel
@@ -417,9 +480,10 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsIssuesRepliesAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsIssuesRepliesAsync(int count = 15, bool showDeletedItems = false)
     {
-        var list = await projectIssueCommentsService.GetLastIssueCommentsIncludeBlogPostAndUserAsync(count: 15);
+        var list = await projectIssueCommentsService.GetLastIssueCommentsIncludeBlogPostAndUserAsync(count,
+            showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -445,9 +509,9 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetVotesRepliesAsync()
+    public async Task<WhatsNewFeedChannel> GetVotesRepliesAsync(int count = 15, bool showDeletedItems = false)
     {
-        var list = await voteCommentsService.GetLastVoteCommentsIncludeBlogPostAndUserAsync(count: 15);
+        var list = await voteCommentsService.GetLastVoteCommentsIncludeBlogPostAndUserAsync(count, showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -473,10 +537,12 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAdvertisementCommentsAsync()
+    public async Task<WhatsNewFeedChannel> GetAdvertisementCommentsAsync(int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false)
     {
-        var list = await advertisementCommentsService.GetLastPagedAdvertisementCommentsAsNoTrackingAsync(pageNumber: 0,
-            recordsPerPage: 15);
+        var list = await advertisementCommentsService.GetLastPagedAdvertisementCommentsAsNoTrackingAsync(pageNumber,
+            recordsPerPage, showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -502,9 +568,12 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsFaqsAsync()
+    public async Task<WhatsNewFeedChannel> GetProjectsFaqsAsync(int pageNumber = 0,
+        int recordsPerPage = 10,
+        bool showDeletedItems = false)
     {
-        var list = await projectFaqsService.GetAllLastPagedProjectFaqsAsync();
+        var list = await projectFaqsService.GetAllLastPagedProjectFaqsAsync(pageNumber, recordsPerPage,
+            showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -530,21 +599,27 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? id)
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? projectId,
+        int pageNumber = 0,
+        int recordsPerPage = 10,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        if (id is null)
+        if (projectId is null)
         {
             return (null, null);
         }
 
-        var project = await projectsService.FindProjectAsync(id.Value);
+        var project = await projectsService.FindProjectAsync(projectId.Value);
 
         if (project is null)
         {
             return (null, null);
         }
 
-        var list = await projectFaqsService.GetLastPagedProjectFaqsAsync(id.Value);
+        var list = await projectFaqsService.GetLastPagedProjectFaqsAsync(projectId.Value, pageNumber, recordsPerPage,
+            showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -575,21 +650,27 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFilesAsync(int? id)
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFilesAsync(int? projectId,
+        int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        if (id is null)
+        if (projectId is null)
         {
             return (null, null);
         }
 
-        var project = await projectsService.FindProjectAsync(id.Value);
+        var project = await projectsService.FindProjectAsync(projectId.Value);
 
         if (project is null)
         {
             return (null, null);
         }
 
-        var list = await projectReleases.GetAllProjectReleasesAsync(id.Value, pageNumber: 0);
+        var list = await projectReleases.GetAllProjectReleasesAsync(projectId.Value, pageNumber, recordsPerPage,
+            showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -620,21 +701,27 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesAsync(int? id)
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesAsync(int? projectId,
+        int pageNumber = 0,
+        int recordsPerPage = 8,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        if (id is null)
+        if (projectId is null)
         {
             return (null, null);
         }
 
-        var project = await projectsService.FindProjectAsync(id.Value);
+        var project = await projectsService.FindProjectAsync(projectId.Value);
 
         if (project is null)
         {
             return (null, null);
         }
 
-        var list = await projectIssuesService.GetLastPagedProjectIssuesAsNoTrackingAsync(id.Value, pageNumber: 0);
+        var list = await projectIssuesService.GetLastPagedProjectIssuesAsNoTrackingAsync(projectId.Value, pageNumber,
+            recordsPerPage, showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -665,22 +752,25 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? id)
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? projectId,
+        int count = 15,
+        bool showDeletedItems = false)
     {
-        if (!id.HasValue)
+        if (!projectId.HasValue)
         {
             return (null, null);
         }
 
-        var project = await projectsService.FindProjectAsync(id.Value);
+        var project = await projectsService.FindProjectAsync(projectId.Value);
 
         if (project is null)
         {
             return (null, null);
         }
 
-        var list = await projectIssueCommentsService.GetLastProjectIssueCommentsIncludeBlogPostAndUserAsync(id.Value,
-            count: 15);
+        var list =
+            await projectIssueCommentsService.GetLastProjectIssueCommentsIncludeBlogPostAndUserAsync(projectId.Value,
+                count, showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -696,7 +786,7 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{id.Value}/{item.ParentId}#comment-{item.Id}")),
+                    $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectId.Value}/{item.ParentId}#comment-{item.Id}")),
                 Categories = ["پاسخ ‌به بازخورد‌های پروژه‌ها"]
             })
             .ToList();
@@ -712,9 +802,9 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<WhatsNewFeedChannel> GetPostsAsync()
+    public async Task<WhatsNewFeedChannel> GetPostsAsync(int count = 15, bool showDeletedItems = false)
     {
-        var items = await blogPostsService.GetLastBlogPostsIncludeAuthorTagsAsync(count: 15);
+        var items = await blogPostsService.GetLastBlogPostsIncludeAuthorTagsAsync(count, showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -741,9 +831,9 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetCommentsAsync()
+    public async Task<WhatsNewFeedChannel> GetCommentsAsync(int count = 15, bool showDeletedItems = false)
     {
-        var items = await blogCommentsService.GetLastBlogCommentsIncludeBlogPostAndUserAsync(count: 15);
+        var items = await blogCommentsService.GetLastBlogCommentsIncludeBlogPostAndUserAsync(count, showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -770,9 +860,9 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetNewsAsync()
+    public async Task<WhatsNewFeedChannel> GetNewsAsync(int count = 15, bool showDeletedItems = false)
     {
-        var list = await dailyNewsItemsService.GetLastDailyNewsItemsIncludeUserAsync(count: 15);
+        var list = await dailyNewsItemsService.GetLastDailyNewsItemsIncludeUserAsync(count, showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -798,9 +888,15 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetTagAsync(string id)
+    public async Task<WhatsNewFeedChannel> GetTagAsync(string tag,
+        int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var items = await blogPostsService.GetLastBlogPostsByTagIncludeAuthorAsync(id, pageNumber: 0);
+        var items = await blogPostsService.GetLastBlogPostsByTagIncludeAuthorAsync(tag, pageNumber, recordsPerPage,
+            showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -821,14 +917,20 @@ public class FeedsService(
             })
             .ToList();
 
-        var title = string.Format(CultureInfo.InvariantCulture, format: "فید گروه {0}", id);
+        var title = string.Format(CultureInfo.InvariantCulture, format: "فید گروه {0}", tag);
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAuthorAsync(string id)
+    public async Task<WhatsNewFeedChannel> GetAuthorAsync(string authorName,
+        int pageNumber = 0,
+        int recordsPerPage = 15,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var items = await blogPostsService.GetLastBlogPostsByAuthorIncludeAuthorTagsAsync(id, pageNumber: 0);
+        var items = await blogPostsService.GetLastBlogPostsByAuthorIncludeAuthorTagsAsync(authorName, pageNumber,
+            recordsPerPage, showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -849,14 +951,16 @@ public class FeedsService(
             })
             .ToList();
 
-        var title = string.Format(CultureInfo.InvariantCulture, format: "فید مطالب {0}", id);
+        var title = string.Format(CultureInfo.InvariantCulture, format: "فید مطالب {0}", authorName);
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetNewsCommentsAsync()
+    public async Task<WhatsNewFeedChannel> GetNewsCommentsAsync(int count = 15, bool showDeletedItems = false)
     {
-        var items = await dailyNewsItemCommentsService.GetLastBlogNewsCommentsIncludeBlogPostAndUserAsync(count: 15);
+        var items =
+            await dailyNewsItemCommentsService.GetLastBlogNewsCommentsIncludeBlogPostAndUserAsync(count,
+                showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -882,10 +986,15 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetNewsAuthorAsync(string id)
+    public async Task<WhatsNewFeedChannel> GetNewsAuthorAsync(string name,
+        int pageNumber = 0,
+        int recordsPerPage = 20,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false)
     {
-        var items = await dailyNewsItemsService.GetLastPagedDailyNewsItemsIncludeUserAndTagAsync(id, pageNumber: 0,
-            recordsPerPage: 20);
+        var items = await dailyNewsItemsService.GetLastPagedDailyNewsItemsIncludeUserAndTagAsync(name, pageNumber,
+            recordsPerPage, showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
 
@@ -905,14 +1014,14 @@ public class FeedsService(
             })
             .ToList();
 
-        var title = string.Format(CultureInfo.InvariantCulture, format: "فید اشتراک‌های {0}", id);
+        var title = string.Format(CultureInfo.InvariantCulture, format: "فید اشتراک‌های {0}", name);
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync()
+    public async Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync(int count = 15, bool onlyActives = true)
     {
-        var list = await courseTopicCommentsService.GetLastTopicCommentsIncludePostAndUserAsync(count: 15);
+        var list = await courseTopicCommentsService.GetLastTopicCommentsIncludePostAndUserAsync(count, onlyActives);
 
         var appSetting = await GetAppSettingsAsync();
 
