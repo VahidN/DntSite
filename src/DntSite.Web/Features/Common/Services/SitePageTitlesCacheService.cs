@@ -1,13 +1,12 @@
+using System.Collections.Concurrent;
 using DntSite.Web.Features.Common.Services.Contracts;
 
 namespace DntSite.Web.Features.Common.Services;
 
-public class SitePageTitlesCacheService(
-    ICacheService cacheService,
-    BaseHttpClient baseHttpClient,
-    ILogger<SitePageTitlesCacheService> logger) : ISitePageTitlesCacheService
+public class SitePageTitlesCacheService(BaseHttpClient baseHttpClient, ILogger<SitePageTitlesCacheService> logger)
+    : ISitePageTitlesCacheService
 {
-    private readonly DateTimeOffset _expiration = DateTimeOffset.UtcNow.AddDays(days: 1);
+    private readonly ConcurrentDictionary<string, string> _urlTitles = new(StringComparer.OrdinalIgnoreCase);
 
     public async Task<string> GetOrAddSitePageTitleAsync(string? url, bool fetchUrl)
     {
@@ -20,13 +19,13 @@ public class SitePageTitlesCacheService(
 
         try
         {
-            if (cacheService.TryGetValue(cacheKey, out string? title) && !string.IsNullOrWhiteSpace(title))
+            if (_urlTitles.TryGetValue(cacheKey, out var title) && !string.IsNullOrWhiteSpace(title))
             {
                 return title;
             }
 
             title = fetchUrl ? await GetDestinationTitleAsync(url) : url;
-            cacheService.Add(cacheKey, title, _expiration);
+            _urlTitles[cacheKey] = title;
 
             return title;
         }
@@ -34,7 +33,7 @@ public class SitePageTitlesCacheService(
         {
             logger.LogError(ex, message: "GetOrAddSitePageTitleAsync({URL})", url);
 
-            cacheService.Add(cacheKey, url, _expiration);
+            _urlTitles[cacheKey] = url;
 
             return url;
         }
@@ -48,7 +47,7 @@ public class SitePageTitlesCacheService(
         }
 
         var cacheKey = GetCacheKey(url);
-        cacheService.Add(cacheKey, title, _expiration);
+        _urlTitles[cacheKey] = title;
     }
 
     public string GetPageTitle(string? url)
@@ -60,7 +59,7 @@ public class SitePageTitlesCacheService(
 
         var cacheKey = GetCacheKey(url);
 
-        if (cacheService.TryGetValue(cacheKey, out string? title) && !string.IsNullOrWhiteSpace(title))
+        if (_urlTitles.TryGetValue(cacheKey, out var title) && !string.IsNullOrWhiteSpace(title))
         {
             return title;
         }
@@ -68,7 +67,7 @@ public class SitePageTitlesCacheService(
         return url;
     }
 
-    private static string GetCacheKey(string url) => $"DNT_URL_{url.ToXxHash64():X}";
+    private static string GetCacheKey(string url) => url.ToXxHash64(prefix: "DNT_URL");
 
     private async Task<string> GetDestinationTitleAsync(string destinationUrl)
     {
