@@ -9,7 +9,7 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
     private const string Hr = "<hr style='border:none;border-bottom:solid #EEEEFF 1.0pt;padding:0'>";
 
     private const string GroupStyle =
-        "style='background: grey;color: white;border-radius: 4px;padding: 2px;margin-left: 5px;'";
+        "style='background: lightslategray;color: white;border-radius: 4px;padding: 2px;margin-left: 5px;'";
 
     // It runs in a http context less environment.
     public async Task<string> GetEmailContentAsync(string url, DateTime yesterday)
