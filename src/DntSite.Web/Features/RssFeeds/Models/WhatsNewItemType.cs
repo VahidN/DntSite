@@ -22,7 +22,7 @@ public sealed class WhatsNewItemType
 
     public static WhatsNewItemType AllAdvertisements => new(value: "آگهی‌ها");
 
-    public static WhatsNewItemType AllDrafts => new(value: "مقالات آتی");
+    public static WhatsNewItemType AllDrafts => new(value: "به زودی");
 
     public static WhatsNewItemType ProjectsNews => new(value: "پروژه‌ها");
 
