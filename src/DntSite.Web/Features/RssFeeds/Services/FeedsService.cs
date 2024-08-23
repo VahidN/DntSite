@@ -107,7 +107,9 @@ public class FeedsService(
                 Title = $"پاسخ به پرسش: {item.Parent.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = ["پاسخ به پرسش‌ها"]
+                Categories = [WhatsNewItemType.QuestionsComments.Value],
+                ItemType = WhatsNewItemType.QuestionsComments,
+                Id = item.Id
             })
             .ToList();
 
@@ -144,7 +146,9 @@ public class FeedsService(
                 Title = $"پیشنهاد: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     BacklogsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = ["پیشنهادها"]
+                Categories = [WhatsNewItemType.Backlogs.Value],
+                ItemType = WhatsNewItemType.Backlogs,
+                Id = item.Id
             })
             .ToList();
 
@@ -180,7 +184,9 @@ public class FeedsService(
                 Title = $"پرسش: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     QuestionsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = ["پرسش‌ها"]
+                Categories = [WhatsNewItemType.Questions.Value],
+                ItemType = WhatsNewItemType.Questions,
+                Id = item.Id
             })
             .ToList();
 
@@ -215,7 +221,9 @@ public class FeedsService(
                 Title = $"مسیر راه: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     RoadMapsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = ["مسیرراه‌ها"]
+                Categories = [WhatsNewItemType.LearningPaths.Value],
+                ItemType = WhatsNewItemType.LearningPaths,
+                Id = item.Id
             })
             .ToList();
 
@@ -243,7 +251,9 @@ public class FeedsService(
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{item.CourseId}/{item.DisplayId:D}")),
-                Categories = ["مطالب دوره‌ها"]
+                Categories = [WhatsNewItemType.AllCoursesTopics.Value],
+                ItemType = WhatsNewItemType.AllCoursesTopics,
+                Id = item.Id
             })
             .ToList();
 
@@ -277,7 +287,9 @@ public class FeedsService(
                 Title = $"دوره جدید: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     CoursesRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = ["دوره‌ها"]
+                Categories = [WhatsNewItemType.AllCourses.Value],
+                ItemType = WhatsNewItemType.AllCourses,
+                Id = item.Id
             })
             .ToList();
 
@@ -313,7 +325,9 @@ public class FeedsService(
                 Title = $"نظر سنجی: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     SurveysRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = ["نظرسنجی‌ها"]
+                Categories = [WhatsNewItemType.AllVotes.Value],
+                ItemType = WhatsNewItemType.AllVotes,
+                Id = item.Id
             })
             .ToList();
 
@@ -346,7 +360,9 @@ public class FeedsService(
                 Title = $"آگهی: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     AdvertisementsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = ["آگهی‌ها"]
+                Categories = [WhatsNewItemType.AllAdvertisements.Value],
+                ItemType = WhatsNewItemType.AllAdvertisements,
+                Id = item.Id
             })
             .ToList();
 
@@ -372,7 +388,9 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = $"به زودی: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(PostsRoutingConstants.ComingSoon2),
-                Categories = ["مقالات آتی"]
+                Categories = [WhatsNewItemType.AllDrafts.Value],
+                ItemType = WhatsNewItemType.AllDrafts,
+                Id = item.Id
             })
             .ToList();
 
@@ -405,7 +423,9 @@ public class FeedsService(
                 Title = $"پروژه جدید: {item.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     ProjectsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = ["پروژه‌ها"]
+                Categories = [WhatsNewItemType.ProjectsNews.Value],
+                ItemType = WhatsNewItemType.ProjectsNews,
+                Id = item.Id
             })
             .ToList();
 
@@ -438,7 +458,9 @@ public class FeedsService(
                 Title = $"فایل جدید: {item.FileName}",
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
-                Categories = ["فایل‌های پروژه‌ها"]
+                Categories = [WhatsNewItemType.ProjectsFiles.Value],
+                ItemType = WhatsNewItemType.ProjectsFiles,
+                Id = item.Id
             })
             .ToList();
 
@@ -471,7 +493,9 @@ public class FeedsService(
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
-                Categories = ["بازخوردهای پروژه‌ها"]
+                Categories = [WhatsNewItemType.ProjectsIssues.Value],
+                ItemType = WhatsNewItemType.ProjectsIssues,
+                Id = item.Id
             })
             .ToList();
 
@@ -500,7 +524,9 @@ public class FeedsService(
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.Parent.ProjectId}/{item.ParentId}#comment-{item.Id}")),
-                Categories = ["پاسخ به بازخورد‌های پروژه‌ها"]
+                Categories = [WhatsNewItemType.ProjectsIssuesReplies.Value],
+                ItemType = WhatsNewItemType.ProjectsIssuesReplies,
+                Id = item.Id
             })
             .ToList();
 
@@ -528,7 +554,9 @@ public class FeedsService(
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = ["نظرات نظرسنجی‌ها"]
+                Categories = [WhatsNewItemType.VotesReplies.Value],
+                ItemType = WhatsNewItemType.VotesReplies,
+                Id = item.Id
             })
             .ToList();
 
@@ -559,7 +587,9 @@ public class FeedsService(
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{AdvertisementsRoutingConstants.AdvertisementsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = ["نظرات آگهی‌ها"]
+                Categories = [WhatsNewItemType.AdvertisementComments.Value],
+                ItemType = WhatsNewItemType.AdvertisementComments,
+                Id = item.Id
             })
             .ToList();
 
@@ -590,7 +620,9 @@ public class FeedsService(
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
-                Categories = ["راهنماهای پروژه‌ها"]
+                Categories = [WhatsNewItemType.ProjectsFaqs.Value],
+                ItemType = WhatsNewItemType.ProjectsFaqs,
+                Id = item.Id
             })
             .ToList();
 
@@ -636,7 +668,9 @@ public class FeedsService(
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
-                Categories = ["راهنماهای پروژه‌ها"]
+                Categories = [WhatsNewItemType.ProjectFaqs.Value],
+                ItemType = WhatsNewItemType.ProjectFaqs,
+                Id = item.Id
             })
             .ToList();
 
@@ -687,7 +721,9 @@ public class FeedsService(
                 Title = item.FileName,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
-                Categories = ["فایل‌های پروژه‌ها"]
+                Categories = [WhatsNewItemType.ProjectFiles.Value],
+                ItemType = WhatsNewItemType.ProjectFiles,
+                Id = item.Id
             })
             .ToList();
 
@@ -738,7 +774,9 @@ public class FeedsService(
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
-                Categories = ["بازخورد‌های پروژه‌ها"]
+                Categories = [WhatsNewItemType.ProjectIssues.Value],
+                ItemType = WhatsNewItemType.ProjectIssues,
+                Id = item.Id
             })
             .ToList();
 
@@ -787,7 +825,9 @@ public class FeedsService(
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectId.Value}/{item.ParentId}#comment-{item.Id}")),
-                Categories = ["پاسخ ‌به بازخورد‌های پروژه‌ها"]
+                Categories = [WhatsNewItemType.ProjectIssuesReplies.Value],
+                ItemType = WhatsNewItemType.ProjectIssuesReplies,
+                Id = item.Id
             })
             .ToList();
 
@@ -822,7 +862,9 @@ public class FeedsService(
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     PostsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = ["مطالب"]
+                Categories = [WhatsNewItemType.Posts.Value],
+                ItemType = WhatsNewItemType.Posts,
+                Id = item.Id
             })
             .ToList();
 
@@ -851,7 +893,9 @@ public class FeedsService(
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{PostsRoutingConstants.PostBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = ["نظرات مطالب"]
+                Categories = [WhatsNewItemType.Comments.Value],
+                ItemType = WhatsNewItemType.Comments,
+                Id = item.Id
             })
             .ToList();
 
@@ -879,7 +923,9 @@ public class FeedsService(
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     NewsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = ["اشتراک‌ها"]
+                Categories = [WhatsNewItemType.News.Value],
+                ItemType = WhatsNewItemType.News,
+                Id = item.Id
             })
             .ToList();
 
@@ -913,7 +959,9 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}")),
-                Categories = ["گروه‌ها"]
+                Categories = [WhatsNewItemType.Tag.Value],
+                ItemType = WhatsNewItemType.Tag,
+                Id = item.Id
             })
             .ToList();
 
@@ -947,7 +995,9 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}")),
-                Categories = ["نویسنده‌ها"]
+                Categories = [WhatsNewItemType.Author.Value],
+                ItemType = WhatsNewItemType.Author,
+                Id = item.Id
             })
             .ToList();
 
@@ -977,7 +1027,9 @@ public class FeedsService(
                 Title = string.Format(CultureInfo.InvariantCulture, format: "پاسخ به: {0}", item.Parent.Title),
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = ["نظرات اشتراک‌ها"]
+                Categories = [WhatsNewItemType.NewsComments.Value],
+                ItemType = WhatsNewItemType.NewsComments,
+                Id = item.Id
             })
             .ToList();
 
@@ -1010,7 +1062,9 @@ public class FeedsService(
                         : item.Audit.CreatedAt),
                 Title = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.Id}")),
-                Categories = ["اشتراک‌های اشخاص"]
+                Categories = [WhatsNewItemType.NewsAuthor.Value],
+                ItemType = WhatsNewItemType.NewsAuthor,
+                Id = item.Id
             })
             .ToList();
 
@@ -1038,7 +1092,9 @@ public class FeedsService(
                 Title = $"پاسخ به: {item.Parent.Title}",
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{CoursesRoutingConstants.CoursesTopicBase}/{item.Parent.CourseId}/{item.Parent.DisplayId:D}#comment-{item.Id}")),
-                Categories = ["بازخوردهای دوره‌ها"]
+                Categories = [WhatsNewItemType.CourseTopicsReplies.Value],
+                ItemType = WhatsNewItemType.CourseTopicsReplies,
+                Id = item.Id
             })
             .ToList();
 
