@@ -87,6 +87,8 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
 
     [Parameter] public RenderFragment? AdditionalHeaderContent { set; get; }
 
+    [Parameter] public RenderFragment? BeforeHeaderContent { set; get; }
+
     [Parameter] public RenderFragment? AdditionalInfoContent { set; get; }
 
     [Parameter] public RenderFragment? AfterFooterContent { set; get; }

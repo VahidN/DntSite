@@ -7,6 +7,10 @@
             <DntPrintUserBrowser BrowserName="@CreatedByUserAgent"/>
             <DntSite.Web.Features.UserProfiles.Components.PrintUser User="@RecordUser" IsNavLink="false"/>
         </div>
+        @if (BeforeHeaderContent is not null)
+        {
+            @BeforeHeaderContent
+        }
         <DntLink IsExternal="false" Url="@PostUrl">
             <h5 class="mt-2" dir="@Title.GetDir()">
                 @Title

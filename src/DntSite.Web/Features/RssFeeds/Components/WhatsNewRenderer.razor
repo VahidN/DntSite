@@ -16,7 +16,7 @@
                           Body="@post.Content"
                           Reactions="null"
                           Tags="null"
-                          Title="@post.Title"
+                          Title="@post.OriginalTitle"
                           BriefDescription="@post.Content"
                           CreatedAt="post.PublishDate.UtcDateTime"
                           RecordUser="post.User"
@@ -34,14 +34,12 @@
                           ShowSocialLinks="false"
                           ShowNumberOfViews="false"
                           ShowNumberOfComments="false">
-            <AdditionalInfoContent>
+            <BeforeHeaderContent>
                 <span class="badge bg-secondary me-2">
                     <i class="@DntBootstrapIcons.BiTag me-1"></i>
-                    @post.Categories.FirstOrDefault()
+                    @post.ItemType.Value
                 </span>
-            </AdditionalInfoContent>
-            <AdditionalBodyContent>
-            </AdditionalBodyContent>
+            </BeforeHeaderContent>
         </ShowBlogPostItem>
     }
 </DntLoading>

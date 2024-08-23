@@ -105,6 +105,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.QuestionsComments.Value}: {item.Parent.Title}",
+				OriginalTitle = item.Parent.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
                 Categories = [WhatsNewItemType.QuestionsComments.Value],
@@ -144,6 +145,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.Backlogs.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     BacklogsRoutingConstants.PostUrlTemplate, item.Id)),
                 Categories = [WhatsNewItemType.Backlogs.Value],
@@ -182,6 +184,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.Questions.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     QuestionsRoutingConstants.PostUrlTemplate, item.Id)),
                 Categories = [WhatsNewItemType.Questions.Value],
@@ -219,6 +222,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.LearningPaths}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     RoadMapsRoutingConstants.PostUrlTemplate, item.Id)),
                 Categories = [WhatsNewItemType.LearningPaths.Value],
@@ -249,6 +253,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.AllCoursesTopics.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{item.CourseId}/{item.DisplayId:D}")),
                 Categories = [WhatsNewItemType.AllCoursesTopics.Value],
@@ -285,6 +290,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.AllCourses.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     CoursesRoutingConstants.PostUrlTemplate, item.Id)),
                 Categories = [WhatsNewItemType.AllCourses.Value],
@@ -323,6 +329,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.AllVotes.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     SurveysRoutingConstants.PostUrlTemplate, item.Id)),
                 Categories = [WhatsNewItemType.AllVotes.Value],
@@ -358,6 +365,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.AllAdvertisements.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     AdvertisementsRoutingConstants.PostUrlTemplate, item.Id)),
                 Categories = [WhatsNewItemType.AllAdvertisements.Value],
@@ -387,6 +395,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.AllDrafts.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(PostsRoutingConstants.ComingSoon2),
                 Categories = [WhatsNewItemType.AllDrafts.Value],
                 ItemType = WhatsNewItemType.AllDrafts,
@@ -421,6 +430,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.ProjectsNews.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     ProjectsRoutingConstants.PostUrlTemplate, item.Id)),
                 Categories = [WhatsNewItemType.ProjectsNews.Value],
@@ -456,6 +466,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.ProjectsFiles.Value}: {item.FileName}",
+				OriginalTitle = item.FileName,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
                 Categories = [WhatsNewItemType.ProjectsFiles.Value],
@@ -491,6 +502,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.ProjectsIssues.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
                 Categories = [WhatsNewItemType.ProjectsIssues.Value],
@@ -522,6 +534,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.ProjectsIssuesReplies.Value}: {item.Parent.Title}",				
+				OriginalTitle = item.Parent.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.Parent.ProjectId}/{item.ParentId}#comment-{item.Id}")),
                 Categories = [WhatsNewItemType.ProjectsIssuesReplies.Value],
@@ -552,6 +565,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.VotesReplies.Value}: {item.Parent.Title}",
+				OriginalTitle = item.Parent.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{item.ParentId}#comment-{item.Id}")),
                 Categories = [WhatsNewItemType.VotesReplies.Value],
@@ -585,6 +599,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.AdvertisementComments.Value}: {item.Parent.Title}",
+				OriginalTitle = item.Parent.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{AdvertisementsRoutingConstants.AdvertisementsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
                 Categories = [WhatsNewItemType.AdvertisementComments.Value],
@@ -618,6 +633,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.ProjectsFaqs.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
                 Categories = [WhatsNewItemType.ProjectsFaqs.Value],
@@ -666,6 +682,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.ProjectFaqs.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
                 Categories = [WhatsNewItemType.ProjectFaqs.Value],
@@ -719,6 +736,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.ProjectFiles.Value}: {item.FileName}",
+				OriginalTitle = item.FileName,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
                 Categories = [WhatsNewItemType.ProjectFiles.Value],
@@ -772,6 +790,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.ProjectIssues.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
                 Categories = [WhatsNewItemType.ProjectIssues.Value],
@@ -823,6 +842,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.ProjectIssuesReplies.Value}: {item.Parent.Title}",
+				OriginalTitle = item.Parent.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectId.Value}/{item.ParentId}#comment-{item.Id}")),
                 Categories = [WhatsNewItemType.ProjectIssuesReplies.Value],
@@ -860,6 +880,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.Posts.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     PostsRoutingConstants.PostUrlTemplate, item.Id)),
                 Categories = [WhatsNewItemType.Posts.Value],
@@ -891,6 +912,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.Comments.Value}: {item.Parent.Title}",
+				OriginalTitle = item.Parent.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{PostsRoutingConstants.PostBase}/{item.ParentId}#comment-{item.Id}")),
                 Categories = [WhatsNewItemType.Comments.Value],
@@ -921,6 +943,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.News.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
                     NewsRoutingConstants.PostUrlTemplate, item.Id)),
                 Categories = [WhatsNewItemType.News.Value],
@@ -958,6 +981,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.Tag.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}")),
                 Categories = [WhatsNewItemType.Tag.Value],
                 ItemType = WhatsNewItemType.Tag,
@@ -994,6 +1018,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.Author.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}")),
                 Categories = [WhatsNewItemType.Author.Value],
                 ItemType = WhatsNewItemType.Author,
@@ -1025,6 +1050,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.NewsComments.Value}: {item.Parent.Title}",
+				OriginalTitle = item.Parent.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(
                     Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
                 Categories = [WhatsNewItemType.NewsComments.Value],
@@ -1061,6 +1087,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.NewsAuthor.Value}: {item.Title}",
+				OriginalTitle = item.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.Id}")),
                 Categories = [WhatsNewItemType.NewsAuthor.Value],
                 ItemType = WhatsNewItemType.NewsAuthor,
@@ -1090,6 +1117,7 @@ public class FeedsService(
                         ? item.AuditActions[^1].CreatedAt
                         : item.Audit.CreatedAt),
                 Title = $"{WhatsNewItemType.CourseTopicsReplies.Value}: {item.Parent.Title}",
+				OriginalTitle = item.Parent.Title,
                 Url = appSetting.SiteRootUri.CombineUrl(Invariant(
                     $"{CoursesRoutingConstants.CoursesTopicBase}/{item.Parent.CourseId}/{item.Parent.DisplayId:D}#comment-{item.Id}")),
                 Categories = [WhatsNewItemType.CourseTopicsReplies.Value],
