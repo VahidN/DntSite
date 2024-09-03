@@ -1,10 +1,22 @@
 @attribute [Route(RssFeedsRoutingConstants.Root)]
 @attribute [Route(RssFeedsRoutingConstants.WhatsNew)]
+@attribute [Route(RssFeedsRoutingConstants.WhatsNewPageCurrentPage)]
 @attribute [Route(RssFeedsRoutingConstants.SiteLogs)]
 
-<DntSitePageTitle PageTitle="تازه چه‌خبر"/>
+<DntSitePageTitle PageTitle="@PageTitle"/>
 
-<DntCacheComponent
-    TComponent="WhatsNewRenderer"
-    CacheKey="Whats-New-Renderer"
-    ExpiresAfter="TimeSpan.FromMinutes(value: 5)"/>
+@if (FullTextSearchService.IsDatabaseIndexed)
+{
+    <WhatsNewItems
+        Posts="_posts"
+        ItemsPerPage="ItemsPerPage"
+        CurrentPage="CurrentPage"
+        ShowPager="true"/>
+}
+else
+{
+    <DntCacheComponent
+        TComponent="WhatsNewFeedRenderer"
+        CacheKey="Whats-New-Renderer"
+        ExpiresAfter="TimeSpan.FromMinutes(value: 5)"/>
+}

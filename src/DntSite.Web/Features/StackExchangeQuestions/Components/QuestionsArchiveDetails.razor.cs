@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Posts.Models;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.Models;
+using DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 using DntSite.Web.Features.StackExchangeQuestions.RoutingConstants;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
 
@@ -12,6 +13,8 @@ namespace DntSite.Web.Features.StackExchangeQuestions.Components;
 public partial class QuestionsArchiveDetails
 {
     private QuestionDetailsModel? _details;
+
+    private string? _documentTypeIdHash;
 
     private List<StackExchangeQuestionComment>? _questionComments;
 
@@ -65,7 +68,11 @@ public partial class QuestionsArchiveDetails
 
         await GetCommentsAsync(QuestionId.Value);
         await UpdateStatAsync();
+        SetSimilarPostsId();
     }
+
+    private void SetSimilarPostsId()
+        => _documentTypeIdHash = _details?.CurrentItem?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
 
     private async Task UpdateStatAsync()
     {

@@ -57,4 +57,6 @@ public interface IProjectIssueCommentsService : IScopedService
     Task EditReplyAsync(int? modelFormCommentId, string modelComment);
 
     Task AddReplyAsync(int? modelFormCommentId, int modelFormPostId, string modelComment, int currentUserUserId);
+
+    Task IndexProjectIssueCommentsAsync();
 }

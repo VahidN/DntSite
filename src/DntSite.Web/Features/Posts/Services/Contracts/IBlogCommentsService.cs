@@ -50,4 +50,6 @@ public interface IBlogCommentsService : IScopedService
     Task EditReplyAsync(int? commentId, string message);
 
     Task AddReplyAsync(int? replyId, int blogPostId, string message, int userId);
+
+    Task IndexBlogPostCommentsAsync();
 }

@@ -9,6 +9,7 @@ using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 
@@ -21,7 +22,8 @@ public class AdvertisementsService(
     IMapper mapper,
     ITagsService tagsService,
     IStatService statService,
-    IAdvertisementCommentsService advertisementCommentsService) : IAdvertisementsService
+    IAdvertisementCommentsService advertisementCommentsService,
+    IFullTextSearchService fullTextSearchService) : IAdvertisementsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Advertisement, object?>>> CustomOrders = new()
     {
@@ -107,6 +109,8 @@ public class AdvertisementsService(
         var result = _advertisements.Add(newsItem).Entity;
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
         return result;
     }
 
@@ -122,6 +126,9 @@ public class AdvertisementsService(
         await advertisementCommentsService.MarkAllOfAdvertisementCommentsAsDeletedAsync(advertisement.Id);
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(advertisement.MapToWhatsNewItemModel(siteRootUri: "")
+            .DocumentTypeIdHash);
     }
 
     /// <summary>
@@ -158,6 +165,8 @@ public class AdvertisementsService(
         }
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(advertisement.MapToWhatsNewItemModel(siteRootUri: ""));
 
         return advertisement;
     }
@@ -297,6 +306,8 @@ public class AdvertisementsService(
         advertisement.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(advertisement.MapToWhatsNewItemModel(siteRootUri: ""));
     }
 
     public Task NotifyAddOrUpdateChangesAsync(Advertisement? advertisement) => NotifyDeleteChangesAsync(advertisement);
@@ -323,5 +334,18 @@ public class AdvertisementsService(
             Body = $"حذف تبلیغ  {advertisement.Title} توسط مدیر از سایت ",
             Id = advertisement.Id
         });
+    }
+
+    public Task IndexAdvertisementsAsync()
+    {
+        var now = DateTime.UtcNow;
+
+        var items = _advertisements.AsNoTracking()
+            .Where(x => !x.IsDeleted && (!x.DueDate.HasValue || x.DueDate.Value >= now))
+            .Include(x => x.User)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 }

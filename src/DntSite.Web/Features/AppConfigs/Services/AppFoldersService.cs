@@ -16,6 +16,7 @@ public class AppFoldersService(IWebHostEnvironment webHostEnvironment, IOptions<
 
     private string? _databaseFolderPath;
     private string? _defaultConnectionString;
+    private string? _luceneIndexFolderPath;
     private string? _thumbnailsServicePath;
     private string? _wwwRootPath;
 
@@ -35,6 +36,8 @@ public class AppFoldersService(IWebHostEnvironment webHostEnvironment, IOptions<
 
     public string CustomFontWithPersianDigitsPath => _customFontWithPersianDigitsPath ??=
         Path.Combine(WwwRootPath, path2: "fonts", path3: "Samim-FD.ttf");
+
+    public string LuceneIndexFolderPath => _luceneIndexFolderPath ??= GetWebRootAppDataFolderPath("LuceneIndex");
 
     public string GetFolderPath(FileType fileType)
         => fileType switch

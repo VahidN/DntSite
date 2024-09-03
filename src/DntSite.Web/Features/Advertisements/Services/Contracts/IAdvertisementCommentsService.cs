@@ -44,4 +44,6 @@ public interface IAdvertisementCommentsService : IScopedService
     Task EditReplyAsync(int? modelFormCommentId, string modelComment);
 
     Task AddReplyAsync(int? modelFormCommentId, int modelFormPostId, string modelComment, int currentUserUserId);
+
+    Task IndexAdvertisementCommentsAsync();
 }

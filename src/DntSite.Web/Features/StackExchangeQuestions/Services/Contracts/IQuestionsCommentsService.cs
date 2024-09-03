@@ -41,4 +41,6 @@ public interface IQuestionsCommentsService : IScopedService
         bool userIsRestricted);
 
     Task MarkQuestionCommentAsAnswerAsync(StackExchangeQuestionComment? questionComment, bool isAnswer);
+
+    Task IndexStackExchangeQuestionCommentsAsync();
 }

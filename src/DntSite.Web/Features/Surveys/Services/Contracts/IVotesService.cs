@@ -63,4 +63,6 @@ public interface IVotesService : IScopedService
     Task<Survey?> AddNewsSurveyAsync(VoteModel writeSurveyModel, User? user);
 
     Task NotifyAddOrUpdateChangesAsync(Survey? surveyItem, VoteModel writeSurveyModel, User? user);
+
+    Task IndexSurveysAsync();
 }

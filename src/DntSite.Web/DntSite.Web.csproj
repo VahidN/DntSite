@@ -51,6 +51,9 @@
     <PackageReference Include="Scrutor"/>
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders"/>
     <PackageReference Include="EFCoreSecondLevelCacheInterceptor"/>    
+    <PackageReference Include="Lucene.Net"/>
+    <PackageReference Include="Lucene.Net.Analysis.Common"/>
+    <PackageReference Include="Lucene.Net.QueryParser"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DntSite.Web.Common.BlazorSsr\DntSite.Web.Common.BlazorSsr.csproj" />

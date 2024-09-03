@@ -1,0 +1,22 @@
+@if (_posts is not null && _totalItems > 0)
+{
+    <DntCard MarginTop="4">
+        <Header>
+            <h5>مطالب مشابه</h5>
+        </Header>
+        <ChildContent>
+            <ul class="list-group">
+                @foreach (var item in _posts)
+                {
+                    <a class="list-group-item list-group-item-action d-flex align-items-center"
+                       href="@item.Url">
+                        @item.OriginalTitle
+                        <span class="badge @item.ItemType.BgColor rounded-pill ms-auto">
+                            @item.ItemType.Value
+                        </span>
+                    </a>
+                }
+            </ul>
+        </ChildContent>
+    </DntCard>
+}

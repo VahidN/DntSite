@@ -7,9 +7,11 @@ using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
+using DntSite.Web.Features.News.ModelsMappings;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 
@@ -29,7 +31,8 @@ public class DailyNewsItemsService(
     IAppFoldersService appFoldersService,
     IPasswordHasherService passwordHasherService,
     IAppSettingsService appSettingsService,
-    IProtectionProviderService protectionProviderService) : IDailyNewsItemsService
+    IProtectionProviderService protectionProviderService,
+    IFullTextSearchService fullTextSearchService) : IDailyNewsItemsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<DailyNewsItem, object?>>> CustomOrders = new()
     {
@@ -268,11 +271,13 @@ public class DailyNewsItemsService(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, message: "UpdateAllNewsLastHttpStatusCodeAsync({Id}, {Url}): ", item.Id, item.Url);
+                logger.LogError(ex.Demystify(), message: "UpdateAllNewsLastHttpStatusCodeAsync({Id}, {Url}): ", item.Id,
+                    item.Url);
 
                 if (IsOutdatedLink(ex))
                 {
                     item.IsDeleted = true;
+                    DeleteFromLuceneIndex(item);
                 }
             }
 
@@ -389,6 +394,8 @@ public class DailyNewsItemsService(
 
         item.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        DeleteFromLuceneIndex(item);
     }
 
     public async Task NotifyAddOrUpdateChangesAsync(DailyNewsItem? newsItem,
@@ -438,6 +445,8 @@ public class DailyNewsItemsService(
         var result = AddDailyNewsItem(newsItem);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToNewsWhatsNewItemModel(siteRootUri: ""));
+
         return result;
     }
 
@@ -457,6 +466,8 @@ public class DailyNewsItemsService(
         newsItem.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(newsItem.MapToNewsWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<OperationResult> CheckUrlHashAsync(string url, int? id, bool isAdmin)
@@ -507,6 +518,22 @@ public class DailyNewsItemsService(
 
         return OperationStat.Succeeded;
     }
+
+    public Task IndexDailyNewsItemsAsync()
+    {
+        var items = _dailyNewsItem.AsNoTracking()
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.User)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToNewsWhatsNewItemModel(siteRootUri: "")));
+    }
+
+    private void DeleteFromLuceneIndex(DailyNewsItem item)
+        => fullTextSearchService.DeleteLuceneDocument(item.MapToNewsWhatsNewItemModel(siteRootUri: "")
+            .DocumentTypeIdHash);
 
     private static bool IsOutdatedLink(Exception exception)
     {

@@ -4,11 +4,27 @@ using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Searches.Services;
 
-public class SearchItemsService(IUnitOfWork uow) : ISearchItemsService
+public class SearchItemsService(IUnitOfWork uow, IAntiXssService antiXssService) : ISearchItemsService
 {
     private readonly DbSet<SearchItem> _searchItems = uow.DbSet<SearchItem>();
 
-    public SearchItem AddSearchItem(SearchItem data) => _searchItems.Add(data).Entity;
+    public async Task<SearchItem?> AddSearchItemAsync(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return null;
+        }
+
+        var result = _searchItems.Add(new SearchItem
+            {
+                Text = antiXssService.GetSanitizedHtml(text)
+            })
+            .Entity;
+
+        await uow.SaveChangesAsync();
+
+        return result;
+    }
 
     public Task<List<SearchItem>> GetLastSearchItemsAsync(int pageNumber,
         int recordsPerPage = 8,

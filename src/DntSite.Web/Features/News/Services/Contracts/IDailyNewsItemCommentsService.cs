@@ -37,4 +37,6 @@ public interface IDailyNewsItemCommentsService : IScopedService
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
+
+    Task IndexDailyNewsItemCommentsAsync();
 }

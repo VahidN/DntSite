@@ -4,6 +4,7 @@ using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.Models;
+using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.RoutingConstants;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.Posts.Models;
@@ -15,6 +16,8 @@ public partial class CourseTopicDetails
     private CourseTopicModel? _courseTopic;
 
     private List<CourseTopicComment>? _courseTopicComments;
+
+    private string? _documentTypeIdHash;
 
     [Parameter] public int? CourseId { set; get; }
 
@@ -104,8 +107,13 @@ public partial class CourseTopicDetails
 
         await GetCommentsAsync(_courseTopic.ThisTopic.Id);
 
+        SetSimilarPostsId();
+
         AddBreadCrumbs();
     }
+
+    private void SetSimilarPostsId()
+        => _documentTypeIdHash = _courseTopic?.ThisTopic?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([

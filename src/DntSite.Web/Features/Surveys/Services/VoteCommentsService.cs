@@ -3,8 +3,10 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.Surveys.Entities;
+using DntSite.Web.Features.Surveys.ModelsMappings;
 using DntSite.Web.Features.Surveys.Services.Contracts;
 
 namespace DntSite.Web.Features.Surveys.Services;
@@ -14,7 +16,8 @@ public class VoteCommentsService(
     IUserRatingsService userRatingsService,
     IStatService statService,
     IAntiXssService antiXssService,
-    IVotesEmailsService votesEmailsService) : IVoteCommentsService
+    IVotesEmailsService votesEmailsService,
+    IFullTextSearchService fullTextSearchService) : IVoteCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<SurveyComment, object?>>> CustomOrders = new()
     {
@@ -164,6 +167,7 @@ public class VoteCommentsService(
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
         await statService.RecalculateThisVoteCommentsCountsAsync(comment.ParentId);
     }
 
@@ -184,6 +188,7 @@ public class VoteCommentsService(
         comment.Body = antiXssService.GetSanitizedHtml(modelComment);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
         await votesEmailsService.VoteCommentSendEmailToAdminsAsync(comment);
     }
 
@@ -209,11 +214,26 @@ public class VoteCommentsService(
         var result = AddVoteComment(comment);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
         await SendEmailsAsync(result);
         await UpdateStatAsync(modelFormPostId, currentUserUserId);
     }
 
     public ValueTask<Survey?> FindVoteCommentParentAsync(int parentId) => uow.DbSet<Survey>().FindAsync(parentId);
+
+    public Task IndexSurveyCommentsAsync()
+    {
+        var items = _voteComments.AsNoTracking()
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.Parent)
+            .Include(x => x.User)
+            .Where(x => !x.Parent.IsDeleted)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+    }
 
     private async Task SendEmailsAsync(SurveyComment result)
     {

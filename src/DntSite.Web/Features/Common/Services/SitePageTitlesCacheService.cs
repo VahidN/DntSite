@@ -31,7 +31,7 @@ public class SitePageTitlesCacheService(BaseHttpClient baseHttpClient, ILogger<S
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, message: "GetOrAddSitePageTitleAsync({URL})", url);
+            logger.LogError(ex.Demystify(), message: "GetOrAddSitePageTitleAsync({URL})", url);
 
             _urlTitles[cacheKey] = url;
 

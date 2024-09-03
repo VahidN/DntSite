@@ -1,27 +1,27 @@
-﻿using DntSite.Web.Features.Advertisements.RoutingConstants;
+﻿using DntSite.Web.Features.Advertisements.ModelsMappings;
 using DntSite.Web.Features.Advertisements.Services.Contracts;
 using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
-using DntSite.Web.Features.Backlogs.RoutingConstants;
+using DntSite.Web.Features.Backlogs.ModelsMappings;
 using DntSite.Web.Features.Backlogs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
-using DntSite.Web.Features.Courses.RoutingConstants;
+using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.Services.Contracts;
-using DntSite.Web.Features.News.RoutingConstants;
+using DntSite.Web.Features.News.ModelsMappings;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Entities;
-using DntSite.Web.Features.Posts.RoutingConstants;
+using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.Services.Contracts;
 using DntSite.Web.Features.Projects.Entities;
-using DntSite.Web.Features.Projects.RoutingConstants;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.Services.Contracts;
-using DntSite.Web.Features.RoadMaps.RoutingConstants;
+using DntSite.Web.Features.RoadMaps.ModelsMappings;
 using DntSite.Web.Features.RoadMaps.Services.Contracts;
 using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.RssFeeds.Services.Contracts;
-using DntSite.Web.Features.StackExchangeQuestions.RoutingConstants;
+using DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
-using DntSite.Web.Features.Surveys.RoutingConstants;
+using DntSite.Web.Features.Surveys.ModelsMappings;
 using DntSite.Web.Features.Surveys.Services.Contracts;
 
 namespace DntSite.Web.Features.RssFeeds.Services;
@@ -93,27 +93,7 @@ public class FeedsService(
             recordsPerPage, showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.QuestionsComments.Value}: {item.Parent.Title}",
-				OriginalTitle = item.Parent.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = [WhatsNewItemType.QuestionsComments.Value],
-                ItemType = WhatsNewItemType.QuestionsComments,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.QuestionsComments.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -133,27 +113,7 @@ public class FeedsService(
             pagerSortBy, isAscending, isNewItems, isDone, isInProgress);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Description,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.Backlogs.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    BacklogsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = [WhatsNewItemType.Backlogs.Value],
-                ItemType = WhatsNewItemType.Backlogs,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.Backlogs.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -172,27 +132,7 @@ public class FeedsService(
             showDeletedItems, pagerSortBy, isAscending, isNewItems, isDone);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Description,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.Questions.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    QuestionsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = [WhatsNewItemType.Questions.Value],
-                ItemType = WhatsNewItemType.Questions,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.Questions.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -210,27 +150,7 @@ public class FeedsService(
             showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Description,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.LearningPaths}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    RoadMapsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = [WhatsNewItemType.LearningPaths.Value],
-                ItemType = WhatsNewItemType.LearningPaths,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.LearningPaths.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -239,29 +159,8 @@ public class FeedsService(
     public async Task<WhatsNewFeedChannel> GetAllCoursesTopicsAsync()
     {
         var list = await courseTopicsService.GetPagedAllActiveCoursesTopicsAsync();
-
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body.GetBriefDescription(charLength: 200),
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.AllCoursesTopics.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{item.CourseId}/{item.DisplayId:D}")),
-                Categories = [WhatsNewItemType.AllCoursesTopics.Value],
-                ItemType = WhatsNewItemType.AllCoursesTopics,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.AllCoursesTopics.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -278,27 +177,7 @@ public class FeedsService(
             onlyActive, showOnlyFinished, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Description,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.AllCourses.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    CoursesRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = [WhatsNewItemType.AllCourses.Value],
-                ItemType = WhatsNewItemType.AllCourses,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.AllCourses.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -314,30 +193,7 @@ public class FeedsService(
             isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content =
-                    item.SurveyItems.Where(x => !x.IsDeleted)
-                        .Select(x => x.Title)
-                        .Aggregate((s1, s2) => s1 + "<br/>" + s2),
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.AllVotes.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    SurveysRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = [WhatsNewItemType.AllVotes.Value],
-                ItemType = WhatsNewItemType.AllVotes,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.AllVotes.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -353,27 +209,7 @@ public class FeedsService(
             pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.AllAdvertisements.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    AdvertisementsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = [WhatsNewItemType.AllAdvertisements.Value],
-                ItemType = WhatsNewItemType.AllAdvertisements,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.AllAdvertisements.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -383,26 +219,7 @@ public class FeedsService(
     {
         var list = await blogPostDraftsService.ComingSoonItemsAsync();
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = "به زودی ...",
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.AllDrafts.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(PostsRoutingConstants.ComingSoon2),
-                Categories = [WhatsNewItemType.AllDrafts.Value],
-                ItemType = WhatsNewItemType.AllDrafts,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Select(item => item.MapToPostWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.AllDrafts.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -418,27 +235,7 @@ public class FeedsService(
             showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Description,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.ProjectsNews.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    ProjectsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = [WhatsNewItemType.ProjectsNews.Value],
-                ItemType = WhatsNewItemType.ProjectsNews,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.ProjectsNews.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -455,24 +252,7 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.FileDescription,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.ProjectsFiles.Value}: {item.FileName}",
-				OriginalTitle = item.FileName,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
-                Categories = [WhatsNewItemType.ProjectsFiles.Value],
-                ItemType = WhatsNewItemType.ProjectsFiles,
-                Id = item.Id
-            })
+        var rssItems = list.Data.Select(item => item.MapToProjectsReleasesWhatsNewItemModel(appSetting.SiteRootUri))
             .ToList();
 
         var title = $"فید {WhatsNewItemType.ProjectsFiles.Value}";
@@ -491,24 +271,7 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Description,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.ProjectsIssues.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
-                Categories = [WhatsNewItemType.ProjectsIssues.Value],
-                ItemType = WhatsNewItemType.ProjectsIssues,
-                Id = item.Id
-            })
+        var rssItems = list.Data.Select(item => item.MapToProjectsIssuesWhatsNewItemModel(appSetting.SiteRootUri))
             .ToList();
 
         var title = $"فید {WhatsNewItemType.ProjectsIssues.Value}";
@@ -522,27 +285,7 @@ public class FeedsService(
             showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.ProjectsIssuesReplies.Value}: {item.Parent.Title}",				
-				OriginalTitle = item.Parent.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.Parent.ProjectId}/{item.ParentId}#comment-{item.Id}")),
-                Categories = [WhatsNewItemType.ProjectsIssuesReplies.Value],
-                ItemType = WhatsNewItemType.ProjectsIssuesReplies,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Select(item => item.MapToProjectsIssuesWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.ProjectsIssuesReplies.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -551,29 +294,8 @@ public class FeedsService(
     public async Task<WhatsNewFeedChannel> GetVotesRepliesAsync(int count = 15, bool showDeletedItems = false)
     {
         var list = await voteCommentsService.GetLastVoteCommentsIncludeBlogPostAndUserAsync(count, showDeletedItems);
-
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.VotesReplies.Value}: {item.Parent.Title}",
-				OriginalTitle = item.Parent.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = [WhatsNewItemType.VotesReplies.Value],
-                ItemType = WhatsNewItemType.VotesReplies,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.VotesReplies.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -587,27 +309,7 @@ public class FeedsService(
             recordsPerPage, showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.AdvertisementComments.Value}: {item.Parent.Title}",
-				OriginalTitle = item.Parent.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{AdvertisementsRoutingConstants.AdvertisementsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = [WhatsNewItemType.AdvertisementComments.Value],
-                ItemType = WhatsNewItemType.AdvertisementComments,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.AdvertisementComments.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -621,27 +323,7 @@ public class FeedsService(
             showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Description,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.ProjectsFaqs.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
-                Categories = [WhatsNewItemType.ProjectsFaqs.Value],
-                ItemType = WhatsNewItemType.ProjectsFaqs,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Select(item => item.MapToProjectsFaqsWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.ProjectsFaqs.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -670,27 +352,7 @@ public class FeedsService(
             showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Description,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.ProjectFaqs.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
-                Categories = [WhatsNewItemType.ProjectFaqs.Value],
-                ItemType = WhatsNewItemType.ProjectFaqs,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Data.Select(item => item.MapToProjectFaqWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید راهنمای پروژه {0}", project.Title);
 
         return (new WhatsNewFeedChannel
@@ -725,24 +387,7 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.FileDescription,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.ProjectFiles.Value}: {item.FileName}",
-				OriginalTitle = item.FileName,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
-                Categories = [WhatsNewItemType.ProjectFiles.Value],
-                ItemType = WhatsNewItemType.ProjectFiles,
-                Id = item.Id
-            })
+        var rssItems = list.Data.Select(item => item.MapToProjectReleaseWhatsNewItemModel(appSetting.SiteRootUri))
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید فایل‌های پروژه‌ {0}", project.Title);
@@ -779,24 +424,7 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Description,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.ProjectIssues.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
-                Categories = [WhatsNewItemType.ProjectIssues.Value],
-                ItemType = WhatsNewItemType.ProjectIssues,
-                Id = item.Id
-            })
+        var rssItems = list.Data.Select(item => item.MapToProjectIssueWhatsNewItemModel(appSetting.SiteRootUri))
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید بازخورد‌های پروژه {0}", project.Title);
@@ -831,24 +459,8 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.ProjectIssuesReplies.Value}: {item.Parent.Title}",
-				OriginalTitle = item.Parent.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectId.Value}/{item.ParentId}#comment-{item.Id}")),
-                Categories = [WhatsNewItemType.ProjectIssuesReplies.Value],
-                ItemType = WhatsNewItemType.ProjectIssuesReplies,
-                Id = item.Id
-            })
+        var rssItems = list
+            .Select(item => item.MapToProjectIssuesWhatsNewItemModel(appSetting.SiteRootUri, projectId.Value))
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید پاسخ ‌به بازخورد‌های پروژه‌ {0}",
@@ -865,28 +477,10 @@ public class FeedsService(
     public async Task<WhatsNewFeedChannel> GetPostsAsync(int count = 15, bool showDeletedItems = false)
     {
         var items = await blogPostsService.GetLastBlogPostsIncludeAuthorTagsAsync(count, showDeletedItems);
-
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Where(item => !IsPrivate(item))
-            .Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.Posts.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    PostsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = [WhatsNewItemType.Posts.Value],
-                ItemType = WhatsNewItemType.Posts,
-                Id = item.Id
-            })
+            .Select(item => item.MapToPostWhatsNewItemModel(appSetting.SiteRootUri))
             .ToList();
 
         var title = $"فید {WhatsNewItemType.Posts.Value}";
@@ -897,28 +491,10 @@ public class FeedsService(
     public async Task<WhatsNewFeedChannel> GetCommentsAsync(int count = 15, bool showDeletedItems = false)
     {
         var items = await blogCommentsService.GetLastBlogCommentsIncludeBlogPostAndUserAsync(count, showDeletedItems);
-
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Where(item => !IsPrivateComment(item))
-            .Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.Comments.Value}: {item.Parent.Title}",
-				OriginalTitle = item.Parent.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{PostsRoutingConstants.PostBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = [WhatsNewItemType.Comments.Value],
-                ItemType = WhatsNewItemType.Comments,
-                Id = item.Id
-            })
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri))
             .ToList();
 
         var title = $"فید {WhatsNewItemType.Comments.Value}";
@@ -929,29 +505,8 @@ public class FeedsService(
     public async Task<WhatsNewFeedChannel> GetNewsAsync(int count = 15, bool showDeletedItems = false)
     {
         var list = await dailyNewsItemsService.GetLastDailyNewsItemsIncludeUserAsync(count, showDeletedItems);
-
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.BriefDescription ?? "",
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.News.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture,
-                    NewsRoutingConstants.PostUrlTemplate, item.Id)),
-                Categories = [WhatsNewItemType.News.Value],
-                ItemType = WhatsNewItemType.News,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Select(item => item.MapToNewsWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.News.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -970,23 +525,7 @@ public class FeedsService(
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Data.Where(item => !IsPrivate(item))
-            .Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.Tag.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}")),
-                Categories = [WhatsNewItemType.Tag.Value],
-                ItemType = WhatsNewItemType.Tag,
-                Id = item.Id
-            })
+            .Select(item => item.MapToTagWhatsNewItemModel(appSetting.SiteRootUri))
             .ToList();
 
         var title = string.Format(CultureInfo.InvariantCulture, format: "فید گروه {0}", tag);
@@ -1007,23 +546,7 @@ public class FeedsService(
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Data.Where(item => !IsPrivate(item))
-            .Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.Author.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{PostsRoutingConstants.PostBase}/{item.Id}")),
-                Categories = [WhatsNewItemType.Author.Value],
-                ItemType = WhatsNewItemType.Author,
-                Id = item.Id
-            })
+            .Select(item => item.MapToAuthorWhatsNewItemModel(appSetting.SiteRootUri))
             .ToList();
 
         var title = string.Format(CultureInfo.InvariantCulture, format: "فید مطالب {0}", authorName);
@@ -1038,27 +561,7 @@ public class FeedsService(
                 showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = items.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body,
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.NewsComments.Value}: {item.Parent.Title}",
-				OriginalTitle = item.Parent.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(
-                    Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-                Categories = [WhatsNewItemType.NewsComments.Value],
-                ItemType = WhatsNewItemType.NewsComments,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = items.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.NewsComments.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -1075,26 +578,7 @@ public class FeedsService(
             recordsPerPage, showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = items.Data.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.BriefDescription ?? "",
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.NewsAuthor.Value}: {item.Title}",
-				OriginalTitle = item.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{item.Id}")),
-                Categories = [WhatsNewItemType.NewsAuthor.Value],
-                ItemType = WhatsNewItemType.NewsAuthor,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = items.Data.Select(item => item.MapToAuthorWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = string.Format(CultureInfo.InvariantCulture, format: "فید اشتراک‌های {0}", name);
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -1103,29 +587,8 @@ public class FeedsService(
     public async Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync(int count = 15, bool onlyActives = true)
     {
         var list = await courseTopicCommentsService.GetLastTopicCommentsIncludePostAndUserAsync(count, onlyActives);
-
         var appSetting = await GetAppSettingsAsync();
-
-        var rssItems = list.Select(item => new WhatsNewItemModel
-            {
-                User = item.User,
-                AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-                Content = item.Body.GetBriefDescription(charLength: 200),
-                PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
-                LastUpdatedTime =
-                    new DateTimeOffset(item.AuditActions.Count > 0
-                        ? item.AuditActions[^1].CreatedAt
-                        : item.Audit.CreatedAt),
-                Title = $"{WhatsNewItemType.CourseTopicsReplies.Value}: {item.Parent.Title}",
-				OriginalTitle = item.Parent.Title,
-                Url = appSetting.SiteRootUri.CombineUrl(Invariant(
-                    $"{CoursesRoutingConstants.CoursesTopicBase}/{item.Parent.CourseId}/{item.Parent.DisplayId:D}#comment-{item.Id}")),
-                Categories = [WhatsNewItemType.CourseTopicsReplies.Value],
-                ItemType = WhatsNewItemType.CourseTopicsReplies,
-                Id = item.Id
-            })
-            .ToList();
-
+        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
         var title = $"فید {WhatsNewItemType.CourseTopicsReplies.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);

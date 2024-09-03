@@ -19,6 +19,8 @@ public interface IUsersInfoService : IScopedService
 
     Task<User?> FindUserByEMailAsync(string eMail);
 
+    Task<List<User>> FindUsersAsync(IList<int?>? userIds);
+
     Task<List<User>> FindUsersStartWithFriendlyNameAsNoTrackingAsync(string name, int count = 20);
 
     Task<List<User>> FindActiveUsersContainFriendlyNameAsNoTrackingAsync(string name, int count = 20);

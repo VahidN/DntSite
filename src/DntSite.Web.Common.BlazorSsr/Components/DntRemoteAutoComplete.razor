@@ -1,0 +1,16 @@
+@if (IsVisible)
+{
+    <div class="position-relative w-@WidthPercent">
+        <span class="@FieldIcon text-muted position-absolute ms-3 start-0 mt-2" role="img"></span>
+        <input class="form-control ps-5"
+               type="search"
+               placeholder="@Placeholder"
+               data-dnt-auto-complete="true"
+               data-dnt-auto-complete-remote-query-url="@GetAbsoluteApiUrl(RemoteQueryApiUrl)"
+               data-dnt-auto-complete-remote-query-string="@RemoteQueryString"
+               data-dnt-auto-complete-remote-log-url="@GetAbsoluteApiUrl(RemoteLogApiUrl)"
+               autocapitalize="off"
+               autocorrect="off"
+               autocomplete="off"/>
+    </div>
+}

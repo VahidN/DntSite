@@ -3,9 +3,11 @@ using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.Models;
+using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Models;
@@ -18,7 +20,8 @@ public class CourseTopicsService(
     IStatService statService,
     ICoursesEmailsService emailsService,
     IUserRatingsService userRatingsService,
-    ICoursesService coursesService) : ICourseTopicsService
+    ICoursesService coursesService,
+    IFullTextSearchService fullTextSearchService) : ICourseTopicsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<CourseTopic, object?>>> CustomOrders = new()
     {
@@ -207,6 +210,9 @@ public class CourseTopicsService(
 
         courseTopic.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: "")
+            .DocumentTypeIdHash);
     }
 
     public async Task UpdateCourseTopicItemAsync(CourseTopic? courseTopic, CourseTopicItemModel writeCourseItemModel)
@@ -221,6 +227,8 @@ public class CourseTopicsService(
         mapper.Map(writeCourseItemModel, courseTopic);
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<CourseTopic?> AddCourseTopicItemAsync(CourseTopicItemModel writeCourseItemModel,
@@ -235,6 +243,8 @@ public class CourseTopicsService(
         var courseTopic = AddCourseTopic(item);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: ""));
+
         return courseTopic;
     }
 
@@ -247,6 +257,19 @@ public class CourseTopicsService(
 
         await emailsService.WriteCourseTopicSendEmailAsync(courseTopic);
         await statService.UpdateNumberOfCourseTopicsStatAsync(courseTopic.CourseId);
+    }
+
+    public Task IndexCourseTopicsAsync()
+    {
+        var items = _courseTopics.AsNoTracking()
+            .Where(x => !x.IsDeleted && x.Course.IsReadyToPublish)
+            .Include(x => x.User)
+            .Include(x => x.Course)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private Task UpdateReadingTimeOfOldPostsAsync(CourseTopic? currentItem)

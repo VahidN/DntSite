@@ -3,6 +3,7 @@ using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
+using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.RoutingConstants;
 using DntSite.Web.Features.Posts.Services.Contracts;
 
@@ -11,6 +12,7 @@ namespace DntSite.Web.Features.Posts.Components;
 public partial class Post
 {
     private BlogPostModel? _blogPost;
+    private string? _documentTypeIdHash;
 
     private List<BlogPostComment>? _postComments;
 
@@ -83,7 +85,11 @@ public partial class Post
 
         await GetCommentsAsync(Id.Value);
         await UpdateStatAsync(Id.Value);
+        SetSimilarPostsId();
     }
+
+    private void SetSimilarPostsId()
+        => _documentTypeIdHash = _blogPost?.CurrentItem?.MapToPostWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
 
     private async Task ManageOldBloggerLinksAsync()
     {

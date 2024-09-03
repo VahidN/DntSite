@@ -1,10 +1,12 @@
 ﻿using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.News.Entities;
+using DntSite.Web.Features.News.ModelsMappings;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.News.Services;
@@ -14,7 +16,8 @@ public class DailyNewsItemCommentsService(
     IAntiXssService antiXssService,
     IStatService statService,
     IDailyNewsEmailsService dailyNewsEmailsService,
-    IUserRatingsService userRatingsService) : IDailyNewsItemCommentsService
+    IUserRatingsService userRatingsService,
+    IFullTextSearchService fullTextSearchService) : IDailyNewsItemCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<DailyNewsItemComment, object?>>> CustomOrders =
         new()
@@ -115,6 +118,8 @@ public class DailyNewsItemCommentsService(
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+
         await statService.RecalculateThisNewsPostCommentsCountsAsync(comment.ParentId);
     }
 
@@ -134,6 +139,8 @@ public class DailyNewsItemCommentsService(
 
         comment.Body = antiXssService.GetSanitizedHtml(message);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
 
         await dailyNewsEmailsService.PostNewsReplySendEmailToAdminsAsync(comment);
     }
@@ -156,8 +163,23 @@ public class DailyNewsItemCommentsService(
         var result = AddBlogNewsComment(comment);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
         await SendEmailsAsync(result);
         await UpdateStatAsync(blogPostId, userId);
+    }
+
+    public Task IndexDailyNewsItemCommentsAsync()
+    {
+        var items = _dailyNewsItemComments.AsNoTracking()
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.Parent)
+            .Include(x => x.User)
+            .Where(x => !x.Parent.IsDeleted)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SendEmailsAsync(DailyNewsItemComment result)

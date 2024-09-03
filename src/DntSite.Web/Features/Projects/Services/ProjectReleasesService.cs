@@ -8,7 +8,9 @@ using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 
@@ -21,7 +23,8 @@ public class ProjectReleasesService(
     IStatService statService,
     IAppFoldersService appFoldersService,
     IMapper mapper,
-    IEmailsFactoryService emailsService) : IProjectReleasesService
+    IEmailsFactoryService emailsService,
+    IFullTextSearchService fullTextSearchService) : IProjectReleasesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<ProjectRelease, object?>>> CustomOrders = new()
     {
@@ -120,6 +123,10 @@ public class ProjectReleasesService(
 
         projectRelease.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(projectRelease
+            .MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "")
+            .DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(ProjectRelease? projectRelease, User? currentUserUser)
@@ -149,6 +156,9 @@ public class ProjectReleasesService(
         await SavePostedFileAsync(projectRelease, projectPostFileModel);
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            projectRelease.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<ProjectRelease?> AddProjectReleaseAsync(ProjectPostFileModel projectPostFileModel,
@@ -163,6 +173,8 @@ public class ProjectReleasesService(
         await SavePostedFileAsync(project, projectPostFileModel);
         var result = _projectReleases.Add(project).Entity;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: ""));
 
         return result;
     }
@@ -211,6 +223,19 @@ public class ProjectReleasesService(
                 .Include(x => x.User)
                 .FirstOrDefaultAsync()
         };
+
+    public Task IndexProjectReleasesAsync()
+    {
+        var items = _projectReleases.Where(x => !x.IsDeleted)
+            .Include(x => x.User)
+            .Include(x => x.Project)
+            .Include(x => x.Reactions)
+            .AsNoTracking()
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "")));
+    }
 
     private async Task SavePostedFileAsync(ProjectRelease? projectRelease, ProjectPostFileModel model)
     {

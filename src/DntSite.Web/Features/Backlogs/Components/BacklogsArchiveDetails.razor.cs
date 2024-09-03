@@ -2,6 +2,7 @@
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Backlogs.Entities;
 using DntSite.Web.Features.Backlogs.Models;
+using DntSite.Web.Features.Backlogs.ModelsMappings;
 using DntSite.Web.Features.Backlogs.RoutingConstants;
 using DntSite.Web.Features.Backlogs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.WebToolkit;
@@ -11,6 +12,8 @@ namespace DntSite.Web.Features.Backlogs.Components;
 public partial class BacklogsArchiveDetails
 {
     private BacklogDetailsModel? _backlogs;
+
+    private string? _documentTypeIdHash;
 
     [Parameter] public int? BacklogId { set; get; }
 
@@ -67,7 +70,12 @@ public partial class BacklogsArchiveDetails
         }
 
         await BacklogsService.UpdateStatAsync(BacklogId.Value, ApplicationState.NavigationManager.IsFromFeed());
+
+        SetSimilarPostsId();
     }
+
+    private void SetSimilarPostsId()
+        => _documentTypeIdHash = _backlogs?.CurrentItem?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..BacklogsBreadCrumbs.DefaultBreadCrumbs]);
 }

@@ -52,6 +52,7 @@ dotnet_diagnostic.AsyncFixer05.severity = error
 dotnet_diagnostic.AsyncifyInvocation.severity = error
 dotnet_diagnostic.AsyncifyVariable.severity = error
 
+dotnet_diagnostic.CA1816.severity = suggestion
 dotnet_diagnostic.CA1018.severity = warning
 dotnet_diagnostic.CA2234.severity = suggestion
 dotnet_diagnostic.CA1031.severity = suggestion
@@ -108,7 +109,7 @@ dotnet_diagnostic.CA1852.severity = warning
 dotnet_diagnostic.CA1854.severity = warning
 dotnet_diagnostic.CA1855.severity = warning
 dotnet_diagnostic.CA1858.severity = warning
-dotnet_diagnostic.CA1863.severity = suggestion
+dotnet_diagnostic.CA1863.severity = warning
 dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.CA2008.severity = warning
 dotnet_diagnostic.CA2009.severity = warning
@@ -215,6 +216,7 @@ dotnet_diagnostic.S6605.severity = suggestion
 dotnet_diagnostic.S6966.severity = suggestion
 dotnet_diagnostic.S6965.severity = suggestion
 dotnet_diagnostic.S6960.severity = suggestion
+dotnet_diagnostic.S6667.severity = suggestion
 
 dotnet_diagnostic.SCS0016.severity = suggestion
 dotnet_diagnostic.SCS0018.severity = suggestion

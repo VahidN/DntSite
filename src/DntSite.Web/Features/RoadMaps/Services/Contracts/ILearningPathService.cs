@@ -62,4 +62,6 @@ public interface ILearningPathService : IScopedService
     Task<LearningPath?> AddLearningPathAsync(LearningPathModel writeLearningPathModel, User? user);
 
     Task NotifyAddOrUpdateChangesAsync(LearningPath? learningPathItem);
+
+    Task IndexLearningPathsAsync();
 }

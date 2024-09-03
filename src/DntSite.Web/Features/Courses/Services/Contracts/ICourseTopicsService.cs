@@ -57,4 +57,6 @@ public interface ICourseTopicsService : IScopedService
     Task<CourseTopic?> AddCourseTopicItemAsync(CourseTopicItemModel writeCourseItemModel, User? user, int courseId);
 
     Task NotifyAddOrUpdateChangesAsync(CourseTopic? courseTopic);
+
+    Task IndexCourseTopicsAsync();
 }

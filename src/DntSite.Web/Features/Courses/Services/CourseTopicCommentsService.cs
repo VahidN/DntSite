@@ -1,10 +1,12 @@
 ﻿using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Courses.Entities;
+using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Courses.Services;
@@ -14,7 +16,8 @@ public class CourseTopicCommentsService(
     IUserRatingsService userRatingsService,
     IStatService statService,
     IAntiXssService antiXssService,
-    ICoursesEmailsService emailsService) : ICourseTopicCommentsService
+    ICoursesEmailsService emailsService,
+    IFullTextSearchService fullTextSearchService) : ICourseTopicCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<CourseTopicComment, object?>>> CustomOrders = new()
     {
@@ -143,8 +146,10 @@ public class CourseTopicCommentsService(
             return;
         }
 
+        comment.IsDeleted = true;
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
         await UpdateStatAsync(comment.ParentId, comment.Parent.CourseId, comment.UserId);
         await emailsService.CourseTopicCommentSendEmailToAdminsAsync(comment);
     }
@@ -165,6 +170,8 @@ public class CourseTopicCommentsService(
 
         comment.Body = antiXssService.GetSanitizedHtml(modelComment);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
 
         await emailsService.CourseTopicCommentSendEmailToAdminsAsync(comment);
         await UpdateStatAsync(comment.ParentId, comment.Parent.CourseId, comment.UserId);
@@ -191,7 +198,22 @@ public class CourseTopicCommentsService(
         var result = AddTopicComment(comment);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
         await NotifyNewCommentAsync(modelFormPostId, currentUserUserId, result);
+    }
+
+    public Task IndexCourseTopicCommentsAsync()
+    {
+        var items = _comments.AsNoTracking()
+            .Where(x => !x.IsDeleted && !x.Parent.IsDeleted && !x.Parent.Course.IsDeleted)
+            .Include(x => x.User)
+            .Include(x => x.Parent)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task NotifyNewCommentAsync(int modelFormPostId, int currentUserUserId, CourseTopicComment result)

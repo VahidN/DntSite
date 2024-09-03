@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Posts.Models;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.RoutingConstants;
 using DntSite.Web.Features.Projects.Services.Contracts;
 
@@ -11,6 +12,7 @@ namespace DntSite.Web.Features.Projects.Components;
 
 public partial class ProjectFeedbackDetails
 {
+    private string? _documentTypeIdHash;
     private List<ProjectIssueComment>? _issueComments;
     private ProjectIssueDetailsModel? _issueTopic;
 
@@ -94,7 +96,12 @@ public partial class ProjectFeedbackDetails
         await GetCommentsAsync(_issueTopic.CurrentItem.Id);
 
         AddBreadCrumbs(_issueTopic?.CurrentItem?.Project.Title ?? "");
+        SetSimilarPostsId();
     }
+
+    private void SetSimilarPostsId()
+        => _documentTypeIdHash = _issueTopic?.CurrentItem?.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")
+            .DocumentTypeIdHash;
 
     private void AddBreadCrumbs(string name)
         => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId)]);

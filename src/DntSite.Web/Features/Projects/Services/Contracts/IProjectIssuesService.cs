@@ -77,4 +77,6 @@ public interface IProjectIssuesService : IScopedService
     Task<ProjectIssue?> AddProjectIssueAsync(IssueModel issueModel, User? user, int projectId);
 
     Task NotifyAddOrUpdateChangesAsync(ProjectIssue? projectIssue, IssueModel issueModel, User? user);
+
+    Task IndexProjectIssuesAsync();
 }

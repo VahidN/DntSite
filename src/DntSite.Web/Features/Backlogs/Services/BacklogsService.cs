@@ -10,6 +10,7 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Posts.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Models;
@@ -24,7 +25,8 @@ public class BacklogsService(
     IBlogPostsService blogPostsService,
     IEmailsFactoryService emailsFactoryService,
     IBacklogEmailsService emailsService,
-    IUserRatingsService userRatingsService) : IBacklogsService
+    IUserRatingsService userRatingsService,
+    IFullTextSearchService fullTextSearchService) : IBacklogsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Backlog, object?>>> CustomOrders = new()
     {
@@ -259,6 +261,8 @@ public class BacklogsService(
 
         backlog.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(backlog.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(Backlog? backlog, BacklogModel? writeBacklogModel)
@@ -287,6 +291,8 @@ public class BacklogsService(
         backlog.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(backlog.MapToWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<Backlog?> AddBacklogAsync(BacklogModel writeBacklogModel, User? user)
@@ -301,6 +307,8 @@ public class BacklogsService(
         item.IsDeleted = false;
         var result = AddBacklog(item);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
 
         return result;
     }
@@ -482,6 +490,18 @@ public class BacklogsService(
         await emailsFactoryService.SendTextToAllAdminsAsync($"پایان پیشنهاد <a href='{url}'>{backlog.Title}</a>");
 
         return "با موفقیت انجام شد";
+    }
+
+    public Task IndexBackLogsAsync()
+    {
+        var items = _backlogs.AsNoTracking()
+            .Include(x => x.User)
+            .Include(x => x.DoneByUser)
+            .Where(x => !x.IsDeleted)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task UpdateStatAsync(Backlog backlog, BacklogModel writeBacklogModel)

@@ -1,4 +1,146 @@
-﻿window.DntPersianDatePicker = {
+﻿window.DntRemoteAutoComplete = {
+    insertAfterElement: (elem, refElem) => {
+        return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
+    },
+    createElement: (html) => {
+        let div = document.createElement('div');
+        div.innerHTML = html;
+        return div.firstChild;
+    },
+    enable: () => {
+        document.querySelectorAll("[data-dnt-auto-complete]").forEach(element => {
+            const queryUrl = element.getAttribute("data-dnt-auto-complete-remote-query-url");
+            if (!queryUrl) {
+                return;
+            }
+
+            const queryString = element.getAttribute("data-dnt-auto-complete-remote-query-string");
+            if (!queryString) {
+                return;
+            }
+
+            const logUrl = element.getAttribute("data-dnt-auto-complete-remote-log-url");
+            if (!logUrl) {
+                return;
+            }
+
+            element.parentNode.classList.add('dropdown');
+            const dropdown = DntRemoteAutoComplete.createElement(`<div class="dropdown-menu shadow-sm"></div>`);
+            DntRemoteAutoComplete.insertAfterElement(dropdown, element);
+
+            const hideDropdown = () => {
+                dropdown.classList.remove('slideIn');
+                dropdown.classList.add('slideOut');
+            };
+
+            const showDropdown = () => {
+                dropdown.classList.remove('slideOut');
+                dropdown.classList.add('slideIn');
+                dropdown.style.display = 'block';
+            };
+
+            const showData = (data) => {
+                const items = element.nextSibling;
+                items.innerHTML = '';
+
+                for (let i = 0; i < data.length; i++) {
+                    items.appendChild(DntRemoteAutoComplete.createElement(data[i]));
+                }
+
+                if (data.length > 0) {
+                    showDropdown();
+                } else {
+                    hideDropdown();
+                }
+            };
+
+            const logSearchedValues = () => {
+                element.nextSibling.querySelectorAll('.dropdown-item').forEach((item) => {
+                    item.onclick = (event) => {
+                        const searchValue = element.value;
+
+                        if (!searchValue) {
+                            return;
+                        }
+
+                        fetch(logUrl, {
+                            method: "POST",
+                            body: JSON.stringify(searchValue),
+                            headers: {
+                                'Accept': 'application/json; charset=utf-8',
+                                'Content-Type': 'application/json; charset=utf-8',
+                                'Pragma': 'no-cache'
+                            }
+                        });
+
+                        hideDropdown();
+                    };
+                });
+            };
+
+            let controller = new AbortController();
+            let signal = controller.signal;
+
+            const doFetchRemoteData = () => {
+                controller.abort();
+                controller = new AbortController();
+                signal = controller.signal;
+
+                if (!element.value) {
+                    hideDropdown();
+                    return;
+                }
+
+                const url = new URL(queryUrl);
+                url.searchParams.append(queryString, element.value);
+                fetch(url, {
+                        method: "GET",
+                        signal: signal,
+                        headers: {
+                            'Pragma': 'no-cache'
+                        }
+                    }
+                )
+                    .then(response => {
+                        if (response.ok) {
+                            return response;
+                        }
+                        return Promise.reject(response);
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        showData(data);
+                        logSearchedValues();
+                    })
+                    .catch(error => {
+                        hideDropdown();
+                    });
+            };
+
+            element.oninput = () => {
+                doFetchRemoteData();
+            };
+
+            element.onclick = () => {
+                doFetchRemoteData();
+            };
+
+            element.onkeydown = (event) => {
+                if (event.key === 'Escape') {
+                    hideDropdown();
+                }
+            };
+
+            element.onblur = (event) => {
+                setTimeout(() => {
+                    hideDropdown();
+                }, 250);
+            };
+        });
+    }
+};
+
+window.DntPersianDatePicker = {
     showDatePicker: (inputElement) => {
         const _faNums = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
         const _arNums = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
@@ -1349,6 +1491,7 @@ window.DntUtilities = {
     enable: () => {
         DntAddActiveClassToLists.enable();
         DntPersianDatePicker.enable();
+        DntRemoteAutoComplete.enable();
         DntPreventSubmitOnEnter.enable();
         DntNavLinkMenu.enable();
         DntBootstrapDarkMode.enable();

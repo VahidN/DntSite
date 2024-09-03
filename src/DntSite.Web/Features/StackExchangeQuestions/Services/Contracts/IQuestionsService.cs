@@ -60,4 +60,6 @@ public interface IQuestionsService : IScopedService
     StackExchangeQuestion AddStackExchangeQuestion(StackExchangeQuestion data);
 
     Task NotifyAddOrUpdateChangesAsync(StackExchangeQuestion? question, QuestionModel writeQuestionModel, User? user);
+
+    Task IndexStackExchangeQuestionsAsync();
 }

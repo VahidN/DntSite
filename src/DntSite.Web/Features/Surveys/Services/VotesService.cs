@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.Surveys.Entities;
 using DntSite.Web.Features.Surveys.Models;
@@ -20,7 +21,8 @@ public class VotesService(
     ITagsService tagsService,
     IVoteItemsService voteItemsService,
     IMapper mapper,
-    IEmailsFactoryService emailsFactoryService) : IVotesService
+    IEmailsFactoryService emailsFactoryService,
+    IFullTextSearchService fullTextSearchService) : IVotesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Survey, object?>>> CustomOrders = new()
     {
@@ -238,6 +240,9 @@ public class VotesService(
 
         surveyItem.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(
+            surveyItem.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(Survey? surveyItem, User? currentUserUser)
@@ -316,6 +321,8 @@ public class VotesService(
         await uow.SaveChangesAsync();
 
         await voteItemsService.AddOrUpdateVoteItemsAsync(surveyItem, writeSurveyModel);
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(surveyItem.MapToWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<Survey?> AddNewsSurveyAsync(VoteModel writeSurveyModel, User? user)
@@ -342,6 +349,18 @@ public class VotesService(
         await statService.RecalculateAllVoteTagsInUseCountsAsync(surveyItem.Tags.Select(x => x.Name).ToArray());
     }
 
+    public Task IndexSurveysAsync()
+    {
+        var items = _votes.Where(x => !x.IsDeleted)
+            .Include(x => x.SurveyItems)
+            .Include(x => x.User)
+            .AsNoTracking()
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+    }
+
     private async Task<Survey> AddNewSurveyAndTagsAsync(VoteModel writeSurveyModel, User? user)
     {
         var listOfActualTags = await tagsService.SaveVoteTagsAsync(writeSurveyModel.Tags);
@@ -351,6 +370,8 @@ public class VotesService(
         survey.UserId = user?.Id;
         var result = AddVote(survey);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
 
         return result;
     }

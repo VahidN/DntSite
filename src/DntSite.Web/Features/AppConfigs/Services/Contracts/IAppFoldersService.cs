@@ -18,6 +18,8 @@ public interface IAppFoldersService : ISingletonService
 
     string CustomFontWithPersianDigitsPath { get; }
 
+    string LuceneIndexFolderPath { get; }
+
     string GetFolderPath(FileType fileType);
 
     string GetWebRootAppDataFolderPath(params string[] folders);

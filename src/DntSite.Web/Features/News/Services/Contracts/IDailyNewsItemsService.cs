@@ -83,4 +83,6 @@ public interface IDailyNewsItemsService : IScopedService
     Task NotifyDeleteChangesAsync(DailyNewsItem? newsItem, User? user);
 
     Task<OperationResult> CheckUrlHashAsync(string url, int? id, bool isAdmin);
+
+    Task IndexDailyNewsItemsAsync();
 }

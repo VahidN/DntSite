@@ -52,7 +52,7 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,
+            _logger.LogError(ex.Demystify(),
                 message:
                 "SiteReferrers Error -> RootUrl: {RootUrl}, ReferrerUrl: {ReferrerUrl}, DestinationUrl: {DestinationUrl}, Log: {Log}",
                 rootUrl, referrerUrl, destinationUrl, context.Request.LogRequest(responseCode: 500));
@@ -116,7 +116,7 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, message: "TryAddOrUpdateReferrerAsync");
+            _logger.LogError(ex.Demystify(), message: "TryAddOrUpdateReferrerAsync");
         }
     }
 

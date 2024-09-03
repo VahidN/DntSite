@@ -4,7 +4,9 @@ using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
 using DntSite.Web.Features.Posts.Entities;
+using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Posts.Services;
@@ -14,7 +16,8 @@ public class BlogCommentsService(
     IUserRatingsService userRatingsService,
     IStatService statService,
     IBlogCommentsEmailsService blogCommentsEmailsService,
-    IAntiXssService antiXssService) : IBlogCommentsService
+    IAntiXssService antiXssService,
+    IFullTextSearchService fullTextSearchService) : IBlogCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<BlogPostComment, object?>>> CustomOrders = new()
     {
@@ -175,6 +178,8 @@ public class BlogCommentsService(
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+
         await statService.RecalculateThisBlogPostCommentsCountsAsync(comment.ParentId);
     }
 
@@ -194,6 +199,8 @@ public class BlogCommentsService(
 
         comment.Body = antiXssService.GetSanitizedHtml(message);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
 
         await blogCommentsEmailsService.PostReplySendEmailToAdminsAsync(comment);
     }
@@ -216,8 +223,24 @@ public class BlogCommentsService(
         var result = AddBlogComment(comment);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
         await SendEmailsAsync(result);
         await UpdateStatAsync(blogPostId, userId);
+    }
+
+    public Task IndexBlogPostCommentsAsync()
+    {
+        var items = _blogComments.AsNoTracking()
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.Parent)
+            .Include(x => x.User)
+            .Where(x => !x.Parent.IsDeleted)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SendEmailsAsync(BlogPostComment result)

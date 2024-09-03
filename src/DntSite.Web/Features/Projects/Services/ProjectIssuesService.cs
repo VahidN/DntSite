@@ -6,7 +6,9 @@ using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 
@@ -18,7 +20,8 @@ public class ProjectIssuesService(
     IProjectsEmailsService emailsService,
     IEmailsFactoryService emailsFactoryService,
     IStatService statService,
-    IMapper mapper) : IProjectIssuesService
+    IMapper mapper,
+    IFullTextSearchService fullTextSearchService) : IProjectIssuesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<ProjectIssue, object?>>> CustomOrders = new()
     {
@@ -252,6 +255,9 @@ public class ProjectIssuesService(
 
         projectIssue.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(projectIssue.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")
+            .DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(ProjectIssue? projectIssue, User? currentUserUser)
@@ -278,6 +284,9 @@ public class ProjectIssuesService(
         mapper.Map(issueModel, projectIssue);
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            projectIssue.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<ProjectIssue?> AddProjectIssueAsync(IssueModel issueModel, User? user, int projectId)
@@ -289,6 +298,8 @@ public class ProjectIssuesService(
         projectIssue.ProjectId = projectId;
         var result = AddProjectIssue(projectIssue);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: ""));
 
         return result;
     }
@@ -302,6 +313,18 @@ public class ProjectIssuesService(
 
         await SendIssueEmailsAsync(projectIssue);
         await UpdateStatAsync(projectIssue);
+    }
+
+    public Task IndexProjectIssuesAsync()
+    {
+        var items = _projectIssue.Where(projectIssue => !projectIssue.IsDeleted)
+            .Include(x => x.Project)
+            .Include(x => x.User)
+            .AsNoTracking()
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SendIssueEmailsAsync(ProjectIssue projectIssue)

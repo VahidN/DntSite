@@ -5,6 +5,7 @@ using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.Models;
 using DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
@@ -19,7 +20,8 @@ public class QuestionsService(
     ITagsService tagsService,
     IStatService statService,
     IQuestionsEmailsService questionsEmailsService,
-    IMapper mapper) : IQuestionsService
+    IMapper mapper,
+    IFullTextSearchService fullTextSearchService) : IQuestionsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<StackExchangeQuestion, object?>>> CustomOrders =
         new()
@@ -218,6 +220,8 @@ public class QuestionsService(
 
         question.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(question.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(StackExchangeQuestion? question, User? currentUserUser)
@@ -254,6 +258,8 @@ public class QuestionsService(
         question.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(question.MapToWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<StackExchangeQuestion?> AddStackExchangeQuestionAsync(QuestionModel writeQuestionModel,
@@ -268,6 +274,8 @@ public class QuestionsService(
         question.UserId = user?.Id;
         var result = AddStackExchangeQuestion(question);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
 
         return result;
     }
@@ -290,5 +298,13 @@ public class QuestionsService(
             await questionsEmailsService.StackExchangeQuestionSendEmailAsync(question,
                 user?.FriendlyName ?? SharedConstants.GuestUserName);
         }
+    }
+
+    public Task IndexStackExchangeQuestionsAsync()
+    {
+        var items = _stackExchangeQuestions.AsNoTracking().Include(x => x.User).Where(x => !x.IsDeleted).AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 }

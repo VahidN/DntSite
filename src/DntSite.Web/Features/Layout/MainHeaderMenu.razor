@@ -17,6 +17,13 @@
                 </NotAuthorized>
             </AuthorizeView>
         </ul>
+
+        <DntRemoteAutoComplete
+            IsVisible="FullTextSearchService.IsDatabaseIndexed"
+            RemoteQueryString="searchQuery"
+            RemoteQueryApiUrl="@ApiUrlsRoutingConstants.Fts.HttpGet.Search"
+            RemoteLogApiUrl="@ApiUrlsRoutingConstants.Fts.HttpPost.Log"/>
+
         <div class="navbar-brand">
             <a dir="ltr" target="_blank" data-enhance-nav="false" class="navbar-brand mb-0 me-3 h1" href="https://github.com/VahidN/DntSite">
                 <span class="@DntBootstrapIcons.BiGithub"></span>

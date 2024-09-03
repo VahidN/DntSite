@@ -73,4 +73,6 @@ public interface IBacklogsService : IScopedService
     Task<OperationResult> CancelBacklogAsync(ManageBacklogModel? data, CurrentUserModel? user, string? siteRootUri);
 
     Task<OperationResult> DoneBacklogAsync(ManageBacklogModel? data, CurrentUserModel? user, string? siteRootUri);
+
+    Task IndexBackLogsAsync();
 }

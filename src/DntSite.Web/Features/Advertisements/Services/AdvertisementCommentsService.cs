@@ -1,10 +1,12 @@
 ﻿using DntSite.Web.Features.Advertisements.Entities;
+using DntSite.Web.Features.Advertisements.ModelsMappings;
 using DntSite.Web.Features.Advertisements.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Advertisements.Services;
@@ -14,7 +16,8 @@ public class AdvertisementCommentsService(
     IUserRatingsService userRatingsService,
     IAntiXssService antiXssService,
     IAdvertisementsEmailsService emailsService,
-    IStatService statService) : IAdvertisementCommentsService
+    IStatService statService,
+    IFullTextSearchService fullTextSearchService) : IAdvertisementCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<AdvertisementComment, object?>>> CustomOrders =
         new()
@@ -162,6 +165,8 @@ public class AdvertisementCommentsService(
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+
         await UpdateStatAsync(comment);
     }
 
@@ -181,6 +186,8 @@ public class AdvertisementCommentsService(
 
         comment.Body = antiXssService.GetSanitizedHtml(modelComment);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
 
         await emailsService.AdvertisementCommentSendEmailToAdminsAsync(comment);
     }
@@ -206,8 +213,25 @@ public class AdvertisementCommentsService(
         var result = AddAdvertisementComment(comment);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
         await SendEmailsAsync(result);
         await UpdateStatAsync(result);
+    }
+
+    public Task IndexAdvertisementCommentsAsync()
+    {
+        var now = DateTime.UtcNow;
+
+        var items = _advertisementComments.AsNoTracking()
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.Parent)
+            .Include(x => x.User)
+            .Where(x => !x.Parent.IsDeleted && (!x.Parent.DueDate.HasValue || x.Parent.DueDate.Value >= now))
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task UpdateStatAsync(AdvertisementComment comment)

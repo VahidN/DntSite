@@ -150,7 +150,7 @@ public class OnlineVisitorsService : IOnlineVisitorsService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, message: "ProcessItemsAsync");
+            _logger.LogError(ex.Demystify(), message: "ProcessItemsAsync");
         }
     }
 

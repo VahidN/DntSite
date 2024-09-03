@@ -55,4 +55,6 @@ public interface IProjectFaqsService : IScopedService
     Task MarkAsDeletedAsync(ProjectFaq? projectFaq);
 
     Task NotifyDeleteChangesAsync(ProjectFaq? projectFaq, User? currentUserUser);
+
+    Task IndexProjectFaqsAsync();
 }

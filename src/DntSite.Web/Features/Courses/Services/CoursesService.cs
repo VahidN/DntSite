@@ -9,6 +9,7 @@ using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Models;
@@ -23,7 +24,8 @@ public class CoursesService(
     ICoursesEmailsService emailsService,
     IMapper mapper,
     ITagsService tagsService,
-    IStatService statService) : ICoursesService
+    IStatService statService,
+    IFullTextSearchService fullTextSearchService) : ICoursesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Course, object?>>> CustomOrders = new()
     {
@@ -435,6 +437,8 @@ public class CoursesService(
 
         course.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(Course? course)
@@ -469,6 +473,8 @@ public class CoursesService(
         course.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<Course?> AddCourseItemAsync(CourseModel writeCourseModel, User? user)
@@ -483,6 +489,8 @@ public class CoursesService(
 
         var course = AddCourse(item);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: ""));
 
         return course;
     }
@@ -499,6 +507,20 @@ public class CoursesService(
 
         await emailsService.NewCourseEmailToAdminsAsync(course.Id, writeCourseModel);
         await emailsService.NewCourseEmailToUserAsync(course.Id, writeCourseModel, course.UserId ?? 0);
+    }
+
+    public Task IndexCoursesAsync()
+    {
+        var items = _courses.AsNoTracking()
+            .Where(x => !x.IsDeleted && x.IsReadyToPublish)
+            .Include(x => x.User)
+            .Include(x => x.Tags)
+            .Include(blogPost => blogPost.Reactions)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task<OperationResult> CheckNumberOfMonthsRequiredAsync(int userId, Course course)

@@ -55,4 +55,6 @@ public interface IProjectsService : IScopedService
     Task<Project?> AddProjectAsync(ProjectModel writeProjectModel, User? user);
 
     Task NotifyAddOrUpdateChangesAsync(Project? project, ProjectModel writeProjectModel, User? user);
+
+    Task IndexProjectsAsync();
 }

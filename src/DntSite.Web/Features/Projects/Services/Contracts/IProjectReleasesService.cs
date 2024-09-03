@@ -54,4 +54,6 @@ public interface IProjectReleasesService : IScopedService
     Task NotifyAddOrUpdateChangesAsync(ProjectRelease? projectRelease,
         ProjectPostFileModel projectPostFileModel,
         User? user);
+
+    Task IndexProjectReleasesAsync();
 }

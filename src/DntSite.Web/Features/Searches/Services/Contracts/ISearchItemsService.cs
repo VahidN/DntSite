@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.Searches.Services.Contracts;
 
 public interface ISearchItemsService : IScopedService
 {
-    SearchItem AddSearchItem(SearchItem data);
+    Task<SearchItem?> AddSearchItemAsync(string? text);
 
     Task<List<SearchItem>> GetLastSearchItemsAsync(int pageNumber,
         int recordsPerPage = 8,

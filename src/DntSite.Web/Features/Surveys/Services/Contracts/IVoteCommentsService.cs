@@ -55,4 +55,6 @@ public interface IVoteCommentsService : IScopedService
         string modelComment,
         int currentUserUserId,
         bool userIsRestricted);
+
+    Task IndexSurveyCommentsAsync();
 }

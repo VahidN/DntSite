@@ -2,6 +2,7 @@
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
+using DntSite.Web.Features.News.ModelsMappings;
 using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Models;
@@ -10,6 +11,8 @@ namespace DntSite.Web.Features.News.Components;
 
 public partial class NewsArchiveDetails
 {
+    private string? _documentTypeIdHash;
+
     private NewsDetailsModel? _news;
 
     private List<DailyNewsItemComment>? _newsComments;
@@ -63,7 +66,11 @@ public partial class NewsArchiveDetails
         }
 
         await GetCommentsAsync(NewsId.Value);
+        SetSimilarPostsId();
     }
+
+    private void SetSimilarPostsId()
+        => _documentTypeIdHash = _news?.CurrentNews?.MapToNewsWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..NewsBreadCrumbs.DefaultBreadCrumbs]);
 

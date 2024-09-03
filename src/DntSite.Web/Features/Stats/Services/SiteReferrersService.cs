@@ -67,8 +67,8 @@ public class SiteReferrersService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, message: "TryAddOrUpdateReferrerAsync({ReferrerUrl}, {DestinationUrl}): ", referrerUrl,
-                destinationUrl);
+            logger.LogError(ex.Demystify(), message: "TryAddOrUpdateReferrerAsync({ReferrerUrl}, {DestinationUrl}): ",
+                referrerUrl, destinationUrl);
 
             return false;
         }

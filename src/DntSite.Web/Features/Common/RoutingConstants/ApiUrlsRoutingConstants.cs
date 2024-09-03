@@ -298,4 +298,17 @@ internal static class ApiUrlsRoutingConstants
             internal const string Log = "/api/CspReport/Log";
         }
     }
+
+    internal static class Fts
+    {
+        internal static class HttpGet
+        {
+            internal const string Search = "/api/Fts/Search";
+        }
+
+        internal static class HttpPost
+        {
+            internal const string Log = "/api/Fts/Log";
+        }
+    }
 }

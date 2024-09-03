@@ -194,6 +194,18 @@ public class UsersInfoService(
         return user is not null && passwordHasherService.IsValidPbkdf2Hash(user.HashedPassword, password) ? user : null;
     }
 
+    public Task<List<User>> FindUsersAsync(IList<int?>? userIds)
+    {
+        if (userIds is null || userIds.Count == 0)
+        {
+            return Task.FromResult<List<User>>([]);
+        }
+
+        userIds = userIds.Distinct().ToList();
+
+        return _users.AsNoTracking().Where(x => userIds.Contains(x.Id)).ToListAsync();
+    }
+
     public Task<List<User>> GetUsersListByRoleAsync(int count, string role)
     {
         var query = from u in _users

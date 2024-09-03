@@ -2,7 +2,9 @@ using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
+using DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
@@ -12,7 +14,8 @@ public class QuestionsCommentsService(
     IUnitOfWork uow,
     IStatService statService,
     IAntiXssService antiXssService,
-    IQuestionsEmailsService questionsEmailsService) : IQuestionsCommentsService
+    IQuestionsEmailsService questionsEmailsService,
+    IFullTextSearchService fullTextSearchService) : IQuestionsCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<StackExchangeQuestionComment, object?>>>
         CustomOrders = new()
@@ -101,6 +104,8 @@ public class QuestionsCommentsService(
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+
         await statService.RecalculateThisStackExchangeQuestionCommentsCountsAsync(comment.ParentId);
     }
 
@@ -120,6 +125,8 @@ public class QuestionsCommentsService(
 
         comment.Body = antiXssService.GetSanitizedHtml(modelComment);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
 
         await questionsEmailsService.PostQuestionCommentReplySendEmailToAdminsAsync(comment);
     }
@@ -146,6 +153,8 @@ public class QuestionsCommentsService(
         var result = AddStackExchangeQuestionComment(comment);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
         await SendEmailsAsync(result);
         await UpdateStatAsync(modelFormPostId, currentUserUserId);
     }
@@ -171,6 +180,19 @@ public class QuestionsCommentsService(
         comment.Parent.IsAnswered = isAnswer;
 
         await uow.SaveChangesAsync();
+    }
+
+    public Task IndexStackExchangeQuestionCommentsAsync()
+    {
+        var items = _questionComments.AsNoTracking()
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.Parent)
+            .Include(x => x.User)
+            .Where(x => !x.Parent.IsDeleted)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SendEmailsAsync(StackExchangeQuestionComment result)

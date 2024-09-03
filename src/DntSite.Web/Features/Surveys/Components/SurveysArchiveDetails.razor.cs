@@ -3,6 +3,7 @@ using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Posts.Models;
 using DntSite.Web.Features.Surveys.Entities;
 using DntSite.Web.Features.Surveys.Models;
+using DntSite.Web.Features.Surveys.ModelsMappings;
 using DntSite.Web.Features.Surveys.RoutingConstants;
 using DntSite.Web.Features.Surveys.Services.Contracts;
 
@@ -10,6 +11,7 @@ namespace DntSite.Web.Features.Surveys.Components;
 
 public partial class SurveysArchiveDetails
 {
+    private string? _documentTypeIdHash;
     private List<SurveyComment>? _surveyComments;
 
     private BlogVoteModel? _surveys;
@@ -63,7 +65,12 @@ public partial class SurveysArchiveDetails
         }
 
         await GetCommentsAsync(SurveyId.Value);
+
+        SetSimilarPostsId();
     }
+
+    private void SetSimilarPostsId()
+        => _documentTypeIdHash = _surveys?.CurrentItem?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..SurveysBreadCrumbs.DefaultBreadCrumbs]);
 

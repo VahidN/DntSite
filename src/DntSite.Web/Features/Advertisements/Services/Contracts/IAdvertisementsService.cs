@@ -66,4 +66,6 @@ public interface IAdvertisementsService : IScopedService
     Task NotifyAddOrUpdateChangesAsync(Advertisement? advertisement);
 
     Task NotifyDeleteChangesAsync(Advertisement? advertisement);
+
+    Task IndexAdvertisementsAsync();
 }

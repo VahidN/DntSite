@@ -4,7 +4,9 @@ using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
 using DntSite.Web.Features.Projects.Entities;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Projects.Services;
@@ -14,7 +16,8 @@ public class ProjectIssueCommentsService(
     IUserRatingsService userRatingsService,
     IAntiXssService antiXssService,
     IProjectsEmailsService projectsEmailsService,
-    IStatService statService) : IProjectIssueCommentsService
+    IStatService statService,
+    IFullTextSearchService fullTextSearchService) : IProjectIssueCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<ProjectIssueComment, object?>>> CustomOrders = new()
     {
@@ -163,7 +166,11 @@ public class ProjectIssueCommentsService(
             return;
         }
 
+        comment.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(comment.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")
+            .DocumentTypeIdHash);
 
         await UpdateStatAsync(comment.ParentId, comment.Parent.ProjectId, comment.UserId);
         await projectsEmailsService.ProjectIssueCommentSendEmailToAdminsAsync(comment);
@@ -186,6 +193,7 @@ public class ProjectIssueCommentsService(
         comment.Body = antiXssService.GetSanitizedHtml(modelComment);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: ""));
         await projectsEmailsService.ProjectIssueCommentSendEmailToAdminsAsync(comment);
         await UpdateStatAsync(comment.ParentId, comment.Parent.ProjectId, comment.UserId);
     }
@@ -211,7 +219,24 @@ public class ProjectIssueCommentsService(
         var result = AddIssueComment(comment);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: ""));
+
         await NotifyNewCommentAsync(modelFormPostId, currentUserUserId, result);
+    }
+
+    public Task IndexProjectIssueCommentsAsync()
+    {
+        var items = _projectIssueComments.AsNoTracking()
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.Parent)
+            .Include(x => x.User)
+            .Include(x => x.Reactions)
+            .Where(x => !x.Parent.IsDeleted)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task NotifyNewCommentAsync(int modelFormPostId, int currentUserUserId, ProjectIssueComment result)

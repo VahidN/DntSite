@@ -3,6 +3,7 @@ using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.RoadMaps.Entities;
 using DntSite.Web.Features.RoadMaps.Models;
+using DntSite.Web.Features.RoadMaps.ModelsMappings;
 using DntSite.Web.Features.RoadMaps.RoutingConstants;
 using DntSite.Web.Features.RoadMaps.Services.Contracts;
 
@@ -10,6 +11,7 @@ namespace DntSite.Web.Features.RoadMaps.Components;
 
 public partial class LearningPathsArchiveDetails
 {
+    private string? _documentTypeIdHash;
     private LearningPathDetailsModel? _learningPath;
 
     [Parameter] public int? LearningPathId { set; get; }
@@ -58,9 +60,14 @@ public partial class LearningPathsArchiveDetails
             return;
         }
 
+        SetSimilarPostsId();
+
         await LearningPathService.UpdateStatAsync(LearningPathId.Value,
             ApplicationState.NavigationManager.IsFromFeed());
     }
+
+    private void SetSimilarPostsId()
+        => _documentTypeIdHash = _learningPath?.CurrentItem?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
 
     private bool IsLearningPathPublic()
         => _learningPath?.CurrentItem is not null && !_learningPath.CurrentItem.IsDeleted;

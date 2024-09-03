@@ -90,4 +90,6 @@ public interface IBlogPostsService : IScopedService
         bool showDeletedItems = false);
 
     Task<List<BlogPost>> GetAllPublicPostsOfDateAsync(DateTime date);
+
+    Task IndexBlogPostsAsync();
 }

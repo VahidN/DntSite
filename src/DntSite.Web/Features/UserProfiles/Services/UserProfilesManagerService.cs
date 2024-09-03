@@ -193,7 +193,7 @@ public class UserProfilesManagerService(
         catch (Exception ex)
         {
             //این مورد چون ضروری و حیاتی نیست، ضرورتی به توقف سایر اعمال ندارد
-            logger.LogError(ex, message: "UpdateUserImageFromGravatar failed!");
+            logger.LogError(ex.Demystify(), message: "UpdateUserImageFromGravatar failed!");
         }
     }
 

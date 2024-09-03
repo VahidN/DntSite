@@ -81,7 +81,7 @@ public class UploadFileController(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, message: "UploadFileAsync({FileType}) -> {Name}", fileType, file?.FileName);
+            logger.LogError(ex.Demystify(), message: "UploadFileAsync({FileType}) -> {Name}", fileType, file?.FileName);
 
             return BadRequest(new FileUploadResultModel
             {

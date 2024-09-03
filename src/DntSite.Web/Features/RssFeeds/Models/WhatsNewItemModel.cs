@@ -11,4 +11,13 @@ public class WhatsNewItemModel : FeedItem
     public required WhatsNewItemType ItemType { set; get; }
 
     public User? User { set; get; }
+
+    public required int? UserId { set; get; }
+
+    public required Type? EntityType { set; get; }
+
+    public string DocumentTypeIdHash => Invariant($"{Id}{ItemType.Value}").GetSha1Hash();
+
+    public string DocumentContentHash
+        => Invariant($"{Id}{ItemType.Value}{OriginalTitle}{Url}{PublishDate}{AuthorName}{Content}").GetSha1Hash();
 }

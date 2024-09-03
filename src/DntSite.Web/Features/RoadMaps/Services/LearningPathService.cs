@@ -9,6 +9,7 @@ using DntSite.Web.Features.RoadMaps.Entities;
 using DntSite.Web.Features.RoadMaps.Models;
 using DntSite.Web.Features.RoadMaps.ModelsMappings;
 using DntSite.Web.Features.RoadMaps.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 
@@ -22,7 +23,8 @@ public class LearningPathService(
     IHtmlHelperService htmlHelperService,
     IEmailsFactoryService emailsFactoryService,
     ILearningPathEmailsService emailsService,
-    IUserRatingsService userRatingsService) : ILearningPathService
+    IUserRatingsService userRatingsService,
+    IFullTextSearchService fullTextSearchService) : ILearningPathService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<LearningPath, object?>>> CustomOrders = new()
     {
@@ -259,13 +261,15 @@ public class LearningPathService(
         }
 
         learningPathItem.IsDeleted = true;
+        await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(learningPathItem.MapToWhatsNewItemModel(siteRootUri: "")
+            .DocumentTypeIdHash);
 
         if (learningPathItem.UserId is not null)
         {
             await statService.UpdateNumberOfLearningPathsAsync(learningPathItem.UserId.Value);
         }
-
-        await uow.SaveChangesAsync();
     }
 
     public Task NotifyDeleteChangesAsync(LearningPath? learningPathItem)
@@ -295,6 +299,8 @@ public class LearningPathService(
         learningPathItem.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(learningPathItem.MapToWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<LearningPath?> AddLearningPathAsync(LearningPathModel writeLearningPathModel, User? user)
@@ -309,6 +315,8 @@ public class LearningPathService(
         newsItem.UserId = user?.Id;
         var result = AddLearningPath(newsItem);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
 
         return result;
     }
@@ -326,5 +334,13 @@ public class LearningPathService(
         }
 
         await emailsService.NewLearningPathSendEmailToAdminsAsync(learningPathItem);
+    }
+
+    public Task IndexLearningPathsAsync()
+    {
+        var items = _learningPaths.AsNoTracking().Include(x => x.User).Where(x => !x.IsDeleted).AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 }

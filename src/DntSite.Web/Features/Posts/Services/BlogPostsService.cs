@@ -14,6 +14,7 @@ using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
 using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Posts.Services;
@@ -27,7 +28,8 @@ public class BlogPostsService(
     IStatService statService,
     IMapper mapper,
     IBlogCommentsService blogCommentsService,
-    IHtmlHelperService htmlHelperService) : IBlogPostsService
+    IHtmlHelperService htmlHelperService,
+    IFullTextSearchService fullTextSearchService) : IBlogPostsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<BlogPost, object?>>> CustomOrders = new()
     {
@@ -425,6 +427,8 @@ public class BlogPostsService(
 
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(blogPost.MapToPostWhatsNewItemModel(siteRootUri: ""));
+
         return blogPost;
     }
 
@@ -479,6 +483,8 @@ public class BlogPostsService(
         await blogCommentsService.MarkAllOfPostCommentsAsDeletedAsync(deleteId.Value);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: ""));
+
         var listOfActualTags = await tagsService.GetThisPostTagsListAsync(deleteId.Value);
         await statService.RecalculateBlogPostTagsInUseCountsAsync(listOfActualTags);
 
@@ -525,6 +531,18 @@ public class BlogPostsService(
         await emailsService.WriteArticleSendEmailAsync(post);
 
         return post;
+    }
+
+    public Task IndexBlogPostsAsync()
+    {
+        var items = _blogPosts.AsNoTracking()
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.User)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToPostWhatsNewItemModel(siteRootUri: "")));
     }
 
     private static string ModifyImagesExt(string ext)

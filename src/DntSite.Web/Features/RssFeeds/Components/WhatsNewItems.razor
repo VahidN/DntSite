@@ -1,7 +1,7 @@
 @using DntSite.Web.Features.News.Entities
 @using DntSite.Web.Features.Posts.Components
-<DntLoading IsLoading="@(_posts is null)">
-    @foreach (var post in _posts!)
+<DntLoading IsLoading="@(Posts is null)">
+    @foreach (var post in Posts!.Data)
     {
         <ShowBlogPostItem TReactionEntity="DailyNewsItemReaction"
                           TForeignKeyEntity="DailyNewsItem"
@@ -35,11 +35,19 @@
                           ShowNumberOfViews="false"
                           ShowNumberOfComments="false">
             <BeforeHeaderContent>
-                <span class="badge bg-secondary me-2">
+                <span class="badge @post.ItemType.BgColor rounded-pill me-2">
                     <i class="@DntBootstrapIcons.BiTag me-1"></i>
                     @post.ItemType.Value
                 </span>
             </BeforeHeaderContent>
         </ShowBlogPostItem>
+    }
+
+    @if (ShowPager)
+    {
+        <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                            TotalItemCount="Posts!.TotalItems"
+                            BasePath="@RssFeedsRoutingConstants.WhatsNew"
+                            CurrentPage="CurrentPage"/>
     }
 </DntLoading>

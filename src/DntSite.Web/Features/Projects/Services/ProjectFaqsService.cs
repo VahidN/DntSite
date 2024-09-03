@@ -5,7 +5,9 @@ using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 
@@ -16,7 +18,8 @@ public class ProjectFaqsService(
     IUserRatingsService userRatingsService,
     IProjectsEmailsService emailsService,
     IStatService statService,
-    IMapper mapper) : IProjectFaqsService
+    IMapper mapper,
+    IFullTextSearchService fullTextSearchService) : IProjectFaqsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<ProjectFaq, object?>>> CustomOrders = new()
     {
@@ -154,6 +157,8 @@ public class ProjectFaqsService(
         mapper.Map(writeProjectFaqFormModel, projectFaq);
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(projectFaq.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<ProjectFaq?> AddProjectFaqAsync(ProjectFaqFormModel writeProjectFaqFormModel,
@@ -167,6 +172,8 @@ public class ProjectFaqsService(
         projectFaq.ProjectId = projectId;
         var result = AddProjectFaq(projectFaq);
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: ""));
 
         return result;
     }
@@ -195,6 +202,8 @@ public class ProjectFaqsService(
 
         projectFaq.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(projectFaq.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task NotifyDeleteChangesAsync(ProjectFaq? projectFaq, User? currentUserUser)
@@ -208,5 +217,18 @@ public class ProjectFaqsService(
 
         await emailsService.SendNewFaqEmailAsync(projectFaq.ProjectId, projectFaq.Id, $"{projectFaq.Title} حذف شد ",
             projectFaq.Description);
+    }
+
+    public Task IndexProjectFaqsAsync()
+    {
+        var items = _projectFaqs.AsNoTracking()
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.User)
+            .Include(x => x.Project)
+            .OrderByDescending(x => x.Id)
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: "")));
     }
 }

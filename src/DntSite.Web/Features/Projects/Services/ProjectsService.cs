@@ -11,6 +11,7 @@ using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
 using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 
@@ -24,7 +25,8 @@ public class ProjectsService(
     IMapper mapper,
     ITagsService tagsService,
     IAppFoldersService appFoldersService,
-    IProjectsEmailsService emailsService) : IProjectsService
+    IProjectsEmailsService emailsService,
+    IFullTextSearchService fullTextSearchService) : IProjectsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Project, object?>>> CustomOrders = new()
     {
@@ -172,6 +174,8 @@ public class ProjectsService(
 
         project.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.DeleteLuceneDocument(project.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(Project? project, User? currentUserUser)
@@ -211,6 +215,8 @@ public class ProjectsService(
         project.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(project.MapToWhatsNewItemModel(siteRootUri: ""));
     }
 
     public async Task<Project?> AddProjectAsync(ProjectModel writeProjectModel, User? user)
@@ -226,6 +232,8 @@ public class ProjectsService(
         var result = AddProject(project);
         await uow.SaveChangesAsync();
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
         return result;
     }
 
@@ -239,6 +247,19 @@ public class ProjectsService(
         await emailsService.NewProjectEmailToAdminsAsync(project.Id, writeProjectModel);
 
         await UpdateStatAsync(writeProjectModel, user);
+    }
+
+    public Task IndexProjectsAsync()
+    {
+        var items = _projects.Where(x => !x.IsDeleted)
+            .Include(x => x.User)
+            .Include(x => x.Tags)
+            .Include(blogPost => blogPost.Reactions)
+            .AsNoTracking()
+            .AsEnumerable();
+
+        return fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SavePostedPhotoAsync(Project? project, ProjectModel writeProjectModel)
