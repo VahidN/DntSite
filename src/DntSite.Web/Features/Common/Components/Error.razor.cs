@@ -19,7 +19,7 @@ public partial class Error
             return;
         }
 
-        Logger.LogError("{Request}", httpRequest.LogRequest(ResponseCode));
+        Logger.LogError(message: "{Request}", httpRequest.LogRequest(ResponseCode));
         SetStatusCode();
     }
 
@@ -30,6 +30,8 @@ public partial class Error
             return;
         }
 
-        HttpContext.Response.StatusCode = ResponseCode.Value;
+        HttpContext.Response.StatusCode = ResponseCode.Value == (int)HttpStatusCode.NotFound
+            ? (int)HttpStatusCode.Gone
+            : ResponseCode.Value;
     }
 }
