@@ -1,0 +1,61 @@
+﻿@using DntSite.Web.Features.Searches.Entities
+@using DntSite.Web.Features.UserProfiles.Components
+@attribute [Route(SearchesRoutingConstants.SearchedItems)]
+@attribute [Route(SearchesRoutingConstants.SearchedItemsPageCurrentPage)]
+
+<DntSitePageTitle PageTitle="آمار جستجوها"/>
+
+<DntLoading IsLoading="@(_items is null)">
+    <DntSimpleTable TRecord="SearchItem"
+                    Records="_items!.Data"
+                    TableClass="table table-striped table-hover caption-top"
+                    HeaderClass="table-secondary"
+                    FooterRowClass="table-warning"
+                    TableResponsiveClass="row table-responsive"
+                    RowClass='record => ""'>
+        <CaptionTemplate>
+            <strong>آمار جستجوها</strong>
+        </CaptionTemplate>
+        <TableColumns>
+            <DntSimpleTableColumn HeaderTitle="متن جستجو شده"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-right align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    <span dir="@record.Text.GetDir()">
+                        @record.Text
+                    </span>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="از طرف"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    <PrintUser User="record.User"/>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="تاریخ ارسال"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    @record.Audit.CreatedAt.ToFriendlyPersianDateTextify()
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+        </TableColumns>
+
+        <DataSourceIsEmptyTemplate>
+            <div class="alert alert-info">
+                اطلاعاتی برای نمایش یافت نشد.
+            </div>
+        </DataSourceIsEmptyTemplate>
+    </DntSimpleTable>
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="_items!.TotalItems"
+                        BasePath="@SearchesRoutingConstants.SearchedItems"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

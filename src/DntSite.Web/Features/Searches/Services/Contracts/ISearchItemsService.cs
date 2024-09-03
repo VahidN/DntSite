@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Searches.Entities;
+﻿using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Searches.Entities;
 
 namespace DntSite.Web.Features.Searches.Services.Contracts;
 
@@ -6,8 +7,8 @@ public interface ISearchItemsService : IScopedService
 {
     Task<SearchItem?> AddSearchItemAsync(string? text);
 
-    Task<List<SearchItem>> GetLastSearchItemsAsync(int pageNumber,
-        int recordsPerPage = 8,
+    Task<PagedResultModel<SearchItem>> GetPagedSearchItemsAsync(int pageNumber,
+        int recordsPerPage,
         bool showDeletedItems = false);
 
     Task DeleteOldSearchItemsAsync(int daysToKeep = 3);

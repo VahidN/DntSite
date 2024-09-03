@@ -1,4 +1,6 @@
-﻿using DntSite.Web.Features.Persistence.UnitOfWork;
+﻿using DntSite.Web.Features.Common.Utils.Pagings;
+using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Searches.Entities;
 using DntSite.Web.Features.Searches.Services.Contracts;
 
@@ -26,18 +28,16 @@ public class SearchItemsService(IUnitOfWork uow, IAntiXssService antiXssService)
         return result;
     }
 
-    public Task<List<SearchItem>> GetLastSearchItemsAsync(int pageNumber,
-        int recordsPerPage = 8,
+    public Task<PagedResultModel<SearchItem>> GetPagedSearchItemsAsync(int pageNumber,
+        int recordsPerPage,
         bool showDeletedItems = false)
     {
-        var skipRecords = pageNumber * recordsPerPage;
-
-        return _searchItems.AsNoTracking()
+        var query = _searchItems.AsNoTracking()
+            .Include(x => x.User)
             .Where(x => x.IsDeleted == showDeletedItems)
-            .OrderByDescending(x => x.Id)
-            .Skip(skipRecords)
-            .Take(recordsPerPage)
-            .ToListAsync();
+            .OrderByDescending(x => x.Id);
+
+        return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
     }
 
     public async Task DeleteOldSearchItemsAsync(int daysToKeep = 3)
