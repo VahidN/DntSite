@@ -1,4 +1,11 @@
 ﻿window.DntRemoteAutoComplete = {
+    canonicalize: (url) => {
+        var div = document.createElement('div');
+        div.innerHTML = "<a></a>";
+        div.firstChild.href = url;
+        div.innerHTML = div.innerHTML;
+        return div.firstChild.href;
+    },
     insertAfterElement: (elem, refElem) => {
         return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
     },
@@ -9,10 +16,11 @@
     },
     enable: () => {
         document.querySelectorAll("[data-dnt-auto-complete]").forEach(element => {
-            const queryUrl = element.getAttribute("data-dnt-auto-complete-remote-query-url");
+            let queryUrl = element.getAttribute("data-dnt-auto-complete-remote-query-url");
             if (!queryUrl) {
                 return;
             }
+            queryUrl = DntRemoteAutoComplete.canonicalize(queryUrl);
 
             const queryString = element.getAttribute("data-dnt-auto-complete-remote-query-string");
             if (!queryString) {
