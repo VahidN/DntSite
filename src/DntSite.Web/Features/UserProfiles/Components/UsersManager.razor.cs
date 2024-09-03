@@ -1,6 +1,7 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Models;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
@@ -23,6 +24,8 @@ public partial class UsersManager
     [Parameter] public int? CurrentPage { set; get; }
 
     [Parameter] public string? Filter { set; get; }
+
+    [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,11 +53,11 @@ public partial class UsersManager
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([UserProfilesBreadCrumbs.Users, UserProfilesBreadCrumbs.UsersManager]);
 
-    private Task DoSearchAsync(string gridifyFilter)
+    private async Task DoSearchAsync(string gridifyFilter)
     {
+        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
+
         ApplicationState.NavigateTo(
             $"{UserProfilesRoutingConstants.UsersManagerFilterBase}/{Uri.EscapeDataString(gridifyFilter ?? "*")}/page/1");
-
-        return Task.CompletedTask;
     }
 }

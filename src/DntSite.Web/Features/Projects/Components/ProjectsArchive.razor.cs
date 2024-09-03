@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.RoutingConstants;
 using DntSite.Web.Features.Projects.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Projects.Components;
 
@@ -22,6 +23,8 @@ public partial class ProjectsArchive
 
     [Parameter] public string? Filter { set; get; }
 
+    [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
+
     protected override async Task OnInitializedAsync()
     {
         await ShowProjectsAsync(Filter);
@@ -32,6 +35,7 @@ public partial class ProjectsArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
+        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
         await ShowProjectsAsync(gridifyFilter);
         StateHasChanged();
     }

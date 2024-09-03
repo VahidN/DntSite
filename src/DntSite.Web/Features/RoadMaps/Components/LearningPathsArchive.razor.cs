@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.RoadMaps.Entities;
 using DntSite.Web.Features.RoadMaps.RoutingConstants;
 using DntSite.Web.Features.RoadMaps.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.RoadMaps.Components;
 
@@ -22,6 +23,8 @@ public partial class LearningPathsArchive
 
     [Parameter] public string? Filter { set; get; }
 
+    [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
+
     protected override async Task OnInitializedAsync()
     {
         await ShowLearningPathsAsync(Filter);
@@ -32,6 +35,7 @@ public partial class LearningPathsArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
+        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
         await ShowLearningPathsAsync(gridifyFilter);
         StateHasChanged();
     }

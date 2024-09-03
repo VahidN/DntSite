@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.RoutingConstants;
 using DntSite.Web.Features.Posts.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Posts.Components;
 
@@ -23,6 +24,8 @@ public partial class PostsArchive
     [Parameter] public string? Filter { set; get; }
 
     [Parameter] [SupplyParameterFromQuery] public string? Term { get; set; }
+
+    [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,6 +50,7 @@ public partial class PostsArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
+        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
         await ShowBlogPostsListAsync(gridifyFilter);
         StateHasChanged();
     }

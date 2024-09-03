@@ -5,6 +5,7 @@ using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.News.Components;
 
@@ -24,6 +25,8 @@ public partial class NewsArchive
     [Parameter] public string? Filter { set; get; }
 
     [Parameter] public int? RedirectId { set; get; }
+
+    [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,6 +66,7 @@ public partial class NewsArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
+        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
         await ShowDailyNewsItemsAsync(gridifyFilter);
         StateHasChanged();
     }

@@ -1,6 +1,7 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.RoutingConstants;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
@@ -22,6 +23,8 @@ public partial class QuestionsArchive
 
     [Parameter] public string? Filter { set; get; }
 
+    [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
+
     protected override async Task OnInitializedAsync()
     {
         await ShowDailyQuestionsItemsAsync(Filter);
@@ -32,6 +35,7 @@ public partial class QuestionsArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
+        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
         await ShowDailyQuestionsItemsAsync(gridifyFilter);
         StateHasChanged();
     }

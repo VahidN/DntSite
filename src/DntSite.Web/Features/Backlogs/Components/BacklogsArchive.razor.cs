@@ -4,6 +4,7 @@ using DntSite.Web.Features.Backlogs.RoutingConstants;
 using DntSite.Web.Features.Backlogs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Backlogs.Components;
 
@@ -22,6 +23,8 @@ public partial class BacklogsArchive
 
     [Parameter] public string? Filter { set; get; }
 
+    [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
+
     protected override async Task OnInitializedAsync()
     {
         await ShowBacklogsAsync(Filter);
@@ -32,6 +35,7 @@ public partial class BacklogsArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
+        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
         await ShowBacklogsAsync(gridifyFilter);
         StateHasChanged();
     }

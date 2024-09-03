@@ -4,6 +4,7 @@ using DntSite.Web.Features.Advertisements.Services.Contracts;
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Advertisements.Components;
 
@@ -22,6 +23,8 @@ public partial class AdvertisementsArchive
 
     [Parameter] public string? Filter { set; get; }
 
+    [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
+
     protected override async Task OnInitializedAsync()
     {
         await ShowAdvertisementsAsync(Filter);
@@ -33,6 +36,7 @@ public partial class AdvertisementsArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
+        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
         await ShowAdvertisementsAsync(gridifyFilter);
         StateHasChanged();
     }

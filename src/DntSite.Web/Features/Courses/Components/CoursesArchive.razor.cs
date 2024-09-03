@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.RoutingConstants;
 using DntSite.Web.Features.Courses.Services.Contracts;
+using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Courses.Components;
 
@@ -22,6 +23,8 @@ public partial class CoursesArchive
 
     [Parameter] public string? Filter { set; get; }
 
+    [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
+
     protected override async Task OnInitializedAsync()
     {
         await ShowCoursesAsync(Filter);
@@ -32,6 +35,7 @@ public partial class CoursesArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
+        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
         await ShowCoursesAsync(gridifyFilter);
         StateHasChanged();
     }
