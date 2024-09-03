@@ -11,3 +11,4 @@ Disallow: /send-private-message/
 Disallow: /send-private-message
 Disallow: /news/redirect/
 Disallow: /newsarchive/news/
+Disallow: /forgotten-password/
