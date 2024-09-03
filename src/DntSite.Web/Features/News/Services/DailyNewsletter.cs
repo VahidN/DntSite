@@ -25,7 +25,7 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
 
         var data = new StringBuilder();
 
-        foreach (var post in posts)
+        foreach (var post in posts.OrderBy(x => x.PublishDate))
         {
             var group = post.Categories.FirstOrDefault();
 
@@ -40,7 +40,11 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
             data.AppendFormat(CultureInfo.InvariantCulture, format: "<b>{0}</b>{1}<br/>", post.User!.FriendlyName, Hr);
 
             var contentDir = post.Content.GetDir();
-            var contentAlign = string.Equals(contentDir, "ltr", StringComparison.OrdinalIgnoreCase) ? "align='left'" : "align='right'";
+
+            var contentAlign = string.Equals(contentDir, b: "ltr", StringComparison.OrdinalIgnoreCase)
+                ? "align='left'"
+                : "align='right'";
+
             data.AppendFormat(CultureInfo.InvariantCulture, format: "<div {2} dir='{0}'>{1}</div>", contentDir,
                 post.Content, contentAlign);
 
