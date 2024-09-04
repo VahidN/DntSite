@@ -22,7 +22,7 @@ public class FullTextSearchService : IFullTextSearchService
 {
     private const LuceneVersion LuceneVersion = Lucene.Net.Util.LuceneVersion.LUCENE_48;
     private readonly Analyzer _analyzer;
-
+    private readonly IAntiXssService _antiXssService;
     private readonly IAppFoldersService _appFoldersService;
     private readonly FSDirectory _fsDirectory;
 
@@ -38,9 +38,12 @@ public class FullTextSearchService : IFullTextSearchService
 
     private bool _isDisposed;
 
-    public FullTextSearchService(IAppFoldersService appFoldersService, ILogger<FullTextSearchService> logger)
+    public FullTextSearchService(IAppFoldersService appFoldersService,
+        IAntiXssService antiXssService,
+        ILogger<FullTextSearchService> logger)
     {
         _appFoldersService = appFoldersService ?? throw new ArgumentNullException(nameof(appFoldersService));
+        _antiXssService = antiXssService;
         _logger = logger;
 
         _keywordAnalyzer = new KeywordAnalyzer();
@@ -245,7 +248,8 @@ public class FullTextSearchService : IFullTextSearchService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Demystify(), message: "FindPagedPosts({Terms})", searchText);
+            _logger.LogError(ex.Demystify(), message: "FindPagedPosts({Terms})",
+                _antiXssService.GetSanitizedHtml(searchText));
         }
 
         return new PagedResultModel<LuceneSearchResult>();
