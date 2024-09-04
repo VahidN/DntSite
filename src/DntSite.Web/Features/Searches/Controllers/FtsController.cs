@@ -1,3 +1,4 @@
+﻿using DntSite.Web.Common.BlazorSsr.Utils;
 using DntSite.Web.Features.Searches.ModelsMappings;
 using DntSite.Web.Features.Searches.Services.Contracts;
 
@@ -11,6 +12,9 @@ public class FtsController(IFullTextSearchService fullTextSearchService, ISearch
 {
     private const int ItemsPerPage = 12;
 
+    private const string ItemNotFound =
+        $"<span class='alert alert-warning'><i class='{DntBootstrapIcons.BiXCircle} me-2'></i>اطلاعاتی یافت نشد</span>";
+
     [HttpGet(template: "[action]")]
     [IgnoreAntiforgeryToken]
     public IActionResult Search([FromQuery] string? searchQuery)
@@ -23,7 +27,10 @@ public class FtsController(IFullTextSearchService fullTextSearchService, ISearch
         var results = fullTextSearchService.FindPagedPosts(searchQuery, ItemsPerPage, pageNumber: 1, ItemsPerPage);
 
         return results.TotalItems == 0
-            ? Ok(Array.Empty<string>())
+            ? Ok(new[]
+            {
+                ItemNotFound
+            })
             : Ok(results.Data.OrderBy(result => result.ItemType.Value)
                 .ThenByDescending(result => result.Score)
                 .Select(result => result.MapToTemplatedResult(searchQuery))
