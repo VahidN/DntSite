@@ -105,6 +105,7 @@ public class BlogCommentsService(
         foreach (var item in list)
         {
             item.IsDeleted = true;
+            fullTextSearchService.DeleteLuceneDocument(item.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
         }
     }
 

@@ -483,7 +483,7 @@ public class BlogPostsService(
         await blogCommentsService.MarkAllOfPostCommentsAsDeletedAsync(deleteId.Value);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.DeleteLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 
         var listOfActualTags = await tagsService.GetThisPostTagsListAsync(deleteId.Value);
         await statService.RecalculateBlogPostTagsInUseCountsAsync(listOfActualTags);
@@ -529,6 +529,7 @@ public class BlogPostsService(
         }
 
         await emailsService.WriteArticleSendEmailAsync(post);
+        fullTextSearchService.AddOrUpdateLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: ""));
 
         return post;
     }
