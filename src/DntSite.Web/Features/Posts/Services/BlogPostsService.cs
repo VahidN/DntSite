@@ -427,7 +427,10 @@ public class BlogPostsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(blogPost.MapToPostWhatsNewItemModel(siteRootUri: ""));
+        if (IsPublicPost(blogPost))
+        {
+            fullTextSearchService.AddOrUpdateLuceneDocument(blogPost.MapToPostWhatsNewItemModel(siteRootUri: ""));
+        }
 
         return blogPost;
     }
@@ -529,7 +532,11 @@ public class BlogPostsService(
         }
 
         await emailsService.WriteArticleSendEmailAsync(post);
-        fullTextSearchService.AddOrUpdateLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: ""));
+
+        if (IsPublicPost(post))
+        {
+            fullTextSearchService.AddOrUpdateLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: ""));
+        }
 
         return post;
     }
@@ -545,6 +552,8 @@ public class BlogPostsService(
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToPostWhatsNewItemModel(siteRootUri: "")));
     }
+
+    private static bool IsPublicPost(BlogPost blogPost) => blogPost.NumberOfRequiredPoints is null or 0;
 
     private static string ModifyImagesExt(string ext)
     {
