@@ -44,6 +44,8 @@ jobs:
       with:
         tag_name: "Release_${{ steps.date.outputs.date }}"
         files: "release*"
-        body: **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.read_version.outputs.last_tag }}...${{ steps.read_version.outputs.current_version }}
+        body: |
+          # What's Changed
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.read_version.outputs.last_tag }}...${{ steps.read_version.outputs.current_version }}
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
