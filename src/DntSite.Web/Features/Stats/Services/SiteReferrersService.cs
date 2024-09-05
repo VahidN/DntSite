@@ -23,7 +23,7 @@ public class SiteReferrersService(
     {
         try
         {
-            var referrerUrlHtmlContent = await baseHttpClient.HttpClient.GetStringAsync(referrerUrl);
+            var referrerUrlHtmlContent = await GetReferrerUrlHtmlContentAsync(referrerUrl);
 
             if (!await IsValidReferrerAsync(referrerUrl, referrerUrlHtmlContent))
             {
@@ -102,18 +102,41 @@ public class SiteReferrersService(
         await uow.SaveChangesAsync();
     }
 
-    private string GetReferrerTitle(string referrerUrl, string referrerUrlHtmlContent)
+    private async Task<string> GetReferrerUrlHtmlContentAsync(string referrerUrl)
     {
-        var title = htmlHelperService.GetHtmlPageTitle(referrerUrlHtmlContent);
+        try
+        {
+            return await baseHttpClient.HttpClient.GetStringAsync(referrerUrl);
+        }
+        catch (HttpRequestException hre)
+        {
+            switch (hre.StatusCode)
+            {
+                case HttpStatusCode.Found: // 302 = HttpStatusCode.Redirect
+                case HttpStatusCode.Moved: // 301 = HttpStatusCode.MovedPermanently
+                case HttpStatusCode.Unauthorized:
+                case HttpStatusCode.Forbidden: // fine! they have banned this server, but the link is correct!
+                case HttpStatusCode.OK:
+                    break;
+                default:
+                    throw;
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private string GetReferrerTitle(string referrerUrl, string? referrerUrlHtmlContent)
+    {
+        var title = htmlHelperService.GetHtmlPageTitle(referrerUrlHtmlContent ?? "");
         sitePageTitlesCacheService.AddSitePageTitle(referrerUrl, title);
 
         return string.IsNullOrWhiteSpace(title) ? referrerUrl : title;
     }
 
-    private async Task<bool> IsValidReferrerAsync(string referrerUrl, string referrerUrlHtmlContent)
+    private async Task<bool> IsValidReferrerAsync(string referrerUrl, string? referrerUrlHtmlContent)
         => !IsSpam(referrerUrlHtmlContent) && !await appSettingsService.IsBannedReferrerAsync(referrerUrl);
 
     private static bool IsSpam(string? referrerUrlHtmlContent)
-        => string.IsNullOrWhiteSpace(referrerUrlHtmlContent) ||
-           referrerUrlHtmlContent.Contains(value: "<iframe", StringComparison.OrdinalIgnoreCase);
+        => referrerUrlHtmlContent?.Contains(value: "<iframe", StringComparison.OrdinalIgnoreCase) == true;
 }
