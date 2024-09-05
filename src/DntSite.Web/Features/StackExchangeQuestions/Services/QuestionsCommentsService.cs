@@ -94,7 +94,7 @@ public class QuestionsCommentsService(
             return;
         }
 
-        var comment = await FindStackExchangeQuestionCommentAsync(modelFormCommentId.Value);
+        var comment = await FindStackExchangeQuestionCommentIncludeParentAsync(modelFormCommentId.Value);
 
         if (comment is null)
         {
@@ -116,7 +116,7 @@ public class QuestionsCommentsService(
             return;
         }
 
-        var comment = await FindStackExchangeQuestionCommentAsync(modelFormCommentId.Value);
+        var comment = await FindStackExchangeQuestionCommentIncludeParentAsync(modelFormCommentId.Value);
 
         if (comment is null)
         {
@@ -153,6 +153,7 @@ public class QuestionsCommentsService(
         var result = AddStackExchangeQuestionComment(comment);
         await uow.SaveChangesAsync();
 
+        await SetParentAsync(result, modelFormPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
 
         await SendEmailsAsync(result);
@@ -194,6 +195,15 @@ public class QuestionsCommentsService(
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
+
+    private async Task SetParentAsync(StackExchangeQuestionComment result, int modelFormPostId)
+        => result.Parent = await uow.DbSet<StackExchangeQuestion>().FindAsync(modelFormPostId) ??
+                           new StackExchangeQuestion
+                           {
+                               Id = modelFormPostId,
+                               Title = "",
+                               Description = ""
+                           };
 
     private async Task SendEmailsAsync(StackExchangeQuestionComment result)
     {

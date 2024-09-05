@@ -18,6 +18,8 @@ public interface IDailyNewsItemCommentsService : IScopedService
 
     ValueTask<DailyNewsItemComment?> FindBlogNewsCommentAsync(int commentId);
 
+    Task<DailyNewsItemComment?> FindBlogNewsCommentIncludeParentAsync(int commentId);
+
     DailyNewsItemComment AddBlogNewsComment(DailyNewsItemComment comment);
 
     Task<PagedResultModel<DailyNewsItemComment>> GetLastPagedBlogNewsCommentsAsNoTrackingAsync(int pageNumber,

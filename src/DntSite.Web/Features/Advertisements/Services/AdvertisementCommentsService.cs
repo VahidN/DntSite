@@ -35,6 +35,9 @@ public class AdvertisementCommentsService(
     public ValueTask<AdvertisementComment?> FindAdvertisementCommentAsync(int id)
         => _advertisementComments.FindAsync(id);
 
+    public Task<AdvertisementComment?> FindAdvertisementCommentIncludeParentAsync(int id)
+        => _advertisementComments.Include(x => x.Parent).OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.Id == id);
+
     public async Task<List<AdvertisementComment>> GetRootCommentsOfAdvertisementAsync(int postId,
         int count = 1000,
         bool showDeletedItems = false)
@@ -155,7 +158,7 @@ public class AdvertisementCommentsService(
             return;
         }
 
-        var comment = await FindAdvertisementCommentAsync(modelFormCommentId.Value);
+        var comment = await FindAdvertisementCommentIncludeParentAsync(modelFormCommentId.Value);
 
         if (comment is null)
         {
@@ -177,7 +180,7 @@ public class AdvertisementCommentsService(
             return;
         }
 
-        var comment = await FindAdvertisementCommentAsync(modelFormCommentId.Value);
+        var comment = await FindAdvertisementCommentIncludeParentAsync(modelFormCommentId.Value);
 
         if (comment is null)
         {
@@ -213,7 +216,9 @@ public class AdvertisementCommentsService(
         var result = AddAdvertisementComment(comment);
         await uow.SaveChangesAsync();
 
+        await SetParentAsync(result, modelFormPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
         await SendEmailsAsync(result);
         await UpdateStatAsync(result);
     }
@@ -233,6 +238,14 @@ public class AdvertisementCommentsService(
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
+
+    private async Task SetParentAsync(AdvertisementComment result, int modelFormPostId)
+        => result.Parent = await uow.DbSet<Advertisement>().FindAsync(modelFormPostId) ?? new Advertisement
+        {
+            Id = modelFormPostId,
+            Title = "",
+            Body = ""
+        };
 
     private async Task UpdateStatAsync(AdvertisementComment comment)
     {

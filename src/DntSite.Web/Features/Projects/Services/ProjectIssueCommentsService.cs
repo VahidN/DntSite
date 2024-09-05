@@ -219,6 +219,7 @@ public class ProjectIssueCommentsService(
         var result = AddIssueComment(comment);
         await uow.SaveChangesAsync();
 
+        await SetParentAsync(result, modelFormPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: ""));
 
         await NotifyNewCommentAsync(modelFormPostId, currentUserUserId, result);
@@ -238,6 +239,15 @@ public class ProjectIssueCommentsService(
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")));
     }
+
+    private async Task SetParentAsync(ProjectIssueComment result, int modelFormPostId)
+        => result.Parent = await uow.DbSet<ProjectIssue>().FindAsync(modelFormPostId) ?? new ProjectIssue
+        {
+            Id = modelFormPostId,
+            Title = "",
+            Description = "",
+            RevisionNumber = ""
+        };
 
     private async Task NotifyNewCommentAsync(int modelFormPostId, int currentUserUserId, ProjectIssueComment result)
     {

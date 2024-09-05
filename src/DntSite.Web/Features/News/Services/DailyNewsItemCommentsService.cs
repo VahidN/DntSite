@@ -50,6 +50,9 @@ public class DailyNewsItemCommentsService(
     public ValueTask<DailyNewsItemComment?> FindBlogNewsCommentAsync(int commentId)
         => _dailyNewsItemComments.FindAsync(commentId);
 
+    public Task<DailyNewsItemComment?> FindBlogNewsCommentIncludeParentAsync(int commentId)
+        => _dailyNewsItemComments.Include(x => x.Parent).OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.Id == commentId);
+
     public DailyNewsItemComment AddBlogNewsComment(DailyNewsItemComment comment)
         => _dailyNewsItemComments.Add(comment).Entity;
 
@@ -108,7 +111,7 @@ public class DailyNewsItemCommentsService(
             return;
         }
 
-        var comment = await FindBlogNewsCommentAsync(commentId.Value);
+        var comment = await FindBlogNewsCommentIncludeParentAsync(commentId.Value);
 
         if (comment is null)
         {
@@ -130,7 +133,7 @@ public class DailyNewsItemCommentsService(
             return;
         }
 
-        var comment = await FindBlogNewsCommentAsync(commentId.Value);
+        var comment = await FindBlogNewsCommentIncludeParentAsync(commentId.Value);
 
         if (comment is null)
         {
@@ -163,7 +166,9 @@ public class DailyNewsItemCommentsService(
         var result = AddBlogNewsComment(comment);
         await uow.SaveChangesAsync();
 
+        await SetParentAsync(result, blogPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
         await SendEmailsAsync(result);
         await UpdateStatAsync(blogPostId, userId);
     }
@@ -181,6 +186,14 @@ public class DailyNewsItemCommentsService(
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
+
+    private async Task SetParentAsync(DailyNewsItemComment result, int modelFormPostId)
+        => result.Parent = await uow.DbSet<DailyNewsItem>().FindAsync(modelFormPostId) ?? new DailyNewsItem
+        {
+            Id = modelFormPostId,
+            Title = "",
+            Url = ""
+        };
 
     private async Task SendEmailsAsync(DailyNewsItemComment result)
     {

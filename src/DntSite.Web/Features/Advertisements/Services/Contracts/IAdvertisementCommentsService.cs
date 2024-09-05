@@ -16,6 +16,8 @@ public interface IAdvertisementCommentsService : IScopedService
 
     ValueTask<AdvertisementComment?> FindAdvertisementCommentAsync(int id);
 
+    Task<AdvertisementComment?> FindAdvertisementCommentIncludeParentAsync(int id);
+
     Task<List<AdvertisementComment>> GetLastPagedAdvertisementCommentsAsNoTrackingAsync(int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false);

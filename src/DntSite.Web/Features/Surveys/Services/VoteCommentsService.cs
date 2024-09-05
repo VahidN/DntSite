@@ -214,7 +214,9 @@ public class VoteCommentsService(
         var result = AddVoteComment(comment);
         await uow.SaveChangesAsync();
 
+        await SetParentAsync(result, modelFormPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
         await SendEmailsAsync(result);
         await UpdateStatAsync(modelFormPostId, currentUserUserId);
     }
@@ -234,6 +236,13 @@ public class VoteCommentsService(
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
+
+    private async Task SetParentAsync(SurveyComment result, int modelFormPostId)
+        => result.Parent = await uow.DbSet<Survey>().FindAsync(modelFormPostId) ?? new Survey
+        {
+            Id = modelFormPostId,
+            Title = ""
+        };
 
     private async Task SendEmailsAsync(SurveyComment result)
     {

@@ -198,6 +198,7 @@ public class CourseTopicCommentsService(
         var result = AddTopicComment(comment);
         await uow.SaveChangesAsync();
 
+        await SetParentAsync(result, modelFormPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
 
         await NotifyNewCommentAsync(modelFormPostId, currentUserUserId, result);
@@ -215,6 +216,14 @@ public class CourseTopicCommentsService(
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
+
+    private async Task SetParentAsync(CourseTopicComment result, int modelFormPostId)
+        => result.Parent = await uow.DbSet<CourseTopic>().FindAsync(modelFormPostId) ?? new CourseTopic
+        {
+            Id = modelFormPostId,
+            Title = "",
+            Body = ""
+        };
 
     private async Task NotifyNewCommentAsync(int modelFormPostId, int currentUserUserId, CourseTopicComment result)
     {

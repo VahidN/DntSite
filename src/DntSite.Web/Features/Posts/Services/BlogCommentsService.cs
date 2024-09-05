@@ -34,6 +34,9 @@ public class BlogCommentsService(
 
     public ValueTask<BlogPostComment?> FindBlogCommentAsync(int id) => _blogComments.FindAsync(id);
 
+    public Task<BlogPostComment?> FindBlogCommentIncludeParentAsync(int id)
+        => _blogComments.Include(x => x.Parent).OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.Id == id);
+
     public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId)
         => userRatingsService.SaveRatingAsync<BlogPostCommentReaction, BlogPostComment>(fkId, reactionType, fromUserId);
 
@@ -95,7 +98,7 @@ public class BlogCommentsService(
 
     public async Task MarkAllOfPostCommentsAsDeletedAsync(int postId)
     {
-        var list = await _blogComments.Where(x => x.ParentId == postId).ToListAsync();
+        var list = await _blogComments.Include(x => x.Parent).Where(x => x.ParentId == postId).ToListAsync();
 
         if (list.Count == 0)
         {
@@ -169,7 +172,7 @@ public class BlogCommentsService(
             return;
         }
 
-        var comment = await FindBlogCommentAsync(commentId.Value);
+        var comment = await FindBlogCommentIncludeParentAsync(commentId.Value);
 
         if (comment is null)
         {
@@ -191,7 +194,7 @@ public class BlogCommentsService(
             return;
         }
 
-        var comment = await FindBlogCommentAsync(commentId.Value);
+        var comment = await FindBlogCommentIncludeParentAsync(commentId.Value);
 
         if (comment is null)
         {
@@ -224,6 +227,7 @@ public class BlogCommentsService(
         var result = AddBlogComment(comment);
         await uow.SaveChangesAsync();
 
+        await SetParentAsync(result, blogPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
 
         await SendEmailsAsync(result);
@@ -243,6 +247,14 @@ public class BlogCommentsService(
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
+
+    private async Task SetParentAsync(BlogPostComment result, int modelFormPostId)
+        => result.Parent = await uow.DbSet<BlogPost>().FindAsync(modelFormPostId) ?? new BlogPost
+        {
+            Id = modelFormPostId,
+            Title = "",
+            Body = ""
+        };
 
     private async Task SendEmailsAsync(BlogPostComment result)
     {

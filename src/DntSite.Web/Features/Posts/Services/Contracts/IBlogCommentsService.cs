@@ -37,6 +37,8 @@ public interface IBlogCommentsService : IScopedService
 
     ValueTask<BlogPostComment?> FindBlogCommentAsync(int id);
 
+    Task<BlogPostComment?> FindBlogCommentIncludeParentAsync(int id);
+
     Task<string> FindBlogCommentPostTitleAsync(int commentId);
 
     ValueTask<BlogPost?> FindCommentPostAsync(int blogPostId);
