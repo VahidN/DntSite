@@ -1,6 +1,7 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Stats.Middlewares.Contracts;
 using DntSite.Web.Features.UserProfiles.Models;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace DntSite.Web.Features.UserProfiles.Components;
 
+[DoNotLogReferrer]
 public partial class Login
 {
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;

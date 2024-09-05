@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using DntSite.Web.Features.Stats.Middlewares.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Stats.Middlewares;
@@ -65,7 +66,10 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
         ShouldSkipThisRequestAsync(HttpContext context, string referrerUrl, string destinationUrl, string rootUrl)
         => string.IsNullOrEmpty(referrerUrl) || !referrerUrl.IsValidUrl() || context.IsProtectedRoute() ||
            await _uaParserService.IsSpiderClientAsync(context) || !destinationUrl.IsReferrerToThisSite(rootUrl) ||
-           referrerUrl.IsLocalReferrer(destinationUrl) || destinationUrl.IsStaticFileUrl();
+           referrerUrl.IsLocalReferrer(destinationUrl) || destinationUrl.IsStaticFileUrl() || DoNotLog(context);
+
+    private static bool DoNotLog(HttpContext context)
+        => context.GetEndpoint()?.Metadata?.GetMetadata<DoNotLogReferrerAttribute>() is not null;
 
     private async Task ProcessItemsQueueAsync()
     {
