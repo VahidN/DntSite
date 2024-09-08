@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.Models;
 
 namespace DntSite.Web.Features.Courses.ModelsMappings;
 
-public class AfterMapCourseModel(IAntiXssService antiXssService) : IMappingAction<CourseModel, Course>
+public class AfterMapCourseModel(IAppAntiXssService antiXssService) : IMappingAction<CourseModel, Course>
 {
     public void Process(CourseModel source, Course destination, ResolutionContext context)
     {

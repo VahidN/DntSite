@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Common.Utils.Pagings;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -15,7 +16,7 @@ public class VoteCommentsService(
     IUnitOfWork uow,
     IUserRatingsService userRatingsService,
     IStatService statService,
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     IVotesEmailsService votesEmailsService,
     IFullTextSearchService fullTextSearchService) : IVoteCommentsService
 {

@@ -1,3 +1,5 @@
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
+
 namespace DntSite.Web.Features.Common.Controllers;
 
 /// <summary>
@@ -8,7 +10,7 @@ namespace DntSite.Web.Features.Common.Controllers;
 [Microsoft.AspNetCore.Mvc.Route(template: "api/[controller]")]
 public class JavaScriptErrorsReportController(
     ILogger<JavaScriptErrorsReportController> logger,
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     ICacheService cacheService) : ControllerBase
 {
     [HttpPost(template: "[action]")]

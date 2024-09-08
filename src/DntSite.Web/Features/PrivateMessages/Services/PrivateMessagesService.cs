@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Common.Utils.Pagings;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.PrivateMessages.Entities;
@@ -11,7 +12,7 @@ namespace DntSite.Web.Features.PrivateMessages.Services;
 
 public class PrivateMessagesService(
     IUnitOfWork uow,
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     IUsersInfoService usersService,
     IPrivateMessagesEmailsService privateMessagesEmailsService) : IPrivateMessagesService
 {

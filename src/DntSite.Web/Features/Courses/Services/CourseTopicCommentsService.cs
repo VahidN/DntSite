@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Common.Utils.Pagings;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.ModelsMappings;
@@ -15,7 +16,7 @@ public class CourseTopicCommentsService(
     IUnitOfWork uow,
     IUserRatingsService userRatingsService,
     IStatService statService,
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     ICoursesEmailsService emailsService,
     IFullTextSearchService fullTextSearchService) : ICourseTopicCommentsService
 {

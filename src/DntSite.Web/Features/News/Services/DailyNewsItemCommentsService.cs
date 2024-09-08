@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Common.Utils.Pagings;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.ModelsMappings;
@@ -13,7 +14,7 @@ namespace DntSite.Web.Features.News.Services;
 
 public class DailyNewsItemCommentsService(
     IUnitOfWork uow,
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     IStatService statService,
     IDailyNewsEmailsService dailyNewsEmailsService,
     IUserRatingsService userRatingsService,

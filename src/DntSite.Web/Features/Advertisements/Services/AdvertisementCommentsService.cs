@@ -1,6 +1,7 @@
 ﻿using DntSite.Web.Features.Advertisements.Entities;
 using DntSite.Web.Features.Advertisements.ModelsMappings;
 using DntSite.Web.Features.Advertisements.Services.Contracts;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
@@ -14,7 +15,7 @@ namespace DntSite.Web.Features.Advertisements.Services;
 public class AdvertisementCommentsService(
     IUnitOfWork uow,
     IUserRatingsService userRatingsService,
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     IAdvertisementsEmailsService emailsService,
     IStatService statService,
     IFullTextSearchService fullTextSearchService) : IAdvertisementCommentsService

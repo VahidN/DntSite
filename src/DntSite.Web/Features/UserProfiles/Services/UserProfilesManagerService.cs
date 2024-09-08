@@ -13,7 +13,7 @@ public class UserProfilesManagerService(
     IUnitOfWork uow,
     IMapper mapper,
     IUploadFileService uploadFileService,
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     IUsersInfoService usersInfoService,
     ICurrentUserService currentUserService,
     BaseHttpClient baseHttpClient,

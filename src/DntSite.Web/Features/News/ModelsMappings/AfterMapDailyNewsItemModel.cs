@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
 
 namespace DntSite.Web.Features.News.ModelsMappings;
 
 public class AfterMapDailyNewsItemModel(
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     IUrlNormalizationService urlNormalizationService,
     IPasswordHasherService passwordHasherService) : IMappingAction<DailyNewsItemModel, DailyNewsItem>
 {

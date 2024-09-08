@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
 
 namespace DntSite.Web.Features.Projects.ModelsMappings;
 
-public class AfterMapProjectModel(IAntiXssService antiXssService) : IMappingAction<ProjectModel, Project>
+public class AfterMapProjectModel(IAppAntiXssService antiXssService) : IMappingAction<ProjectModel, Project>
 {
     public void Process(ProjectModel source, Project destination, ResolutionContext context)
     {

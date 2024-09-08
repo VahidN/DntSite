@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Common.Utils.Pagings;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -14,7 +15,7 @@ namespace DntSite.Web.Features.Projects.Services;
 public class ProjectIssueCommentsService(
     IUnitOfWork uow,
     IUserRatingsService userRatingsService,
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     IProjectsEmailsService projectsEmailsService,
     IStatService statService,
     IFullTextSearchService fullTextSearchService) : IProjectIssueCommentsService

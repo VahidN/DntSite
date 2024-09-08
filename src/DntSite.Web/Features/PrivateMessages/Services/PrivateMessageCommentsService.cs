@@ -1,3 +1,4 @@
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
 using DntSite.Web.Features.PrivateMessages.Entities;
@@ -9,7 +10,7 @@ namespace DntSite.Web.Features.PrivateMessages.Services;
 
 public class PrivateMessageCommentsService(
     IUnitOfWork uow,
-    IAntiXssService antiXssService,
+    IAppAntiXssService antiXssService,
     IPrivateMessagesEmailsService privateMessagesEmailsService,
     IPrivateMessagesService privateMessagesService) : IPrivateMessageCommentsService
 {

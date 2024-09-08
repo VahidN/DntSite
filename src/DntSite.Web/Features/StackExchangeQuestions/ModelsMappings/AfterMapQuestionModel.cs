@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.Models;
 
 namespace DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 
-public class AfterMapQuestionModel(IAntiXssService antiXssService)
+public class AfterMapQuestionModel(IAppAntiXssService antiXssService)
     : IMappingAction<QuestionModel, StackExchangeQuestion>
 {
     public void Process(QuestionModel source, StackExchangeQuestion destination, ResolutionContext context)

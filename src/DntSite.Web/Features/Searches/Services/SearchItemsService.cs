@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Common.Utils.Pagings;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Searches.Entities;
@@ -6,7 +7,7 @@ using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Searches.Services;
 
-public class SearchItemsService(IUnitOfWork uow, IAntiXssService antiXssService) : ISearchItemsService
+public class SearchItemsService(IUnitOfWork uow, IAppAntiXssService antiXssService) : ISearchItemsService
 {
     private readonly DbSet<SearchItem> _searchItems = uow.DbSet<SearchItem>();
 
