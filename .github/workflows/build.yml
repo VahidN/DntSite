@@ -46,6 +46,6 @@ jobs:
         files: "release*"
         body: |
           # What's Changed
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.read_version.outputs.last_tag }}...${{ steps.read_version.outputs.current_version }}
+          **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
