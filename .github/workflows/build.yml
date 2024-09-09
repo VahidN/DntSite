@@ -44,8 +44,5 @@ jobs:
       with:
         tag_name: "Release_${{ steps.date.outputs.date }}"
         files: "release*"
-        body: |
-          # What's Changed
-          **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
