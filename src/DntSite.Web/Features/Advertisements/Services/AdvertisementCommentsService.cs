@@ -241,12 +241,14 @@ public class AdvertisementCommentsService(
     }
 
     private async Task SetParentAsync(AdvertisementComment result, int modelFormPostId)
-        => result.Parent = await uow.DbSet<Advertisement>().FindAsync(modelFormPostId) ?? new Advertisement
-        {
-            Id = modelFormPostId,
-            Title = "",
-            Body = ""
-        };
+        => result.Parent =
+            await uow.DbSet<Advertisement>().OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.Id == modelFormPostId) ??
+            new Advertisement
+            {
+                Id = modelFormPostId,
+                Title = "",
+                Body = ""
+            };
 
     private async Task UpdateStatAsync(AdvertisementComment comment)
     {

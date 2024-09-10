@@ -27,7 +27,7 @@ public static class BacklogsMappersExtensions
             Title = $"{WhatsNewItemType.Backlogs.Value}: {item.Title}",
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id)),
-            Categories = [WhatsNewItemType.Backlogs.Value],
+            Categories = item.Tags.Select(x => x.Name),
             ItemType = WhatsNewItemType.Backlogs,
             Id = item.Id,
             UserId = item.UserId,

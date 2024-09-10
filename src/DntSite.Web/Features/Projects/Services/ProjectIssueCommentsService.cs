@@ -242,13 +242,15 @@ public class ProjectIssueCommentsService(
     }
 
     private async Task SetParentAsync(ProjectIssueComment result, int modelFormPostId)
-        => result.Parent = await uow.DbSet<ProjectIssue>().FindAsync(modelFormPostId) ?? new ProjectIssue
-        {
-            Id = modelFormPostId,
-            Title = "",
-            Description = "",
-            RevisionNumber = ""
-        };
+        => result.Parent =
+            await uow.DbSet<ProjectIssue>().OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.Id == modelFormPostId) ??
+            new ProjectIssue
+            {
+                Id = modelFormPostId,
+                Title = "",
+                Description = "",
+                RevisionNumber = ""
+            };
 
     private async Task NotifyNewCommentAsync(int modelFormPostId, int currentUserUserId, ProjectIssueComment result)
     {

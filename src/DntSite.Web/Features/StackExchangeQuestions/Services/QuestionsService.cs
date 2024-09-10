@@ -112,6 +112,7 @@ public class QuestionsService(
         bool isDone = false)
     {
         var query = _stackExchangeQuestions.AsNoTracking()
+            .Include(x => x.Tags)
             .Include(x => x.User)
             .Where(x => x.IsDeleted == showDeletedItems);
 
@@ -302,7 +303,11 @@ public class QuestionsService(
 
     public Task IndexStackExchangeQuestionsAsync()
     {
-        var items = _stackExchangeQuestions.AsNoTracking().Include(x => x.User).Where(x => !x.IsDeleted).AsEnumerable();
+        var items = _stackExchangeQuestions.AsNoTracking()
+            .Include(x => x.Tags)
+            .Include(x => x.User)
+            .Where(x => !x.IsDeleted)
+            .AsEnumerable();
 
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToWhatsNewItemModel(siteRootUri: "")));

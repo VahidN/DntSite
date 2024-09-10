@@ -198,13 +198,15 @@ public class QuestionsCommentsService(
     }
 
     private async Task SetParentAsync(StackExchangeQuestionComment result, int modelFormPostId)
-        => result.Parent = await uow.DbSet<StackExchangeQuestion>().FindAsync(modelFormPostId) ??
-                           new StackExchangeQuestion
-                           {
-                               Id = modelFormPostId,
-                               Title = "",
-                               Description = ""
-                           };
+        => result.Parent =
+            await uow.DbSet<StackExchangeQuestion>()
+                .OrderBy(x => x.Id)
+                .FirstOrDefaultAsync(x => x.Id == modelFormPostId) ?? new StackExchangeQuestion
+            {
+                Id = modelFormPostId,
+                Title = "",
+                Description = ""
+            };
 
     private async Task SendEmailsAsync(StackExchangeQuestionComment result)
     {

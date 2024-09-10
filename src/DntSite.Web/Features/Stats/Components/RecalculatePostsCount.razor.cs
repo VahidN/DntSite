@@ -1,4 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
+using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.RoutingConstants;
 using DntSite.Web.Features.Stats.Services.Contracts;
@@ -10,6 +11,8 @@ namespace DntSite.Web.Features.Stats.Components;
 public partial class RecalculatePostsCount
 {
     [InjectComponentScoped] internal IStatService StatService { set; get; } = null!;
+
+    [Inject] internal IFullTextSearchService FullTextSearchService { set; get; } = null!;
 
     [SupplyParameterFromForm] internal RecalculatePostsCountAction RecalculateAction { set; get; }
 
@@ -29,6 +32,10 @@ public partial class RecalculatePostsCount
                 break;
             case RecalculatePostsCountAction.UpdateAllUsersRatings:
                 await StatService.UpdateAllUsersRatingsAsync();
+
+                break;
+            case RecalculatePostsCountAction.UpdateFullTextIndex:
+                FullTextSearchService.DeleteOldIndexFiles();
 
                 break;
         }

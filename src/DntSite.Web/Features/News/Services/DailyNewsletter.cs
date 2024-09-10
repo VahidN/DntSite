@@ -27,7 +27,7 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
 
         foreach (var post in posts.OrderBy(x => x.ItemType.Value).ThenBy(x => x.PublishDate))
         {
-            var group = post.Categories.FirstOrDefault();
+            var group = post.ItemType.Value;
 
             if (!string.IsNullOrWhiteSpace(group))
             {

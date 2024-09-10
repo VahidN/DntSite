@@ -352,6 +352,7 @@ public class VotesService(
     public Task IndexSurveysAsync()
     {
         var items = _votes.Where(x => !x.IsDeleted)
+            .Include(x => x.Tags)
             .Include(x => x.SurveyItems)
             .Include(x => x.User)
             .AsNoTracking()

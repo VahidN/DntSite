@@ -342,6 +342,7 @@ public class AdvertisementsService(
 
         var items = _advertisements.AsNoTracking()
             .Where(x => !x.IsDeleted && (!x.DueDate.HasValue || x.DueDate.Value >= now))
+            .Include(x => x.Tags)
             .Include(x => x.User)
             .AsEnumerable();
 

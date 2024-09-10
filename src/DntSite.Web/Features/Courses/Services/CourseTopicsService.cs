@@ -38,7 +38,10 @@ public class CourseTopicsService(
     public ValueTask<CourseTopic?> FindCourseTopicAsync(int id) => _courseTopics.FindAsync(id);
 
     public Task<CourseTopic?> FindCourseTopicAsync(Guid id)
-        => _courseTopics.OrderBy(x => x.DisplayId).FirstOrDefaultAsync(x => x.DisplayId == id);
+        => _courseTopics.Include(x => x.Course)
+            .ThenInclude(x => x.Tags)
+            .OrderBy(x => x.DisplayId)
+            .FirstOrDefaultAsync(x => x.DisplayId == id);
 
     public CourseTopic AddCourseTopic(CourseTopic topic) => _courseTopics.Add(topic).Entity;
 
@@ -72,6 +75,7 @@ public class CourseTopicsService(
             .Where(x => !x.IsDeleted && x.Course.IsReadyToPublish)
             .Include(x => x.User)
             .Include(x => x.Course)
+            .ThenInclude(x => x.Tags)
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
@@ -104,6 +108,7 @@ public class CourseTopicsService(
         => _courseTopics.Where(x => x.IsDeleted != onlyActive)
             .Include(x => x.User)
             .Include(x => x.Course)
+            .ThenInclude(x => x.Tags)
             .Include(x => x.Reactions)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(x => x.DisplayId == topicId);
@@ -166,6 +171,7 @@ public class CourseTopicsService(
                     .OrderBy(x => x.Id)
                     .Include(x => x.User)
                     .Include(x => x.Course)
+                    .ThenInclude(x => x.Tags)
                     .Include(x => x.Reactions)
                     .OrderBy(x => x.Id)
                     .FirstOrDefaultAsync(),
@@ -174,6 +180,7 @@ public class CourseTopicsService(
                 .OrderByDescending(x => x.Id)
                 .Include(x => x.User)
                 .Include(x => x.Course)
+                .ThenInclude(x => x.Tags)
                 .Include(x => x.Reactions)
                 .FirstOrDefaultAsync()
         };
@@ -243,6 +250,7 @@ public class CourseTopicsService(
         var courseTopic = AddCourseTopic(item);
         await uow.SaveChangesAsync();
 
+        await SetParentAsync(courseTopic, courseId);
         fullTextSearchService.AddOrUpdateLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: ""));
 
         return courseTopic;
@@ -265,12 +273,25 @@ public class CourseTopicsService(
             .Where(x => !x.IsDeleted && x.Course.IsReadyToPublish)
             .Include(x => x.User)
             .Include(x => x.Course)
+            .ThenInclude(x => x.Tags)
             .OrderByDescending(x => x.Id)
             .AsEnumerable();
 
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
+
+    private async Task SetParentAsync(CourseTopic result, int courseId)
+        => result.Course =
+            await uow.DbSet<Course>()
+                .Include(x => x.Tags)
+                .OrderBy(x => x.Id)
+                .FirstOrDefaultAsync(x => x.Id == courseId) ?? new Course
+            {
+                Id = courseId,
+                Title = "",
+                Description = ""
+            };
 
     private Task UpdateReadingTimeOfOldPostsAsync(CourseTopic? currentItem)
     {

@@ -546,6 +546,7 @@ public class BlogPostsService(
         var items = _blogPosts.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.User)
+            .Include(x => x.Tags)
             .OrderByDescending(x => x.Id)
             .AsEnumerable();
 

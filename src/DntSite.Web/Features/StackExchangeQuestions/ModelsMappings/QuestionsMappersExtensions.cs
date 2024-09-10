@@ -28,7 +28,7 @@ public static class QuestionsMappersExtensions
             OriginalTitle = item.Parent.Title,
             Url = siteRootUri.CombineUrl(
                 Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-            Categories = [WhatsNewItemType.QuestionsComments.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.QuestionsComments,
             Id = item.Id,
             UserId = item.UserId,
@@ -53,7 +53,7 @@ public static class QuestionsMappersExtensions
             Title = $"{WhatsNewItemType.Questions.Value}: {item.Title}",
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id)),
-            Categories = [WhatsNewItemType.Questions.Value],
+            Categories = item.Tags.Select(x => x.Name),
             ItemType = WhatsNewItemType.Questions,
             Id = item.Id,
             UserId = item.UserId,

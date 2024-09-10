@@ -107,6 +107,7 @@ public class DailyNewsItemsService(
         => _dailyNewsItem.AsNoTracking()
             .Where(x => x.IsDeleted == showDeletedItems)
             .Include(x => x.User)
+            .Include(x => x.Tags)
             .OrderByDescending(x => x.Id)
             .Take(count)
             .ToListAsync();
@@ -524,6 +525,7 @@ public class DailyNewsItemsService(
         var items = _dailyNewsItem.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.User)
+            .Include(x => x.Tags)
             .OrderByDescending(x => x.Id)
             .AsEnumerable();
 

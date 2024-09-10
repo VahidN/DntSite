@@ -9,7 +9,8 @@ namespace DntSite.Web.Features.Searches.ModelsMappings;
 
 public static class LuceneDocumentMapper
 {
-    private const string Format = "yyyyMMddHHmmss.fffzzzzz";
+    private const string DateTimeFormat = "yyyyMMddHHmmss.fffzzzzz";
+    private const char CategoriesSeparator = ':';
 
     public const string IndexedTitle = nameof(IndexedTitle);
 
@@ -22,14 +23,9 @@ public static class LuceneDocumentMapper
         string badgeCssClass = "badge rounded-pill")
         => result is null
             ? ""
-            : string.Format(CultureInfo.InvariantCulture, ParsedSearchResultTemplate, 
-               linkCssClass, 
-               result.Url, 
-               badgeCssClass,
-               result.ItemType.BgColor, 
-               result.ItemType.Value,
-               result.OriginalTitle.ToHighlightedText(searchQuery)               
-               );
+            : string.Format(CultureInfo.InvariantCulture, ParsedSearchResultTemplate, linkCssClass, result.Url,
+                badgeCssClass, result.ItemType.BgColor, result.ItemType.Value,
+                result.OriginalTitle.ToHighlightedText(searchQuery));
 
     public static Document MapToLuceneDocument(this WhatsNewItemModel post)
     {
@@ -37,17 +33,19 @@ public static class LuceneDocumentMapper
 
         return
         [
-            new TextField(IndexedTitle, post.ItemType.IsCommentOrReply() ? "" : post.OriginalTitle, Field.Store.NO)
+            new TextField(IndexedTitle, post.ItemType.IsCommentOrReply() ? "" : post.OriginalTitle, Field.Store.YES)
             {
                 Boost = 2
             },
             new TextField(nameof(WhatsNewItemModel.OriginalTitle), post.OriginalTitle, Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.Url), post.Url, Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.PublishDate),
-                post.PublishDate.ToString(Format, CultureInfo.InvariantCulture), Field.Store.YES),
+                post.PublishDate.ToString(DateTimeFormat, CultureInfo.InvariantCulture), Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.ItemType), post.ItemType.Value, Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.AuthorName), post.AuthorName, Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.Content), post.Content, Field.Store.YES),
+            new TextField(nameof(WhatsNewItemModel.Categories), string.Join(CategoriesSeparator, post.Categories),
+                Field.Store.YES),
 
             // Document StringField instances are sort of keywords, they are not analyzed, they indexed as is (in its original case).
             new StringField(nameof(WhatsNewItemModel.Id), post.Id.ToString(CultureInfo.InvariantCulture),
@@ -76,13 +74,14 @@ public static class LuceneDocumentMapper
             OriginalTitle = document.Get(nameof(WhatsNewItemModel.OriginalTitle), CultureInfo.InvariantCulture),
             Url = document.Get(nameof(WhatsNewItemModel.Url), CultureInfo.InvariantCulture),
             PublishDate =
-                DateTimeOffset.ParseExact(publishDate, Format, DateTimeFormatInfo.InvariantInfo,
+                DateTimeOffset.ParseExact(publishDate, DateTimeFormat, DateTimeFormatInfo.InvariantInfo,
                     DateTimeStyles.AssumeUniversal),
             ItemType =
                 WhatsNewItemType.Get(document.Get(nameof(WhatsNewItemModel.ItemType), CultureInfo.InvariantCulture)),
             EntityType = Type.GetType(document.Get(nameof(WhatsNewItemModel.EntityType), CultureInfo.InvariantCulture)),
             AuthorName = document.Get(nameof(WhatsNewItemModel.AuthorName), CultureInfo.InvariantCulture),
             UserId = document.Get(nameof(WhatsNewItemModel.UserId), CultureInfo.InvariantCulture).ToInt(),
+            Categories = document.GetCategories(),
             Content = content,
             Score = score * scoreNorm,
             LuceneDocId = luceneDocId
@@ -109,5 +108,14 @@ public static class LuceneDocumentMapper
             UserId = item.UserId,
             EntityType = item.EntityType
         };
+    }
+
+    private static IEnumerable<string> GetCategories(this Document document)
+    {
+        var categories = document.Get(nameof(WhatsNewItemModel.Categories), CultureInfo.InvariantCulture);
+
+        return string.IsNullOrWhiteSpace(categories)
+            ? Enumerable.Empty<string>()
+            : categories.Split(CategoriesSeparator, StringSplitOptions.RemoveEmptyEntries);
     }
 }

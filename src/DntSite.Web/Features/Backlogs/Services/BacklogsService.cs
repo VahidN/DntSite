@@ -495,6 +495,7 @@ public class BacklogsService(
     public Task IndexBackLogsAsync()
     {
         var items = _backlogs.AsNoTracking()
+            .Include(x => x.Tags)
             .Include(x => x.User)
             .Include(x => x.DoneByUser)
             .Where(x => !x.IsDeleted)

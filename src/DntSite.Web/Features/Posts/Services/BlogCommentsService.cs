@@ -250,12 +250,14 @@ public class BlogCommentsService(
     }
 
     private async Task SetParentAsync(BlogPostComment result, int modelFormPostId)
-        => result.Parent = await uow.DbSet<BlogPost>().FindAsync(modelFormPostId) ?? new BlogPost
-        {
-            Id = modelFormPostId,
-            Title = "",
-            Body = ""
-        };
+        => result.Parent =
+            await uow.DbSet<BlogPost>().OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.Id == modelFormPostId) ??
+            new BlogPost
+            {
+                Id = modelFormPostId,
+                Title = "",
+                Body = ""
+            };
 
     private async Task SendEmailsAsync(BlogPostComment result)
     {

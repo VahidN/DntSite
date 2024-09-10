@@ -30,7 +30,7 @@ public static class ProjectsMappersExtensions
             OriginalTitle = item.Parent.Title,
             Url = siteRootUri.CombineUrl(Invariant(
                 $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectId}/{item.ParentId}#comment-{item.Id}")),
-            Categories = [WhatsNewItemType.ProjectIssuesReplies.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.ProjectIssuesReplies,
             Id = item.Id,
             UserId = item.UserId,
@@ -56,7 +56,7 @@ public static class ProjectsMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(
                 Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
-            Categories = [WhatsNewItemType.ProjectIssues.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.ProjectIssues,
             Id = item.Id,
             UserId = item.UserId,
@@ -82,7 +82,7 @@ public static class ProjectsMappersExtensions
             OriginalTitle = item.FileName,
             Url = siteRootUri.CombineUrl(
                 Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
-            Categories = [WhatsNewItemType.ProjectFiles.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.ProjectFiles,
             Id = item.Id,
             UserId = item.UserId,
@@ -108,7 +108,7 @@ public static class ProjectsMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(
                 Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
-            Categories = [WhatsNewItemType.ProjectFaqs.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.ProjectFaqs,
             Id = item.Id,
             UserId = item.UserId,
@@ -134,7 +134,7 @@ public static class ProjectsMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(
                 Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
-            Categories = [WhatsNewItemType.ProjectsFaqs.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.ProjectsFaqs,
             Id = item.Id,
             UserId = item.UserId,
@@ -159,7 +159,7 @@ public static class ProjectsMappersExtensions
             Title = $"{WhatsNewItemType.ProjectsNews.Value}: {item.Title}",
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id)),
-            Categories = [WhatsNewItemType.ProjectsNews.Value],
+            Categories = item.Tags.Select(x => x.Name),
             ItemType = WhatsNewItemType.ProjectsNews,
             Id = item.Id,
             UserId = item.UserId,
@@ -185,7 +185,7 @@ public static class ProjectsMappersExtensions
             OriginalTitle = item.FileName,
             Url = siteRootUri.CombineUrl(
                 Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
-            Categories = [WhatsNewItemType.ProjectsFiles.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.ProjectsFiles,
             Id = item.Id,
             UserId = item.UserId,
@@ -211,7 +211,7 @@ public static class ProjectsMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(
                 Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
-            Categories = [WhatsNewItemType.ProjectsIssues.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.ProjectsIssues,
             Id = item.Id,
             UserId = item.UserId,
@@ -238,7 +238,7 @@ public static class ProjectsMappersExtensions
             OriginalTitle = item.Parent.Title,
             Url = siteRootUri.CombineUrl(Invariant(
                 $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.Parent.ProjectId}/{item.ParentId}#comment-{item.Id}")),
-            Categories = [WhatsNewItemType.ProjectsIssuesReplies.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.ProjectsIssuesReplies,
             Id = item.Id,
             UserId = item.UserId,

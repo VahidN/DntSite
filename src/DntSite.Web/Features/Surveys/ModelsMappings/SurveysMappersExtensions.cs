@@ -28,7 +28,7 @@ public static class SurveysMappersExtensions
             Title = $"{WhatsNewItemType.AllVotes.Value}: {item.Title}",
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id)),
-            Categories = [WhatsNewItemType.AllVotes.Value],
+            Categories = item.Tags.Select(x => x.Name),
             ItemType = WhatsNewItemType.AllVotes,
             Id = item.Id,
             UserId = item.UserId,
@@ -54,7 +54,7 @@ public static class SurveysMappersExtensions
             OriginalTitle = item.Parent.Title,
             Url = siteRootUri.CombineUrl(Invariant(
                 $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-            Categories = [WhatsNewItemType.VotesReplies.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.VotesReplies,
             Id = item.Id,
             UserId = item.UserId,

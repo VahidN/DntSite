@@ -1,3 +1,4 @@
+using AsyncKeyedLock;
 using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Searches.Services;
@@ -5,11 +6,11 @@ namespace DntSite.Web.Features.Searches.Services;
 public class StartupIndexingService(IServiceScopeFactory serviceScopeFactory, ILogger<StartupIndexingService> logger)
     : BackgroundService
 {
-    private static readonly SemaphoreSlim Signal = new(initialCount: 1, maxCount: 1);
+    private static readonly AsyncNonKeyedLocker Lock = new(maxCount: 1);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await Signal.WaitAsync(stoppingToken);
+        using var lockAsync = await Lock.LockAsync(stoppingToken);
 
         try
         {
@@ -21,7 +22,7 @@ public class StartupIndexingService(IServiceScopeFactory serviceScopeFactory, IL
             using var scope = serviceScopeFactory.CreateScope();
 
             var fullTextSearchWriterService = scope.ServiceProvider.GetRequiredService<IFullTextSearchWriterService>();
-            await fullTextSearchWriterService.IndexDatabaseAsync(stoppingToken);
+            await fullTextSearchWriterService.IndexDatabaseAsync(forceStart: false, stoppingToken);
         }
         catch (Exception ex)
         {
@@ -31,14 +32,12 @@ public class StartupIndexingService(IServiceScopeFactory serviceScopeFactory, IL
         {
             logger.LogInformation(message: "{DateTime} Finished StartupIndexingService.",
                 DateTime.UtcNow.ToString(format: "HH:mm:ss.fff", CultureInfo.InvariantCulture));
-
-            Signal.Release();
         }
     }
 
     public override void Dispose()
     {
         base.Dispose();
-        Signal.Dispose();
+        Lock.Dispose();
     }
 }

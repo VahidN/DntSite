@@ -338,7 +338,11 @@ public class LearningPathService(
 
     public Task IndexLearningPathsAsync()
     {
-        var items = _learningPaths.AsNoTracking().Include(x => x.User).Where(x => !x.IsDeleted).AsEnumerable();
+        var items = _learningPaths.AsNoTracking()
+            .Include(x => x.Tags)
+            .Include(x => x.User)
+            .Where(x => !x.IsDeleted)
+            .AsEnumerable();
 
         return fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToWhatsNewItemModel(siteRootUri: "")));

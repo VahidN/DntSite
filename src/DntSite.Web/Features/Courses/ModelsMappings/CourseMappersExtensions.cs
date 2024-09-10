@@ -28,7 +28,7 @@ public static class CourseMappersExtensions
             OriginalTitle = item.Parent.Title,
             Url = siteRootUri.CombineUrl(Invariant(
                 $"{CoursesRoutingConstants.CoursesTopicBase}/{item.Parent.CourseId}/{item.Parent.DisplayId:D}#comment-{item.Id}")),
-            Categories = [WhatsNewItemType.CourseTopicsReplies.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.CourseTopicsReplies,
             Id = item.Id,
             UserId = item.UserId,
@@ -54,7 +54,7 @@ public static class CourseMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(
                 Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{item.CourseId}/{item.DisplayId:D}")),
-            Categories = [WhatsNewItemType.AllCoursesTopics.Value],
+            Categories = item.Course.Tags.Select(x => x.Name),
             ItemType = WhatsNewItemType.AllCoursesTopics,
             Id = item.Id,
             UserId = item.UserId,
@@ -79,7 +79,7 @@ public static class CourseMappersExtensions
             Title = $"{WhatsNewItemType.AllCourses.Value}: {item.Title}",
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id)),
-            Categories = [WhatsNewItemType.AllCourses.Value],
+            Categories = item.Tags.Select(x => x.Name),
             ItemType = WhatsNewItemType.AllCourses,
             Id = item.Id,
             UserId = item.UserId,

@@ -1,5 +1,4 @@
-@using DntSite.Web.Features.Stats.Models
-@using DntSite.Web.Features.Stats.RoutingConstants
+﻿@using DntSite.Web.Features.Stats.Models
 @attribute [Route(StatsRoutingConstants.RecalculatePostsCount)]
 
 <DntSitePageTitle PageTitle="بازشماری آمار تعداد مطالب سیستم"/>
@@ -24,6 +23,12 @@
                         name="@nameof(RecalculateAction)" value="@RecalculatePostsCountAction.UpdateAllUsersRatings"
                         class="btn btn-sm btn-primary me-2">
                     محاسبه مجدد جمع امتیازهای کلیه کاربران
+                </button>
+
+                <button type="submit"
+                        name="@nameof(RecalculateAction)" value="@RecalculatePostsCountAction.UpdateFullTextIndex"
+                        class="btn btn-sm btn-primary me-2">
+                    بازسازی ایندکس جستجوی سایت
                 </button>
             </div>
         </EditForm>

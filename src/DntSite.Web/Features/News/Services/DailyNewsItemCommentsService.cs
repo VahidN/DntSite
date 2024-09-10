@@ -189,12 +189,14 @@ public class DailyNewsItemCommentsService(
     }
 
     private async Task SetParentAsync(DailyNewsItemComment result, int modelFormPostId)
-        => result.Parent = await uow.DbSet<DailyNewsItem>().FindAsync(modelFormPostId) ?? new DailyNewsItem
-        {
-            Id = modelFormPostId,
-            Title = "",
-            Url = ""
-        };
+        => result.Parent =
+            await uow.DbSet<DailyNewsItem>().OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.Id == modelFormPostId) ??
+            new DailyNewsItem
+            {
+                Id = modelFormPostId,
+                Title = "",
+                Url = ""
+            };
 
     private async Task SendEmailsAsync(DailyNewsItemComment result)
     {

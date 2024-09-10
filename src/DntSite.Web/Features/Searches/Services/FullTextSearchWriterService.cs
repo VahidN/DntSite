@@ -1,3 +1,4 @@
+using AsyncKeyedLock;
 using DntSite.Web.Features.Advertisements.Services.Contracts;
 using DntSite.Web.Features.Backlogs.Services.Contracts;
 using DntSite.Web.Features.Courses.Services.Contracts;
@@ -35,14 +36,20 @@ public class FullTextSearchWriterService(
     IVoteCommentsService voteCommentsService,
     IVotesService votesService) : IFullTextSearchWriterService
 {
-    public async Task IndexDatabaseAsync(CancellationToken stoppingToken)
+    private static readonly AsyncNonKeyedLocker Lock = new(maxCount: 1);
+
+    public async Task IndexDatabaseAsync(bool forceStart, CancellationToken stoppingToken)
     {
+        using var @lock = await Lock.LockAsync(stoppingToken);
+
         try
         {
-            if (fullTextSearchService.IsDatabaseIndexed)
+            if (!forceStart && fullTextSearchService.IsDatabaseIndexed)
             {
                 return;
             }
+
+            logger.LogWarning(message: "Started Indexing Database");
 
             Func<Task>[] actions =
             [
@@ -76,5 +83,7 @@ public class FullTextSearchWriterService(
         {
             logger.LogError(ex.Demystify(), message: "Failed to index database");
         }
+
+        logger.LogWarning(message: "Finished Indexing Database");
     }
 }

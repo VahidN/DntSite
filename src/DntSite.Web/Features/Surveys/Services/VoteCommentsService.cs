@@ -239,11 +239,12 @@ public class VoteCommentsService(
     }
 
     private async Task SetParentAsync(SurveyComment result, int modelFormPostId)
-        => result.Parent = await uow.DbSet<Survey>().FindAsync(modelFormPostId) ?? new Survey
-        {
-            Id = modelFormPostId,
-            Title = ""
-        };
+        => result.Parent =
+            await uow.DbSet<Survey>().OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.Id == modelFormPostId) ?? new Survey
+            {
+                Id = modelFormPostId,
+                Title = ""
+            };
 
     private async Task SendEmailsAsync(SurveyComment result)
     {

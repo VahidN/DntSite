@@ -35,6 +35,13 @@ public static class SchedulersConfig
                 return now.Minute % 5 == 0 && now.Second == 1;
             });
 
+            options.AddScheduledTask<FullTextSearchWriterJob>(utcNow =>
+            {
+                var now = GetNowIranTime(utcNow);
+
+                return now.Minute % 5 == 0 && now.Second == 1;
+            });
+
             options.AddScheduledTask<DeleteOrphans>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 7, Second: 1 });
 

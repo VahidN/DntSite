@@ -27,7 +27,7 @@ public static class AdvertisementsMappersExtensions
             Title = $"{WhatsNewItemType.AllAdvertisements.Value}: {item.Title}",
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id)),
-            Categories = [WhatsNewItemType.AllAdvertisements.Value],
+            Categories = item.Tags.Select(x => x.Name),
             ItemType = WhatsNewItemType.AllAdvertisements,
             Id = item.Id,
             UserId = item.UserId,
@@ -53,7 +53,7 @@ public static class AdvertisementsMappersExtensions
             OriginalTitle = item.Parent.Title,
             Url = siteRootUri.CombineUrl(Invariant(
                 $"{AdvertisementsRoutingConstants.AdvertisementsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
-            Categories = [WhatsNewItemType.AdvertisementComments.Value],
+            Categories = [],
             ItemType = WhatsNewItemType.AdvertisementComments,
             Id = item.Id,
             UserId = item.UserId,
