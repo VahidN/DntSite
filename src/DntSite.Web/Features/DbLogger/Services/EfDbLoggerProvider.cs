@@ -10,16 +10,20 @@ public class EfDbLoggerProvider : ILoggerProvider
 {
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly List<EfDbLoggerItem> _currentBatch = new();
-    private readonly TimeSpan _interval = TimeSpan.FromSeconds(7);
+    private readonly TimeSpan _interval = TimeSpan.FromSeconds(value: 7);
     private readonly BlockingCollection<EfDbLoggerItem> _messageQueue = new(new ConcurrentQueue<EfDbLoggerItem>());
     private readonly Task _outputTask;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IOptions<StartupSettingsModel> _siteSettings;
     private bool _isDisposed;
+    private StartupSettingsModel _siteSettings;
 
-    public EfDbLoggerProvider(IOptions<StartupSettingsModel> siteSettings, IServiceProvider serviceProvider)
+    public EfDbLoggerProvider(IOptionsMonitor<StartupSettingsModel> siteSettings, IServiceProvider serviceProvider)
     {
-        _siteSettings = siteSettings;
+        ArgumentNullException.ThrowIfNull(siteSettings);
+
+        _siteSettings = siteSettings.CurrentValue;
+        siteSettings.OnChange(settings => _siteSettings = settings);
+
         _serviceProvider = serviceProvider;
         _outputTask = Task.Run(ProcessLogQueueAsync);
     }
@@ -29,7 +33,7 @@ public class EfDbLoggerProvider : ILoggerProvider
 
     public void Dispose()
     {
-        Dispose(true);
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
 
@@ -61,7 +65,8 @@ public class EfDbLoggerProvider : ILoggerProvider
         }
     }
 
-    [SuppressMessage("Microsoft.Usage", "CA1031:catch a more specific allowed exception type, or rethrow the exception",
+    [SuppressMessage(category: "Microsoft.Usage",
+        checkId: "CA1031:catch a more specific allowed exception type, or rethrow the exception",
         Justification = "cancellation token canceled or CompleteAdding called")]
     private async Task ProcessLogQueueAsync()
     {
@@ -86,7 +91,8 @@ public class EfDbLoggerProvider : ILoggerProvider
         }
     }
 
-    [SuppressMessage("Microsoft.Usage", "CA1031:catch a more specific allowed exception type, or rethrow the exception",
+    [SuppressMessage(category: "Microsoft.Usage",
+        checkId: "CA1031:catch a more specific allowed exception type, or rethrow the exception",
         Justification = "don't throw exceptions from logger")]
     private async Task SaveLogItemsAsync(IList<EfDbLoggerItem> items, CancellationToken cancellationToken)
     {
@@ -115,7 +121,8 @@ public class EfDbLoggerProvider : ILoggerProvider
         }
     }
 
-    [SuppressMessage("Microsoft.Usage", "CA1031:catch a more specific allowed exception type, or rethrow the exception",
+    [SuppressMessage(category: "Microsoft.Usage",
+        checkId: "CA1031:catch a more specific allowed exception type, or rethrow the exception",
         Justification = "don't throw exceptions from logger")]
     private void Stop()
     {

@@ -16,7 +16,7 @@ public partial class Login
 {
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
-    [Inject] internal IOptions<StartupSettingsModel> SiteSettings { set; get; } = null!;
+    [Inject] internal IOptionsSnapshot<StartupSettingsModel> SiteSettings { set; get; } = null!;
 
     [InjectComponentScoped] internal IUsersInfoService UsersService { set; get; } = null!;
 

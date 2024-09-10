@@ -1,6 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Models;
-using Microsoft.Extensions.Options;
 
 namespace DntSite.Web.Features.DbLogger.Services;
 
@@ -8,9 +7,9 @@ public class EfDbLogger(
     EfDbLoggerProvider loggerProvider,
     IServiceProvider serviceProvider,
     string loggerName,
-    IOptions<StartupSettingsModel> siteSettings) : ILogger
+    StartupSettingsModel siteSettings) : ILogger
 {
-    private readonly LogLevel _minLevel = siteSettings.Value.Logging.LogLevel.Default;
+    private readonly LogLevel _minLevel = siteSettings.Logging.LogLevel.Default;
 
     public IDisposable? BeginScope<TState>(TState state)
         where TState : notnull

@@ -4,11 +4,11 @@ using Microsoft.Extensions.Options;
 
 namespace DntSite.Web.Features.AppConfigs.Services;
 
-public class AppFoldersService(IWebHostEnvironment webHostEnvironment, IOptions<StartupSettingsModel> siteSettings)
-    : IAppFoldersService
+public class AppFoldersService : IAppFoldersService
 {
     private const string AppDataFolder = "App_Data";
     private const string WwwRoot = "wwwroot";
+    private readonly IWebHostEnvironment _webHostEnvironment;
     private string? _articleImagesPath;
     private string? _avatarsPath;
 
@@ -17,8 +17,19 @@ public class AppFoldersService(IWebHostEnvironment webHostEnvironment, IOptions<
     private string? _databaseFolderPath;
     private string? _defaultConnectionString;
     private string? _luceneIndexFolderPath;
+    private StartupSettingsModel _siteSettings;
     private string? _thumbnailsServicePath;
     private string? _wwwRootPath;
+
+    public AppFoldersService(IWebHostEnvironment webHostEnvironment, IOptionsMonitor<StartupSettingsModel> siteSettings)
+    {
+        ArgumentNullException.ThrowIfNull(siteSettings);
+
+        _webHostEnvironment = webHostEnvironment;
+        _siteSettings = siteSettings.CurrentValue;
+
+        siteSettings.OnChange(settings => _siteSettings = settings);
+    }
 
     public string DefaultConnectionString => _defaultConnectionString ??= GetDefaultConnectionString();
 
@@ -77,7 +88,7 @@ public class AppFoldersService(IWebHostEnvironment webHostEnvironment, IOptions<
 
     private string GetWwwRootPath()
     {
-        var webRootPath = webHostEnvironment.WebRootPath;
+        var webRootPath = _webHostEnvironment.WebRootPath;
 
         if (webRootPath.TrimEnd(Path.DirectorySeparatorChar).EndsWith(WwwRoot, StringComparison.OrdinalIgnoreCase))
         {
@@ -92,7 +103,7 @@ public class AppFoldersService(IWebHostEnvironment webHostEnvironment, IOptions<
 
     private string GetDefaultConnectionString()
     {
-        var defaultConnection = siteSettings.Value.ConnectionStrings.DefaultConnection;
+        var defaultConnection = _siteSettings.ConnectionStrings.DefaultConnection;
 
         return defaultConnection.Replace(oldValue: "|DataDirectory|", DatabaseFolderPath,
             StringComparison.OrdinalIgnoreCase);
