@@ -29,7 +29,7 @@ public partial class Error
 
         if (HttpContext.IsNoneAspNetCoreRequest())
         {
-            NavigationManager.NavigateTo(CommonRoutingConstants.CatchAllPhpRequests);
+            NavigationManager.NavigateTo(CommonRoutingConstants.CatchAllPhpRequestsPath);
 
             return;
         }
