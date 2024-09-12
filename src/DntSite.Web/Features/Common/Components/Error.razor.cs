@@ -1,3 +1,6 @@
+using DntSite.Web.Features.Common.RoutingConstants;
+using DntSite.Web.Features.Common.Utils.WebToolkit;
+
 namespace DntSite.Web.Features.Common.Components;
 
 public partial class Error
@@ -7,6 +10,8 @@ public partial class Error
     [Parameter] public int? ResponseCode { get; set; }
 
     [Inject] internal ILogger<Error> Logger { get; set; } = null!;
+
+    [Inject] public NavigationManager NavigationManager { set; get; } = null!;
 
     private bool IsThisPageCalledDirectly => string.Equals(HttpContext?.GetCurrentUrl(), b: "/error/404",
         StringComparison.OrdinalIgnoreCase);
@@ -19,6 +24,13 @@ public partial class Error
 
         if (httpRequest is null)
         {
+            return;
+        }
+
+        if (HttpContext.IsNoneAspNetCoreRequest())
+        {
+            NavigationManager.NavigateTo(CommonRoutingConstants.CatchAllPhpRequests);
+
             return;
         }
 
