@@ -1,6 +1,6 @@
 ﻿using DntSite.Web.Features.Posts.Services.Contracts;
 
-namespace DntSite.Web.Features.ScheduledTasks.Services;
+namespace DntSite.Web.Features.Posts.ScheduledTasks;
 
 public class DeleteOrphans(IBlogPostDraftsService blogPostDraftsService) : IScheduledTask
 {

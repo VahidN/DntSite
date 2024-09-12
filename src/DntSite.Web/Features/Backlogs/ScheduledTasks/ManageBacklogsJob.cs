@@ -1,6 +1,6 @@
 ﻿using DntSite.Web.Features.Backlogs.Services.Contracts;
 
-namespace DntSite.Web.Features.ScheduledTasks.Services;
+namespace DntSite.Web.Features.Backlogs.ScheduledTasks;
 
 public class ManageBacklogsJob(IBacklogsService backlogsService) : IScheduledTask
 {

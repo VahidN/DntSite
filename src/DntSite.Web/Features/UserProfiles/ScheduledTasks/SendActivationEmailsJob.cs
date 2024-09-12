@@ -1,6 +1,6 @@
 ﻿using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
-namespace DntSite.Web.Features.ScheduledTasks.Services;
+namespace DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 public class SendActivationEmailsJob(IUsersManagerEmailsService emailsService) : IScheduledTask
 {

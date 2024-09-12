@@ -1,7 +1,7 @@
 using AsyncKeyedLock;
 using DntSite.Web.Features.Searches.Services.Contracts;
 
-namespace DntSite.Web.Features.Searches.Services;
+namespace DntSite.Web.Features.Searches.ScheduledTasks;
 
 public class StartupIndexingService(IServiceScopeFactory serviceScopeFactory, ILogger<StartupIndexingService> logger)
     : BackgroundService

@@ -1,4 +1,11 @@
-﻿using DntSite.Web.Features.ScheduledTasks.Services;
+﻿using DntSite.Web.Features.Backlogs.ScheduledTasks;
+using DntSite.Web.Features.News.ScheduledTasks;
+using DntSite.Web.Features.Posts.ScheduledTasks;
+using DntSite.Web.Features.PrivateMessages.ScheduledTasks;
+using DntSite.Web.Features.Searches.ScheduledTasks;
+using DntSite.Web.Features.Seo.ScheduledTasks;
+using DntSite.Web.Features.Stats.ScheduledTasks;
+using DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 namespace DntSite.Web.Features.ServicesConfigs;
 

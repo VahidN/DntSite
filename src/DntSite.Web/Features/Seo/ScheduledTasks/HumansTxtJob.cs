@@ -1,6 +1,6 @@
 ﻿using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
-namespace DntSite.Web.Features.ScheduledTasks.Services;
+namespace DntSite.Web.Features.Seo.ScheduledTasks;
 
 public class HumansTxtJob(IHumansTxtFileService humansTxtFileService) : IScheduledTask
 {

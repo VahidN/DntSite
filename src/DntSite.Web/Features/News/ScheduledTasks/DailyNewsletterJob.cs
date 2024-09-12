@@ -3,7 +3,7 @@ using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.PrivateMessages.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
-namespace DntSite.Web.Features.ScheduledTasks.Services;
+namespace DntSite.Web.Features.News.ScheduledTasks;
 
 public class DailyNewsletterJob(
     IUsersInfoService usersService,
@@ -19,7 +19,7 @@ public class DailyNewsletterJob(
         }
 
         var users = await usersService.GetAllDailyEmailReceiversListAsync();
-        var yesterday = DateTime.UtcNow.AddHours(value: 3.5).AddDays(value: -1);
+        var yesterday = DateTime.UtcNow.AddDays(value: -1);
         var appSetting = await commonService.GetBlogConfigAsync();
 
         if (appSetting is null)

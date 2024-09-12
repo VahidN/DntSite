@@ -1,6 +1,6 @@
 ﻿using DntSite.Web.Features.News.Services.Contracts;
 
-namespace DntSite.Web.Features.ScheduledTasks.Services;
+namespace DntSite.Web.Features.News.ScheduledTasks;
 
 public class NewsHttpStatusCodeJob(IDailyNewsItemsService dailyNewsItemsService) : IScheduledTask
 {

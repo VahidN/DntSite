@@ -1,6 +1,6 @@
 ﻿using DntSite.Web.Features.PrivateMessages.Services.Contracts;
 
-namespace DntSite.Web.Features.ScheduledTasks.Services;
+namespace DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 public class NewPersianYearEmailsJob(IJobsEmailsService jobsEmailsService) : IScheduledTask
 {
