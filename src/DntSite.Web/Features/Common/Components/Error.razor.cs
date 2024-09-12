@@ -8,6 +8,9 @@ public partial class Error
 
     [Inject] internal ILogger<Error> Logger { get; set; } = null!;
 
+    private bool IsThisPageCalledDirectly => string.Equals(HttpContext?.GetCurrentUrl(), b: "/error/404",
+        StringComparison.OrdinalIgnoreCase);
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -19,7 +22,11 @@ public partial class Error
             return;
         }
 
-        Logger.LogError(message: "{Request}", httpRequest.LogRequest(ResponseCode));
+        if (!IsThisPageCalledDirectly)
+        {
+            Logger.LogError(message: "{Request}", httpRequest.LogRequest(ResponseCode));
+        }
+
         SetStatusCode();
     }
 
