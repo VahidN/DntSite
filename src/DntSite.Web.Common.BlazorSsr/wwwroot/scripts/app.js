@@ -62,26 +62,37 @@
                 }
             };
 
+            const searchedItems = [];
             const logSearchedValues = () => {
+                const logSearchedData = () => {
+                    const searchValue = element.value;
+
+                    if (!searchValue || searchedItems.includes(searchValue)) {
+                        return;
+                    }
+
+                    searchedItems.push(searchValue);
+                    fetch(logUrl, {
+                        method: "POST",
+                        body: JSON.stringify(searchValue),
+                        headers: {
+                            'Accept': 'application/json; charset=utf-8',
+                            'Content-Type': 'application/json; charset=utf-8',
+                            'Pragma': 'no-cache'
+                        }
+                    });
+                };
+
                 element.nextSibling.querySelectorAll('.dropdown-item').forEach((item) => {
                     item.onclick = (event) => {
-                        const searchValue = element.value;
-
-                        if (!searchValue) {
-                            return;
-                        }
-
-                        fetch(logUrl, {
-                            method: "POST",
-                            body: JSON.stringify(searchValue),
-                            headers: {
-                                'Accept': 'application/json; charset=utf-8',
-                                'Content-Type': 'application/json; charset=utf-8',
-                                'Pragma': 'no-cache'
-                            }
-                        });
-
+                        logSearchedData();
                         hideDropdown();
+                    };
+                    item.onmousedown = (event) => {
+                        const keycode = (event.keyCode ? event.keyCode : event.which);
+                        if (keycode === 3) { // right click
+                            logSearchedData();
+                        }
                     };
                 });
             };
@@ -138,13 +149,30 @@
                     hideDropdown();
                 }
             };
-
-            element.onblur = (event) => {
-                setTimeout(() => {
-                    hideDropdown();
-                }, 250);
-            };
         });
+    }
+};
+
+window.DntManageEscapeKeyPress = {
+    hideDropDown: (element) => {
+        element.classList.remove('slideIn');
+        element.classList.add('slideOut');
+    },
+    enable: () => {
+        document.onkeydown = (evt) => {
+            evt = evt || window.event;
+            let isEscape = false;
+            if ("key" in evt) {
+                isEscape = (evt.key === "Escape" || evt.key === "Esc");
+            } else {
+                isEscape = (evt.keyCode === 27);
+            }
+            if (isEscape) {
+                document.querySelectorAll(".dropdown-menu").forEach(element => {
+                    DntManageEscapeKeyPress.hideDropDown(element);
+                });
+            }
+        };
     }
 };
 
@@ -1500,6 +1528,7 @@ window.DntUtilities = {
         DntAddActiveClassToLists.enable();
         DntPersianDatePicker.enable();
         DntRemoteAutoComplete.enable();
+        DntManageEscapeKeyPress.enable();
         DntPreventSubmitOnEnter.enable();
         DntNavLinkMenu.enable();
         DntBootstrapDarkMode.enable();
