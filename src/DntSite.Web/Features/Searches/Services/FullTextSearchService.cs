@@ -23,16 +23,22 @@ public class FullTextSearchService : IFullTextSearchService
 {
     private const LuceneVersion LuceneVersion = Lucene.Net.Util.LuceneVersion.LUCENE_48;
 
-    private readonly IAppAntiXssService _antiXssService;
-    private readonly IAppFoldersService _appFoldersService;
-
-    private readonly string[] _defaultSearchFieldNames =
+    private static readonly string[] DefaultMoreLikeThisFieldNames =
     [
         nameof(WhatsNewItemModel.Content), nameof(LuceneDocumentMapper.IndexedTitle),
-        nameof(WhatsNewItemModel.Categories), nameof(WhatsNewItemModel.AuthorName)
+        nameof(WhatsNewItemModel.Categories)
     ];
 
-    private readonly AsyncNonKeyedLocker _lock = new(maxCount: 1);
+    private static readonly string[] DefaultSearchFieldNames =
+    [
+        ..DefaultMoreLikeThisFieldNames, nameof(WhatsNewItemModel.AuthorName)
+    ];
+
+    private static readonly AsyncNonKeyedLocker Locker = new(maxCount: 1);
+    private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(value: 3);
+
+    private readonly IAppAntiXssService _antiXssService;
+    private readonly IAppFoldersService _appFoldersService;
     private readonly ILogger<FullTextSearchService> _logger;
 
     private Analyzer? _analyzer;
@@ -92,7 +98,7 @@ public class FullTextSearchService : IFullTextSearchService
 
     public void DeleteOldIndexFiles()
     {
-        using var @lock = _lock.Lock();
+        using var @lock = Locker.Lock();
 
         try
         {
@@ -123,7 +129,7 @@ public class FullTextSearchService : IFullTextSearchService
             return;
         }
 
-        using var @lock = _lock.Lock();
+        using var @lock = Locker.Lock();
 
         try
         {
@@ -175,7 +181,7 @@ public class FullTextSearchService : IFullTextSearchService
 
     public void CommitChanges()
     {
-        using var @lock = _lock.Lock();
+        using var @lock = Locker.Lock();
 
         try
         {
@@ -194,6 +200,8 @@ public class FullTextSearchService : IFullTextSearchService
         int pageSize,
         params string[]? moreLikeTheseFieldNames)
     {
+        using var @lock = Locker.Lock(LockTimeout, out _);
+
         try
         {
             var docId = FindLuceneDocument(documentTypeIdHash)?.LuceneDocId;
@@ -205,7 +213,7 @@ public class FullTextSearchService : IFullTextSearchService
 
             if (moreLikeTheseFieldNames is null || moreLikeTheseFieldNames.Length == 0)
             {
-                moreLikeTheseFieldNames = _defaultSearchFieldNames;
+                moreLikeTheseFieldNames = DefaultMoreLikeThisFieldNames;
             }
 
             return DoSearch(indexSearcher =>
@@ -246,11 +254,13 @@ public class FullTextSearchService : IFullTextSearchService
             return new PagedResultModel<LuceneSearchResult>();
         }
 
+        using var @lock = Locker.Lock(LockTimeout, out _);
+
         try
         {
             if (searchInTheseFieldNames is null || searchInTheseFieldNames.Length == 0)
             {
-                searchInTheseFieldNames = _defaultSearchFieldNames;
+                searchInTheseFieldNames = DefaultSearchFieldNames;
             }
 
             var parser = new MultiFieldQueryParser(LuceneVersion, searchInTheseFieldNames, _analyzer);
@@ -279,6 +289,8 @@ public class FullTextSearchService : IFullTextSearchService
         string sortField,
         bool isDescending)
     {
+        using var @lock = Locker.Lock(LockTimeout, out _);
+
         var query = new MatchAllDocsQuery();
         var maxItems = GetNumberOfDocuments();
 
@@ -341,7 +353,7 @@ public class FullTextSearchService : IFullTextSearchService
             return;
         }
 
-        using var @lock = _lock.Lock();
+        using var @lock = Locker.Lock();
 
         FtsIndexWrite.DeleteDocuments(new Term(nameof(WhatsNewItemModel.DocumentTypeIdHash), documentTypeIdHash));
 
@@ -352,7 +364,7 @@ public class FullTextSearchService : IFullTextSearchService
     [MemberNotNull(nameof(_indexWriter), nameof(_searcherManager))]
     private void InitializeSearchService()
     {
-        using var @lock = _lock.Lock(TimeSpan.FromSeconds(value: 1), out _);
+        using var @lock = Locker.Lock(LockTimeout, out _);
 
         CloseSearchService();
 
@@ -451,7 +463,7 @@ public class FullTextSearchService : IFullTextSearchService
             }
 
             CloseSearchService();
-            _lock.Dispose();
+            Locker.Dispose();
         }
         finally
         {
