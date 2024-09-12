@@ -1,4 +1,5 @@
-﻿@attribute [Route(PrivateMessagesRoutingConstants.PublicContactUs1)]
+﻿@using DntSite.Web.Features.UserProfiles.Components
+@attribute [Route(PrivateMessagesRoutingConstants.PublicContactUs1)]
 @attribute [Route(PrivateMessagesRoutingConstants.PublicContactUs2)]
 @attribute [Route(PrivateMessagesRoutingConstants.PublicContactUs3)]
 
@@ -9,6 +10,7 @@
         تماس با ما
     </FrameHeader>
     <FrameBody>
+        <EmailsHelp/>
         <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync" FormName="@nameof(PublicContactUs)" Enhance>
             <DataAnnotationsValidator/>
 

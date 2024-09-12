@@ -8,6 +8,8 @@
     <FrameBody>
         @if (_canUsersRegister)
         {
+            <EmailsHelp/>
+
             <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync" FormName="@nameof(Register)" Enhance>
                 <DataAnnotationsValidator/>
 
