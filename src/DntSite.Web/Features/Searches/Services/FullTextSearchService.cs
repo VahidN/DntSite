@@ -169,6 +169,7 @@ public class FullTextSearchService : IFullTextSearchService
 
             if (commitChanges)
             {
+                using var @lock = await Locker.LockAsync(LockTimeout);
                 FtsIndexWrite.Flush(triggerMerge: true, applyAllDeletes: true);
                 FtsIndexWrite.Commit();
             }
