@@ -37,6 +37,17 @@
                 </CellValueTemplate>
             </DntSimpleTableColumn>
 
+            <DntSimpleTableColumn HeaderTitle="مشخصات"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle"
+                                  width="430">
+                <CellValueTemplate Context="record">
+                    <div class="badge bg-secondary text-wrap" dir="ltr">@record.Audit.CreatedByUserAgent</div>
+                    <div class="badge bg-info" dir="ltr">@record.Audit.CreatedByUserIp</div>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
             <DntSimpleTableColumn HeaderTitle="تاریخ ارسال"
                                   HeaderCellClass="text-center"
                                   RowCellClass='record => "text-center align-middle"'
