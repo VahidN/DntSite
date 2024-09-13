@@ -1136,7 +1136,13 @@ window.DntAddIconsToExternalLinks = {
 
 window.DntHtmlEditor = {
     getUniqueId: outerDivElement => outerDivElement.getAttribute('data-dnt-html-editor-id'),
-    setEditorElementHeight: editorElement => {
+    setEditorElementHeight: (editorElement, toolbar) => {
+        toolbar.classList.add('sticky-top', 'bg-light-subtle');
+        const header = document.getElementById("header");
+        if (header) {
+            toolbar.style.top = `${header.clientHeight}px`;
+        }
+
         editorElement.style.minHeight = editorElement.getAttribute('data-dnt-html-editor-height');
         editorElement.style.height = "auto";
     },
@@ -1369,7 +1375,7 @@ window.DntHtmlEditor = {
                     maximumUploadFileSizeErrorMessage
                 } = dntHtmlEditor.getEditorOptions(editorElement);
 
-                dntHtmlEditor.setEditorElementHeight(editorElement);
+                dntHtmlEditor.setEditorElementHeight(editorElement, toolbar);
                 const quill = new Quill(editorElement, {
                     debug: 'warn',
                     readOnly: isReadOnly,
