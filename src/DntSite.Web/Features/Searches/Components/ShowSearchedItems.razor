@@ -22,6 +22,9 @@
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
+                    <button class="btn btn-light btn-sm" type="button" data-dnt-search-text="@record.Text">
+                        <span class="@DntBootstrapIcons.BiSearch text-muted" role="img"></span>
+                    </button>
                     <span dir="@record.Text.GetDir()">
                         @record.Text
                     </span>

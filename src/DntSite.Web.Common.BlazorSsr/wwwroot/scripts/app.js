@@ -1,6 +1,25 @@
-﻿window.DntRemoteAutoComplete = {
+﻿window.DntFillSearchBox = {
+    enable: () => {
+        document.querySelectorAll("button[data-dnt-search-text]").forEach(element => {
+            const searchText = element.getAttribute("data-dnt-search-text");
+            if (!searchText) {
+                return;
+            }
+
+            element.onclick = () => {
+                document.querySelectorAll("input[type=search]").forEach(searchBox => {
+                    searchBox.value = searchText;
+                    searchBox.click();
+                    searchBox.focus();
+                });
+            };
+        });
+    }
+};
+
+window.DntRemoteAutoComplete = {
     canonicalize: (url) => {
-        var div = document.createElement('div');
+        let div = document.createElement('div');
         div.innerHTML = "<a></a>";
         div.firstChild.href = url;
         div.innerHTML = div.innerHTML;
@@ -1528,6 +1547,7 @@ window.DntUtilities = {
         DntAddActiveClassToLists.enable();
         DntPersianDatePicker.enable();
         DntRemoteAutoComplete.enable();
+        DntFillSearchBox.enable();
         DntManageEscapeKeyPress.enable();
         DntPreventSubmitOnEnter.enable();
         DntNavLinkMenu.enable();
