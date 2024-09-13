@@ -21,7 +21,7 @@ public static partial class UriExtensions
 
     [GeneratedRegex(
         pattern:
-        @".*\.aspx|asax|asp|ashx|asmx|axd|master|svc|php|ph|sphp|cfm|ps|stm|htaccess|htpasswd|phtml|cgi|pl|py|rb|sh|jsp|cshtml|vbhtml|swf|xap|asptxt|xamlx(/.*)?",
+        @".*\.aspx|asax|htm|asp|ashx|asmx|axd|master|svc|php|ph|sphp|cfm|ps|stm|htaccess|htpasswd|phtml|cgi|pl|py|rb|sh|jsp|cshtml|vbhtml|swf|xap|asptxt|xamlx(/.*)?",
         RegexOptions.Compiled | RegexOptions.IgnoreCase, matchTimeoutMilliseconds: 3000)]
     private static partial Regex AllNoneAspNetCorePagesRegex();
 }
