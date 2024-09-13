@@ -1,4 +1,19 @@
-﻿window.DntFillSearchBox = {
+﻿window.DntStickySidebar = {
+    enable: () => {
+        const sideBarMenu = document.querySelector("div#sidebar-menu > ul");
+        if (sideBarMenu) {
+            sideBarMenu.classList.add("sticky-top");
+            sideBarMenu.style.zIndex = "1010";
+            const header = document.getElementById("header");
+            if (header) {
+                const top = header.clientHeight + 10;
+                sideBarMenu.style.top = `${top}px`;
+            }
+        }
+    }
+};
+
+window.DntFillSearchBox = {
     enable: () => {
         document.querySelectorAll("button[data-dnt-search-text]").forEach(element => {
             const searchText = element.getAttribute("data-dnt-search-text");
@@ -1554,6 +1569,7 @@ window.DntUtilities = {
         DntPersianDatePicker.enable();
         DntRemoteAutoComplete.enable();
         DntFillSearchBox.enable();
+        DntStickySidebar.enable();
         DntManageEscapeKeyPress.enable();
         DntPreventSubmitOnEnter.enable();
         DntNavLinkMenu.enable();
