@@ -62,5 +62,5 @@ public static class SchedulersConfig
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 1, Second: 1 });
         });
 
-    private static DateTime GetNowIranTime(DateTime utcNow) => utcNow.AddHours(value: 3.5);
+    private static DateTime GetNowIranTime(DateTime utcNow) => utcNow.ToIranTimeZoneDateTime();
 }

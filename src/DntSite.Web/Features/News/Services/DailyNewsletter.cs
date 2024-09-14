@@ -12,11 +12,11 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
         "style='background: lightslategray;color: white;border-radius: 4px;padding: 2px;margin-left: 5px;'";
 
     // It runs in a http context less environment.
-    public async Task<string> GetEmailContentAsync(string url, DateTime yesterday)
+    public async Task<string> GetEmailContentAsync(DateTime dateTime)
     {
         var posts = (await feedsService.GetLatestChangesAsync()).RssItems?.Where(x
-            => x.PublishDate.Year == yesterday.Year && x.PublishDate.Month == yesterday.Month &&
-               x.PublishDate.Day == yesterday.Day);
+            => x.PublishDate.Year == dateTime.Year && x.PublishDate.Month == dateTime.Month &&
+               x.PublishDate.Day == dateTime.Day);
 
         if (posts is null)
         {

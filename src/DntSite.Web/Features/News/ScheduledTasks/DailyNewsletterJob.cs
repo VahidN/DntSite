@@ -1,5 +1,4 @@
-﻿using DntSite.Web.Features.Common.Services.Contracts;
-using DntSite.Web.Features.News.Services.Contracts;
+﻿using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.PrivateMessages.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
@@ -8,8 +7,7 @@ namespace DntSite.Web.Features.News.ScheduledTasks;
 public class DailyNewsletterJob(
     IUsersInfoService usersService,
     IDailyNewsletter dailyNewsletter,
-    IJobsEmailsService jobsEmailsService,
-    ICommonService commonService) : IScheduledTask
+    IJobsEmailsService jobsEmailsService) : IScheduledTask
 {
     public async Task RunAsync()
     {
@@ -19,23 +17,16 @@ public class DailyNewsletterJob(
         }
 
         var users = await usersService.GetAllDailyEmailReceiversListAsync();
-        var yesterday = DateTime.UtcNow.AddDays(value: -1);
-        var appSetting = await commonService.GetBlogConfigAsync();
+        var dateTime = DateTime.UtcNow.ToIranTimeZoneDateTime().AddDays(value: -1);
 
-        if (appSetting is null)
-        {
-            throw new InvalidOperationException(message: "appSetting is null");
-        }
-
-        var url = $"{appSetting.SiteRootUri.TrimEnd(trimChar: '/')}/";
-        var content = await dailyNewsletter.GetEmailContentAsync(url, yesterday);
+        var content = await dailyNewsletter.GetEmailContentAsync(dateTime);
 
         if (string.IsNullOrWhiteSpace(content))
         {
             return;
         }
 
-        await jobsEmailsService.SendDailyNewsletterEmailAsync(users, url, content, yesterday);
+        await jobsEmailsService.SendDailyNewsletterEmailAsync(users, content, dateTime);
     }
 
     public bool IsShuttingDown { get; set; }

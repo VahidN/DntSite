@@ -12,7 +12,7 @@ public class JobsEmailsService(
     ICommonService commonService,
     IStatService statService) : IJobsEmailsService
 {
-    public Task SendDailyNewsletterEmailAsync(IList<User> users, string url, string content, DateTime yesterday)
+    public Task SendDailyNewsletterEmailAsync(IList<User> users, string content, DateTime yesterday)
     {
         var emails = users.Select(x => x.EMail).ToList();
 
@@ -21,7 +21,6 @@ public class JobsEmailsService(
         return emailsFactoryService.SendEmailToAllUsersAsync<DailyNewsletterEmail, DailyNewsletterEmailModel>(emails,
             messageId: "DailyNewsletter", inReplyTo: "", references: "DailyNewsletter", new DailyNewsletterEmailModel
             {
-                BaseUrl = url,
                 Body = $"<b>{emailSubject}</b><br/><br/>{content}"
             }, emailSubject, addIp: false);
     }
