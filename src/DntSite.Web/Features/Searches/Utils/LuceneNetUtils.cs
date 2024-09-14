@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Lucene.Net.Documents;
 using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
 
@@ -56,5 +57,28 @@ public static class LuceneNetUtils
 
             return parser.Parse(searchTerms);
         }
+    }
+
+    public static Document NormalizeDocument(this Document document)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+
+        foreach (var field in document)
+        {
+            switch (field)
+            {
+                case StringField stringField:
+                    stringField.SetStringValue(stringField.GetStringValue(CultureInfo.InvariantCulture)
+                        .ApplyCorrectYeKe());
+
+                    break;
+                case TextField textField:
+                    textField.SetStringValue(textField.GetStringValue(CultureInfo.InvariantCulture).ApplyCorrectYeKe());
+
+                    break;
+            }
+        }
+
+        return document;
     }
 }

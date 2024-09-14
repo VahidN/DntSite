@@ -31,7 +31,7 @@ public static class LuceneDocumentMapper
     {
         ArgumentNullException.ThrowIfNull(post);
 
-        return
+        Document document =
         [
             new TextField(IndexedTitle, post.ItemType.IsCommentOrReply() ? "" : post.OriginalTitle, Field.Store.YES)
             {
@@ -56,6 +56,8 @@ public static class LuceneDocumentMapper
                 Field.Store.YES),
             new StringField(nameof(WhatsNewItemModel.EntityType), post.EntityType?.FullName ?? "", Field.Store.YES)
         ];
+
+        return document.NormalizeDocument();
     }
 
     public static LuceneSearchResult MapToLuceneSearchResult(this Document document,
