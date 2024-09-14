@@ -75,6 +75,30 @@ window.DntRemoteAutoComplete = {
                 dropdown.classList.add('slideOut');
             };
 
+            const hideDropdownOnEscKeyPress = (evt) => {
+                evt = evt || window.event;
+                let isEscape = false;
+                if ("key" in evt) {
+                    isEscape = (evt.key === "Escape" || evt.key === "Esc");
+                } else {
+                    isEscape = (evt.keyCode === 27);
+                }
+                if (isEscape) {
+                    hideDropdown();
+                }
+            };
+
+            document.onkeydown = (evt) => {
+                hideDropdownOnEscKeyPress(evt);
+            };
+
+            document.onclick = (evt) => {
+                if (!dropdown.contains(evt.target)) {
+                    // Clicked outside the dropdown
+                    hideDropdown();
+                }
+            };
+
             const showDropdown = () => {
                 dropdown.classList.remove('slideOut');
                 dropdown.classList.add('slideIn');
@@ -184,29 +208,6 @@ window.DntRemoteAutoComplete = {
                 }
             };
         });
-    }
-};
-
-window.DntManageEscapeKeyPress = {
-    hideDropDown: (element) => {
-        element.classList.remove('slideIn');
-        element.classList.add('slideOut');
-    },
-    enable: () => {
-        document.onkeydown = (evt) => {
-            evt = evt || window.event;
-            let isEscape = false;
-            if ("key" in evt) {
-                isEscape = (evt.key === "Escape" || evt.key === "Esc");
-            } else {
-                isEscape = (evt.keyCode === 27);
-            }
-            if (isEscape) {
-                document.querySelectorAll(".dropdown-menu").forEach(element => {
-                    DntManageEscapeKeyPress.hideDropDown(element);
-                });
-            }
-        };
     }
 };
 
@@ -1570,7 +1571,6 @@ window.DntUtilities = {
         DntRemoteAutoComplete.enable();
         DntFillSearchBox.enable();
         DntStickySidebar.enable();
-        DntManageEscapeKeyPress.enable();
         DntPreventSubmitOnEnter.enable();
         DntNavLinkMenu.enable();
         DntBootstrapDarkMode.enable();
