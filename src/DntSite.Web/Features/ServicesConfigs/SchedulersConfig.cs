@@ -49,6 +49,13 @@ public static class SchedulersConfig
                 return now.Minute % 5 == 0 && now.Second == 1;
             });
 
+            options.AddScheduledTask<ThumbnailsServiceJob>(utcNow =>
+            {
+                var now = GetNowIranTime(utcNow);
+
+                return now.Minute % 10 == 0 && now.Second == 1;
+            });
+
             options.AddScheduledTask<DeleteOrphans>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 7, Second: 1 });
 

@@ -8,8 +8,6 @@ namespace DntSite.Web.Features.News.Services.Contracts;
 
 public interface IDailyNewsItemsService : IScopedService
 {
-    Task<List<DownloadItem>> GetNeedScreenshotsItemsAsync(int count);
-
     DailyNewsItem AddDailyNewsItem(DailyNewsItem data);
 
     Task<bool> IsTheSameAuthorAsync(int postId, int userId);
@@ -21,8 +19,6 @@ public interface IDailyNewsItemsService : IScopedService
     Task<string?> GetRedirectUrlAsync(string siteUrl, int maxRedirects = 20);
 
     Task<List<DailyNewsItem>> GetLastDailyNewsItemsIncludeUserAsync(int count, bool showDeletedItems = false);
-
-    Task<OperationResult<string>> DeleteImageAsync(string pid);
 
     Task<PagedResultModel<DailyNewsItem>> GetLastPagedDailyNewsItemsIncludeUserAndTagsAsync(int pageNumber,
         int recordsPerPage = 8,

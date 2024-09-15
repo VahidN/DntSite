@@ -28,10 +28,8 @@ public class DailyNewsItemsService(
     IRedirectUrlFinderService redirectUrlFinderService,
     ILogger<DailyNewsItemsService> logger,
     IUserRatingsService userRatingsService,
-    IAppFoldersService appFoldersService,
     IPasswordHasherService passwordHasherService,
     IAppSettingsService appSettingsService,
-    IProtectionProviderService protectionProviderService,
     IFullTextSearchService fullTextSearchService) : IDailyNewsItemsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<DailyNewsItem, object?>>> CustomOrders = new()
@@ -45,18 +43,6 @@ public class DailyNewsItemsService(
     };
 
     private readonly DbSet<DailyNewsItem> _dailyNewsItem = uow.DbSet<DailyNewsItem>();
-
-    public Task<List<DownloadItem>> GetNeedScreenshotsItemsAsync(int count)
-        => _dailyNewsItem.AsNoTracking()
-            .Where(x => !x.IsDeleted && x.PageThumbnail == null)
-            .OrderByDescending(x => x.Id)
-            .Take(count)
-            .Select(x => new DownloadItem
-            {
-                Id = x.Id,
-                Url = x.Url
-            })
-            .ToListAsync();
 
     public async Task UpdateStatAsync(int id, bool fromFeed)
     {
@@ -231,28 +217,6 @@ public class DailyNewsItemsService(
                         x.Audit.CreatedAt.Day == date.Day)
             .OrderBy(x => x.Id)
             .ToListAsync();
-
-    public async Task<OperationResult<string>> DeleteImageAsync(string pid)
-    {
-        if (string.IsNullOrWhiteSpace(pid))
-        {
-            return OperationStat.Failed;
-        }
-
-        var id = protectionProviderService.Decrypt(pid)?.ToInt() ?? 0;
-        var post = await FindDailyNewsItemAsync(id);
-
-        if (post is null)
-        {
-            return OperationStat.Failed;
-        }
-
-        var name = Invariant($"news-{id}.jpg");
-        var path = Path.Combine(appFoldersService.ThumbnailsServiceFolderPath, name);
-        File.Delete(path);
-
-        return ("", OperationStat.Succeeded, name);
-    }
 
     public async Task UpdateAllNewsLastHttpStatusCodeAsync()
     {
