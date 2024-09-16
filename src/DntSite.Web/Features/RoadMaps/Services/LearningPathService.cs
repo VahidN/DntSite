@@ -336,15 +336,14 @@ public class LearningPathService(
         await emailsService.NewLearningPathSendEmailToAdminsAsync(learningPathItem);
     }
 
-    public Task IndexLearningPathsAsync()
+    public async Task IndexLearningPathsAsync()
     {
-        var items = _learningPaths.AsNoTracking()
+        var items = await _learningPaths.AsNoTracking()
             .Include(x => x.Tags)
             .Include(x => x.User)
             .Where(x => !x.IsDeleted)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 }

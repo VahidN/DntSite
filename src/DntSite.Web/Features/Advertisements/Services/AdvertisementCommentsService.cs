@@ -224,20 +224,19 @@ public class AdvertisementCommentsService(
         await UpdateStatAsync(result);
     }
 
-    public Task IndexAdvertisementCommentsAsync()
+    public async Task IndexAdvertisementCommentsAsync()
     {
         var now = DateTime.UtcNow;
 
-        var items = _advertisementComments.AsNoTracking()
+        var items = await _advertisementComments.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.Parent)
             .Include(x => x.User)
             .Where(x => !x.Parent.IsDeleted && (!x.Parent.DueDate.HasValue || x.Parent.DueDate.Value >= now))
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SetParentAsync(AdvertisementComment result, int modelFormPostId)

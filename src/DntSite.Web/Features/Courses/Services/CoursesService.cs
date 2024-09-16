@@ -509,18 +509,17 @@ public class CoursesService(
         await emailsService.NewCourseEmailToUserAsync(course.Id, writeCourseModel, course.UserId ?? 0);
     }
 
-    public Task IndexCoursesAsync()
+    public async Task IndexCoursesAsync()
     {
-        var items = _courses.AsNoTracking()
+        var items = await _courses.AsNoTracking()
             .Where(x => !x.IsDeleted && x.IsReadyToPublish)
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task<OperationResult> CheckNumberOfMonthsRequiredAsync(int userId, Course course)

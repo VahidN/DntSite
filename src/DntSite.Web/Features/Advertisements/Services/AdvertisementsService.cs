@@ -336,17 +336,16 @@ public class AdvertisementsService(
         });
     }
 
-    public Task IndexAdvertisementsAsync()
+    public async Task IndexAdvertisementsAsync()
     {
         var now = DateTime.UtcNow;
 
-        var items = _advertisements.AsNoTracking()
+        var items = await _advertisements.AsNoTracking()
             .Where(x => !x.IsDeleted && (!x.DueDate.HasValue || x.DueDate.Value >= now))
             .Include(x => x.Tags)
             .Include(x => x.User)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 }

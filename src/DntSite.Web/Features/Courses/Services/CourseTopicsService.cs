@@ -267,18 +267,17 @@ public class CourseTopicsService(
         await statService.UpdateNumberOfCourseTopicsStatAsync(courseTopic.CourseId);
     }
 
-    public Task IndexCourseTopicsAsync()
+    public async Task IndexCourseTopicsAsync()
     {
-        var items = _courseTopics.AsNoTracking()
+        var items = await _courseTopics.AsNoTracking()
             .Where(x => !x.IsDeleted && x.Course.IsReadyToPublish)
             .Include(x => x.User)
             .Include(x => x.Course)
             .ThenInclude(x => x.Tags)
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SetParentAsync(CourseTopic result, int courseId)

@@ -301,15 +301,14 @@ public class QuestionsService(
         }
     }
 
-    public Task IndexStackExchangeQuestionsAsync()
+    public async Task IndexStackExchangeQuestionsAsync()
     {
-        var items = _stackExchangeQuestions.AsNoTracking()
+        var items = await _stackExchangeQuestions.AsNoTracking()
             .Include(x => x.Tags)
             .Include(x => x.User)
             .Where(x => !x.IsDeleted)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 }

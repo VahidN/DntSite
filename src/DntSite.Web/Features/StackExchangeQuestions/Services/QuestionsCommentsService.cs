@@ -184,17 +184,16 @@ public class QuestionsCommentsService(
         await uow.SaveChangesAsync();
     }
 
-    public Task IndexStackExchangeQuestionCommentsAsync()
+    public async Task IndexStackExchangeQuestionCommentsAsync()
     {
-        var items = _questionComments.AsNoTracking()
+        var items = await _questionComments.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.Parent)
             .Include(x => x.User)
             .Where(x => !x.Parent.IsDeleted)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SetParentAsync(StackExchangeQuestionComment result, int modelFormPostId)

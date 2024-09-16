@@ -219,16 +219,16 @@ public class ProjectFaqsService(
             projectFaq.Description);
     }
 
-    public Task IndexProjectFaqsAsync()
+    public async Task IndexProjectFaqsAsync()
     {
-        var items = _projectFaqs.AsNoTracking()
+        var items = await _projectFaqs.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.User)
             .Include(x => x.Project)
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
+        await fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: "")));
     }
 }

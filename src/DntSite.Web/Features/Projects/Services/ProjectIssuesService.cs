@@ -315,15 +315,15 @@ public class ProjectIssuesService(
         await UpdateStatAsync(projectIssue);
     }
 
-    public Task IndexProjectIssuesAsync()
+    public async Task IndexProjectIssuesAsync()
     {
-        var items = _projectIssue.Where(projectIssue => !projectIssue.IsDeleted)
+        var items = await _projectIssue.Where(projectIssue => !projectIssue.IsDeleted)
             .Include(x => x.Project)
             .Include(x => x.User)
             .AsNoTracking()
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
+        await fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")));
     }
 

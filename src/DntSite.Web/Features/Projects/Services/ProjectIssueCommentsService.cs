@@ -226,18 +226,18 @@ public class ProjectIssueCommentsService(
         await NotifyNewCommentAsync(modelFormPostId, currentUserUserId, result);
     }
 
-    public Task IndexProjectIssueCommentsAsync()
+    public async Task IndexProjectIssueCommentsAsync()
     {
-        var items = _projectIssueComments.AsNoTracking()
+        var items = await _projectIssueComments.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.Parent)
             .Include(x => x.User)
             .Include(x => x.Reactions)
             .Where(x => !x.Parent.IsDeleted)
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
+        await fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")));
     }
 

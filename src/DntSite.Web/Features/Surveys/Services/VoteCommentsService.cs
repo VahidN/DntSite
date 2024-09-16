@@ -224,18 +224,17 @@ public class VoteCommentsService(
 
     public ValueTask<Survey?> FindVoteCommentParentAsync(int parentId) => uow.DbSet<Survey>().FindAsync(parentId);
 
-    public Task IndexSurveyCommentsAsync()
+    public async Task IndexSurveyCommentsAsync()
     {
-        var items = _voteComments.AsNoTracking()
+        var items = await _voteComments.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.Parent)
             .Include(x => x.User)
             .Where(x => !x.Parent.IsDeleted)
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SetParentAsync(SurveyComment result, int modelFormPostId)

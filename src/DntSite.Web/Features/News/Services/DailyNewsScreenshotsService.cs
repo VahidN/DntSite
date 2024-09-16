@@ -144,8 +144,8 @@ public class DailyNewsScreenshotsService(
 
     private async Task MakePageThumbnailNullForNonExistingFilesAsync(List<int> availableImageFileIds)
     {
-        var allPublicItemsWithNoImage = _dailyNewsItem.Where(x => !x.IsDeleted && !availableImageFileIds.Contains(x.Id))
-            .AsEnumerable();
+        var allPublicItemsWithNoImage =
+            await _dailyNewsItem.Where(x => !x.IsDeleted && !availableImageFileIds.Contains(x.Id)).ToListAsync();
 
         foreach (var item in allPublicItemsWithNoImage)
         {

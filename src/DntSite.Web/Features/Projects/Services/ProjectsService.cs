@@ -249,17 +249,16 @@ public class ProjectsService(
         await UpdateStatAsync(writeProjectModel, user);
     }
 
-    public Task IndexProjectsAsync()
+    public async Task IndexProjectsAsync()
     {
-        var items = _projects.Where(x => !x.IsDeleted)
+        var items = await _projects.Where(x => !x.IsDeleted)
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
             .AsNoTracking()
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SavePostedPhotoAsync(Project? project, ProjectModel writeProjectModel)

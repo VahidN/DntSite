@@ -349,17 +349,16 @@ public class VotesService(
         await statService.RecalculateAllVoteTagsInUseCountsAsync(surveyItem.Tags.Select(x => x.Name).ToArray());
     }
 
-    public Task IndexSurveysAsync()
+    public async Task IndexSurveysAsync()
     {
-        var items = _votes.Where(x => !x.IsDeleted)
+        var items = await _votes.Where(x => !x.IsDeleted)
             .Include(x => x.Tags)
             .Include(x => x.SurveyItems)
             .Include(x => x.User)
             .AsNoTracking()
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task<Survey> AddNewSurveyAndTagsAsync(VoteModel writeSurveyModel, User? user)

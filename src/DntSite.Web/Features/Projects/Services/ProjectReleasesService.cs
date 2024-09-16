@@ -224,16 +224,16 @@ public class ProjectReleasesService(
                 .FirstOrDefaultAsync()
         };
 
-    public Task IndexProjectReleasesAsync()
+    public async Task IndexProjectReleasesAsync()
     {
-        var items = _projectReleases.Where(x => !x.IsDeleted)
+        var items = await _projectReleases.Where(x => !x.IsDeleted)
             .Include(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Reactions)
             .AsNoTracking()
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
+        await fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "")));
     }
 

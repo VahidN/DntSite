@@ -220,7 +220,7 @@ public class DailyNewsItemsService(
 
     public async Task UpdateAllNewsLastHttpStatusCodeAsync()
     {
-        var itemsNeedUpdate = _dailyNewsItem.Where(x => !x.IsDeleted).OrderByDescending(x => x.Id).AsEnumerable();
+        var itemsNeedUpdate = await _dailyNewsItem.Where(x => !x.IsDeleted).OrderByDescending(x => x.Id).ToListAsync();
 
         foreach (var item in itemsNeedUpdate)
         {
@@ -484,16 +484,16 @@ public class DailyNewsItemsService(
         return OperationStat.Succeeded;
     }
 
-    public Task IndexDailyNewsItemsAsync()
+    public async Task IndexDailyNewsItemsAsync()
     {
-        var items = _dailyNewsItem.AsNoTracking()
+        var items = await _dailyNewsItem.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.User)
             .Include(x => x.Tags)
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
+        await fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToNewsWhatsNewItemModel(siteRootUri: "")));
     }
 

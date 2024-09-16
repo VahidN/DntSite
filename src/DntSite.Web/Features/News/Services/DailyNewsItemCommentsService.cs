@@ -174,18 +174,17 @@ public class DailyNewsItemCommentsService(
         await UpdateStatAsync(blogPostId, userId);
     }
 
-    public Task IndexDailyNewsItemCommentsAsync()
+    public async Task IndexDailyNewsItemCommentsAsync()
     {
-        var items = _dailyNewsItemComments.AsNoTracking()
+        var items = await _dailyNewsItemComments.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.Parent)
             .Include(x => x.User)
             .Where(x => !x.Parent.IsDeleted)
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SetParentAsync(DailyNewsItemComment result, int modelFormPostId)

@@ -342,7 +342,7 @@ public class BlogPostsService(
     public async Task FixOldBlogImageLinksAsync(string baseUrl)
     {
         var pathGetInvalidPathChars = Path.GetInvalidPathChars();
-        var list = _blogPosts.AsEnumerable();
+        var list = await _blogPosts.ToListAsync();
 
         var blogDir = appFoldersService.ArticleImagesFolderPath;
 
@@ -541,16 +541,16 @@ public class BlogPostsService(
         return post;
     }
 
-    public Task IndexBlogPostsAsync()
+    public async Task IndexBlogPostsAsync()
     {
-        var items = _blogPosts.AsNoTracking()
+        var items = await _blogPosts.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Include(x => x.User)
             .Include(x => x.Tags)
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
+        await fullTextSearchService.IndexTableAsync(items.Select(item
             => item.MapToPostWhatsNewItemModel(siteRootUri: "")));
     }
 

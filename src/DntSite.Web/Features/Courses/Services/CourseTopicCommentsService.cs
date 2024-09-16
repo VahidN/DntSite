@@ -205,17 +205,16 @@ public class CourseTopicCommentsService(
         await NotifyNewCommentAsync(modelFormPostId, currentUserUserId, result);
     }
 
-    public Task IndexCourseTopicCommentsAsync()
+    public async Task IndexCourseTopicCommentsAsync()
     {
-        var items = _comments.AsNoTracking()
+        var items = await _comments.AsNoTracking()
             .Where(x => !x.IsDeleted && !x.Parent.IsDeleted && !x.Parent.Course.IsDeleted)
             .Include(x => x.User)
             .Include(x => x.Parent)
             .OrderByDescending(x => x.Id)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task SetParentAsync(CourseTopicComment result, int modelFormPostId)

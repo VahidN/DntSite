@@ -492,17 +492,16 @@ public class BacklogsService(
         return "با موفقیت انجام شد";
     }
 
-    public Task IndexBackLogsAsync()
+    public async Task IndexBackLogsAsync()
     {
-        var items = _backlogs.AsNoTracking()
+        var items = await _backlogs.AsNoTracking()
             .Include(x => x.Tags)
             .Include(x => x.User)
             .Include(x => x.DoneByUser)
             .Where(x => !x.IsDeleted)
-            .AsEnumerable();
+            .ToListAsync();
 
-        return fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
     private async Task UpdateStatAsync(Backlog backlog, BacklogModel writeBacklogModel)
