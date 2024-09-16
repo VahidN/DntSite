@@ -70,7 +70,8 @@ public partial class NewsArchiveDetails
     }
 
     private void SetSimilarPostsId()
-        => _documentTypeIdHash = _news?.CurrentNews?.MapToNewsWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
+        => _documentTypeIdHash = _news?.CurrentNews?.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: "")
+            .DocumentTypeIdHash;
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..NewsBreadCrumbs.DefaultBreadCrumbs]);
 

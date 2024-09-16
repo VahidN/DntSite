@@ -410,7 +410,8 @@ public class DailyNewsItemsService(
         var result = AddDailyNewsItem(newsItem);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToNewsWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            result.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: ""));
 
         return result;
     }
@@ -432,7 +433,8 @@ public class DailyNewsItemsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(newsItem.MapToNewsWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            newsItem.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: ""));
     }
 
     public async Task<OperationResult> CheckUrlHashAsync(string url, int? id, bool isAdmin)
@@ -494,11 +496,12 @@ public class DailyNewsItemsService(
             .ToListAsync();
 
         await fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToNewsWhatsNewItemModel(siteRootUri: "")));
+            => item.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: "")));
     }
 
     private void DeleteFromLuceneIndex(DailyNewsItem item)
-        => fullTextSearchService.DeleteLuceneDocument(item.MapToNewsWhatsNewItemModel(siteRootUri: "")
+        => fullTextSearchService.DeleteLuceneDocument(item
+            .MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: "")
             .DocumentTypeIdHash);
 
     private static bool IsOutdatedLink(Exception exception)

@@ -1,3 +1,4 @@
+@using DntSite.Web.Features.News.Components
 @using DntSite.Web.Features.News.Entities
 @using DntSite.Web.Features.Posts.Components
 <DntLoading IsLoading="@(Posts is null)">
@@ -40,6 +41,12 @@
                     @post.ItemType.Value
                 </span>
             </BeforeHeaderContent>
+            <AdditionalBodyContent>
+                @if (post.EntityType == typeof(DailyNewsItem))
+                {
+                    <PrintNewsThumb Id="@post.Id" Title="@post.Title"/>
+                }
+            </AdditionalBodyContent>
         </ShowBlogPostItem>
     }
 

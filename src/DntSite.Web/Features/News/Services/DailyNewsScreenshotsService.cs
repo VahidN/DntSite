@@ -1,4 +1,5 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.RoutingConstants;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.News.Services.Contracts;
@@ -85,6 +86,30 @@ public class DailyNewsScreenshotsService(
         var itemsNeedUpdate = await GetItemsNeedUpdateAsync();
         await UpdateRecordIfThereIsImageFileAsync(itemsNeedUpdate, availableImageFileIds);
         await MakePageThumbnailNullForNonExistingFilesAsync(availableImageFileIds);
+    }
+
+    public string GetNewsThumbImage(DailyNewsItem? item, string siteRootUri)
+    {
+        if (item is null || string.IsNullOrWhiteSpace(siteRootUri))
+        {
+            return string.Empty;
+        }
+
+        var (fileName, path) = GetImageInfo(item.Id);
+
+        if (!File.Exists(path))
+        {
+            return string.Empty;
+        }
+
+        var url = siteRootUri.CombineUrl(
+            $"{ApiUrlsRoutingConstants.File.HttpAny.NewsThumb}?name={Uri.EscapeDataString(fileName)}");
+
+        return $"""
+                <br/><img src='{url}'
+                alt={item.Title}
+                style='border: 0 none; max-width: 100%; display: block; margin-left: auto; margin-right: auto;' />
+                """;
     }
 
     private Task<List<DailyNewsItem>> GetItemsNeedUpdateAsync()

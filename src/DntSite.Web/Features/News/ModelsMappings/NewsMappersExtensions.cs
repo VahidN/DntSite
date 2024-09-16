@@ -10,7 +10,7 @@ public static class NewsMappersExtensions
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(NewsRoutingConstants.PostUrlTemplate);
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this DailyNewsItemComment item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this DailyNewsItemComment item, string siteRootUri = "")
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -36,7 +36,9 @@ public static class NewsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToAuthorWhatsNewItemModel(this DailyNewsItem item, string siteRootUri)
+    public static WhatsNewItemModel MapToAuthorWhatsNewItemModel(this DailyNewsItem item,
+        string siteRootUri = "",
+        string newsThumbImage = "")
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -44,7 +46,7 @@ public static class NewsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.BriefDescription ?? "",
+            Content = $"{item.BriefDescription} {newsThumbImage}",
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -61,7 +63,9 @@ public static class NewsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToNewsWhatsNewItemModel(this DailyNewsItem item, string siteRootUri)
+    public static WhatsNewItemModel MapToNewsWhatsNewItemModel(this DailyNewsItem item,
+        string siteRootUri = "",
+        string newsThumbImage = "")
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -69,7 +73,7 @@ public static class NewsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.BriefDescription ?? "",
+            Content = $"{item.BriefDescription} {newsThumbImage}",
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

@@ -1,3 +1,4 @@
+using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
 
 namespace DntSite.Web.Features.News.Services.Contracts;
@@ -11,4 +12,6 @@ public interface IDailyNewsScreenshotsService : IScopedService
     Task DownloadScreenshotsAsync(int count);
 
     Task UpdateAllNewsPageThumbnailsAsync();
+
+    string GetNewsThumbImage(DailyNewsItem? item, string siteRootUri);
 }

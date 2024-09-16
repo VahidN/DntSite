@@ -48,7 +48,8 @@ public class FeedsService(
     ILearningPathService learningPathService,
     IBacklogsService backlogsService,
     IQuestionsService stackExchangeService,
-    IQuestionsCommentsService questionsCommentsService) : IFeedsService
+    IQuestionsCommentsService questionsCommentsService,
+    IDailyNewsScreenshotsService dailyNewsScreenshotsService) : IFeedsService
 {
     public async Task<WhatsNewFeedChannel> GetLatestChangesAsync(int take = 30)
     {
@@ -506,7 +507,11 @@ public class FeedsService(
     {
         var list = await dailyNewsItemsService.GetLastDailyNewsItemsIncludeUserAsync(count, showDeletedItems);
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Select(item => item.MapToNewsWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Select(item => item.MapToNewsWhatsNewItemModel(appSetting.SiteRootUri,
+                dailyNewsScreenshotsService.GetNewsThumbImage(item, appSetting.SiteRootUri)))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.News.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
@@ -578,7 +583,11 @@ public class FeedsService(
             recordsPerPage, showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = items.Data.Select(item => item.MapToAuthorWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = items.Data.Select(item => item.MapToAuthorWhatsNewItemModel(appSetting.SiteRootUri,
+                dailyNewsScreenshotsService.GetNewsThumbImage(item, appSetting.SiteRootUri)))
+            .ToList();
+
         var title = string.Format(CultureInfo.InvariantCulture, format: "فید اشتراک‌های {0}", name);
 
         return GetFeedChannel(title, appSetting, rssItems);

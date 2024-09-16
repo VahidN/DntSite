@@ -40,7 +40,7 @@
                 <PrintNewsRedirect DailyNewsItem="post"/>
             </AdditionalHeaderContent>
             <AdditionalBodyContent>
-                <PrintNewsThumb DailyNewsItem="post"/>
+                <PrintNewsThumb Id="@post.Id" Title="@post.Title"/>
             </AdditionalBodyContent>
         </ShowBlogPostItem>
     }
