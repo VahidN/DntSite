@@ -2,6 +2,7 @@ using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.RoutingConstants;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
+using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 
@@ -102,13 +103,19 @@ public class DailyNewsScreenshotsService(
             return string.Empty;
         }
 
-        var url = siteRootUri.CombineUrl(
+        var imageUrl = siteRootUri.CombineUrl(
             $"{ApiUrlsRoutingConstants.File.HttpAny.NewsThumb}?name={Uri.EscapeDataString(fileName)}");
 
+        var redirectUrl = siteRootUri.CombineUrl(Invariant($"{NewsRoutingConstants.NewsRedirectBase}/{item.Id}"));
+
         return $"""
-                <br/><img src='{url}'
-                alt={item.Title}
-                style='border: 0 none; max-width: 100%; display: block; margin-left: auto; margin-right: auto;' />
+                <br/>
+                <a href="{redirectUrl}" rel="nofollow" target="_blank">
+                   <img src='{imageUrl}'
+                        alt='{item.Title}'
+                        title='{item.Title}'
+                        style='border: 0 none; max-width: 100%; display: block; margin-left: auto; margin-right: auto;' />
+                </a>
                 """;
     }
 

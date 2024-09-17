@@ -44,7 +44,7 @@
             <AdditionalBodyContent>
                 @if (post.EntityType == typeof(DailyNewsItem))
                 {
-                    <PrintNewsThumb Id="@post.Id" Title="@post.Title"/>
+                    <PrintNewsThumb Id="@post.Id" Title="@post.OriginalTitle"/>
                 }
             </AdditionalBodyContent>
         </ShowBlogPostItem>
