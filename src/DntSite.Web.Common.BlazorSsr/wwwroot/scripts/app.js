@@ -1124,7 +1124,11 @@ window.DntAddIconsToExternalLinks = {
         const mySite = window.location.host;
         const googleFavIco = "https://www.google.com/s2/favicons?domain=";
         document.querySelectorAll("a").forEach(link => {
-            if (link?.parentElement?.parentElement?.getAttribute("contenteditable")) {
+            if (!link || !link.href) {
+                return;
+            }
+			
+            if (document.querySelector('[contenteditable]')?.contains(link)) {
                 return;
             }
 
@@ -1132,9 +1136,13 @@ window.DntAddIconsToExternalLinks = {
                 return;
             }
 
-            if (link.itemprop && link.itemprop.toLowerCase().startsWith("social")) {
+            if (link.classList && link.classList.contains('navbar-brand')) {
                 return;
             }
+			
+            if (link.itemprop && link.itemprop.toLowerCase().startsWith("social")) {
+                return;
+            }			
 
             if (link && link.href &&
                 link.href.match("^https?://") &&
