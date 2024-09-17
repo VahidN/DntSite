@@ -41,9 +41,5 @@ public class JobsEmailsService(
         await emailsFactoryService.SendEmailToAllUsersAsync<Birthday, BirthdayModel>(emails,
             messageId: "DailyBirthDates", inReplyTo: "DailyBirthDates", references: "DailyBirthDates",
             new BirthdayModel(), emailSubject: "سال روز تولدتان مبارک", addIp: false);
-
-        await emailsFactoryService.SendEmailToAllAdminsAsync<Birthday, BirthdayModel>(messageId: "DailyBirthDates",
-            inReplyTo: "DailyBirthDates", references: "DailyBirthDates", new BirthdayModel(),
-            emailSubject: "سال روز تولدتان مبارک");
     }
 }
