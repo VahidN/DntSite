@@ -1121,6 +1121,11 @@ window.DntBackToTop = {
 
 window.DntAddIconsToExternalLinks = {
     enable: () => {
+
+        if(!window.navigator.onLine) {
+           return;
+        }
+
         const mySite = window.location.host;
         const googleFavIco = "https://www.google.com/s2/favicons?domain=";
         document.querySelectorAll("a").forEach(link => {
