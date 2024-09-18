@@ -41,10 +41,10 @@ public class StatService(IUnitOfWork uow) : IStatService
         };
 
     public Task<int> NumberOfLinksAsync(bool showDeletedItems = false)
-        => uow.DbSet<DailyNewsItem>().CountAsync(x => x.IsDeleted == showDeletedItems);
+        => uow.DbSet<DailyNewsItem>().AsNoTracking().CountAsync(x => x.IsDeleted == showDeletedItems);
 
     public Task<int> NumberOfPostsAsync(bool showDeletedItems = false)
-        => uow.DbSet<BlogPost>().CountAsync(x => x.IsDeleted == showDeletedItems);
+        => uow.DbSet<BlogPost>().AsNoTracking().CountAsync(x => x.IsDeleted == showDeletedItems);
 
     public async Task UpdateNumberOfDraftsStatAsync(int userId)
     {
@@ -55,19 +55,21 @@ public class StatService(IUnitOfWork uow) : IStatService
             return;
         }
 
-        user.UserStat.NumberOfDrafts = await uow.DbSet<BlogPostDraft>().CountAsync(x => x.UserId == userId);
+        user.UserStat.NumberOfDrafts =
+            await uow.DbSet<BlogPostDraft>().AsNoTracking().CountAsync(x => x.UserId == userId);
+
         await uow.SaveChangesAsync();
     }
 
     public Task<int> NumberOfCommentsAsync(bool showDeletedItems = false)
-        => uow.DbSet<BlogPostComment>().CountAsync(x => x.IsDeleted == showDeletedItems);
+        => uow.DbSet<BlogPostComment>().AsNoTracking().CountAsync(x => x.IsDeleted == showDeletedItems);
 
     public Task<int> NumberOfTagsAsync(bool showActives = true)
-        => uow.DbSet<BlogPostTag>().CountAsync(x => x.IsDeleted != showActives);
+        => uow.DbSet<BlogPostTag>().AsNoTracking().CountAsync(x => x.IsDeleted != showActives);
 
     public Task<int> NumberOfAdminsAsync(bool showActives = true)
     {
-        var query = from role in uow.DbSet<Role>()
+        var query = from role in uow.DbSet<Role>().AsNoTracking()
             from user in role.AssociatedEntities
             where role.Name == CustomRoles.Admin && user.IsActive == showActives
             select user;
@@ -76,10 +78,12 @@ public class StatService(IUnitOfWork uow) : IStatService
     }
 
     public Task<int> NumberOfUsersAsync(bool showActives = true)
-        => uow.DbSet<User>().CountAsync(x => x.IsActive == showActives);
+        => uow.DbSet<User>().AsNoTracking().CountAsync(x => x.IsActive == showActives);
 
     public Task<int> NumberOfWritersAsync(bool showActives = true)
-        => uow.DbSet<User>().CountAsync(user => user.IsActive == showActives && user.UserStat.NumberOfPosts > 0);
+        => uow.DbSet<User>()
+            .AsNoTracking()
+            .CountAsync(user => user.IsActive == showActives && user.UserStat.NumberOfPosts > 0);
 
     public async Task RecalculateAllUsersNumberOfPostsAndCommentsAsync(bool showDeletedItems = false)
     {
@@ -102,7 +106,7 @@ public class StatService(IUnitOfWork uow) : IStatService
             return;
         }
 
-        var count = await uow.DbSet<LearningPath>().CountAsync(x => !x.IsDeleted && x.UserId == userId);
+        var count = await uow.DbSet<LearningPath>().AsNoTracking().CountAsync(x => !x.IsDeleted && x.UserId == userId);
         user.UserStat.NumberOfLearningPaths = count;
         await uow.SaveChangesAsync();
     }
@@ -116,6 +120,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in tags)
         {
             tag.InUseCount = await uow.DbSet<BlogPostTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -131,6 +136,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in tags)
         {
             tag.InUseCount = await uow.DbSet<BlogPostTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -148,6 +154,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in listOfActualTagNames)
         {
             tag.InUseCount = await uow.DbSet<DailyNewsItemTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -166,6 +173,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in listOfActualTagNames)
         {
             tag.InUseCount = await uow.DbSet<StackExchangeQuestionTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -183,6 +191,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in listOfActualTagNames)
         {
             tag.InUseCount = await uow.DbSet<BacklogTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -203,6 +212,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in tags)
         {
             tag.InUseCount = await uow.DbSet<LearningPathTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -220,6 +230,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in listOfActualTagNames)
         {
             tag.InUseCount = await uow.DbSet<ProjectTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -237,6 +248,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in listOfActualTagNames)
         {
             tag.InUseCount = await uow.DbSet<SurveyTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -281,6 +293,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         tag.InUseCount = await uow.DbSet<BlogPostTag>()
+            .AsNoTracking()
             .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
             .SelectMany(x => x.AssociatedEntities)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -300,6 +313,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         tag.InUseCount = await uow.DbSet<BlogPostTag>()
+            .AsNoTracking()
             .Where(x => x.IsDeleted != showActives && x.Id == tagId)
             .SelectMany(x => x.AssociatedEntities)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -319,6 +333,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         post.PingbackSent = false;
 
         post.EntityStat.NumberOfComments = await uow.DbSet<BlogPost>()
+            .AsNoTracking()
             .Where(x => x.Id == postId)
             .SelectMany(x => x.Comments)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -333,6 +348,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var item in list)
         {
             item.EntityStat.NumberOfComments = await uow.DbSet<BlogPost>()
+                .AsNoTracking()
                 .Where(x => x.Id == item.Id)
                 .SelectMany(x => x.Comments)
                 .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -353,6 +369,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         post.PingbackSent = false;
 
         post.EntityStat.NumberOfComments = await uow.DbSet<DailyNewsItem>()
+            .AsNoTracking()
             .Where(x => x.Id == postId)
             .SelectMany(x => x.Comments)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -370,6 +387,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         post.EntityStat.NumberOfComments = await uow.DbSet<StackExchangeQuestion>()
+            .AsNoTracking()
             .Where(x => x.Id == postId)
             .SelectMany(x => x.Comments)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -387,6 +405,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         project.NumberOfIssues = await uow.DbSet<Project>()
+            .AsNoTracking()
             .Where(x => x.Id == projectId)
             .SelectMany(x => x.ProjectIssues)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -404,6 +423,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         projectIssue.EntityStat.NumberOfComments = await uow.DbSet<ProjectIssue>()
+            .AsNoTracking()
             .Where(x => x.Id == issueId)
             .SelectMany(x => x.Comments)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -421,6 +441,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         project.NumberOfReleases = await uow.DbSet<Project>()
+            .AsNoTracking()
             .Where(x => x.Id == projectId)
             .SelectMany(x => x.ProjectReleases)
             .CountAsync(x => x.IsDeleted != showDeletedItems);
@@ -438,6 +459,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         project.NumberOfIssuesComments = await uow.DbSet<ProjectIssue>()
+            .AsNoTracking()
             .Where(x => x.ProjectId == projectId && x.IsDeleted == showDeletedItems)
             .SelectMany(x => x.Comments)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -455,6 +477,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         project.NumberOfFaqs = await uow.DbSet<ProjectFaq>()
+            .AsNoTracking()
             .Where(x => x.ProjectId == projectId)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
 
@@ -521,6 +544,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         vote.EntityStat.NumberOfComments = await uow.DbSet<Survey>()
+            .AsNoTracking()
             .Where(x => x.Id == voteId)
             .SelectMany(x => x.Comments)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -538,6 +562,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         advertisement.EntityStat.NumberOfComments = await uow.DbSet<Advertisement>()
+            .AsNoTracking()
             .Where(x => x.Id == id)
             .SelectMany(x => x.Comments)
             .CountAsync(x => x.IsDeleted == showDeletedItems);
@@ -565,6 +590,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in listOfActualTagNames)
         {
             tag.InUseCount = await uow.DbSet<CourseTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != onlyIsActive && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted != onlyIsActive);
@@ -583,11 +609,13 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         course.NumberOfTopics = await uow.DbSet<Course>()
+            .AsNoTracking()
             .Where(x => x.Id == courseId && !x.IsDeleted)
             .SelectMany(x => x.CourseTopics)
             .CountAsync(x => !x.IsDeleted && x.IsMainTopic);
 
         course.NumberOfHelperTopics = await uow.DbSet<Course>()
+            .AsNoTracking()
             .Where(x => x.Id == courseId && !x.IsDeleted)
             .SelectMany(x => x.CourseTopics)
             .CountAsync(x => !x.IsDeleted && !x.IsMainTopic);
@@ -605,6 +633,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         topic.EntityStat.NumberOfComments = await uow.DbSet<CourseTopic>()
+            .AsNoTracking()
             .Where(x => x.Id == postId && !x.IsDeleted)
             .SelectMany(x => x.Comments)
             .CountAsync(x => !x.IsDeleted);
@@ -622,6 +651,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         course.NumberOfComments = await uow.DbSet<CourseTopic>()
+            .AsNoTracking()
             .Where(x => x.CourseId == courseId && !x.IsDeleted)
             .SelectMany(x => x.Comments)
             .CountAsync(x => !x.IsDeleted);
@@ -639,6 +669,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         course.NumberOfQuestions = await uow.DbSet<Course>()
+            .AsNoTracking()
             .Where(x => x.Id == courseId && !x.IsDeleted)
             .SelectMany(x => x.CourseQuestions)
             .CountAsync(x => !x.IsDeleted);
@@ -656,6 +687,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         courseQuestion.EntityStat.NumberOfComments = await uow.DbSet<CourseQuestion>()
+            .AsNoTracking()
             .Where(x => x.Id == questionId && !x.IsDeleted)
             .SelectMany(x => x.Comments)
             .CountAsync(x => !x.IsDeleted);
@@ -673,6 +705,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         course.NumberOfQuestionsComments = await uow.DbSet<CourseQuestion>()
+            .AsNoTracking()
             .Where(x => x.CourseId == courseId && !x.IsDeleted)
             .SelectMany(x => x.Comments)
             .CountAsync(x => !x.IsDeleted);
@@ -685,13 +718,16 @@ public class StatService(IUnitOfWork uow) : IStatService
         {
             CoursesAdditinalTopicsNumber =
                 await uow.DbSet<Course>()
+                    .AsNoTracking()
                     .SelectMany(x => x.CourseTopics)
                     .CountAsync(x => x.IsDeleted != onlyActives && !x.IsMainTopic),
             CoursesNumber =
                 await uow.DbSet<Course>()
+                    .AsNoTracking()
                     .CountAsync(x => x.IsDeleted != onlyActives && x.IsReadyToPublish == onlyActives),
-            CoursesTagsNumber = await uow.DbSet<CourseTag>().CountAsync(x => x.IsDeleted != onlyActives),
+            CoursesTagsNumber = await uow.DbSet<CourseTag>().AsNoTracking().CountAsync(x => x.IsDeleted != onlyActives),
             CoursesTopicsNumber = await uow.DbSet<Course>()
+                .AsNoTracking()
                 .SelectMany(x => x.CourseTopics)
                 .CountAsync(x => x.IsDeleted != onlyActives && x.IsMainTopic)
         };
@@ -701,19 +737,23 @@ public class StatService(IUnitOfWork uow) : IStatService
         {
             ProjectsFilesNumber =
                 await uow.DbSet<ProjectRelease>()
+                    .AsNoTracking()
                     .Include(x => x.Project)
                     .CountAsync(x => x.IsDeleted != showDeletedItems && x.Project.IsDeleted == showDeletedItems),
             ProjectsIssuesNumber =
                 await uow.DbSet<ProjectIssue>()
+                    .AsNoTracking()
                     .Include(x => x.Project)
                     .AsNoTracking()
                     .CountAsync(x => x.IsDeleted == showDeletedItems && x.Project.IsDeleted == showDeletedItems),
-            ProjectsNumber = await uow.DbSet<Project>().CountAsync(x => x.IsDeleted == showDeletedItems),
+            ProjectsNumber = await uow.DbSet<Project>().AsNoTracking().CountAsync(x => x.IsDeleted == showDeletedItems),
             ProjectsIssuesCommentsNumber =
                 await uow.DbSet<ProjectIssueComment>()
+                    .AsNoTracking()
                     .Include(x => x.Parent)
                     .CountAsync(x => x.IsDeleted == showDeletedItems && x.Parent.IsDeleted == showDeletedItems),
-            ProjectsTagsNumber = await uow.DbSet<ProjectTag>().CountAsync(x => x.IsDeleted != showDeletedItems)
+            ProjectsTagsNumber =
+                await uow.DbSet<ProjectTag>().AsNoTracking().CountAsync(x => x.IsDeleted != showDeletedItems)
         };
 
     public async Task<ProjectsStatModel> GetProjectStatAsync(int projectId, bool showDeletedItems = false)
@@ -721,6 +761,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         {
             ProjectsFilesNumber =
                 await uow.DbSet<ProjectRelease>()
+                    .AsNoTracking()
                     .CountAsync(x => x.IsDeleted != showDeletedItems && x.ProjectId == projectId),
             ProjectsIssuesNumber =
                 await uow.DbSet<ProjectIssue>()
@@ -763,8 +804,9 @@ public class StatService(IUnitOfWork uow) : IStatService
 
         var userId = user.Id;
 
-        user.Rating.TotalRaters =
-            await uow.DbSet<ParentReactionEntity>().CountAsync(userRating => userRating.ForUserId == userId);
+        user.Rating.TotalRaters = await uow.DbSet<ParentReactionEntity>()
+            .AsNoTracking()
+            .CountAsync(userRating => userRating.ForUserId == userId);
 
         if (user.Rating.TotalRaters == 0)
         {
@@ -817,6 +859,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in tags)
         {
             tag.InUseCount = await uow.DbSet<AdvertisementTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems && (!x.DueDate.HasValue || x.DueDate.Value >= now));
@@ -843,6 +886,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         foreach (var tag in tags)
         {
             tag.InUseCount = await uow.DbSet<AdvertisementTag>()
+                .AsNoTracking()
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems && (!x.DueDate.HasValue || x.DueDate.Value >= now));
@@ -852,32 +896,37 @@ public class StatService(IUnitOfWork uow) : IStatService
     }
 
     private Task<int> GetNumberOfQuestionsAsync()
-        => uow.DbSet<StackExchangeQuestion>().CountAsync(x => !x.IsAnswered && !x.IsDeleted);
+        => uow.DbSet<StackExchangeQuestion>().AsNoTracking().CountAsync(x => !x.IsAnswered && !x.IsDeleted);
 
     private Task<int> GetNumberOfBacklogsAsync()
-        => uow.DbSet<Backlog>().CountAsync(x => !x.IsDeleted && !x.DoneByUserId.HasValue);
+        => uow.DbSet<Backlog>().AsNoTracking().CountAsync(x => !x.IsDeleted && !x.DoneByUserId.HasValue);
 
-    private Task<int> GetNumberOfLearningPathsAsync() => uow.DbSet<LearningPath>().CountAsync(x => !x.IsDeleted);
+    private Task<int> GetNumberOfLearningPathsAsync()
+        => uow.DbSet<LearningPath>().AsNoTracking().CountAsync(x => !x.IsDeleted);
 
-    private Task<int> GetNumberOfJobsSeekersAsync() => uow.DbSet<User>().CountAsync(x => x.IsActive && x.IsJobsSeeker);
+    private Task<int> GetNumberOfJobsSeekersAsync()
+        => uow.DbSet<User>().AsNoTracking().CountAsync(x => x.IsActive && x.IsJobsSeeker);
 
     private Task<int> GetNumberOfComingSoonAsync()
-        => uow.DbSet<BlogPostDraft>().CountAsync(x => !x.IsConverted && x.User!.UserStat.NumberOfPosts > 0);
+        => uow.DbSet<BlogPostDraft>()
+            .AsNoTracking()
+            .CountAsync(x => !x.IsConverted && x.User!.UserStat.NumberOfPosts > 0);
 
     private Task<int> GetNumberOfAdsAsync()
     {
         var now = DateTime.UtcNow;
 
         return uow.DbSet<Advertisement>()
+            .AsNoTracking()
             .CountAsync(x => !x.IsDeleted && (!x.DueDate.HasValue || x.DueDate.Value >= now));
     }
 
     private Task<int> GetNumberOfCoursesAsync()
-        => uow.DbSet<Course>().CountAsync(x => !x.IsDeleted && x.IsReadyToPublish);
+        => uow.DbSet<Course>().AsNoTracking().CountAsync(x => !x.IsDeleted && x.IsReadyToPublish);
 
-    private Task<int> GetNumberOfProjectsAsync() => uow.DbSet<Project>().CountAsync(x => !x.IsDeleted);
+    private Task<int> GetNumberOfProjectsAsync() => uow.DbSet<Project>().AsNoTracking().CountAsync(x => !x.IsDeleted);
 
-    private Task<int> GetNumberOfVotesAsync() => uow.DbSet<Survey>().CountAsync(x => !x.IsDeleted);
+    private Task<int> GetNumberOfVotesAsync() => uow.DbSet<Survey>().AsNoTracking().CountAsync(x => !x.IsDeleted);
 
     private static List<Browser> BrowsersList() => new();
 
@@ -923,22 +972,27 @@ public class StatService(IUnitOfWork uow) : IStatService
 
     private Task<int> GetUserStatStackExchangeQuestionsCommentsAsync(User user, bool showDeletedItems)
         => uow.DbSet<StackExchangeQuestionComment>()
+            .AsNoTracking()
             .Include(x => x.Parent)
             .CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems &&
                              x.Parent.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfStackExchangeQuestionsAsync(User user, bool showDeletedItems)
-        => uow.DbSet<StackExchangeQuestion>().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
+        => uow.DbSet<StackExchangeQuestion>()
+            .AsNoTracking()
+            .CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfBacklogsAsync(User user, bool showDeletedItems)
-        => uow.DbSet<Backlog>().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
+        => uow.DbSet<Backlog>().AsNoTracking().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
 
     private Task<int> UserStatNumberOfCoursesAsync(User user, bool showDeletedItems)
         => uow.DbSet<Course>()
+            .AsNoTracking()
             .CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems && x.IsReadyToPublish);
 
     private Task<int> GetUserStatNumberOfAdvertisementCommentsAsync(User user, bool showDeletedItems, DateTime now)
         => uow.DbSet<AdvertisementComment>()
+            .AsNoTracking()
             .Include(x => x.Parent)
             .CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems &&
                              x.Parent.IsDeleted == showDeletedItems &&
@@ -946,48 +1000,56 @@ public class StatService(IUnitOfWork uow) : IStatService
 
     private Task<int> GetUserStatNumberOfAdvertisementsAsync(User user, bool showDeletedItems, DateTime now)
         => uow.DbSet<Advertisement>()
+            .AsNoTracking()
             .CountAsync(x
                 => x.UserId == user.Id && x.IsDeleted == showDeletedItems &&
                    (!x.DueDate.HasValue || x.DueDate.Value >= now));
 
     private Task<int> GetUserStatNumberOfSurveyCommentsAsync(User user, bool showDeletedItems)
         => uow.DbSet<SurveyComment>()
+            .AsNoTracking()
             .Include(x => x.Parent)
             .CountAsync(x
                 => x.UserId == user.Id && x.IsDeleted == showDeletedItems && x.Parent.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfSurveysAsync(User user, bool showDeletedItems)
-        => uow.DbSet<Survey>().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
+        => uow.DbSet<Survey>().AsNoTracking().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfLinksCommentsAsync(User user, bool showDeletedItems)
         => uow.DbSet<DailyNewsItemComment>()
+            .AsNoTracking()
             .Include(x => x.Parent)
             .CountAsync(x
                 => x.UserId == user.Id && x.IsDeleted == showDeletedItems && x.Parent.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfProjectsCommentsAsync(User user, bool showDeletedItems)
         => uow.DbSet<ProjectIssueComment>()
+            .AsNoTracking()
             .Include(x => x.Parent)
             .CountAsync(x
                 => x.UserId == user.Id && x.IsDeleted == showDeletedItems && x.Parent.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfProjectsFeedbacksAsync(User user, bool showDeletedItems)
         => uow.DbSet<ProjectIssue>()
+            .AsNoTracking()
             .Include(x => x.Project)
             .CountAsync(x
                 => x.UserId == user.Id && x.IsDeleted == showDeletedItems && x.Project.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfProjectsAsync(bool showDeletedItems, User user)
-        => uow.DbSet<Project>().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
+        => uow.DbSet<Project>().AsNoTracking().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfLinksAsync(User user, bool showDeletedItems)
-        => uow.DbSet<DailyNewsItem>().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
+        => uow.DbSet<DailyNewsItem>()
+            .AsNoTracking()
+            .CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfPostsAsync(User user, bool showDeletedItems)
-        => uow.DbSet<BlogPost>().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
+        => uow.DbSet<BlogPost>().AsNoTracking().CountAsync(x => x.UserId == user.Id && x.IsDeleted == showDeletedItems);
 
     private Task<int> GetUserStatNumberOfCommentsAsync(User user, bool showDeletedItems)
         => uow.DbSet<BlogPostComment>()
+            .AsNoTracking()
             .Include(x => x.Parent)
             .CountAsync(x
                 => x.UserId == user.Id && x.IsDeleted == showDeletedItems && x.Parent.IsDeleted == showDeletedItems);

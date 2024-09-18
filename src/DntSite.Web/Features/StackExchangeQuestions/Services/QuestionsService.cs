@@ -52,7 +52,7 @@ public class QuestionsService(
         {
             AllItemsCount = await _stackExchangeQuestions.AsNoTracking().CountAsync(x => !x.IsDeleted),
             DoneItemsCount = await _stackExchangeQuestions.AsNoTracking().CountAsync(x => x.IsAnswered && !x.IsDeleted),
-            NewItemsCount = await _stackExchangeQuestions.CountAsync(x => !x.IsAnswered && !x.IsDeleted)
+            NewItemsCount = await _stackExchangeQuestions.AsNoTracking().CountAsync(x => !x.IsAnswered && !x.IsDeleted)
         };
 
     public Task<StackExchangeQuestion?> GetLastActiveStackExchangeQuestionAsync()

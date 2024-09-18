@@ -45,7 +45,9 @@ public class BookmarksService(IUnitOfWork uow) : IBookmarksService
 
         await uow.SaveChangesAsync();
 
-        parentEntity.EntityStat.NumberOfBookmarks = await entityBookmarksQuery.CountAsync(x => x.ParentId == fkId);
+        parentEntity.EntityStat.NumberOfBookmarks =
+            await entityBookmarksQuery.AsNoTracking().CountAsync(x => x.ParentId == fkId);
+
         await uow.SaveChangesAsync();
 
         return true;
@@ -96,7 +98,7 @@ public class BookmarksService(IUnitOfWork uow) : IBookmarksService
         if (parentEntity is not null)
         {
             parentEntity.EntityStat.NumberOfBookmarks =
-                await entityBookmarksQuery.CountAsync(x => x.ParentId == parentEntity.Id);
+                await entityBookmarksQuery.AsNoTracking().CountAsync(x => x.ParentId == parentEntity.Id);
 
             await uow.SaveChangesAsync();
         }

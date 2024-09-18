@@ -73,9 +73,9 @@ public class UserRatingsService(IUnitOfWork uow) : IUserRatingsService
 
         await uow.SaveChangesAsync();
 
-        parentEntity.Rating.TotalRaters = await entityReactionsQuery.CountAsync(x => x.ParentId == fkId);
+        parentEntity.Rating.TotalRaters = await entityReactionsQuery.AsNoTracking().CountAsync(x => x.ParentId == fkId);
 
-        parentEntity.Rating.TotalRating = await entityReactionsQuery
+        parentEntity.Rating.TotalRating = await entityReactionsQuery.AsNoTracking()
             .Where(x => x.ParentId == fkId)
             .SumAsync(x => (int?)x.Reaction) ?? 0;
 

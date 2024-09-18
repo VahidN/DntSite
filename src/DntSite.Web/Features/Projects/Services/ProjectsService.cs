@@ -56,7 +56,7 @@ public class ProjectsService(
         => userRatingsService.SaveRatingAsync<ProjectReaction, Project>(fkId, reactionType, fromUserId);
 
     public Task<int> GetAllProjectsCountAsync(bool showDeletedItems = false)
-        => _projects.CountAsync(x => x.IsDeleted == showDeletedItems);
+        => _projects.AsNoTracking().CountAsync(x => x.IsDeleted == showDeletedItems);
 
     public Task<List<Project>> GetAllPublicProjectsOfDateAsync(DateTime date)
         => _projects.AsNoTracking()

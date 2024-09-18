@@ -105,8 +105,9 @@ public class UsersInfoService(
 
     public Task<int> NumberOfNotActivatedUsersAsync(DateTime? from)
         => !from.HasValue
-            ? _users.CountAsync(user => user.IsActive && !user.EmailIsValidated)
-            : _users.CountAsync(user => user.IsActive && !user.EmailIsValidated && user.Audit.CreatedAt >= from.Value);
+            ? _users.AsNoTracking().CountAsync(user => user.IsActive && !user.EmailIsValidated)
+            : _users.AsNoTracking()
+                .CountAsync(user => user.IsActive && !user.EmailIsValidated && user.Audit.CreatedAt >= from.Value);
 
     public async Task<byte[]> GetEmailImageAsync(int? userId)
     {
@@ -495,7 +496,8 @@ public class UsersInfoService(
         DateTime toDate,
         bool userIsActive = true,
         bool showDeletedItems = false)
-        => _users.Where(x => x.IsActive == userIsActive && x.Id == userId)
+        => _users.AsNoTracking()
+            .Where(x => x.IsActive == userIsActive && x.Id == userId)
             .SelectMany(x => x.BlogPosts)
             .CountAsync(x
                 => x.IsDeleted == showDeletedItems && x.Audit.CreatedAt >= fromDate && x.Audit.CreatedAt <= toDate);
