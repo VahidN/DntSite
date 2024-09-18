@@ -507,7 +507,7 @@ public class BacklogsService(
     private async Task UpdateStatAsync(Backlog backlog, BacklogModel writeBacklogModel)
     {
         await statService.RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(backlog.UserId ?? 0);
-        await statService.RecalculateAllBacklogTagsInUseCountsAsync(writeBacklogModel.Tags);
+        await statService.RecalculateTagsInUseCountsAsync<BacklogTag, Backlog>();
     }
 
     private Task LogAndEmailAsync(Backlog backlog)

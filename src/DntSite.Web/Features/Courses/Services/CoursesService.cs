@@ -503,7 +503,7 @@ public class CoursesService(
         }
 
         await statService.RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(user.Id);
-        await statService.RecalculateAllCourseTagsInUseCountsAsync(writeCourseModel.Tags);
+        await statService.RecalculateTagsInUseCountsAsync<CourseTag, Course>();
 
         await emailsService.NewCourseEmailToAdminsAsync(course.Id, writeCourseModel);
         await emailsService.NewCourseEmailToUserAsync(course.Id, writeCourseModel, course.UserId ?? 0);

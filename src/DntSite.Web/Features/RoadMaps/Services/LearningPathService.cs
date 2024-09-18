@@ -293,13 +293,13 @@ public class LearningPathService(
         }
 
         var listOfActualTags = await tagsService.SaveNewLearningPathTagsAsync(writeLearningPathModel.Tags);
-        await statService.RecalculateAllLearningPathTagsInUseCountsAsync(listOfActualTags);
 
         mapper.Map(writeLearningPathModel, learningPathItem);
         learningPathItem.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
 
+        await statService.RecalculateTagsInUseCountsAsync<LearningPathTag, LearningPath>();
         fullTextSearchService.AddOrUpdateLuceneDocument(learningPathItem.MapToWhatsNewItemModel(siteRootUri: ""));
     }
 
@@ -308,13 +308,14 @@ public class LearningPathService(
         ArgumentNullException.ThrowIfNull(writeLearningPathModel);
 
         var listOfActualTags = await tagsService.SaveNewLearningPathTagsAsync(writeLearningPathModel.Tags);
-        await statService.RecalculateAllLearningPathTagsInUseCountsAsync(listOfActualTags);
 
         var newsItem = mapper.Map<LearningPathModel, LearningPath>(writeLearningPathModel);
         newsItem.Tags = listOfActualTags;
         newsItem.UserId = user?.Id;
         var result = AddLearningPath(newsItem);
         await uow.SaveChangesAsync();
+
+        await statService.RecalculateTagsInUseCountsAsync<LearningPathTag, LearningPath>();
 
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
 

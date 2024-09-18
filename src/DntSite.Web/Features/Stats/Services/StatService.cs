@@ -111,152 +111,6 @@ public class StatService(IUnitOfWork uow) : IStatService
         await uow.SaveChangesAsync();
     }
 
-    public async Task RecalculateBlogPostTagsInUseCountsAsync(IList<BlogPostTag> tags,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        ArgumentNullException.ThrowIfNull(tags);
-
-        foreach (var tag in tags)
-        {
-            tag.InUseCount = await uow.DbSet<BlogPostTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted == showDeletedItems);
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
-    public async Task RecalculateAllBlogPostTagsInUseCountsAsync(bool showActives = true, bool showDeletedItems = false)
-    {
-        var tags = await uow.DbSet<BlogPostTag>().ToListAsync();
-
-        foreach (var tag in tags)
-        {
-            tag.InUseCount = await uow.DbSet<BlogPostTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted == showDeletedItems);
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
-    public async Task RecalculateAllLinkTagsInUseCountsAsync(IList<string> tags,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        var listOfActualTagNames = await uow.DbSet<DailyNewsItemTag>().Where(x => tags.Contains(x.Name)).ToListAsync();
-
-        foreach (var tag in listOfActualTagNames)
-        {
-            tag.InUseCount = await uow.DbSet<DailyNewsItemTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted == showDeletedItems);
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
-    public async Task RecalculateAllQuestionTagsInUseCountsAsync(IList<string> tags,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        var listOfActualTagNames =
-            await uow.DbSet<StackExchangeQuestionTag>().Where(x => tags.Contains(x.Name)).ToListAsync();
-
-        foreach (var tag in listOfActualTagNames)
-        {
-            tag.InUseCount = await uow.DbSet<StackExchangeQuestionTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted == showDeletedItems);
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
-    public async Task RecalculateAllBacklogTagsInUseCountsAsync(IList<string> backlogTags,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        var listOfActualTagNames = await uow.DbSet<BacklogTag>().Where(x => backlogTags.Contains(x.Name)).ToListAsync();
-
-        foreach (var tag in listOfActualTagNames)
-        {
-            tag.InUseCount = await uow.DbSet<BacklogTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted == showDeletedItems);
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
-    public async Task RecalculateAllLearningPathTagsInUseCountsAsync(IList<LearningPathTag> tags,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        if (tags is null)
-        {
-            return;
-        }
-
-        foreach (var tag in tags)
-        {
-            tag.InUseCount = await uow.DbSet<LearningPathTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted == showDeletedItems);
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
-    public async Task RecalculateAllProjectTagsInUseCountsAsync(IList<string> tags,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        var listOfActualTagNames = await uow.DbSet<ProjectTag>().Where(x => tags.Contains(x.Name)).ToListAsync();
-
-        foreach (var tag in listOfActualTagNames)
-        {
-            tag.InUseCount = await uow.DbSet<ProjectTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted == showDeletedItems);
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
-    public async Task RecalculateAllVoteTagsInUseCountsAsync(string[] tags,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        var listOfActualTagNames = await uow.DbSet<SurveyTag>().Where(x => tags.Contains(x.Name)).ToListAsync();
-
-        foreach (var tag in listOfActualTagNames)
-        {
-            tag.InUseCount = await uow.DbSet<SurveyTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted == showDeletedItems);
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
     public async Task RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(int userId,
         bool showDeletedItems = false)
     {
@@ -279,46 +133,6 @@ public class StatService(IUnitOfWork uow) : IStatService
         {
             await UpdateUserRatingsAsync(user);
         }
-    }
-
-    public async Task RecalculateThisTagInUseCountsAsync(string tagName,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        var tag = await uow.DbSet<BlogPostTag>().OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.Name == tagName);
-
-        if (tag is null)
-        {
-            return;
-        }
-
-        tag.InUseCount = await uow.DbSet<BlogPostTag>()
-            .AsNoTracking()
-            .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-            .SelectMany(x => x.AssociatedEntities)
-            .CountAsync(x => x.IsDeleted == showDeletedItems);
-
-        await uow.SaveChangesAsync();
-    }
-
-    public async Task RecalculateThisTagInUseCountsAsync(int tagId,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        var tag = await uow.DbSet<BlogPostTag>().FindAsync(tagId);
-
-        if (tag is null)
-        {
-            return;
-        }
-
-        tag.InUseCount = await uow.DbSet<BlogPostTag>()
-            .AsNoTracking()
-            .Where(x => x.IsDeleted != showActives && x.Id == tagId)
-            .SelectMany(x => x.AssociatedEntities)
-            .CountAsync(x => x.IsDeleted == showDeletedItems);
-
-        await uow.SaveChangesAsync();
     }
 
     public async Task RecalculateThisBlogPostCommentsCountsAsync(int postId, bool showDeletedItems = false)
@@ -583,22 +397,6 @@ public class StatService(IUnitOfWork uow) : IStatService
         await uow.SaveChangesAsync();
     }
 
-    public async Task RecalculateAllCourseTagsInUseCountsAsync(IList<string> tags, bool onlyIsActive = true)
-    {
-        var listOfActualTagNames = await uow.DbSet<CourseTag>().Where(x => tags.Contains(x.Name)).ToListAsync();
-
-        foreach (var tag in listOfActualTagNames)
-        {
-            tag.InUseCount = await uow.DbSet<CourseTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != onlyIsActive && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted != onlyIsActive);
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
     public async Task UpdateNumberOfCourseTopicsStatAsync(int courseId)
     {
         var course = await uow.DbSet<Course>().FindAsync(courseId);
@@ -849,25 +647,6 @@ public class StatService(IUnitOfWork uow) : IStatService
         };
     }
 
-    public async Task RecalculateAllAdvertisementTagsInUseCountsAsync(ICollection<AdvertisementTag> tags,
-        bool showActives = true,
-        bool showDeletedItems = false)
-    {
-        ArgumentNullException.ThrowIfNull(tags);
-        var now = DateTime.UtcNow;
-
-        foreach (var tag in tags)
-        {
-            tag.InUseCount = await uow.DbSet<AdvertisementTag>()
-                .AsNoTracking()
-                .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
-                .SelectMany(x => x.AssociatedEntities)
-                .CountAsync(x => x.IsDeleted == showDeletedItems && (!x.DueDate.HasValue || x.DueDate.Value >= now));
-        }
-
-        await uow.SaveChangesAsync();
-    }
-
     public async Task RecalculateAllAdvertisementTagsInUseCountsAsync(bool onlyInUseItems,
         bool showActives = true,
         bool showDeletedItems = false)
@@ -890,6 +669,30 @@ public class StatService(IUnitOfWork uow) : IStatService
                 .Where(x => x.IsDeleted != showActives && x.Id == tag.Id)
                 .SelectMany(x => x.AssociatedEntities)
                 .CountAsync(x => x.IsDeleted == showDeletedItems && (!x.DueDate.HasValue || x.DueDate.Value >= now));
+        }
+
+        await uow.SaveChangesAsync();
+    }
+
+    public async Task RecalculateTagsInUseCountsAsync<TTagEntity, TAssociatedEntity>(bool showActives = true,
+        bool showDeletedItems = false)
+        where TTagEntity : BaseTagEntity<TAssociatedEntity>
+        where TAssociatedEntity : BaseAuditedEntity
+    {
+        var tagsInfo = await uow.DbSet<TTagEntity>()
+            .Where(tag => tag.IsDeleted != showActives)
+            .Select(tag => new
+            {
+                Tag = tag,
+                InUseCount =
+                    tag.AssociatedEntities.Count(associatedEntity => associatedEntity.IsDeleted == showDeletedItems)
+            })
+            .Where(x => x.InUseCount != x.Tag.InUseCount)
+            .ToListAsync();
+
+        foreach (var tagInfo in tagsInfo)
+        {
+            tagInfo.Tag.InUseCount = tagInfo.InUseCount;
         }
 
         await uow.SaveChangesAsync();

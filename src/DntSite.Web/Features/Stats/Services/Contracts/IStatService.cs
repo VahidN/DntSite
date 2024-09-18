@@ -1,6 +1,4 @@
-﻿using DntSite.Web.Features.Advertisements.Entities;
-using DntSite.Web.Features.Posts.Entities;
-using DntSite.Web.Features.RoadMaps.Entities;
+﻿using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.UserProfiles.Entities;
 
@@ -8,6 +6,11 @@ namespace DntSite.Web.Features.Stats.Services.Contracts;
 
 public interface IStatService : IScopedService
 {
+    Task RecalculateTagsInUseCountsAsync<TTagEntity, TAssociatedEntity>(bool showActives = true,
+        bool showDeletedItems = false)
+        where TTagEntity : BaseTagEntity<TAssociatedEntity>
+        where TAssociatedEntity : BaseAuditedEntity;
+
     Task UpdateAllUsersRatingsAsync();
 
     Task<AgeStatModel?> GetAverageAgeAsync();
@@ -36,8 +39,6 @@ public interface IStatService : IScopedService
 
     Task<int> NumberOfWritersAsync(bool showActives = true);
 
-    Task RecalculateAllVoteTagsInUseCountsAsync(string[] tags, bool showActives = true, bool showDeletedItems = false);
-
     Task<RecalculatePostsModel> GetStatAsync();
 
     Task<ProjectsStatModel> GetProjectStatAsync(int projectId, bool showDeletedItems = false);
@@ -46,35 +47,13 @@ public interface IStatService : IScopedService
 
     Task RecalculateAllUsersNumberOfPostsAndCommentsAsync(bool showDeletedItems = false);
 
-    Task RecalculateAllBlogPostTagsInUseCountsAsync(bool showActives = true, bool showDeletedItems = false);
-
     Task RecalculateThisStackExchangeQuestionCommentsCountsAsync(int postId, bool showDeletedItems = false);
 
-    Task RecalculateBlogPostTagsInUseCountsAsync(IList<BlogPostTag> tags,
-        bool showActives = true,
-        bool showDeletedItems = false);
-
     Task RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(int userId, bool showDeletedItems = false);
-
-    Task RecalculateThisTagInUseCountsAsync(string tagName, bool showActives = true, bool showDeletedItems = false);
-
-    Task RecalculateThisTagInUseCountsAsync(int tagId, bool showActives = true, bool showDeletedItems = false);
 
     Task RecalculateThisBlogPostCommentsCountsAsync(int postId, bool showDeletedItems = false);
 
     Task RecalculateAllBlogPostsCommentsCountsAsync(bool showDeletedItems = false);
-
-    Task RecalculateAllLinkTagsInUseCountsAsync(IList<string> tags,
-        bool showActives = true,
-        bool showDeletedItems = false);
-
-    Task RecalculateAllQuestionTagsInUseCountsAsync(IList<string> tags,
-        bool showActives = true,
-        bool showDeletedItems = false);
-
-    Task RecalculateAllProjectTagsInUseCountsAsync(IList<string> tags,
-        bool showActives = true,
-        bool showDeletedItems = false);
 
     Task RecalculateThisNewsPostCommentsCountsAsync(int postId, bool showDeletedItems = false);
 
@@ -98,10 +77,6 @@ public interface IStatService : IScopedService
 
     Task RecalculateThisVoteCommentsCountsAsync(int voteId, bool showDeletedItems = false);
 
-    Task RecalculateAllAdvertisementTagsInUseCountsAsync(ICollection<AdvertisementTag> tags,
-        bool showActives = true,
-        bool showDeletedItems = false);
-
     Task RecalculateAllAdvertisementTagsInUseCountsAsync(bool onlyInUseItems,
         bool showActives = true,
         bool showDeletedItems = false);
@@ -109,8 +84,6 @@ public interface IStatService : IScopedService
     Task RecalculateThisAdvertisementCommentsCountsAsync(int id, bool showDeletedItems = false);
 
     Task UpdateNumberOfAdvertisementsOfActiveUsersAsync(bool showDeletedItems = false);
-
-    Task RecalculateAllCourseTagsInUseCountsAsync(IList<string> tags, bool onlyIsActive = true);
 
     Task UpdateNumberOfCourseTopicsStatAsync(int courseId);
 
@@ -123,12 +96,4 @@ public interface IStatService : IScopedService
     Task RecalculateThisCourseQuestionCommentsCountsAsync(int questionId);
 
     Task UpdateNumberOfCourseQuestionsCommentsAsync(int courseId);
-
-    Task RecalculateAllLearningPathTagsInUseCountsAsync(IList<LearningPathTag> tags,
-        bool showActives = true,
-        bool showDeletedItems = false);
-
-    Task RecalculateAllBacklogTagsInUseCountsAsync(IList<string> backlogTags,
-        bool showActives = true,
-        bool showDeletedItems = false);
 }

@@ -1,4 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
+using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.RoutingConstants;
@@ -26,7 +27,7 @@ public partial class RecalculatePostsCount
         {
             case RecalculatePostsCountAction.RecalculateForm:
                 await StatService.RecalculateAllBlogPostsCommentsCountsAsync();
-                await StatService.RecalculateAllBlogPostTagsInUseCountsAsync();
+                await StatService.RecalculateTagsInUseCountsAsync<BlogPostTag, BlogPost>();
                 await StatService.RecalculateAllUsersNumberOfPostsAndCommentsAsync();
 
                 break;

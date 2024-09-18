@@ -290,7 +290,7 @@ public class QuestionsService(
     {
         ArgumentNullException.ThrowIfNull(writeQuestionModel);
 
-        await statService.RecalculateAllQuestionTagsInUseCountsAsync(writeQuestionModel.Tags);
+        await statService.RecalculateTagsInUseCountsAsync<StackExchangeQuestionTag, StackExchangeQuestion>();
 
         await statService.RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(user?.Id ?? 0);
 

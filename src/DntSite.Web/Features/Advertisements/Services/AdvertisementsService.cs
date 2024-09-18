@@ -319,7 +319,7 @@ public class AdvertisementsService(
             return;
         }
 
-        await statService.RecalculateAllAdvertisementTagsInUseCountsAsync(advertisement.Tags);
+        await statService.RecalculateTagsInUseCountsAsync<AdvertisementTag, Advertisement>();
         await statService.RecalculateAllAdvertisementTagsInUseCountsAsync(onlyInUseItems: true);
 
         if (advertisement.UserId.HasValue)

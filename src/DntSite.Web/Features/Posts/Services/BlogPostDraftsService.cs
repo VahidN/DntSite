@@ -155,7 +155,7 @@ public class BlogPostDraftsService(
         draft.IsConverted = true;
         await blogPostsService.SaveBlogPostAsync(blogPost, listOfActualTags);
 
-        await statService.RecalculateBlogPostTagsInUseCountsAsync(listOfActualTags);
+        await statService.RecalculateTagsInUseCountsAsync<BlogPostTag, BlogPost>();
 
         if (blogPost.UserId is not null)
         {

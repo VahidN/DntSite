@@ -489,7 +489,7 @@ public class BlogPostsService(
         fullTextSearchService.DeleteLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 
         var listOfActualTags = await tagsService.GetThisPostTagsListAsync(deleteId.Value);
-        await statService.RecalculateBlogPostTagsInUseCountsAsync(listOfActualTags);
+        await statService.RecalculateTagsInUseCountsAsync<BlogPostTag, BlogPost>();
 
         if (post.UserId is not null)
         {
@@ -524,7 +524,7 @@ public class BlogPostsService(
         mapper.Map(writeArticleModel, post);
         await SaveBlogPostAsync(post, availableDbTags, isEditForm: true);
 
-        await statService.RecalculateBlogPostTagsInUseCountsAsync(availableDbTags);
+        await statService.RecalculateTagsInUseCountsAsync<BlogPostTag, BlogPost>();
 
         if (post.UserId is not null)
         {

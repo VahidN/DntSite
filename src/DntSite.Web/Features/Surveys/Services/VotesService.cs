@@ -346,7 +346,7 @@ public class VotesService(
 
         await votesEmailsService.VoteSendEmailAsync(surveyItem);
         await statService.RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(surveyItem.UserId ?? 0);
-        await statService.RecalculateAllVoteTagsInUseCountsAsync(surveyItem.Tags.Select(x => x.Name).ToArray());
+        await statService.RecalculateTagsInUseCountsAsync<SurveyTag, Survey>();
     }
 
     public async Task IndexSurveysAsync()

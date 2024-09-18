@@ -297,6 +297,6 @@ public class ProjectsService(
         }
 
         await statService.RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(user.Id);
-        await statService.RecalculateAllProjectTagsInUseCountsAsync(writeProjectModel.Tags);
+        await statService.RecalculateTagsInUseCountsAsync<ProjectTag, Project>();
     }
 }

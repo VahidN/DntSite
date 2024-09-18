@@ -369,7 +369,7 @@ public class DailyNewsItemsService(
     {
         ArgumentNullException.ThrowIfNull(writeNewsModel);
 
-        await statService.RecalculateAllLinkTagsInUseCountsAsync(writeNewsModel.Tags);
+        await statService.RecalculateTagsInUseCountsAsync<DailyNewsItemTag, DailyNewsItem>();
 
         await statService.RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(user?.Id ?? 0);
 
