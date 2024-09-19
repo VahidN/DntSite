@@ -113,7 +113,7 @@ public class DailyNewsScreenshotsService(
                 <a href="{redirectUrl}" rel="nofollow" target="_blank">
                    <img src='{imageUrl}'
                         alt='{item.Title}'
-                        title='{item.Title}'
+                        title='{item.Title.ApplyRle()}'
                         style='border: 0 none; max-width: 100%; display: block; margin-left: auto; margin-right: auto;' />
                 </a>
                 """;
