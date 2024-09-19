@@ -81,8 +81,6 @@ public interface IUsersInfoService : IScopedService
 
     User AddUser(User data);
 
-    Task<User?> EditUserRolesAsync(string[] roles, int userId);
-
     Task<List<User>> GetActiveLinksWritersListAsync(int count = 1000);
 
     Task<List<User>> GetAllDailyEmailReceiversListAsync(int count = 300);

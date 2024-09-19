@@ -381,35 +381,6 @@ public class UsersInfoService(
 
     public User AddUser(User data) => _users.Add(data).Entity;
 
-    public async Task<User?> EditUserRolesAsync(string[] roles, int userId)
-    {
-        var user = await _users.FindAsync(userId);
-
-        if (user is null)
-        {
-            return null;
-        }
-
-        if (user is { Roles: not null } && user.Roles.Count != 0)
-        {
-            user.Roles.Clear();
-        }
-
-        if (roles is { Length: not 0 })
-        {
-            var listOfActualRoles = await commonService.FindListOfActualRolesAsync(roles);
-
-            user.Roles = new List<Role>();
-
-            foreach (var item in listOfActualRoles)
-            {
-                user.Roles.Add(item);
-            }
-        }
-
-        return user;
-    }
-
     public Task<List<User>> GetActiveLinksWritersListAsync(int count = 1000)
         => _users.Where(user => user.IsActive && user.UserStat.NumberOfLinks > 0)
             .OrderByDescending(x => x.UserStat.NumberOfLinks)
