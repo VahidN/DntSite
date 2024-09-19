@@ -272,7 +272,7 @@ public class BacklogsService(
             return;
         }
 
-        await UpdateStatAsync(backlog, writeBacklogModel);
+        await UpdateStatAsync(backlog);
 
         await emailsFactoryService.SendTextToAllAdminsAsync(string.Create(CultureInfo.InvariantCulture,
             $"پیشنهاد شماره {backlog.Id} حذف شد."));
@@ -323,7 +323,7 @@ public class BacklogsService(
         }
 
         await emailsService.NewBacklogSendEmailToAdminsAsync(backlog);
-        await UpdateStatAsync(backlog, writeBacklogModel);
+        await UpdateStatAsync(backlog);
     }
 
     public async Task UpdateStatAsync(int backlogId, bool isFromFeed)
@@ -506,7 +506,7 @@ public class BacklogsService(
         await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
     }
 
-    private async Task UpdateStatAsync(Backlog backlog, BacklogModel writeBacklogModel)
+    private async Task UpdateStatAsync(Backlog backlog)
     {
         await statService.RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(backlog.UserId ?? 0);
         await statService.RecalculateTagsInUseCountsAsync<BacklogTag, Backlog>();

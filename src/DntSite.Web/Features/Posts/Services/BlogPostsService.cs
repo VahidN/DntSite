@@ -488,7 +488,6 @@ public class BlogPostsService(
 
         fullTextSearchService.DeleteLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 
-        var listOfActualTags = await tagsService.GetThisPostTagsListAsync(deleteId.Value);
         await statService.RecalculateTagsInUseCountsAsync<BlogPostTag, BlogPost>();
 
         if (post.UserId is not null)
