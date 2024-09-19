@@ -73,7 +73,7 @@ public class FileController(
 
         if (!safeFile.IsSafeToDownload)
         {
-            return BadRequest();
+            return StatusCode((int)HttpStatusCode.Gone);
         }
 
         var path = safeFile.SafeFilePath;
