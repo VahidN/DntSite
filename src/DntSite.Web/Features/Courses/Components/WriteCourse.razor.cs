@@ -138,6 +138,7 @@ public partial class WriteCourse
 
         await CoursesService.NotifyAddOrUpdateChangesAsync(course, WriteCourseModel, user);
 
-        ApplicationState.NavigateTo(Invariant($"{CoursesRoutingConstants.CoursesDetailsBase}/{course?.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{CoursesRoutingConstants.CoursesDetailsBase}/{course?.Id}"));
     }
 }

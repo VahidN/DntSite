@@ -11,10 +11,11 @@ public partial class PrintNewsRedirect
 
     private string HttpStatusCodeText => DailyNewsItem?.LastHttpStatusCode is null
         ? "نامشخص"
-        : Invariant($"{(int)DailyNewsItem.LastHttpStatusCode.Value}, {DailyNewsItem.LastHttpStatusCode.Value}");
+        : string.Create(CultureInfo.InvariantCulture,
+            $"{(int)DailyNewsItem.LastHttpStatusCode.Value}, {DailyNewsItem.LastHttpStatusCode.Value}");
 
     private string UrlHost => DailyNewsItem is not null ? new Uri(DailyNewsItem.Url).Host : "";
 
     private string GetUrl(DailyNewsItem dailyNewsItem)
-        => Invariant($"{NewsRoutingConstants.NewsRedirectBase}/{dailyNewsItem.Id}");
+        => string.Create(CultureInfo.InvariantCulture, $"{NewsRoutingConstants.NewsRedirectBase}/{dailyNewsItem.Id}");
 }

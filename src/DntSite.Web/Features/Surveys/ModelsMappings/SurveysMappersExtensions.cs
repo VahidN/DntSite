@@ -52,7 +52,7 @@ public static class SurveysMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.VotesReplies.Value}: {item.Parent.Title}",
             OriginalTitle = item.Parent.Title,
-            Url = siteRootUri.CombineUrl(Invariant(
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
                 $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{item.ParentId}#comment-{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.VotesReplies,

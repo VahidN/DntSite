@@ -44,23 +44,23 @@ public partial class ProjectFeedbackDetails
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);
 
-    private string CommentsUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{FeedbackId}#comments");
+    private string CommentsUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{FeedbackId}#comments");
 
-    private string PostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{FeedbackId}");
+    private string PostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{FeedbackId}");
 
-    private string LastPostUrl
-        => Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{_issueTopic!.PreviousItem?.Id}");
+    private string LastPostUrl => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{_issueTopic!.PreviousItem?.Id}");
 
-    private string NextPostUrl
-        => Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{_issueTopic!.NextItem?.Id}");
+    private string NextPostUrl => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{_issueTopic!.NextItem?.Id}");
 
-    private string EditPostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectFeedbackEditBase}/{ProjectId}/{EncryptedFeedbackId}");
+    private string EditPostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.WriteProjectFeedbackEditBase}/{ProjectId}/{EncryptedFeedbackId}");
 
-    private string DeletePostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectFeedbackDeleteBase}/{ProjectId}/{EncryptedFeedbackId}");
+    private string DeletePostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.WriteProjectFeedbackDeleteBase}/{ProjectId}/{EncryptedFeedbackId}");
 
     private string EncryptedFeedbackId => FeedbackId.HasValue
         ? ProtectionProvider.Encrypt(FeedbackId.Value.ToString(CultureInfo.InvariantCulture))

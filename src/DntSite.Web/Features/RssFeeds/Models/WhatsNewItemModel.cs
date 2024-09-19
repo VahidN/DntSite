@@ -16,8 +16,10 @@ public class WhatsNewItemModel : FeedItem
 
     public required Type? EntityType { set; get; }
 
-    public string DocumentTypeIdHash => Invariant($"{Id}{ItemType.Value}").GetSha1Hash();
+    public string DocumentTypeIdHash
+        => string.Create(CultureInfo.InvariantCulture, $"{Id}{ItemType.Value}").GetSha1Hash();
 
-    public string DocumentContentHash
-        => Invariant($"{Id}{ItemType.Value}{OriginalTitle}{Url}{PublishDate}{AuthorName}{Content}").GetSha1Hash();
+    public string DocumentContentHash => string.Create(CultureInfo.InvariantCulture,
+            $"{Id}{ItemType.Value}{OriginalTitle}{Url}{PublishDate}{AuthorName}{Content}")
+        .GetSha1Hash();
 }

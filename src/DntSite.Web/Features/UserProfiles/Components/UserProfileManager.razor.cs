@@ -8,7 +8,7 @@ namespace DntSite.Web.Features.UserProfiles.Components;
 
 public partial class UserProfileManager
 {
-    private string FormName => Invariant($"{nameof(UserProfileManager)}{User?.Id}");
+    private string FormName => string.Create(CultureInfo.InvariantCulture, $"{nameof(UserProfileManager)}{User?.Id}");
 
     private bool IsUserAdmin => User is not null && User.Roles.Any(x => string.Equals(x.Name, CustomRoles.Admin,
         StringComparison.Ordinal));

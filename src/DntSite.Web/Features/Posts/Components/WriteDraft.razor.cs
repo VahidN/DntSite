@@ -146,7 +146,8 @@ public partial class WriteDraft
             await StatService.UpdateNumberOfDraftsStatAsync(draft.UserId.Value);
         }
 
-        ApplicationState.NavigateTo(Invariant($"{PostsRoutingConstants.ShowDraftBase}/{draft.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{PostsRoutingConstants.ShowDraftBase}/{draft.Id}"));
     }
 
     private async Task AddDraftAsync()
@@ -165,7 +166,8 @@ public partial class WriteDraft
             await StatService.UpdateNumberOfDraftsStatAsync(result.UserId.Value);
         }
 
-        ApplicationState.NavigateTo(Invariant($"{PostsRoutingConstants.ShowDraftBase}/{result.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{PostsRoutingConstants.ShowDraftBase}/{result.Id}"));
     }
 
     private async Task PerformConvertToLinkAsync()
@@ -253,6 +255,7 @@ public partial class WriteDraft
 
         await BlogPostDraftsService.DeleteDraftAsync(draft);
 
-        ApplicationState.NavigateTo(Invariant($"{PostsRoutingConstants.PostBase}/{ConvertToCommentModel.ReplyPostId}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{PostsRoutingConstants.PostBase}/{ConvertToCommentModel.ReplyPostId}"));
     }
 }

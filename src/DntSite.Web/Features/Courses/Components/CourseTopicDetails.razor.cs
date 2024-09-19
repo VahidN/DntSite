@@ -49,23 +49,23 @@ public partial class CourseTopicDetails
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);
 
-    private string CommentsUrlTemplate
-        => Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{DisplayId:D}#comments");
+    private string CommentsUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{DisplayId:D}#comments");
 
-    private string PostUrlTemplate => Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{DisplayId:D}");
+    private string PostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{DisplayId:D}");
 
-    private string LastPostUrl
-        => Invariant(
-            $"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{_courseTopic!.PreviousTopic?.DisplayId:D}");
+    private string LastPostUrl => string.Create(CultureInfo.InvariantCulture,
+        $"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{_courseTopic!.PreviousTopic?.DisplayId:D}");
 
-    private string NextPostUrl
-        => Invariant($"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{_courseTopic!.NextTopic?.DisplayId:D}");
+    private string NextPostUrl => string.Create(CultureInfo.InvariantCulture,
+        $"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{_courseTopic!.NextTopic?.DisplayId:D}");
 
-    private string EditPostUrlTemplate
-        => Invariant($"{CoursesRoutingConstants.WriteCourseTopicEditBase}/{CourseId}/{EncryptedDisplayId}");
+    private string EditPostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{CoursesRoutingConstants.WriteCourseTopicEditBase}/{CourseId}/{EncryptedDisplayId}");
 
-    private string DeletePostUrlTemplate
-        => Invariant($"{CoursesRoutingConstants.WriteCourseTopicDeleteBase}/{CourseId}/{EncryptedDisplayId}");
+    private string DeletePostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{CoursesRoutingConstants.WriteCourseTopicDeleteBase}/{CourseId}/{EncryptedDisplayId}");
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
@@ -120,13 +120,15 @@ public partial class CourseTopicDetails
             ..CoursesBreadCrumbs.DefaultBreadCrumbs, new BreadCrumb
             {
                 Title = $"دوره «{CurrentPost?.Course.Title ?? ""}»",
-                Url = Invariant($"{CoursesRoutingConstants.CoursesDetailsBase}/{CourseId}"),
+                Url = string.Create(CultureInfo.InvariantCulture,
+                    $"{CoursesRoutingConstants.CoursesDetailsBase}/{CourseId}"),
                 GlyphIcon = DntBootstrapIcons.BiShare
             },
             new BreadCrumb
             {
                 Title = "نظرات دوره",
-                Url = Invariant($"{CoursesRoutingConstants.CourseCommentsBase}/{CourseId}"),
+                Url = string.Create(CultureInfo.InvariantCulture,
+                    $"{CoursesRoutingConstants.CourseCommentsBase}/{CourseId}"),
                 GlyphIcon = DntBootstrapIcons.BiShare
             }
         ]);

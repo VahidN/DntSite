@@ -11,15 +11,17 @@ public class DailyNewsEmailsService(ICommonService commonService, IEmailsFactory
 {
     public Task ConvertedDailyNewsItemsSendEmailAsync(int id, string title, int toInt)
         => emailsFactoryService.SendEmailToIdAsync<ConvertedToLink, ConvertedToLinkModel>(
-            Invariant($"DailyNewsItem/Id/{id}"), inReplyTo: "", Invariant($"DailyNewsItem/Id/{id}"),
-            new ConvertedToLinkModel(), toInt, $"لینک جدید ارسالی:  {title}");
+            string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/Id/{id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/Id/{id}"), new ConvertedToLinkModel(), toInt,
+            $"لینک جدید ارسالی:  {title}");
 
     public async Task DailyNewsItemsSendEmailAsync(DailyNewsItem result, string friendlyName)
     {
         ArgumentNullException.ThrowIfNull(result);
 
         await emailsFactoryService.SendEmailToAllAdminsAsync<DailyLinksToAdminsEmails, DailyLinksToAdminsEmailsModel>(
-            Invariant($"DailyNewsItem/Id/{result.Id}"), inReplyTo: "", Invariant($"DailyNewsItem/Id/{result.Id}"),
+            string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/Id/{result.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/Id/{result.Id}"),
             new DailyLinksToAdminsEmailsModel
             {
                 NewsId = result.Id,
@@ -44,8 +46,9 @@ public class DailyNewsEmailsService(ICommonService commonService, IEmailsFactory
 
         await emailsFactoryService
             .SendEmailToAllAdminsAsync<PostNewsReplyToAdminsEmail, PostNewsReplyToAdminsEmailModel>(
-                Invariant($"DailyNewsItem/ReplyId/{data.Id}"), inReplyTo: "",
-                Invariant($"DailyNewsItem/Id/{data.ParentId}"), new PostNewsReplyToAdminsEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/ReplyId/{data.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/Id/{data.ParentId}"),
+                new PostNewsReplyToAdminsEmailModel
                 {
                     Title = post.Title,
                     Username = data.GuestUser.UserName,
@@ -99,8 +102,9 @@ public class DailyNewsEmailsService(ICommonService commonService, IEmailsFactory
             }
 
             await emailsFactoryService.SendEmailAsync<PostNewsReplyToPersonEmail, PostNewsReplyToPersonEmailModel>(
-                Invariant($"DailyNewsItem/ReplyId/{comment.Id}"), inReplyTo: "",
-                Invariant($"DailyNewsItem/Id/{comment.ParentId}"), new PostNewsReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/ReplyId/{comment.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/Id/{comment.ParentId}"),
+                new PostNewsReplyToPersonEmailModel
                 {
                     Title = post.Title,
                     ReplyToComment = replyToComment.Body,
@@ -121,8 +125,9 @@ public class DailyNewsEmailsService(ICommonService commonService, IEmailsFactory
         if (replyToComment.UserId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<PostNewsReplyToPersonEmail, PostNewsReplyToPersonEmailModel>(
-                Invariant($"DailyNewsItem/ReplyId/{comment.Id}"), inReplyTo: "",
-                Invariant($"DailyNewsItem/Id/{comment.ParentId}"), new PostNewsReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/ReplyId/{comment.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/Id/{comment.ParentId}"),
+                new PostNewsReplyToPersonEmailModel
                 {
                     Title = post.Title,
                     ReplyToComment = replyToComment.Body,
@@ -156,8 +161,9 @@ public class DailyNewsEmailsService(ICommonService commonService, IEmailsFactory
         }
 
         await emailsFactoryService.SendEmailToIdAsync<PostNewsReplyToWritersEmail, PostNewsReplyToWritersEmailModel>(
-            Invariant($"DailyNewsItem/ReplyId/{comment.Id}"), inReplyTo: "",
-            Invariant($"DailyNewsItem/Id/{comment.ParentId}"), new PostNewsReplyToWritersEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/ReplyId/{comment.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"DailyNewsItem/Id/{comment.ParentId}"),
+            new PostNewsReplyToWritersEmailModel
             {
                 Title = post.Title,
                 Username = comment.GuestUser.UserName,

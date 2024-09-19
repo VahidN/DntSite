@@ -224,7 +224,7 @@ public class CoursesService(
                     }
 
                     return (
-                        Invariant(
+                        string.Create(CultureInfo.InvariantCulture,
                             $"برای دسترسی به این دوره نیاز به {course.NumberOfPostsRequired} مطلب ارسالی است. تعداد مطالب ارسالی شما: {user.UserStat.NumberOfPosts}"),
                         OperationStat.Failed);
                 }
@@ -244,7 +244,7 @@ public class CoursesService(
                         }
 
                         return (
-                            Invariant(
+                            string.Create(CultureInfo.InvariantCulture,
                                 $"برای دسترسی به این دوره نیاز به دریافت {course.NumberOfTotalRatingsRequired} امتیاز در طی {course.NumberOfMonthsTotalRatingsRequired} ماه قبل است. تعداد امتیازهای دریافتی شما در طی {course.NumberOfMonthsTotalRatingsRequired} ماه قبل: {numberOfTotalRatings}"),
                             OperationStat.Failed);
                     }
@@ -255,7 +255,7 @@ public class CoursesService(
                     }
 
                     return (
-                        Invariant(
+                        string.Create(CultureInfo.InvariantCulture,
                             $"برای دسترسی به این دوره نیاز به {course.NumberOfTotalRatingsRequired} امتیاز دریافتی است. تعداد امتیازهای دریافتی شما: {user.Rating.TotalRating}"),
                         OperationStat.Failed);
                 }
@@ -532,7 +532,7 @@ public class CoursesService(
         }
 
         return (
-            Invariant(
+            string.Create(CultureInfo.InvariantCulture,
                 $"برای دسترسی به این دوره نیاز به ارسال {course.NumberOfPostsRequired} مطلب در طی {course.NumberOfMonthsRequired} ماه قبل است. تعداد مطالب ارسالی شما در طی {course.NumberOfMonthsRequired} ماه قبل: {numberOfPosts}"),
             OperationStat.Failed);
     }

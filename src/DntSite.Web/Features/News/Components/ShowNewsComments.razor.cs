@@ -94,5 +94,5 @@ public partial class ShowNewsComments
         ]);
 
     private string GetPostAbsoluteUrl(DailyNewsItemComment comment)
-        => Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{comment.ParentId}");
+        => string.Create(CultureInfo.InvariantCulture, $"{NewsRoutingConstants.NewsDetailsBase}/{comment.ParentId}");
 }

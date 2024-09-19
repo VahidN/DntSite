@@ -69,7 +69,8 @@ public partial class WriteProjectRelease
         await ProjectReleasesService.MarkAsDeletedAsync(projectRelease);
         await ProjectReleasesService.NotifyDeleteChangesAsync(projectRelease, ApplicationState.CurrentUser?.User);
 
-        ApplicationState.NavigateTo(Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}"));
     }
 
     private void AddBreadCrumbs(string name)
@@ -132,7 +133,7 @@ public partial class WriteProjectRelease
 
         await ProjectReleasesService.NotifyAddOrUpdateChangesAsync(projectRelease, ProjectPostFileModel, user);
 
-        ApplicationState.NavigateTo(
-            Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}/{projectRelease?.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}/{projectRelease?.Id}"));
     }
 }

@@ -13,7 +13,8 @@ public partial class PrintNewsThumb
 
     private bool FileExists => File.Exists(Path.Combine(AppFoldersService.ThumbnailsServiceFolderPath, FileName));
 
-    private string ImageUrl => Invariant($"{NewsRoutingConstants.NewsRedirectBase}/{Id}");
+    private string ImageUrl
+        => string.Create(CultureInfo.InvariantCulture, $"{NewsRoutingConstants.NewsRedirectBase}/{Id}");
 
-    private string FileName => Invariant($"news-{Id}.jpg");
+    private string FileName => string.Create(CultureInfo.InvariantCulture, $"news-{Id}.jpg");
 }

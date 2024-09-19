@@ -238,7 +238,8 @@ public class QuestionsService(
         {
             Id = question.Id,
             Title = question.Title,
-            Description = Invariant($"حذف پرسش شماره {question.Id} توسط مدیر از سایت ")
+            Description = string.Create(CultureInfo.InvariantCulture,
+                $"حذف پرسش شماره {question.Id} توسط مدیر از سایت ")
         }, currentUserUser?.FriendlyName ?? SharedConstants.GuestUserName);
     }
 

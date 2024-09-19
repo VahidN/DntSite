@@ -55,7 +55,8 @@ public partial class ShowCoursesComments
         }
 
         return CourseId.HasValue
-            ? Invariant($"{CoursesRoutingConstants.CourseCommentsBase}/{CourseId.Value}")
+            ? string.Create(CultureInfo.InvariantCulture,
+                $"{CoursesRoutingConstants.CourseCommentsBase}/{CourseId.Value}")
             : CoursesRoutingConstants.CoursesComments;
     }
 
@@ -121,6 +122,6 @@ public partial class ShowCoursesComments
         ]);
 
     private string GetPostAbsoluteUrl(CourseTopicComment comment)
-        => Invariant(
+        => string.Create(CultureInfo.InvariantCulture,
             $"{CoursesRoutingConstants.CoursesTopicBase}/{comment.Parent.CourseId}/{comment.Parent.DisplayId.ToString(format: "D")}");
 }

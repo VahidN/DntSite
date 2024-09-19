@@ -97,7 +97,8 @@ public partial class ChangeUserPassword
             UserProfilesBreadCrumbs.Users, new BreadCrumb
             {
                 Title = "تغییر کلمه‌ی عبور کاربر",
-                Url = Invariant($"{UserProfilesRoutingConstants.ChangeUserPasswordBase}/{EncryptedUserId}"),
+                Url = string.Create(CultureInfo.InvariantCulture,
+                    $"{UserProfilesRoutingConstants.ChangeUserPasswordBase}/{EncryptedUserId}"),
                 GlyphIcon = DntBootstrapIcons.BiPerson
             }
         ]);

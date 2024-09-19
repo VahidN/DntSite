@@ -14,8 +14,9 @@ public class QuestionsEmailsService(ICommonService commonService, IEmailsFactory
         ArgumentNullException.ThrowIfNull(result);
 
         await emailsFactoryService.SendEmailToAllAdminsAsync<QuestionsToAdminsEmails, QuestionsToAdminsEmailsModel>(
-            Invariant($"StackExchangeQuestion/Id/{result.Id}"), inReplyTo: "",
-            Invariant($"StackExchangeQuestion/Id/{result.Id}"), new QuestionsToAdminsEmailsModel
+            string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/Id/{result.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/Id/{result.Id}"),
+            new QuestionsToAdminsEmailsModel
             {
                 Title = result.Title,
                 Body = result.Description,
@@ -38,8 +39,9 @@ public class QuestionsEmailsService(ICommonService commonService, IEmailsFactory
 
         await emailsFactoryService
             .SendEmailToAllAdminsAsync<QuestionsReplyToAdminsEmail, QuestionsReplyToAdminsEmailModel>(
-                Invariant($"StackExchangeQuestion/ReplyId/{data.Id}"), inReplyTo: "",
-                Invariant($"StackExchangeQuestion/Id/{data.ParentId}"), new QuestionsReplyToAdminsEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/ReplyId/{data.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/Id/{data.ParentId}"),
+                new QuestionsReplyToAdminsEmailModel
                 {
                     Title = post.Title,
                     Username = data.GuestUser.UserName,
@@ -93,8 +95,10 @@ public class QuestionsEmailsService(ICommonService commonService, IEmailsFactory
             }
 
             await emailsFactoryService.SendEmailAsync<QuestionsReplyToPersonEmail, QuestionsReplyToPersonEmailModel>(
-                Invariant($"StackExchangeQuestion/ReplyId/{comment.Id}"), inReplyTo: "",
-                Invariant($"StackExchangeQuestion/Id/{comment.ParentId}"), new QuestionsReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/ReplyId/{comment.Id}"),
+                inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/Id/{comment.ParentId}"),
+                new QuestionsReplyToPersonEmailModel
                 {
                     Title = post.Title,
                     ReplyToComment = replyToComment.Body,
@@ -116,8 +120,10 @@ public class QuestionsEmailsService(ICommonService commonService, IEmailsFactory
         {
             await emailsFactoryService
                 .SendEmailToIdAsync<QuestionsReplyToPersonEmail, QuestionsReplyToPersonEmailModel>(
-                    Invariant($"StackExchangeQuestion/ReplyId/{comment.Id}"), inReplyTo: "",
-                    Invariant($"StackExchangeQuestion/Id/{comment.ParentId}"), new QuestionsReplyToPersonEmailModel
+                    string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/ReplyId/{comment.Id}"),
+                    inReplyTo: "",
+                    string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/Id/{comment.ParentId}"),
+                    new QuestionsReplyToPersonEmailModel
                     {
                         Title = post.Title,
                         ReplyToComment = replyToComment.Body,
@@ -151,8 +157,9 @@ public class QuestionsEmailsService(ICommonService commonService, IEmailsFactory
         }
 
         await emailsFactoryService.SendEmailToIdAsync<QuestionsReplyToWritersEmail, QuestionsReplyToWritersEmailModel>(
-            Invariant($"StackExchangeQuestion/ReplyId/{comment.Id}"), inReplyTo: "",
-            Invariant($"StackExchangeQuestion/Id/{comment.ParentId}"), new QuestionsReplyToWritersEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/ReplyId/{comment.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/Id/{comment.ParentId}"),
+            new QuestionsReplyToWritersEmailModel
             {
                 Title = post.Title,
                 Username = comment.GuestUser.UserName,

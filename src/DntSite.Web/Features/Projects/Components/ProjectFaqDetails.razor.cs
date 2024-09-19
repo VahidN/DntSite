@@ -17,13 +17,14 @@ public partial class ProjectFaqDetails
 
     [Parameter] public int? FaqId { set; get; }
 
-    private string PostUrlTemplate => Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{ProjectId}/{FaqId}");
+    private string PostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectFaqsBase}/{ProjectId}/{FaqId}");
 
-    private string EditPostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectFaqEditBase}/{ProjectId}/{EncryptedFaqId}");
+    private string EditPostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.WriteProjectFaqEditBase}/{ProjectId}/{EncryptedFaqId}");
 
-    private string DeletePostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectFaqDeleteBase}/{ProjectId}/{EncryptedFaqId}");
+    private string DeletePostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.WriteProjectFaqDeleteBase}/{ProjectId}/{EncryptedFaqId}");
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
@@ -53,11 +54,11 @@ public partial class ProjectFaqDetails
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);
 
-    private string LastPostUrl
-        => Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{ProjectId}/{_faqs!.PreviousItem?.Id}");
+    private string LastPostUrl => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectFaqsBase}/{ProjectId}/{_faqs!.PreviousItem?.Id}");
 
-    private string NextPostUrl
-        => Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{ProjectId}/{_faqs!.NextItem?.Id}");
+    private string NextPostUrl => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectFaqsBase}/{ProjectId}/{_faqs!.NextItem?.Id}");
 
     private List<string> GetTags() => CurrentPost?.Tags.Select(x => x.Name).ToList() ?? [];
 

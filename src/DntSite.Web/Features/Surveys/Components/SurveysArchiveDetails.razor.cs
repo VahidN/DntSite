@@ -110,7 +110,7 @@ public partial class SurveysArchiveDetails
     {
         await SurveysService.ApplyVoteAsync(arg.FormId, arg.SurveyItemIds, ApplicationState.CurrentUser?.User);
 
-        ApplicationState.NavigateTo(
-            Invariant($"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{arg.FormId}#results"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{arg.FormId}#results"));
     }
 }

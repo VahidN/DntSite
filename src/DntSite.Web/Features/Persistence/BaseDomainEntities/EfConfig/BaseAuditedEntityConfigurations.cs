@@ -13,7 +13,7 @@ public static class BaseAuditedEntityConfigurations
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
-        WriteLine(Invariant(
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
             $"{DateTime.UtcNow:HH:mm:ss.fff} Started ApplyBaseEntityConfigurationToAllDerivedEntities"));
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes()
@@ -23,7 +23,7 @@ public static class BaseAuditedEntityConfigurations
             ConfigureBaseEntityMethodInfo.MakeGenericMethod(entityType.ClrType).Invoke(obj: null, [modelBuilder]);
         }
 
-        WriteLine(Invariant(
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
             $"{DateTime.UtcNow:HH:mm:ss.fff} Finished ApplyBaseEntityConfigurationToAllDerivedEntities"));
     }
 

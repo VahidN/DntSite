@@ -6,7 +6,8 @@ public static class ModelBuilderConfigs
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started SetDecimalPrecision"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started SetDecimalPrecision"));
 
         foreach (var property in modelBuilder.Model.GetEntityTypes()
                      .SelectMany(t => t.GetProperties())
@@ -15,14 +16,17 @@ public static class ModelBuilderConfigs
             property.SetColumnType(value: "decimal(18, 6)");
         }
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished SetDecimalPrecision"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Finished SetDecimalPrecision"));
     }
 
     public static void SetCaseInsensitiveSearchesForSqLite(this ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started SetCaseInsensitiveSearchesForSqLite"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started SetCaseInsensitiveSearchesForSqLite"));
+
         modelBuilder.UseCollation(collation: "NOCASE");
 
         foreach (var property in modelBuilder.Model.GetEntityTypes()
@@ -32,6 +36,7 @@ public static class ModelBuilderConfigs
             property.SetCollation(collation: "NOCASE");
         }
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished SetCaseInsensitiveSearchesForSqLite"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Finished SetCaseInsensitiveSearchesForSqLite"));
     }
 }

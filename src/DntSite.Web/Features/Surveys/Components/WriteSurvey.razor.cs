@@ -122,6 +122,7 @@ public partial class WriteSurvey
 
         await SurveysService.NotifyAddOrUpdateChangesAsync(surveyItem, WriteSurveyModel, user);
 
-        ApplicationState.NavigateTo(Invariant($"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{surveyItem?.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{surveyItem?.Id}"));
     }
 }

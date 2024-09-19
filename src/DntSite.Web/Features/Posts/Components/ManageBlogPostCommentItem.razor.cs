@@ -10,7 +10,7 @@ public partial class ManageBlogPostCommentItem
     private bool _showSubmitEditedComment;
     private bool _showSubmitNewComment;
 
-    private string FormName => Invariant($"CommentAction_{CommentId}");
+    private string FormName => string.Create(CultureInfo.InvariantCulture, $"CommentAction_{CommentId}");
 
     private bool CanUserEditThisReply => ApplicationState.CanCurrentUserEditThisItem(RecordUser?.Id, CreatedAt);
 

@@ -21,8 +21,9 @@ public class BlogCommentsEmailsService(ICommonService commonService, IEmailsFact
         }
 
         await emailsFactoryService.SendEmailToAllAdminsAsync<PostReplyToAdminsEmail, PostReplyToAdminsEmailModel>(
-            Invariant($"PostReply/CommentId/{data.Id}"), inReplyTo: "",
-            Invariant($"PostReply/BlogPostId/{data.ParentId}"), new PostReplyToAdminsEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"PostReply/CommentId/{data.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"PostReply/BlogPostId/{data.ParentId}"),
+            new PostReplyToAdminsEmailModel
             {
                 Title = post.Title,
                 Username = data.GuestUser.UserName,
@@ -76,8 +77,9 @@ public class BlogCommentsEmailsService(ICommonService commonService, IEmailsFact
             }
 
             await emailsFactoryService.SendEmailAsync<PostReplyToPersonEmail, PostReplyToPersonEmailModel>(
-                Invariant($"PostReply/CommentId/{comment.Id}"), inReplyTo: "",
-                Invariant($"PostReply/BlogPostId/{comment.ParentId}"), new PostReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"PostReply/CommentId/{comment.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"PostReply/BlogPostId/{comment.ParentId}"),
+                new PostReplyToPersonEmailModel
                 {
                     Title = post.Title,
                     ReplyToComment = replyToComment.Body,
@@ -98,8 +100,9 @@ public class BlogCommentsEmailsService(ICommonService commonService, IEmailsFact
         if (replyToComment.UserId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<PostReplyToPersonEmail, PostReplyToPersonEmailModel>(
-                Invariant($"PostReply/CommentId/{comment.Id}"), inReplyTo: "",
-                Invariant($"PostReply/BlogPostId/{comment.ParentId}"), new PostReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"PostReply/CommentId/{comment.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"PostReply/BlogPostId/{comment.ParentId}"),
+                new PostReplyToPersonEmailModel
                 {
                     Title = post.Title,
                     ReplyToComment = replyToComment.Body,
@@ -113,8 +116,8 @@ public class BlogCommentsEmailsService(ICommonService commonService, IEmailsFact
 
     public Task ConvertedToReplySendEmailAsync(int postId, string title, int userIdValue)
         => emailsFactoryService.SendEmailToIdAsync<ConvertedToReply, ConvertedToReplyModel>(
-            Invariant($"Reply/PostId/{postId}"), inReplyTo: "", Invariant($"Reply/PostId/{postId}"),
-            new ConvertedToReplyModel
+            string.Create(CultureInfo.InvariantCulture, $"Reply/PostId/{postId}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"Reply/PostId/{postId}"), new ConvertedToReplyModel
             {
                 PostId = postId.ToString(CultureInfo.InvariantCulture)
             }, userIdValue, $"نظر تکمیلی جدید ارسالی برای مطلب: {title}");
@@ -143,8 +146,9 @@ public class BlogCommentsEmailsService(ICommonService commonService, IEmailsFact
         if (post.UserId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<PostReplyToWritersEmail, PostReplyToWritersEmailModel>(
-                Invariant($"PostReply/CommentId/{comment.Id}"), inReplyTo: "",
-                Invariant($"PostReply/BlogPostId/{comment.ParentId}"), new PostReplyToWritersEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"PostReply/CommentId/{comment.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"PostReply/BlogPostId/{comment.ParentId}"),
+                new PostReplyToWritersEmailModel
                 {
                     Title = post.Title,
                     Username = comment.GuestUser.UserName,

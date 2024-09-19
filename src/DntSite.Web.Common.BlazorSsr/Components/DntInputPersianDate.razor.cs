@@ -91,7 +91,7 @@ public partial class DntInputPersianDate
 
     private string? PersianDateValue => Year is null || Month is null || Day is null
         ? null
-        : Invariant($"{Year.Value}/{Month.Value:00}/{Day.Value:00}");
+        : string.Create(CultureInfo.InvariantCulture, $"{Year.Value}/{Month.Value:00}/{Day.Value:00}");
 
     [Parameter] public DateTime? Date { set; get; }
 

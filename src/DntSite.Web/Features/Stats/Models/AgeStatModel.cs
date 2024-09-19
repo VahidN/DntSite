@@ -23,7 +23,7 @@ public class AgeStatModel
                 return string.Empty;
             }
 
-            return Invariant(
+            return string.Create(CultureInfo.InvariantCulture,
                     $"{RleChar}جوان\u200cترین عضو: {MinAgeUser.FriendlyName} ({MinAgeUser.DateOfBirth.Value.GetAge()}) و مسن\u200cترین عضو: {MaxAgeUser.FriendlyName} ({MaxAgeUser.DateOfBirth.Value.GetAge()})؛ در بین {UsersCount} نفر (که اطلاعات تاریخ تولد خود را تکمیل کرده‌اند).")
                 .ToPersianNumbers();
         }

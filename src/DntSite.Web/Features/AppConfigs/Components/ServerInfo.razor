@@ -6,7 +6,7 @@
     <DntCardFrame MarginTop="1">
         <FrameHeader>
             مشخصات پروسه‌ی برنامه
-            <span dir="ltr">[@@ @Invariant($"{DateTime.UtcNow:yyyy-MM-dd, HH:mm:ss}"), V @GetVersionInfo()]</span>
+            <span dir="ltr">[@@ @string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:yyyy-MM-dd, HH:mm:ss}"), V @GetVersionInfo()]</span>
         </FrameHeader>
         <FrameBody>
             <div>

@@ -61,7 +61,7 @@ public partial class FilesManager
         => $"{ApiUrlsRoutingConstants.File.HttpAny.Image}?name={Uri.EscapeDataString(record.Name)}";
 
     private string GetFormName(FileModel record)
-        => Invariant($"File_{record.Name.GetHashCode(StringComparison.Ordinal)}");
+        => string.Create(CultureInfo.InvariantCulture, $"File_{record.Name.GetHashCode(StringComparison.Ordinal)}");
 
     private async Task OnDeleteFileAsync()
     {

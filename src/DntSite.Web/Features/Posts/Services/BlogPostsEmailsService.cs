@@ -16,18 +16,18 @@ public class BlogPostsEmailsService(ICommonService commonService, IEmailsFactory
         var emails = (await commonService.GetAllActiveAdminsAsNoTrackingAsync()).Select(x => x.EMail).ToList();
 
         await emailsFactoryService.SendEmailToAllUsersAsync<NewConvertedBlogPost, NewConvertedBlogPostModel>(emails,
-            "DraftConverted", "", "DraftConverted", new NewConvertedBlogPostModel
+            messageId: "DraftConverted", inReplyTo: "", references: "DraftConverted", new NewConvertedBlogPostModel
             {
                 Source = blogPost.Title,
                 Dest = blogPost.Body
-            }, $"مطلب جدید تبدیل شده: {blogPost.Title}", false);
+            }, $"مطلب جدید تبدیل شده: {blogPost.Title}", addIp: false);
 
-        await emailsFactoryService.SendEmailAsync<NewConvertedBlogPost, NewConvertedBlogPostModel>("DraftConverted", "",
-            "DraftConverted", new NewConvertedBlogPostModel
+        await emailsFactoryService.SendEmailAsync<NewConvertedBlogPost, NewConvertedBlogPostModel>(
+            messageId: "DraftConverted", inReplyTo: "", references: "DraftConverted", new NewConvertedBlogPostModel
             {
                 Source = blogPost.Title,
                 Dest = blogPost.Body
-            }, blogPost.User?.EMail, $"مطلب جدید تبدیل شده: {blogPost.Title}", false);
+            }, blogPost.User?.EMail, $"مطلب جدید تبدیل شده: {blogPost.Title}", addIp: false);
     }
 
     public Task WriteArticleSendEmailAsync(BlogPost blogPost)
@@ -35,8 +35,8 @@ public class BlogPostsEmailsService(ICommonService commonService, IEmailsFactory
         ArgumentNullException.ThrowIfNull(blogPost);
 
         return emailsFactoryService.SendEmailToAllAdminsAsync<WriteArticleEmail, WriteArticleEmailModel>(
-            Invariant($"WriteArticle/{blogPost.Id}"), "", Invariant($"WriteArticle/{blogPost.Id}"),
-            new WriteArticleEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"WriteArticle/{blogPost.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"WriteArticle/{blogPost.Id}"), new WriteArticleEmailModel
             {
                 Title = blogPost.Title,
                 Body = blogPost.Body,
@@ -49,7 +49,8 @@ public class BlogPostsEmailsService(ICommonService commonService, IEmailsFactory
         ArgumentNullException.ThrowIfNull(blogPost);
 
         return emailsFactoryService.SendEmailToAllAdminsAsync<NewDraftEmail, NewDraftEmailModel>(
-            Invariant($"WriteDraft/{blogPost.Id}"), "", Invariant($"WriteDraft/{blogPost.Id}"), new NewDraftEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"WriteDraft/{blogPost.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"WriteDraft/{blogPost.Id}"), new NewDraftEmailModel
             {
                 Title = blogPost.Title,
                 Body = blogPost.Body,

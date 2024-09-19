@@ -10,7 +10,7 @@ public partial class SurveyForm
 
     private bool IsFormReadonly => IsSurveyExpired || !_canUserVote;
 
-    private string FormName => Invariant($"SurveyForm_{Survey?.Id}");
+    private string FormName => string.Create(CultureInfo.InvariantCulture, $"SurveyForm_{Survey?.Id}");
 
     [InjectComponentScoped] internal IVotesService VotesService { set; get; } = null!;
 

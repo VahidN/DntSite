@@ -33,6 +33,6 @@
 
     [Parameter] public TopicReplyToAdminsEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesTopicBase).CombineUrl(Invariant($"/{Model.CId}/{Model.PmId}#comment-{Model.CommentId}"));
+    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesTopicBase).CombineUrl(string.Create(CultureInfo.InvariantCulture, $"/{Model.CId}/{Model.PmId}#comment-{Model.CommentId}"));
 
 }

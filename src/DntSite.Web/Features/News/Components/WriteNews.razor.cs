@@ -138,6 +138,7 @@ public partial class WriteNews
 
         await DailyNewsItemsService.NotifyAddOrUpdateChangesAsync(newsItem, WriteNewsModel, user);
 
-        ApplicationState.NavigateTo(Invariant($"{NewsRoutingConstants.NewsDetailsBase}/{newsItem?.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{NewsRoutingConstants.NewsDetailsBase}/{newsItem?.Id}"));
     }
 }

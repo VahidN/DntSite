@@ -113,7 +113,8 @@ public class TagsService(IUnitOfWork uow) : ITagsService
 
         return tag is null
             ? string.Empty
-            : Invariant($"{fileName}{tag.Id}-{tag.Name.RemoveIllegalCharactersFromFileName()}.pdf");
+            : string.Create(CultureInfo.InvariantCulture,
+                $"{fileName}{tag.Id}-{tag.Name.RemoveIllegalCharactersFromFileName()}.pdf");
     }
 
     public Task<List<BlogPostTag>> GetAllPostTagsListAsNoTrackingAsync(int count)

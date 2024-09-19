@@ -94,5 +94,6 @@ public partial class ShowQuestionsComments
         ]);
 
     private string GetPostAbsoluteUrl(StackExchangeQuestionComment comment)
-        => Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{comment.ParentId}");
+        => string.Create(CultureInfo.InvariantCulture,
+            $"{QuestionsRoutingConstants.QuestionsDetailsBase}/{comment.ParentId}");
 }

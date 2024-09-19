@@ -18,7 +18,8 @@ public partial class FooterMenu
         var currentPersianYear = DateTime.UtcNow.GetPersianYear();
 
         _copyrightMessage = firstPost is null
-            ? Invariant($"© {SiteName}, {currentPersianYear}")
-            : Invariant($"© {SiteName}, {firstPost.Audit.CreatedAt.GetPersianYear()}-{currentPersianYear}");
+            ? string.Create(CultureInfo.InvariantCulture, $"© {SiteName}, {currentPersianYear}")
+            : string.Create(CultureInfo.InvariantCulture,
+                $"© {SiteName}, {firstPost.Audit.CreatedAt.GetPersianYear()}-{currentPersianYear}");
     }
 }

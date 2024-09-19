@@ -69,21 +69,22 @@ public partial class WriteCourseTopic
     }
 
     private void NavigateToMainCoursePage(CourseTopic? courseTopic)
-        => ApplicationState.NavigateTo(
-            Invariant($"{CoursesRoutingConstants.CoursesDetailsBase}/{courseTopic?.CourseId}"));
+        => ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{CoursesRoutingConstants.CoursesDetailsBase}/{courseTopic?.CourseId}"));
 
     private void AddBreadCrumbs(string? courseTitle)
         => ApplicationState.BreadCrumbs.AddRange([
             ..CoursesBreadCrumbs.DefaultBreadCrumbs, new BreadCrumb
             {
                 Title = $"دوره «{courseTitle}»",
-                Url = Invariant($"{CoursesRoutingConstants.Courses}/{CourseId}"),
+                Url = string.Create(CultureInfo.InvariantCulture, $"{CoursesRoutingConstants.Courses}/{CourseId}"),
                 GlyphIcon = DntBootstrapIcons.BiMortarboard
             },
             new BreadCrumb
             {
                 Title = "تعریف مطلب دوره",
-                Url = Invariant($"{CoursesRoutingConstants.WriteCourseTopicBase}/{CourseId}"),
+                Url = string.Create(CultureInfo.InvariantCulture,
+                    $"{CoursesRoutingConstants.WriteCourseTopicBase}/{CourseId}"),
                 GlyphIcon = DntBootstrapIcons.BiPencil
             }
         ]);

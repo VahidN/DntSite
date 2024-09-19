@@ -25,6 +25,6 @@
 
     [Parameter] public BacklogToAdminEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(BacklogsRoutingConstants.BacklogsDetailsBase).CombineUrl(Invariant($"/{Model.Id}"));
+    private string PostUrl => Model.SiteRootUri.CombineUrl(BacklogsRoutingConstants.BacklogsDetailsBase).CombineUrl(string.Create(CultureInfo.InvariantCulture, $"/{Model.Id}"));
 
 }

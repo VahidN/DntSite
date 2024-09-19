@@ -106,11 +106,11 @@ public class DailyNewsItemsService(
 
         var shamsiDate = DateTime.UtcNow.ToPersianYearMonthDay();
 
-        var fromDate =
-            Invariant($"{shamsiDate.Year}/{shamsiDate.Month.ToString(format: "00", CultureInfo.InvariantCulture)}/01");
+        var fromDate = string.Create(CultureInfo.InvariantCulture,
+            $"{shamsiDate.Year}/{shamsiDate.Month.ToString(format: "00", CultureInfo.InvariantCulture)}/01");
 
-        var toDate =
-            Invariant($"{shamsiDate.Year}/{shamsiDate.Month.ToString(format: "00", CultureInfo.InvariantCulture)}/31");
+        var toDate = string.Create(CultureInfo.InvariantCulture,
+            $"{shamsiDate.Year}/{shamsiDate.Month.ToString(format: "00", CultureInfo.InvariantCulture)}/31");
 
         return _dailyNewsItem.AsNoTracking()
             .Include(x => x.User)
@@ -195,8 +195,8 @@ public class DailyNewsItemsService(
             CultureInfo.InvariantCulture);
 
         year = year - pageNumber;
-        var fromDate = Invariant($"{year}/01/01");
-        var toDate = Invariant($"{year}/12/30");
+        var fromDate = string.Create(CultureInfo.InvariantCulture, $"{year}/01/01");
+        var toDate = string.Create(CultureInfo.InvariantCulture, $"{year}/12/30");
 
         return await _dailyNewsItem.AsNoTracking()
             .Include(x => x.User)
@@ -393,7 +393,8 @@ public class DailyNewsItemsService(
         {
             Title = newsItem.Title,
             Url = newsItem.Url,
-            BriefDescription = Invariant($"حذف خبر شماره {newsItem.Id} توسط مدیر از سایت ")
+            BriefDescription = string.Create(CultureInfo.InvariantCulture,
+                $"حذف خبر شماره {newsItem.Id} توسط مدیر از سایت ")
         }, user?.FriendlyName ?? SharedConstants.GuestUserName);
     }
 
@@ -479,7 +480,8 @@ public class DailyNewsItemsService(
         if (data is not null)
         {
             return (
-                Invariant($"این آدرس پیشتر در اشتراک شماره «{data.Id}» تحت عنوان «{data.Title}» در سایت ثبت شده‌است."),
+                string.Create(CultureInfo.InvariantCulture,
+                    $"این آدرس پیشتر در اشتراک شماره «{data.Id}» تحت عنوان «{data.Title}» در سایت ثبت شده‌است."),
                 OperationStat.Failed);
         }
 

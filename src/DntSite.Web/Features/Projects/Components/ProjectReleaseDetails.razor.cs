@@ -15,20 +15,20 @@ public partial class ProjectReleaseDetails
 
     [Parameter] public int? ReleaseId { set; get; }
 
-    private string LastPostUrl
-        => Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}/{_releases!.PreviousItem?.Id}");
+    private string LastPostUrl => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}/{_releases!.PreviousItem?.Id}");
 
-    private string NextPostUrl
-        => Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}/{_releases!.NextItem?.Id}");
+    private string NextPostUrl => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}/{_releases!.NextItem?.Id}");
 
-    private string PostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}/{ReleaseId}");
+    private string PostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId}/{ReleaseId}");
 
-    private string EditPostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectReleaseEditBase}/{ProjectId}/{EncryptedReleaseId}");
+    private string EditPostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.WriteProjectReleaseEditBase}/{ProjectId}/{EncryptedReleaseId}");
 
-    private string DeletePostUrlTemplate
-        => Invariant($"{ProjectsRoutingConstants.WriteProjectReleaseDeleteBase}/{ProjectId}/{EncryptedReleaseId}");
+    private string DeletePostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
+        $"{ProjectsRoutingConstants.WriteProjectReleaseDeleteBase}/{ProjectId}/{EncryptedReleaseId}");
 
     private string EncryptedReleaseId => ReleaseId.HasValue
         ? ProtectionProvider.Encrypt(ReleaseId.Value.ToString(CultureInfo.InvariantCulture))

@@ -31,6 +31,6 @@
 
     [Parameter] public AdvertisementReplyToWritersEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(AdvertisementsRoutingConstants.AdvertisementsDetailsBase).CombineUrl(Invariant($"/{Model.AdvertisementId}#comment-{Model.CommentId}"));
+    private string PostUrl => Model.SiteRootUri.CombineUrl(AdvertisementsRoutingConstants.AdvertisementsDetailsBase).CombineUrl(string.Create(CultureInfo.InvariantCulture, $"/{Model.AdvertisementId}#comment-{Model.CommentId}"));
 
 }

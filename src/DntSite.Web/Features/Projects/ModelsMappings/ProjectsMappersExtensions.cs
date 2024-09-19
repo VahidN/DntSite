@@ -28,7 +28,7 @@ public static class ProjectsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.ProjectIssuesReplies.Value}: {item.Parent.Title}",
             OriginalTitle = item.Parent.Title,
-            Url = siteRootUri.CombineUrl(Invariant(
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
                 $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectId}/{item.ParentId}#comment-{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.ProjectIssuesReplies,
@@ -54,8 +54,8 @@ public static class ProjectsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.ProjectIssues.Value}: {item.Title}",
             OriginalTitle = item.Title,
-            Url = siteRootUri.CombineUrl(
-                Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.ProjectIssues,
             Id = item.Id,
@@ -80,8 +80,8 @@ public static class ProjectsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.ProjectFiles.Value}: {item.FileName}",
             OriginalTitle = item.FileName,
-            Url = siteRootUri.CombineUrl(
-                Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.ProjectFiles,
             Id = item.Id,
@@ -106,8 +106,8 @@ public static class ProjectsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.ProjectFaqs.Value}: {item.Title}",
             OriginalTitle = item.Title,
-            Url = siteRootUri.CombineUrl(
-                Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.ProjectFaqs,
             Id = item.Id,
@@ -132,8 +132,8 @@ public static class ProjectsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.ProjectsFaqs.Value}: {item.Title}",
             OriginalTitle = item.Title,
-            Url = siteRootUri.CombineUrl(
-                Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectFaqsBase}/{item.Project.Id}/{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.ProjectsFaqs,
             Id = item.Id,
@@ -183,8 +183,8 @@ public static class ProjectsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.ProjectsFiles.Value}: {item.FileName}",
             OriginalTitle = item.FileName,
-            Url = siteRootUri.CombineUrl(
-                Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectReleasesBase}/{item.ProjectId}/{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.ProjectsFiles,
             Id = item.Id,
@@ -209,8 +209,8 @@ public static class ProjectsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.ProjectsIssues.Value}: {item.Title}",
             OriginalTitle = item.Title,
-            Url = siteRootUri.CombineUrl(
-                Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.ProjectId}/{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.ProjectsIssues,
             Id = item.Id,
@@ -236,7 +236,7 @@ public static class ProjectsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.ProjectsIssuesReplies.Value}: {item.Parent.Title}",
             OriginalTitle = item.Parent.Title,
-            Url = siteRootUri.CombineUrl(Invariant(
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
                 $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{item.Parent.ProjectId}/{item.ParentId}#comment-{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.ProjectsIssuesReplies,

@@ -94,5 +94,5 @@ public partial class ShowBlogPostsComments
         ]);
 
     private string GetPostAbsoluteUrl(BlogPostComment comment)
-        => Invariant($"{PostsRoutingConstants.PostBase}/{comment.ParentId}");
+        => string.Create(CultureInfo.InvariantCulture, $"{PostsRoutingConstants.PostBase}/{comment.ParentId}");
 }

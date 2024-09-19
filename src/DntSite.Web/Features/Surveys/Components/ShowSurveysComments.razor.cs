@@ -93,5 +93,6 @@ public partial class ShowSurveysComments
         ]);
 
     private string GetPostAbsoluteUrl(SurveyComment comment)
-        => Invariant($"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{comment.ParentId}");
+        => string.Create(CultureInfo.InvariantCulture,
+            $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{comment.ParentId}");
 }

@@ -30,8 +30,9 @@ public class SiteReferrersService(
                 return false;
             }
 
-            var referrerHash =
-                hasherService.GetSha1Hash(Invariant($"{referrerUrl}_{destinationUrl}").ToUpperInvariant());
+            var referrerHash = hasherService.GetSha1Hash(string
+                .Create(CultureInfo.InvariantCulture, $"{referrerUrl}_{destinationUrl}")
+                .ToUpperInvariant());
 
             var siteReferrer = await FindSiteReferrerAsync(referrerHash);
 

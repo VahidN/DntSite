@@ -26,8 +26,8 @@ public static class QuestionsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.QuestionsComments.Value}: {item.Parent.Title}",
             OriginalTitle = item.Parent.Title,
-            Url = siteRootUri.CombineUrl(
-                Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
+                $"{QuestionsRoutingConstants.QuestionsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.QuestionsComments,
             Id = item.Id,

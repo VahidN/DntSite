@@ -57,7 +57,8 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started OnModelCreating"));
+        WriteLine(
+            string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:HH:mm:ss.fff} Started OnModelCreating"));
 
         // it should be placed here, otherwise it will rewrite the following settings!
         base.OnModelCreating(modelBuilder);
@@ -75,13 +76,18 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
         modelBuilder.ConfigureTph(tphBaseTypes);
         modelBuilder.SetCaseInsensitiveSearchesForSqLite();
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started ApplyConfigurationsFromAssembly"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started ApplyConfigurationsFromAssembly"));
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDataProtectionKeyConfig).Assembly);
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished ApplyConfigurationsFromAssembly"));
+
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Finished ApplyConfigurationsFromAssembly"));
 
         modelBuilder.SetDecimalPrecision();
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished OnModelCreating"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Finished OnModelCreating"));
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

@@ -254,8 +254,8 @@ public class VotesService(
 
         await statService.RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(currentUserUser?.UserId ?? 0);
 
-        await emailsFactoryService.SendTextToAllAdminsAsync(
-            Invariant($"حذف نظرسنجی {surveyItem.Title} توسط مدیر از سایت "));
+        await emailsFactoryService.SendTextToAllAdminsAsync(string.Create(CultureInfo.InvariantCulture,
+            $"حذف نظرسنجی {surveyItem.Title} توسط مدیر از سایت "));
     }
 
     public async Task ApplyVoteAsync(int surveyId, IList<int>? surveyItemIds, User? user)

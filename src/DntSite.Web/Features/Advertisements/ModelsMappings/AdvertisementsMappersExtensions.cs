@@ -51,7 +51,7 @@ public static class AdvertisementsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.AdvertisementComments.Value}: {item.Parent.Title}",
             OriginalTitle = item.Parent.Title,
-            Url = siteRootUri.CombineUrl(Invariant(
+            Url = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
                 $"{AdvertisementsRoutingConstants.AdvertisementsDetailsBase}/{item.ParentId}#comment-{item.Id}")),
             Categories = [],
             ItemType = WhatsNewItemType.AdvertisementComments,

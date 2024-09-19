@@ -122,7 +122,7 @@ public partial class WriteLearningPaths
 
         await LearningPathService.NotifyAddOrUpdateChangesAsync(learningPathItem);
 
-        ApplicationState.NavigateTo(
-            Invariant($"{RoadMapsRoutingConstants.LearningPathsDetailsBase}/{learningPathItem?.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{RoadMapsRoutingConstants.LearningPathsDetailsBase}/{learningPathItem?.Id}"));
     }
 }

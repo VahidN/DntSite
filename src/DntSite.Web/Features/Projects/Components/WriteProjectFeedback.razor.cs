@@ -97,7 +97,8 @@ public partial class WriteProjectFeedback
         await ProjectIssuesService.MarkAsDeletedAsync(projectIssue);
         await ProjectIssuesService.NotifyDeleteChangesAsync(projectIssue, ApplicationState.CurrentUser?.User);
 
-        ApplicationState.NavigateTo(Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}"));
     }
 
     private void AddBreadCrumbs(string name)
@@ -160,7 +161,7 @@ public partial class WriteProjectFeedback
 
         await ProjectIssuesService.NotifyAddOrUpdateChangesAsync(projectIssue, IssueModel, user);
 
-        ApplicationState.NavigateTo(
-            Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{projectIssue?.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId}/{projectIssue?.Id}"));
     }
 }

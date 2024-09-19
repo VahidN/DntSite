@@ -22,8 +22,8 @@ public partial class DntReactions<TReactionEntity, TForeignKeyEntity>
     [MemberNotNullWhen(returnValue: true, nameof(_thumbsDownUsers))]
     private bool HasThumbsDownUsers => _thumbsDownUsers is { Count: > 0 };
 
-    private string FormName
-        => Invariant($"Reaction_{typeof(TReactionEntity).Name}_{typeof(TForeignKeyEntity).Name}_{Id}");
+    private string FormName => string.Create(CultureInfo.InvariantCulture,
+        $"Reaction_{typeof(TReactionEntity).Name}_{typeof(TForeignKeyEntity).Name}_{Id}");
 
     private string ThumbsUpId { get; } = Guid.NewGuid().ToString(format: "N");
 

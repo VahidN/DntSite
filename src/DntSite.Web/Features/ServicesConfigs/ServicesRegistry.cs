@@ -52,7 +52,8 @@ public static class ServicesRegistry
 
     private static void ScanAllServices(this IServiceCollection services)
     {
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started ScanAllServices"));
+        WriteLine(
+            string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:HH:mm:ss.fff} Started ScanAllServices"));
 
         // Using the `Scrutor` to add all of the application's services at once.
         services.Scan(scan => scan.FromAssembliesOf(typeof(IDataSeedersRunner))
@@ -77,7 +78,8 @@ public static class ServicesRegistry
             .AsSelf()
             .WithSingletonLifetime());
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished ScanAllServices"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Finished ScanAllServices"));
     }
 
     private static StartupSettingsModel GetSiteSettings(this IConfiguration configuration)

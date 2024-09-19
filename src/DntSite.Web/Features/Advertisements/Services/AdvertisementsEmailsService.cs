@@ -31,8 +31,9 @@ public class AdvertisementsEmailsService(ICommonService commonService, IEmailsFa
 
         return emailsFactoryService
             .SendEmailToAllAdminsAsync<AdvertisementReplyToAdminsEmail, AdvertisementReplyToAdminsEmailModel>(
-                Invariant($"AdvertisementId/{data.Id}/CommentId/{comment.Id}"), inReplyTo: "",
-                Invariant($"AdvertisementId/{data.Id}"), new AdvertisementReplyToAdminsEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"AdvertisementId/{data.Id}/CommentId/{comment.Id}"),
+                inReplyTo: "", string.Create(CultureInfo.InvariantCulture, $"AdvertisementId/{data.Id}"),
+                new AdvertisementReplyToAdminsEmailModel
                 {
                     Title = data.Title,
                     Username = comment.GuestUser.UserName,
@@ -82,8 +83,10 @@ public class AdvertisementsEmailsService(ICommonService commonService, IEmailsFa
 
             await emailsFactoryService
                 .SendEmailAsync<AdvertisementReplyToPersonEmail, AdvertisementReplyToPersonEmailModel>(
-                    Invariant($"AdvertisementId/{advertisement.Id}/CommentId/{comment.Id}"), inReplyTo: "",
-                    Invariant($"AdvertisementId/{advertisement.Id}"), new AdvertisementReplyToPersonEmailModel
+                    string.Create(CultureInfo.InvariantCulture,
+                        $"AdvertisementId/{advertisement.Id}/CommentId/{comment.Id}"), inReplyTo: "",
+                    string.Create(CultureInfo.InvariantCulture, $"AdvertisementId/{advertisement.Id}"),
+                    new AdvertisementReplyToPersonEmailModel
                     {
                         Title = advertisement.Title,
                         ReplyToComment = replyToComment.Body,
@@ -108,8 +111,10 @@ public class AdvertisementsEmailsService(ICommonService commonService, IEmailsFa
 
         await emailsFactoryService
             .SendEmailToIdAsync<AdvertisementReplyToPersonEmail, AdvertisementReplyToPersonEmailModel>(
-                Invariant($"AdvertisementId/{advertisement.Id}/CommentId/{comment.Id}"), inReplyTo: "",
-                Invariant($"AdvertisementId/{advertisement.Id}"), new AdvertisementReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture,
+                    $"AdvertisementId/{advertisement.Id}/CommentId/{comment.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"AdvertisementId/{advertisement.Id}"),
+                new AdvertisementReplyToPersonEmailModel
                 {
                     Title = advertisement.Title,
                     ReplyToComment = replyToComment.Body,
@@ -143,8 +148,10 @@ public class AdvertisementsEmailsService(ICommonService commonService, IEmailsFa
 
         await emailsFactoryService
             .SendEmailToIdAsync<AdvertisementReplyToWritersEmail, AdvertisementReplyToWritersEmailModel>(
-                Invariant($"AdvertisementId/{advertisement.Id}/CommentId/{comment.Id}"), inReplyTo: "",
-                Invariant($"AdvertisementId/{advertisement.Id}"), new AdvertisementReplyToWritersEmailModel
+                string.Create(CultureInfo.InvariantCulture,
+                    $"AdvertisementId/{advertisement.Id}/CommentId/{comment.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"AdvertisementId/{advertisement.Id}"),
+                new AdvertisementReplyToWritersEmailModel
                 {
                     Title = advertisement.Title,
                     Username = comment.GuestUser.UserName,

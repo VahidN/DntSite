@@ -121,6 +121,7 @@ public partial class WriteBacklog
 
         await BacklogsService.NotifyAddOrUpdateChangesAsync(backlog, WriteBacklogModel);
 
-        ApplicationState.NavigateTo(Invariant($"{BacklogsRoutingConstants.BacklogsDetailsBase}/{backlog?.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{BacklogsRoutingConstants.BacklogsDetailsBase}/{backlog?.Id}"));
     }
 }

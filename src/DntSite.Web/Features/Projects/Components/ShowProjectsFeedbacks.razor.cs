@@ -38,7 +38,8 @@ public partial class ShowProjectsFeedbacks
         }
 
         return ProjectId.HasValue
-            ? Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId.Value}")
+            ? string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{ProjectId.Value}")
             : ProjectsRoutingConstants.ProjectsComments;
     }
 
@@ -127,5 +128,6 @@ public partial class ShowProjectsFeedbacks
         ]);
 
     private string GetPostAbsoluteUrl(ProjectIssue projectIssue)
-        => Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectIssue.ProjectId}/{projectIssue.Id}");
+        => string.Create(CultureInfo.InvariantCulture,
+            $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectIssue.ProjectId}/{projectIssue.Id}");
 }

@@ -53,7 +53,7 @@ public partial class ShowBlogPostCommentItem<TReactionEntity, TForeignKeyEntity>
         ? ApplicationState.CurrentAbsoluteUri.ToString()
         : PostAbsoluteUrl;
 
-    private string PostUrlWithComment => Invariant($"{PostUrl}#comment-{CommentId}");
+    private string PostUrlWithComment => string.Create(CultureInfo.InvariantCulture, $"{PostUrl}#comment-{CommentId}");
 
-    private string CommentHtmlId => Invariant($"comment-{CommentId}");
+    private string CommentHtmlId => string.Create(CultureInfo.InvariantCulture, $"comment-{CommentId}");
 }

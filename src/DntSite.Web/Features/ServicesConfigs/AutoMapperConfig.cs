@@ -11,7 +11,8 @@ public static class AutoMapperConfig
     {
         ArgumentNullException.ThrowIfNull(host);
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started CompileAutoMapperConfig"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started CompileAutoMapperConfig"));
 
         host.Services.RunScopedService<IConfigurationProvider>(configurationProvider =>
         {
@@ -19,7 +20,8 @@ public static class AutoMapperConfig
             configurationProvider.CompileMappings();
         });
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished CompileAutoMapperConfig"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Finished CompileAutoMapperConfig"));
 
         return host;
     }

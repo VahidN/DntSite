@@ -90,27 +90,28 @@ public class EmailsFactoryService(
         var pickupFolder = GetPickupFolderPath(smtpServerSetting);
 
         await webMailService.SendEmailAsync(new SmtpConfig
-        {
-            Server = smtpServerSetting.Address,
-            Port = smtpServerSetting.Port,
-            Username = smtpServerSetting.Username,
-            Password = smtpServerSetting.Password,
-            FromAddress = appSetting.SiteFromEmail!,
-            FromName = appSetting.BlogName,
-            UsePickupFolder = smtpServerSetting.UsePickupFolder,
-            PickupFolder = pickupFolder
-        }, [
-            new MailAddress
             {
-                ToAddress = toEmail
-            }
-        ], Invariant($"{appSetting.BlogName} - {subject}"), htmlTemplateContent, headers: new MailHeaders
-        {
-            InReplyTo = inReplyTo,
-            MessageId = messageId,
-            References = references,
-            UnSubscribeUrl = appSetting.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.EditProfile)
-        }, shouldValidateServerCertificate: smtpServerSetting.ShouldValidateServerCertificate);
+                Server = smtpServerSetting.Address,
+                Port = smtpServerSetting.Port,
+                Username = smtpServerSetting.Username,
+                Password = smtpServerSetting.Password,
+                FromAddress = appSetting.SiteFromEmail!,
+                FromName = appSetting.BlogName,
+                UsePickupFolder = smtpServerSetting.UsePickupFolder,
+                PickupFolder = pickupFolder
+            }, [
+                new MailAddress
+                {
+                    ToAddress = toEmail
+                }
+            ], string.Create(CultureInfo.InvariantCulture, $"{appSetting.BlogName} - {subject}"), htmlTemplateContent,
+            headers: new MailHeaders
+            {
+                InReplyTo = inReplyTo,
+                MessageId = messageId,
+                References = references,
+                UnSubscribeUrl = appSetting.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.EditProfile)
+            }, shouldValidateServerCertificate: smtpServerSetting.ShouldValidateServerCertificate);
     }
 
     public async Task SendEmailToAllAdminsAsync<TLayout, TLayoutModel>(string messageId,
@@ -239,7 +240,7 @@ public class EmailsFactoryService(
         var user = await httpContextAccessor.HttpContext.RequestServices.GetRequiredService<ICurrentUserService>()
             .GetCurrentUserAsync();
 
-        return Invariant(
+        return string.Create(CultureInfo.InvariantCulture,
             $"<br/><hr/><div align='center' dir='ltr'>Sent from IP: {ip} / {user.FriendlyName} / {user.UserId}</div>");
     }
 

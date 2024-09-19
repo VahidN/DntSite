@@ -96,6 +96,7 @@ public partial class WriteArticle
 
         await BlogPostsService.PerformEditAsync(EditId.ToInt(), WriteArticleModel, ApplicationState);
 
-        ApplicationState.NavigateTo(Invariant($"{PostsRoutingConstants.PostBase}/{EditId}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{PostsRoutingConstants.PostBase}/{EditId}"));
     }
 }

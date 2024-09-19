@@ -571,7 +571,7 @@ public class UserProfilesManagerService(
 
         if (model is { DateOfBirthYear: not null, DateOfBirthMonth: not null, DateOfBirthDay: not null })
         {
-            var date = Invariant(
+            var date = string.Create(CultureInfo.InvariantCulture,
                 $"{model.DateOfBirthYear.Value}/{model.DateOfBirthMonth.Value:00}/{model.DateOfBirthDay.Value:00}");
 
             user.DateOfBirth = date.ToGregorianDateTime();

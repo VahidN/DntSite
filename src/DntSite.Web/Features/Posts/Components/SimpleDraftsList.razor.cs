@@ -18,7 +18,8 @@ public partial class SimpleDraftsList
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
-    private static string GetShowDraftLink(int itemId) => Invariant($"{PostsRoutingConstants.ShowDraftBase}/{itemId}");
+    private static string GetShowDraftLink(int itemId)
+        => string.Create(CultureInfo.InvariantCulture, $"{PostsRoutingConstants.ShowDraftBase}/{itemId}");
 
     private static string GetTagUrl(string tagName) => $"{PostsRoutingConstants.Tag}/{Uri.EscapeDataString(tagName)}";
 }

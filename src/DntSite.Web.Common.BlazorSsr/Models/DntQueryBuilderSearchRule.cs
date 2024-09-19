@@ -35,21 +35,18 @@ public class DntQueryBuilderSearchRule<TRecord>
     /// </summary>
     public DntQueryBuilderOperationLogic NextOperationLogic { set; get; }
 
-    public string RulePropertyIndexName
-        => Invariant(
-            $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(RulePropertyIndex)}");
+    public string RulePropertyIndexName => string.Create(CultureInfo.InvariantCulture,
+        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(RulePropertyIndex)}");
 
-    public string RuleOperationKindName
-        => Invariant(
-            $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(OperationKind)}");
+    public string RuleOperationKindName => string.Create(CultureInfo.InvariantCulture,
+        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(OperationKind)}");
 
-    public string RuleOperationName
-        => Invariant($"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(Operation)}");
+    public string RuleOperationName => string.Create(CultureInfo.InvariantCulture,
+        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(Operation)}");
 
-    public string RuleValueName
-        => Invariant($"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(Value)}");
+    public string RuleValueName => string.Create(CultureInfo.InvariantCulture,
+        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(Value)}");
 
-    public string RuleNextOperationLogicName
-        => Invariant(
-            $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(NextOperationLogic)}");
+    public string RuleNextOperationLogicName => string.Create(CultureInfo.InvariantCulture,
+        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(NextOperationLogic)}");
 }

@@ -190,7 +190,8 @@ public class LearningPathService(
     public string GetTagPdfFileName(LearningPath tag, string fileName = "dot-net-tips-learning-path-")
         => tag is null
             ? string.Empty
-            : Invariant($"{fileName}{tag.Id}-{tag.Title.RemoveIllegalCharactersFromFileName()}.pdf");
+            : string.Create(CultureInfo.InvariantCulture,
+                $"{fileName}{tag.Id}-{tag.Title.RemoveIllegalCharactersFromFileName()}.pdf");
 
     public async Task UpdateStatAsync(int learningPathId, bool isFromFeed)
     {
@@ -279,8 +280,8 @@ public class LearningPathService(
             return Task.CompletedTask;
         }
 
-        return emailsFactoryService.SendTextToAllAdminsAsync(
-            Invariant($"مسیر راه شماره {learningPathItem.Id} حذف شد."));
+        return emailsFactoryService.SendTextToAllAdminsAsync(string.Create(CultureInfo.InvariantCulture,
+            $"مسیر راه شماره {learningPathItem.Id} حذف شد."));
     }
 
     public async Task UpdateLearningPathAsync(LearningPath? learningPathItem, LearningPathModel writeLearningPathModel)

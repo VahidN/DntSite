@@ -7,7 +7,7 @@ namespace DntSite.Web.Features.Projects.Components;
 
 public partial class ShowProjectsArchiveList
 {
-    private string PageTitle => Invariant($"{MainTitle}، صفحه: {CurrentPage ?? 1}");
+    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
 
     [Parameter] [EditorRequired] public required string MainTitle { set; get; }
 

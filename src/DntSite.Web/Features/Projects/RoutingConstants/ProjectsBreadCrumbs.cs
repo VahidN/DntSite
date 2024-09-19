@@ -71,7 +71,8 @@ public static class ProjectsBreadCrumbs
         => new()
         {
             Title = $"پروژه {name}",
-            Url = Invariant($"{ProjectsRoutingConstants.ProjectsDetailsBase}/{projectId}"),
+            Url = string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectsDetailsBase}/{projectId}"),
             GlyphIcon = DntBootstrapIcons.BiPuzzle
         };
 
@@ -81,14 +82,16 @@ public static class ProjectsBreadCrumbs
             AllowAnonymous = false,
             Title = "ارسال یک بازخورد جدید",
             GlyphIcon = DntBootstrapIcons.BiChatRight,
-            Url = Invariant($"{ProjectsRoutingConstants.WriteProjectFeedbackBase}/{projectId}")
+            Url = string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.WriteProjectFeedbackBase}/{projectId}")
         };
 
     public static BreadCrumb ProjectComments(int? projectId)
         => new()
         {
             Title = "نظرات پروژه‌",
-            Url = Invariant($"{ProjectsRoutingConstants.ProjectCommentsBase}/{projectId}"),
+            Url = string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectCommentsBase}/{projectId}"),
             GlyphIcon = DntBootstrapIcons.BiChat
         };
 
@@ -96,7 +99,8 @@ public static class ProjectsBreadCrumbs
         => new()
         {
             Title = "بازخوردهای پروژه‌",
-            Url = Invariant($"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectId}"),
+            Url = string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{projectId}"),
             GlyphIcon = DntBootstrapIcons.BiQuestionCircle
         };
 
@@ -104,7 +108,8 @@ public static class ProjectsBreadCrumbs
         => new()
         {
             Title = "راهنماهای پروژه‌",
-            Url = Invariant($"{ProjectsRoutingConstants.ProjectFaqsBase}/{projectId}"),
+            Url =
+                string.Create(CultureInfo.InvariantCulture, $"{ProjectsRoutingConstants.ProjectFaqsBase}/{projectId}"),
             GlyphIcon = DntBootstrapIcons.BiFiletypeDoc
         };
 
@@ -112,7 +117,8 @@ public static class ProjectsBreadCrumbs
         => new()
         {
             Title = "فایل‌های پروژه",
-            Url = Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{projectId}"),
+            Url = string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectReleasesBase}/{projectId}"),
             GlyphIcon = DntBootstrapIcons.BiFile
         };
 

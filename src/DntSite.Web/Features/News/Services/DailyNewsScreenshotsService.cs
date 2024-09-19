@@ -106,7 +106,8 @@ public class DailyNewsScreenshotsService(
         var imageUrl = siteRootUri.CombineUrl(
             $"{ApiUrlsRoutingConstants.File.HttpAny.NewsThumb}?name={Uri.EscapeDataString(fileName)}");
 
-        var redirectUrl = siteRootUri.CombineUrl(Invariant($"{NewsRoutingConstants.NewsRedirectBase}/{item.Id}"));
+        var redirectUrl = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
+            $"{NewsRoutingConstants.NewsRedirectBase}/{item.Id}"));
 
         return $"""
                 <br/>
@@ -126,7 +127,7 @@ public class DailyNewsScreenshotsService(
 
     private (string FileName, string Path) GetImageInfo(int id)
     {
-        var name = Invariant($"news-{id}.jpg");
+        var name = string.Create(CultureInfo.InvariantCulture, $"news-{id}.jpg");
         var path = Path.Combine(appFoldersService.ThumbnailsServiceFolderPath, name);
 
         return (name, path);

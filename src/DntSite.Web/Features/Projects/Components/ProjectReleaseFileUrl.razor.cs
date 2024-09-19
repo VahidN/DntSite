@@ -6,7 +6,8 @@ namespace DntSite.Web.Features.Projects.Components;
 
 public partial class ProjectReleaseFileUrl
 {
-    private string FormName => Invariant($"ProjectReleaseFileUrl_{ProjectRelease?.Id}");
+    private string FormName
+        => string.Create(CultureInfo.InvariantCulture, $"ProjectReleaseFileUrl_{ProjectRelease?.Id}");
 
     [Parameter] public ProjectRelease? ProjectRelease { get; set; }
 

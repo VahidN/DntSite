@@ -49,8 +49,9 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
 
         return emailsFactoryService
             .SendEmailToAllAdminsAsync<CourseQuestionReplyToAdminsEmail, CourseQuestionReplyToAdminsEmailModel>(
-                Invariant($"CourseId/{data.CourseId}/courseQuestionPmQId/{comment.ParentId}"), inReplyTo: "",
-                Invariant($"CourseId/{data.CourseId}/courseQuestion/{data.Id}"),
+                string.Create(CultureInfo.InvariantCulture,
+                    $"CourseId/{data.CourseId}/courseQuestionPmQId/{comment.ParentId}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"CourseId/{data.CourseId}/courseQuestion/{data.Id}"),
                 new CourseQuestionReplyToAdminsEmailModel
                 {
                     Title = data.Title,
@@ -102,8 +103,10 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
 
             await emailsFactoryService
                 .SendEmailAsync<CourseQuestionReplyToPersonEmail, CourseQuestionReplyToPersonEmailModel>(
-                    Invariant($"CourseId/{question.CourseId}/courseQuestionPmQId/{comment.ParentId}"), inReplyTo: "",
-                    Invariant($"CourseId/{question.CourseId}/courseQuestion/{question.Id}"),
+                    string.Create(CultureInfo.InvariantCulture,
+                        $"CourseId/{question.CourseId}/courseQuestionPmQId/{comment.ParentId}"), inReplyTo: "",
+                    string.Create(CultureInfo.InvariantCulture,
+                        $"CourseId/{question.CourseId}/courseQuestion/{question.Id}"),
                     new CourseQuestionReplyToPersonEmailModel
                     {
                         Title = question.Title,
@@ -127,8 +130,10 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
         {
             await emailsFactoryService
                 .SendEmailToIdAsync<CourseQuestionReplyToPersonEmail, CourseQuestionReplyToPersonEmailModel>(
-                    Invariant($"CourseId/{question.CourseId}/courseQuestionPmQId/{comment.ParentId}"), inReplyTo: "",
-                    Invariant($"CourseId/{question.CourseId}/courseQuestion/{question.Id}"),
+                    string.Create(CultureInfo.InvariantCulture,
+                        $"CourseId/{question.CourseId}/courseQuestionPmQId/{comment.ParentId}"), inReplyTo: "",
+                    string.Create(CultureInfo.InvariantCulture,
+                        $"CourseId/{question.CourseId}/courseQuestion/{question.Id}"),
                     new CourseQuestionReplyToPersonEmailModel
                     {
                         Title = question.Title,
@@ -162,8 +167,10 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
         {
             await emailsFactoryService
                 .SendEmailToIdAsync<CourseQuestionReplyToWritersEmail, CourseQuestionReplyToWritersEmailModel>(
-                    Invariant($"CourseId/{question.CourseId}/courseQuestionPmQId/{comment.ParentId}"), inReplyTo: "",
-                    Invariant($"CourseId/{question.CourseId}/courseQuestion/{question.Id}"),
+                    string.Create(CultureInfo.InvariantCulture,
+                        $"CourseId/{question.CourseId}/courseQuestionPmQId/{comment.ParentId}"), inReplyTo: "",
+                    string.Create(CultureInfo.InvariantCulture,
+                        $"CourseId/{question.CourseId}/courseQuestion/{question.Id}"),
                     new CourseQuestionReplyToWritersEmailModel
                     {
                         Title = question.Title,
@@ -183,8 +190,9 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
         var data = comment.Parent;
 
         await emailsFactoryService.SendEmailToAllAdminsAsync<TopicReplyToAdminsEmail, TopicReplyToAdminsEmailModel>(
-            Invariant($"CourseId/{data.CourseId}/CommentId/{comment.Id}"), inReplyTo: "",
-            Invariant($"CourseId/{data.CourseId}/PmId/{data.Id}"), new TopicReplyToAdminsEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"CourseId/{data.CourseId}/CommentId/{comment.Id}"),
+            inReplyTo: "", string.Create(CultureInfo.InvariantCulture, $"CourseId/{data.CourseId}/PmId/{data.Id}"),
+            new TopicReplyToAdminsEmailModel
             {
                 Title = data.Title,
                 Username = comment.GuestUser.UserName,
@@ -234,8 +242,10 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
             }
 
             await emailsFactoryService.SendEmailAsync<TopicReplyToPersonEmail, TopicReplyToPersonEmailModel>(
-                Invariant($"CourseId/{topic.CourseId}/CommentId/{comment.Id}"), inReplyTo: "",
-                Invariant($"CourseId/{topic.CourseId}/PmId/{topic.Id}"), new TopicReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"CourseId/{topic.CourseId}/CommentId/{comment.Id}"),
+                inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"CourseId/{topic.CourseId}/PmId/{topic.Id}"),
+                new TopicReplyToPersonEmailModel
                 {
                     Title = topic.Title,
                     ReplyToComment = replyToComment.Body,
@@ -257,8 +267,10 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
         if (replyToComment.UserId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<TopicReplyToPersonEmail, TopicReplyToPersonEmailModel>(
-                Invariant($"CourseId/{topic.CourseId}/CommentId/{comment.Id}"), inReplyTo: "",
-                Invariant($"CourseId/{topic.CourseId}/PmId/{topic.Id}"), new TopicReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"CourseId/{topic.CourseId}/CommentId/{comment.Id}"),
+                inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"CourseId/{topic.CourseId}/PmId/{topic.Id}"),
+                new TopicReplyToPersonEmailModel
                 {
                     Title = topic.Title,
                     ReplyToComment = replyToComment.Body,
@@ -290,8 +302,10 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
         if (topic.UserId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<TopicReplyToWritersEmail, TopicReplyToWritersEmailModel>(
-                Invariant($"CourseId/{topic.CourseId}/CommentId/{comment.Id}"), inReplyTo: "",
-                Invariant($"CourseId/{topic.CourseId}/PmId/{topic.Id}"), new TopicReplyToWritersEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"CourseId/{topic.CourseId}/CommentId/{comment.Id}"),
+                inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"CourseId/{topic.CourseId}/PmId/{topic.Id}"),
+                new TopicReplyToWritersEmailModel
                 {
                     Title = topic.Title,
                     Username = comment.GuestUser.UserName,
@@ -344,8 +358,10 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
 
         await emailsFactoryService
             .SendEmailToAllAdminsAsync<NewQuestionSendEmailToAdmins, NewQuestionSendEmailToAdminsModel>(
-                Invariant($"CourseId/{courseQuestion.CourseId}/courseQuestion/{courseQuestion.Id}"), inReplyTo: "",
-                Invariant($"CourseId/{courseQuestion.CourseId}/courseQuestion/{courseQuestion.Id}"),
+                string.Create(CultureInfo.InvariantCulture,
+                    $"CourseId/{courseQuestion.CourseId}/courseQuestion/{courseQuestion.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture,
+                    $"CourseId/{courseQuestion.CourseId}/courseQuestion/{courseQuestion.Id}"),
                 new NewQuestionSendEmailToAdminsModel
                 {
                     Title = course.Title,
@@ -384,8 +400,9 @@ public class CoursesEmailsService(ICommonService commonService, IEmailsFactorySe
         {
             await emailsFactoryService
                 .SendEmailToIdAsync<NewQuestionSendEmailToWriters, NewQuestionSendEmailToWritersModel>(
-                    Invariant($"CourseId/{data.CourseId}/courseQuestion/{data.Id}"), inReplyTo: "",
-                    Invariant($"CourseId/{data.CourseId}/courseQuestion/{data.Id}"),
+                    string.Create(CultureInfo.InvariantCulture, $"CourseId/{data.CourseId}/courseQuestion/{data.Id}"),
+                    inReplyTo: "",
+                    string.Create(CultureInfo.InvariantCulture, $"CourseId/{data.CourseId}/courseQuestion/{data.Id}"),
                     new NewQuestionSendEmailToWritersModel
                     {
                         Title = course.Title,

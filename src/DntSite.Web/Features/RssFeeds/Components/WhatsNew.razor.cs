@@ -13,7 +13,8 @@ public partial class WhatsNew
 
     private PagedResultModel<LuceneSearchResult>? _posts;
 
-    private string PageTitle => Invariant($"{MainPageTitle}، صفحه: {CurrentPage ?? 1}");
+    private string PageTitle
+        => string.Create(CultureInfo.InvariantCulture, $"{MainPageTitle}، صفحه: {CurrentPage ?? 1}");
 
     [Parameter] public int? CurrentPage { set; get; }
 

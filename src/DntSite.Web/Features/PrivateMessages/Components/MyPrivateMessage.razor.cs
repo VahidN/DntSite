@@ -77,7 +77,8 @@ public partial class MyPrivateMessage
             PrivateMessagesBreadCrumbs.Users, PrivateMessagesBreadCrumbs.MyPrivateMessages, new BreadCrumb
             {
                 Title = PageTitle,
-                Url = Invariant($"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{EncryptedId}"),
+                Url = string.Create(CultureInfo.InvariantCulture,
+                    $"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{EncryptedId}"),
                 GlyphIcon = DntBootstrapIcons.BiInbox
             }
         ]);

@@ -121,6 +121,7 @@ public partial class WriteProject
 
         await ProjectsService.NotifyAddOrUpdateChangesAsync(project, WriteProjectModel, user);
 
-        ApplicationState.NavigateTo(Invariant($"{ProjectsRoutingConstants.ProjectsDetailsBase}/{project?.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{ProjectsRoutingConstants.ProjectsDetailsBase}/{project?.Id}"));
     }
 }

@@ -38,7 +38,8 @@ public partial class ShowProjectsReleases
         }
 
         return ProjectId.HasValue
-            ? Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId.Value}")
+            ? string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectReleasesBase}/{ProjectId.Value}")
             : ProjectsRoutingConstants.ProjectsReleases;
     }
 
@@ -127,5 +128,6 @@ public partial class ShowProjectsReleases
         ]);
 
     private string GetPostAbsoluteUrl(ProjectRelease projectRelease)
-        => Invariant($"{ProjectsRoutingConstants.ProjectReleasesBase}/{projectRelease.ProjectId}/{projectRelease.Id}");
+        => string.Create(CultureInfo.InvariantCulture,
+            $"{ProjectsRoutingConstants.ProjectReleasesBase}/{projectRelease.ProjectId}/{projectRelease.Id}");
 }

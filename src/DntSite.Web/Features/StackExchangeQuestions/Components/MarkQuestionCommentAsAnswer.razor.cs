@@ -8,7 +8,8 @@ namespace DntSite.Web.Features.StackExchangeQuestions.Components;
 
 public partial class MarkQuestionCommentAsAnswer
 {
-    private string FormName => Invariant($"MarkQuestionCommentAsAnswer_{QuestionComment?.Id}");
+    private string FormName
+        => string.Create(CultureInfo.InvariantCulture, $"MarkQuestionCommentAsAnswer_{QuestionComment?.Id}");
 
     private bool CanCurrentUserMarkAsAnswer => ApplicationState.CurrentUser?.UserId == QuestionComment?.Parent.UserId ||
                                                ApplicationState.CurrentUser?.IsAdmin == true;
@@ -44,7 +45,7 @@ public partial class MarkQuestionCommentAsAnswer
                 break;
         }
 
-        ApplicationState.NavigateTo(
-            Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{QuestionComment?.ParentId}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{QuestionsRoutingConstants.QuestionsDetailsBase}/{QuestionComment?.ParentId}"));
     }
 }

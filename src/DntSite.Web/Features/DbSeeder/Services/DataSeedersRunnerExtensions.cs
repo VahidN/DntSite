@@ -11,9 +11,9 @@ public static class DataSeedersRunnerExtensions
     {
         ArgumentNullException.ThrowIfNull(host);
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started InitializeDb"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:HH:mm:ss.fff} Started InitializeDb"));
         host.Services.RunScopedService<IDataSeedersRunner>(runner => runner.RunAllDataSeeders());
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished InitializeDb"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:HH:mm:ss.fff} Finished InitializeDb"));
 
         return host;
     }

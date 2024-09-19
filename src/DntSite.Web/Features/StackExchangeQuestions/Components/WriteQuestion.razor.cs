@@ -109,6 +109,7 @@ public partial class WriteQuestion
 
         await QuestionsService.NotifyAddOrUpdateChangesAsync(question, WriteQuestionModel, user);
 
-        ApplicationState.NavigateTo(Invariant($"{QuestionsRoutingConstants.QuestionsDetailsBase}/{question?.Id}"));
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{QuestionsRoutingConstants.QuestionsDetailsBase}/{question?.Id}"));
     }
 }

@@ -21,18 +21,18 @@ public class PrivateMessagesEmailsService(
         var idHash = passwordHasherService.GetSha256Hash(pm);
 
         await emailsFactoryService.SendEmailAsync<ContactUsEmail, ContactUsEmailModel>(
-            Invariant($"PrivateMessage/id/{idHash}"), "", Invariant($"PrivateMessage/id/{idHash}"),
-            new ContactUsEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"PrivateMessage/id/{idHash}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"PrivateMessage/id/{idHash}"), new ContactUsEmailModel
             {
                 FriendlyName = fromUserFriendlyName,
                 Title = $"پاسخ به : {title}",
                 Body = body,
                 PmId = pm
-            }, toUser?.EMail, "پیام خصوصی: " + $"پاسخ به : {title}", false);
+            }, toUser?.EMail, "پیام خصوصی: " + $"پاسخ به : {title}", addIp: false);
 
         await emailsFactoryService.SendEmailToAllAdminsAsync<ContactUsEmail, ContactUsEmailModel>(
-            Invariant($"PrivateMessage/id/{idHash}"), "", Invariant($"PrivateMessage/id/{idHash}"),
-            new ContactUsEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"PrivateMessage/id/{idHash}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"PrivateMessage/id/{idHash}"), new ContactUsEmailModel
             {
                 FriendlyName = fromUserFriendlyName,
                 Title = title,
@@ -56,7 +56,8 @@ public class PrivateMessagesEmailsService(
         var emails = (await commonService.GetAllActiveAdminsAsNoTrackingAsync()).Select(x => x.EMail).ToList();
 
         await emailsFactoryService.SendEmailToAllUsersAsync<PublicContactUsEmail, PublicContactUsEmailModel>(emails,
-            "PublicContactUs", "", "PublicContactUs", items, $"تماس با ما: {data.Title}", true);
+            messageId: "PublicContactUs", inReplyTo: "", references: "PublicContactUs", items,
+            $"تماس با ما: {data.Title}", addIp: true);
     }
 
     public async Task SendEmailContactUsAsync(ContactUsModel data, User toUser, User fromUser, int firstMessageId)
@@ -69,17 +70,17 @@ public class PrivateMessagesEmailsService(
         var idHash = passwordHasherService.GetSha256Hash(pmId);
 
         await emailsFactoryService.SendEmailAsync<ContactUsEmail, ContactUsEmailModel>(
-            Invariant($"PrivateMessage/id/{idHash}"), "", Invariant($"PrivateMessage/id/{idHash}"),
-            new ContactUsEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"PrivateMessage/id/{idHash}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"PrivateMessage/id/{idHash}"), new ContactUsEmailModel
             {
                 FriendlyName = fromUser.FriendlyName,
                 Title = data.Title,
                 Body = data.DescriptionText,
                 PmId = pmId
-            }, toUser.EMail, $"پیام خصوصی: {data.Title}", false);
+            }, toUser.EMail, $"پیام خصوصی: {data.Title}", addIp: false);
 
-        await emailsFactoryService.SendEmailToAllAdminsAsync<ContactUsEmail, ContactUsEmailModel>("ContactUs", "",
-            "ContactUs", new ContactUsEmailModel
+        await emailsFactoryService.SendEmailToAllAdminsAsync<ContactUsEmail, ContactUsEmailModel>(
+            messageId: "ContactUs", inReplyTo: "", references: "ContactUs", new ContactUsEmailModel
             {
                 FriendlyName = fromUser.FriendlyName,
                 Title = data.Title,
@@ -89,9 +90,9 @@ public class PrivateMessagesEmailsService(
     }
 
     public Task SendMassEmailAsync(IList<string> emails, string title, string body)
-        => emailsFactoryService.SendEmailToAllUsersAsync<NewMassEmail, NewMassEmailModel>(emails, "MassEmail", "",
-            "MassEmail", new NewMassEmailModel
+        => emailsFactoryService.SendEmailToAllUsersAsync<NewMassEmail, NewMassEmailModel>(emails,
+            messageId: "MassEmail", inReplyTo: "", references: "MassEmail", new NewMassEmailModel
             {
                 Body = body
-            }, title, false);
+            }, title, addIp: false);
 }

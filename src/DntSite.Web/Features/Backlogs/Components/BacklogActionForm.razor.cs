@@ -10,7 +10,7 @@ public partial class BacklogActionForm
     [MemberNotNullWhen(returnValue: true, nameof(Model))]
     private bool IsTaken => Model?.TakenByUser is not null;
 
-    private string FormName => Invariant($"BacklogStat_{Model?.Id}");
+    private string FormName => string.Create(CultureInfo.InvariantCulture, $"BacklogStat_{Model?.Id}");
 
     private bool IsTakenByCurrentUser => ApplicationState.CurrentUser?.IsAdmin == true ||
                                          (Model?.TakenByUser is not null && Model.TakenByUser.Id ==
@@ -69,7 +69,8 @@ public partial class BacklogActionForm
 
         if (operationResult.Stat == OperationStat.Succeeded)
         {
-            ApplicationState.NavigateTo(Invariant($"{BacklogsRoutingConstants.BacklogsDetailsBase}/{Model.Id}"));
+            ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+                $"{BacklogsRoutingConstants.BacklogsDetailsBase}/{Model.Id}"));
         }
         else
         {

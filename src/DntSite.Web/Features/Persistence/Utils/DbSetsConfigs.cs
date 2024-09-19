@@ -9,7 +9,8 @@ public static class DbSetsConfigs
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started RegisterAllEntities"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started RegisterAllEntities"));
 
         var baseType = typeof(TEntity);
 
@@ -25,7 +26,8 @@ public static class DbSetsConfigs
             builder.Entity(entityType);
         }
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished RegisterAllEntities"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Finished RegisterAllEntities"));
     }
 
     private static bool ShouldSkipClrType(IEnumerable<Type>? exceptTheseTypes, Type entity)
@@ -36,7 +38,9 @@ public static class DbSetsConfigs
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started MakeAllDerivedTableNamesPluralized"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Started MakeAllDerivedTableNamesPluralized"));
+
         var baseType = typeof(TEntity);
 
         foreach (var entityType in builder.Model.GetEntityTypes())
@@ -58,14 +62,15 @@ public static class DbSetsConfigs
             entityType.SetTableName(pluralizedTableName);
         }
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished MakeAllDerivedTableNamesPluralized"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Finished MakeAllDerivedTableNamesPluralized"));
     }
 
     public static void ConfigureTph(this ModelBuilder modelBuilder, params Type[] tphBaseTypes)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Started ConfigureTph"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:HH:mm:ss.fff} Started ConfigureTph"));
 
         if (tphBaseTypes is null)
         {
@@ -81,6 +86,6 @@ public static class DbSetsConfigs
             modelBuilder.Entity(type).UseTphMappingStrategy().ToTable(pluralizedTableName);
         }
 
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Finished ConfigureTph"));
+        WriteLine(string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:HH:mm:ss.fff} Finished ConfigureTph"));
     }
 }

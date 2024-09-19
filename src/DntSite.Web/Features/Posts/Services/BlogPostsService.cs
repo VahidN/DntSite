@@ -297,8 +297,8 @@ public class BlogPostsService(
             CultureInfo.InvariantCulture);
 
         year = year - pageNumber;
-        var fromDate = Invariant($"{year}/01/01");
-        var toDate = Invariant($"{year}/12/30");
+        var fromDate = string.Create(CultureInfo.InvariantCulture, $"{year}/01/01");
+        var toDate = string.Create(CultureInfo.InvariantCulture, $"{year}/12/30");
 
         return await _blogPosts.AsNoTracking()
             .Include(x => x.User)
@@ -317,11 +317,11 @@ public class BlogPostsService(
 
         var shamsiDate = DateTime.UtcNow.ToPersianYearMonthDay();
 
-        var fromDate =
-            Invariant($"{shamsiDate.Year}/{shamsiDate.Month.ToString(format: "00", CultureInfo.InvariantCulture)}/01");
+        var fromDate = string.Create(CultureInfo.InvariantCulture,
+            $"{shamsiDate.Year}/{shamsiDate.Month.ToString(format: "00", CultureInfo.InvariantCulture)}/01");
 
-        var toDate =
-            Invariant($"{shamsiDate.Year}/{shamsiDate.Month.ToString(format: "00", CultureInfo.InvariantCulture)}/31");
+        var toDate = string.Create(CultureInfo.InvariantCulture,
+            $"{shamsiDate.Year}/{shamsiDate.Month.ToString(format: "00", CultureInfo.InvariantCulture)}/31");
 
         return _blogPosts.AsNoTracking()
             .Include(x => x.User)
@@ -499,7 +499,7 @@ public class BlogPostsService(
         await emailsService.WriteArticleSendEmailAsync(new BlogPost
         {
             Title = post.Title,
-            Body = Invariant($"حذف مطلب شماره {deleteId.Value} توسط مدیر از سایت "),
+            Body = string.Create(CultureInfo.InvariantCulture, $"حذف مطلب شماره {deleteId.Value} توسط مدیر از سایت "),
             Id = deleteId.Value
         });
     }

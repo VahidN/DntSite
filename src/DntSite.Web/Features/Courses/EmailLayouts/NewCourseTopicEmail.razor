@@ -33,6 +33,6 @@
 
     [Parameter] public NewCourseTopicEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesTopicBase).CombineUrl(Invariant($"/{Model.CId}/{Model.PmId}"));
+    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesTopicBase).CombineUrl(string.Create(CultureInfo.InvariantCulture, $"/{Model.CId}/{Model.PmId}"));
 
 }

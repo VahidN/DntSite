@@ -187,6 +187,7 @@ dotnet_diagnostic.MA0080.severity = error
 dotnet_diagnostic.MA0100.severity = error
 dotnet_diagnostic.MA0104.severity = error
 dotnet_diagnostic.MA0107.severity = error
+dotnet_diagnostic.MA0111.severity = error
 dotnet_diagnostic.MA0127.severity = error
 dotnet_diagnostic.MA0137.severity = error
 dotnet_diagnostic.MA0138.severity = error

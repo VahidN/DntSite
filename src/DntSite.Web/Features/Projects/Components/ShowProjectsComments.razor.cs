@@ -38,7 +38,8 @@ public partial class ShowProjectsComments
         }
 
         return ProjectId.HasValue
-            ? Invariant($"{ProjectsRoutingConstants.ProjectCommentsBase}/{ProjectId.Value}")
+            ? string.Create(CultureInfo.InvariantCulture,
+                $"{ProjectsRoutingConstants.ProjectCommentsBase}/{ProjectId.Value}")
             : ProjectsRoutingConstants.ProjectsComments;
     }
 
@@ -127,6 +128,6 @@ public partial class ShowProjectsComments
         ]);
 
     private string GetPostAbsoluteUrl(ProjectIssueComment issueComment)
-        => Invariant(
+        => string.Create(CultureInfo.InvariantCulture,
             $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{issueComment.Parent.ProjectId}/{issueComment.ParentId}");
 }

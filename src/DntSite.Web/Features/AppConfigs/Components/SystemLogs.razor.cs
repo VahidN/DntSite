@@ -73,5 +73,6 @@ public partial class SystemLogs
         await ShowResultsAsync();
     }
 
-    private static string GetDeleteLogRowFormName(int itemId) => Invariant($"DeleteLogRowForm{itemId}");
+    private static string GetDeleteLogRowFormName(int itemId)
+        => string.Create(CultureInfo.InvariantCulture, $"DeleteLogRowForm{itemId}");
 }

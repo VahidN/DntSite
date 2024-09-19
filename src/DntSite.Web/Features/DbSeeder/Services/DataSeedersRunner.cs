@@ -11,11 +11,15 @@ public class DataSeedersRunner(IServiceProvider serviceProvider, IUnitOfWork uow
         MigrateDb();
 
         var seeders = serviceProvider.GetServices<IDataSeeder>().ToList();
-        WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Running `{seeders.Count}` IDataSeeder(s)."));
+
+        WriteLine(string.Create(CultureInfo.InvariantCulture,
+            $"{DateTime.UtcNow:HH:mm:ss.fff} Running `{seeders.Count}` IDataSeeder(s)."));
 
         foreach (var seeder in seeders.OrderBy(dataSeeder => dataSeeder.Order))
         {
-            WriteLine(Invariant($"{DateTime.UtcNow:HH:mm:ss.fff} Running IDataSeeder: `{seeder.GetType()}`"));
+            WriteLine(string.Create(CultureInfo.InvariantCulture,
+                $"{DateTime.UtcNow:HH:mm:ss.fff} Running IDataSeeder: `{seeder.GetType()}`"));
+
             seeder.SeedData();
         }
     }

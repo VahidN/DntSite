@@ -111,7 +111,7 @@ Task RunAsync(WebApplication webApplication, IHostEnvironment env)
 
         var hostEndPoints = string.Join(separator: ", ", webApplication.GetKestrelListeningAddresses());
 
-        var startupMessage = Invariant(
+        var startupMessage = string.Create(CultureInfo.InvariantCulture,
             $"{DateTime.UtcNow:HH:mm:ss.fff} Started webApp[V{Assembly.GetExecutingAssembly().GetBuildDateTime()}].RunAsync() with IsDevelopment:{env.IsDevelopment()} @ {hostEndPoints}");
 
         webApplication.Services.GetRequiredService<ILoggerFactory>()

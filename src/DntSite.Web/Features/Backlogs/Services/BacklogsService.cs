@@ -273,7 +273,9 @@ public class BacklogsService(
         }
 
         await UpdateStatAsync(backlog, writeBacklogModel);
-        await emailsFactoryService.SendTextToAllAdminsAsync(Invariant($"پیشنهاد شماره {backlog.Id} حذف شد."));
+
+        await emailsFactoryService.SendTextToAllAdminsAsync(string.Create(CultureInfo.InvariantCulture,
+            $"پیشنهاد شماره {backlog.Id} حذف شد."));
     }
 
     public async Task UpdateBacklogAsync(Backlog? backlog, BacklogModel writeBacklogModel)
@@ -387,7 +389,7 @@ public class BacklogsService(
 
         await uow.SaveChangesAsync();
 
-        var url = Invariant($"{siteRootUri}backlogs/details/{backlog.Id}");
+        var url = string.Create(CultureInfo.InvariantCulture, $"{siteRootUri}backlogs/details/{backlog.Id}");
         await emailsFactoryService.SendTextToAllAdminsAsync($"انتخاب پیشنهاد <a href='{url}'>{backlog.Title}</a>");
 
         return "با موفقیت انجام شد";
@@ -432,7 +434,7 @@ public class BacklogsService(
 
         await uow.SaveChangesAsync();
 
-        var url = Invariant($"{siteRootUri}backlogs/details/{backlog.Id}");
+        var url = string.Create(CultureInfo.InvariantCulture, $"{siteRootUri}backlogs/details/{backlog.Id}");
         await emailsFactoryService.SendTextToAllAdminsAsync($"لغو پیشنهاد <a href='{url}'>{backlog.Title}</a>");
 
         return "با موفقیت انجام شد";
@@ -486,7 +488,7 @@ public class BacklogsService(
 
         await uow.SaveChangesAsync();
 
-        var url = Invariant($"{siteRootUri}backlogs/details/{backlog.Id}");
+        var url = string.Create(CultureInfo.InvariantCulture, $"{siteRootUri}backlogs/details/{backlog.Id}");
         await emailsFactoryService.SendTextToAllAdminsAsync($"پایان پیشنهاد <a href='{url}'>{backlog.Title}</a>");
 
         return "با موفقیت انجام شد";

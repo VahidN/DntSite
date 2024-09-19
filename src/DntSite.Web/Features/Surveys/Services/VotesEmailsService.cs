@@ -16,8 +16,8 @@ public class VotesEmailsService(ICommonService commonService, IEmailsFactoryServ
         var vote = comment.Parent;
 
         return emailsFactoryService.SendEmailToAllAdminsAsync<VoteReplyToAdminsEmail, VoteReplyToAdminsEmailModel>(
-            Invariant($"Vote/{vote.Id}/CommentId/{comment.Id}"), inReplyTo: "", Invariant($"Vote/{vote.Id}"),
-            new VoteReplyToAdminsEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"Vote/{vote.Id}/CommentId/{comment.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"Vote/{vote.Id}"), new VoteReplyToAdminsEmailModel
             {
                 Title = vote.Title,
                 Username = comment.GuestUser.UserName,
@@ -65,8 +65,8 @@ public class VotesEmailsService(ICommonService commonService, IEmailsFactoryServ
             }
 
             await emailsFactoryService.SendEmailAsync<VoteReplyToPersonEmail, VoteReplyToPersonEmailModel>(
-                Invariant($"Vote/{vote.Id}/CommentId/{comment.Id}"), inReplyTo: "", Invariant($"Vote/{vote.Id}"),
-                new VoteReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"Vote/{vote.Id}/CommentId/{comment.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"Vote/{vote.Id}"), new VoteReplyToPersonEmailModel
                 {
                     Title = vote.Title,
                     ReplyToComment = replyToComment.Body,
@@ -87,8 +87,8 @@ public class VotesEmailsService(ICommonService commonService, IEmailsFactoryServ
         if (replyToComment.UserId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<VoteReplyToPersonEmail, VoteReplyToPersonEmailModel>(
-                Invariant($"Vote/{vote.Id}/CommentId/{comment.Id}"), inReplyTo: "", Invariant($"Vote/{vote.Id}"),
-                new VoteReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture, $"Vote/{vote.Id}/CommentId/{comment.Id}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"Vote/{vote.Id}"), new VoteReplyToPersonEmailModel
                 {
                     Title = vote.Title,
                     ReplyToComment = replyToComment.Body,
@@ -117,8 +117,8 @@ public class VotesEmailsService(ICommonService commonService, IEmailsFactoryServ
         }
 
         await emailsFactoryService.SendEmailToIdAsync<VoteReplyToWritersEmail, VoteReplyToWritersEmailModel>(
-            Invariant($"Vote/{vote.Id}/CommentId/{comment.Id}"), inReplyTo: "", Invariant($"Vote/{vote.Id}"),
-            new VoteReplyToWritersEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"Vote/{vote.Id}/CommentId/{comment.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"Vote/{vote.Id}"), new VoteReplyToWritersEmailModel
             {
                 Title = vote.Title,
                 Username = comment.GuestUser.UserName,

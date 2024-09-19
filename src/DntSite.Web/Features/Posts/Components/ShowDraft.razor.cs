@@ -15,7 +15,8 @@ public partial class ShowDraft
 
     [Parameter] public int? ShowId { set; get; }
 
-    private string ShowDraftUrl => Invariant($"{PostsRoutingConstants.ShowDraftBase}/{ShowId}");
+    private string ShowDraftUrl
+        => string.Create(CultureInfo.InvariantCulture, $"{PostsRoutingConstants.ShowDraftBase}/{ShowId}");
 
     [InjectComponentScoped] internal IBlogPostDraftsService BlogPostDraftsService { set; get; } = null!;
 

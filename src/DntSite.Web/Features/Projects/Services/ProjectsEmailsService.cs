@@ -21,8 +21,9 @@ public class ProjectsEmailsService(ICommonService commonService, IEmailsFactoryS
         }
 
         await emailsFactoryService.SendEmailToAllAdminsAsync<NewIssueSendEmailToAdmins, NewIssueSendEmailToAdminsModel>(
-            Invariant($"ProjectId/{data.ProjectId}/PmId/{data.Id}"), inReplyTo: "",
-            Invariant($"ProjectId/{data.ProjectId}/PmId/{data.Id}"), new NewIssueSendEmailToAdminsModel
+            string.Create(CultureInfo.InvariantCulture, $"ProjectId/{data.ProjectId}/PmId/{data.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"ProjectId/{data.ProjectId}/PmId/{data.Id}"),
+            new NewIssueSendEmailToAdminsModel
             {
                 Title = project.Title,
                 Username = data.GuestUser.UserName,
@@ -59,8 +60,10 @@ public class ProjectsEmailsService(ICommonService commonService, IEmailsFactoryS
         if (authorId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<NewIssueSendEmailToWriters, NewIssueSendEmailToWritersModel>(
-                Invariant($"ProjectId/{data.ProjectId}/PmId/{data.Id}"), inReplyTo: "",
-                Invariant($"ProjectId/{data.ProjectId}/PmId/{data.Id}"), new NewIssueSendEmailToWritersModel
+                string.Create(CultureInfo.InvariantCulture, $"ProjectId/{data.ProjectId}/PmId/{data.Id}"),
+                inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"ProjectId/{data.ProjectId}/PmId/{data.Id}"),
+                new NewIssueSendEmailToWritersModel
                 {
                     Title = project.Title,
                     Username = data.GuestUser.UserName,
@@ -108,8 +111,10 @@ public class ProjectsEmailsService(ICommonService commonService, IEmailsFactoryS
         var issue = data.Parent;
 
         return emailsFactoryService.SendEmailToAllAdminsAsync<IssueReplyToAdminsEmail, IssueReplyToAdminsEmailModel>(
-            Invariant($"ProjectId/{issue.ProjectId}/PmId/{data.ParentId}"), inReplyTo: "",
-            Invariant($"ProjectId/{issue.ProjectId}/PmId/{data.ParentId}"), new IssueReplyToAdminsEmailModel
+            string.Create(CultureInfo.InvariantCulture, $"ProjectId/{issue.ProjectId}/PmId/{data.ParentId}"),
+            inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"ProjectId/{issue.ProjectId}/PmId/{data.ParentId}"),
+            new IssueReplyToAdminsEmailModel
             {
                 Title = issue.Title,
                 Username = data.GuestUser.UserName,
@@ -159,8 +164,10 @@ public class ProjectsEmailsService(ICommonService commonService, IEmailsFactoryS
             }
 
             await emailsFactoryService.SendEmailAsync<IssueReplyToPersonEmail, IssueReplyToPersonEmailModel>(
-                Invariant($"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), inReplyTo: "",
-                Invariant($"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), new IssueReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture,
+                    $"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture,
+                    $"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), new IssueReplyToPersonEmailModel
                 {
                     Title = issue.Title,
                     ReplyToComment = replyToComment.Body,
@@ -182,8 +189,10 @@ public class ProjectsEmailsService(ICommonService commonService, IEmailsFactoryS
         if (replyToComment.UserId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<IssueReplyToPersonEmail, IssueReplyToPersonEmailModel>(
-                Invariant($"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), inReplyTo: "",
-                Invariant($"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), new IssueReplyToPersonEmailModel
+                string.Create(CultureInfo.InvariantCulture,
+                    $"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture,
+                    $"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), new IssueReplyToPersonEmailModel
                 {
                     Title = issue.Title,
                     ReplyToComment = replyToComment.Body,
@@ -225,15 +234,19 @@ public class ProjectsEmailsService(ICommonService commonService, IEmailsFactoryS
         if (issue.UserId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<IssueReplyToWritersEmail, IssueReplyToWritersEmailModel>(
-                Invariant($"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), inReplyTo: "",
-                Invariant($"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), items, issue.UserId.Value,
+                string.Create(CultureInfo.InvariantCulture,
+                    $"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture,
+                    $"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), items, issue.UserId.Value,
                 $"پاسخ به : {issue.Title}");
         }
         else
         {
             await emailsFactoryService.SendEmailAsync<IssueReplyToWritersEmail, IssueReplyToWritersEmailModel>(
-                Invariant($"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), inReplyTo: "",
-                Invariant($"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), items, issue.GuestUser.Email,
+                string.Create(CultureInfo.InvariantCulture,
+                    $"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture,
+                    $"ProjectId/{issue.ProjectId}/PmId/{issueComment.ParentId}"), items, issue.GuestUser.Email,
                 $"پاسخ به : {issue.Title}", addIp: false);
         }
     }
@@ -260,19 +273,21 @@ public class ProjectsEmailsService(ICommonService commonService, IEmailsFactoryS
         if (toUserId is not null)
         {
             await emailsFactoryService.SendEmailToIdAsync<ApplyIssueStatusEmail, ApplyIssueStatusEmailModel>(
-                Invariant($"ProjectId/{projectId}/PmId/{issueId}"), inReplyTo: "",
-                Invariant($"ProjectId/{projectId}/PmId/{issueId}"), items, toUserId.Value, emailTitle);
+                string.Create(CultureInfo.InvariantCulture, $"ProjectId/{projectId}/PmId/{issueId}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"ProjectId/{projectId}/PmId/{issueId}"), items,
+                toUserId.Value, emailTitle);
         }
         else
         {
             await emailsFactoryService.SendEmailAsync<ApplyIssueStatusEmail, ApplyIssueStatusEmailModel>(
-                Invariant($"ProjectId/{projectId}/PmId/{issueId}"), inReplyTo: "",
-                Invariant($"ProjectId/{projectId}/PmId/{issueId}"), items, toUserIdEmail, emailTitle, addIp: false);
+                string.Create(CultureInfo.InvariantCulture, $"ProjectId/{projectId}/PmId/{issueId}"), inReplyTo: "",
+                string.Create(CultureInfo.InvariantCulture, $"ProjectId/{projectId}/PmId/{issueId}"), items,
+                toUserIdEmail, emailTitle, addIp: false);
         }
 
         await emailsFactoryService.SendEmailToAllAdminsAsync<ApplyIssueStatusEmail, ApplyIssueStatusEmailModel>(
-            Invariant($"ProjectId/{projectId}/PmId/{issueId}"), inReplyTo: "",
-            Invariant($"ProjectId/{projectId}/PmId/{issueId}"), items, emailTitle);
+            string.Create(CultureInfo.InvariantCulture, $"ProjectId/{projectId}/PmId/{issueId}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"ProjectId/{projectId}/PmId/{issueId}"), items, emailTitle);
     }
 
     public Task SendNewFaqEmailAsync(int projectId, int faqId, string title, string body)
