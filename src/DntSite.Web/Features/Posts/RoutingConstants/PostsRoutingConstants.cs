@@ -12,7 +12,7 @@ public static class PostsRoutingConstants
     public const string PostIdSlug = $"{PostBase}/{{Id:int}}/{{Slug}}";
 
     // Such as /2012/05/ef-code-first-15.html
-    public const string OldBloggerPostUrls = "/{PublishYear}/{PublishMonth}/{OldTitle}";
+    public const string OldBloggerPostUrls = "/{PublishYear}/{PublishMonth}/{OldTitle}.html";
 
     public const string PageCurrentPage = "/page/{CurrentPage:int}";
     public const string Posts = "/posts";

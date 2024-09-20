@@ -94,7 +94,7 @@ public partial class Post
     {
         var oldUrl = ApplicationState.AppSetting?.SiteRootUri.CombineUrl(PublishYear.ToEnglishNumbers())
             .CombineUrl(PublishMonth.ToEnglishNumbers())
-            .CombineUrl(OldTitle);
+            .CombineUrl($"{OldTitle}.html");
 
         var post = await BlogPostsService.FindBlogPostAsync(oldUrl.ToEnglishNumbers());
 
