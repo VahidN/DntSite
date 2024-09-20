@@ -74,7 +74,7 @@ public class DailyNewsScreenshotsService(
                     File.Delete(path);
                 }
 
-                hasDownloadedFile = true;
+                hasDownloadedFile = File.Exists(path);
 
                 await Task.Delay(TimeSpan.FromSeconds(value: 7));
             }
