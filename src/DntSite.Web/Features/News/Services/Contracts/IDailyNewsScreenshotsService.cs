@@ -9,7 +9,7 @@ public interface IDailyNewsScreenshotsService : IScopedService
 
     Task<OperationResult<string>> DeleteImageAsync(string pid);
 
-    Task DownloadScreenshotsAsync(int count);
+    Task<bool> DownloadScreenshotsAsync(int count);
 
     Task UpdateAllNewsPageThumbnailsAsync();
 

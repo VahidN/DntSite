@@ -30,8 +30,12 @@ public class ThumbnailsServiceJob(IDailyNewsScreenshotsService dailyNewsScreensh
             return;
         }
 
-        await dailyNewsScreenshots.DownloadScreenshotsAsync(count: 10);
-        await dailyNewsScreenshots.UpdateAllNewsPageThumbnailsAsync();
+        var hasDownloadedFile = await dailyNewsScreenshots.DownloadScreenshotsAsync(count: 10);
+
+        if (hasDownloadedFile)
+        {
+            await dailyNewsScreenshots.UpdateAllNewsPageThumbnailsAsync();
+        }
     }
 
     public bool IsShuttingDown { get; set; }

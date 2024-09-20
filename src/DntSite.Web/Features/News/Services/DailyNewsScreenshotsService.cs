@@ -51,8 +51,10 @@ public class DailyNewsScreenshotsService(
         return ("", OperationStat.Succeeded, name);
     }
 
-    public async Task DownloadScreenshotsAsync(int count)
+    public async Task<bool> DownloadScreenshotsAsync(int count)
     {
+        var hasDownloadedFile = false;
+
         try
         {
             var items = await GetNeedScreenshotsItemsAsync(count);
@@ -72,6 +74,8 @@ public class DailyNewsScreenshotsService(
                     File.Delete(path);
                 }
 
+                hasDownloadedFile = true;
+
                 await Task.Delay(TimeSpan.FromSeconds(value: 7));
             }
         }
@@ -79,6 +83,8 @@ public class DailyNewsScreenshotsService(
         {
             logger.LogError(ex.Demystify(), message: "DownloadScreenshotsAsync Error");
         }
+
+        return hasDownloadedFile;
     }
 
     public async Task UpdateAllNewsPageThumbnailsAsync()
