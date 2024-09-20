@@ -1122,8 +1122,8 @@ window.DntBackToTop = {
 window.DntAddIconsToExternalLinks = {
     enable: () => {
 
-        if(!window.navigator.onLine) {
-           return;
+        if (!window.navigator.onLine) {
+            return;
         }
 
         const mySite = window.location.host;
@@ -1132,7 +1132,7 @@ window.DntAddIconsToExternalLinks = {
             if (!link || !link.href) {
                 return;
             }
-			
+
             if (document.querySelector('[contenteditable]')?.contains(link)) {
                 return;
             }
@@ -1144,10 +1144,10 @@ window.DntAddIconsToExternalLinks = {
             if (link.classList && link.classList.contains('navbar-brand')) {
                 return;
             }
-			
+
             if (link.itemprop && link.itemprop.toLowerCase().startsWith("social")) {
                 return;
-            }			
+            }
 
             if (link && link.href &&
                 link.href.match("^https?://") &&
@@ -1291,7 +1291,8 @@ window.DntHtmlEditor = {
             }
 
             const firstFile = fileInput.files[0];
-            if (isImage && !/^image\//.test(firstFile.type)) {
+            const hasImageType = /^image\//.test(firstFile.type);
+            if (isImage && !hasImageType) {
                 dntHtmlEditor.showErrorMessage(uniqueId, uploadOnlyImageFileErrorMessage);
                 return;
             }
@@ -1320,7 +1321,7 @@ window.DntHtmlEditor = {
                     }
                     const url = data.url;
                     const range = quill.getSelection();
-                    if (isImage) {
+                    if (isImage || hasImageType) {
                         quill.insertEmbed(range.index, 'image', url, Quill.sources.USER);
                     } else {
                         const fileName = data.fileName;
