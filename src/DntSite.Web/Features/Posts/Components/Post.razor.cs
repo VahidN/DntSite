@@ -43,9 +43,8 @@ public partial class Post
 
     [Parameter] public string? OldTitle { set; get; }
 
-    private bool IsOldBloggerPostUrl => !string.IsNullOrWhiteSpace(PublishYear) &&
-                                        !string.IsNullOrWhiteSpace(PublishMonth) &&
-                                        !string.IsNullOrWhiteSpace(OldTitle);
+    private bool IsOldBloggerPostUrl => PublishYear.IsNumber() &&
+                                        PublishMonth.IsNumber() && !string.IsNullOrWhiteSpace(OldTitle);
 
     private bool CanUserViewThisPost => ApplicationState.CurrentUser.CanUserViewThisPost(CurrentPost);
 
