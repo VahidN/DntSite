@@ -6,6 +6,10 @@ public partial class CatchAllPhpRequests
 
     [Parameter] public string? Data { get; set; }
 
+    [Parameter] public string? SubDomain { get; set; }
+
+    [Parameter] public string? Folder { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
