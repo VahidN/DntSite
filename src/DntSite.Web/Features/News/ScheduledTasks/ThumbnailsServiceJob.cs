@@ -30,9 +30,9 @@ public class ThumbnailsServiceJob(IDailyNewsScreenshotsService dailyNewsScreensh
             return;
         }
 
-        var hasDownloadedFile = await dailyNewsScreenshots.DownloadScreenshotsAsync(count: 10);
+        var numberOfDownloadedFiles = await dailyNewsScreenshots.DownloadScreenshotsAsync(count: 10);
 
-        if (hasDownloadedFile)
+        if (numberOfDownloadedFiles > 0)
         {
             await dailyNewsScreenshots.UpdateAllNewsPageThumbnailsAsync();
         }
