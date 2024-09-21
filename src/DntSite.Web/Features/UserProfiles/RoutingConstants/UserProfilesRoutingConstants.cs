@@ -37,6 +37,9 @@ public static class UserProfilesRoutingConstants
     public const string Users = "/users";
     public const string UsersPageCurrentPage = $"{Users}/page/{{CurrentPage:int}}";
 
+    public const string OldUsers = "/siteusers";
+    public const string OldUsersPageCurrentPage = $"{OldUsers}/index/{{CurrentPage:int}}";
+
     public const string UsersFilterBase = $"{Users}/filter";
     public const string UsersFilterFilterPageCurrentPage = $"{UsersFilterBase}/{{Filter}}/page/{{CurrentPage:int}}";
 
