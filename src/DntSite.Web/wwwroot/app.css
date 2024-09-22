@@ -101,6 +101,8 @@ pre, code {
     word-break: break-word;
     direction: ltr;
     text-align: left;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
 }
 
 img {

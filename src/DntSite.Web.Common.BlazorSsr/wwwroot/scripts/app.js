@@ -1170,6 +1170,7 @@ window.DntHtmlEditor = {
         const header = document.getElementById("header");
         if (header) {
             toolbar.style.top = `${header.clientHeight}px`;
+            toolbar.style.zIndex = "1010";
         }
 
         editorElement.style.minHeight = editorElement.getAttribute('data-dnt-html-editor-height');
