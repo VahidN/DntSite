@@ -25,8 +25,13 @@ public class IndexedDataExplorerService(
         return posts;
     }
 
-    private async Task UpdateUsersInfoAsync(PagedResultModel<LuceneSearchResult> posts)
+    public async Task UpdateUsersInfoAsync(PagedResultModel<LuceneSearchResult>? posts)
     {
+        if (posts is null || posts.TotalItems == 0)
+        {
+            return;
+        }
+
         var userIds = posts.Data.Where(x => x.UserId.HasValue).Select(x => x.UserId).ToList();
 
         var users = await usersInfoService.FindUsersAsync(userIds);

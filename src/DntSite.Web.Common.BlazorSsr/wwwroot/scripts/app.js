@@ -66,6 +66,11 @@ window.DntRemoteAutoComplete = {
                 return;
             }
 
+            const redirectUrl = element.getAttribute("data-dnt-auto-complete-redirect-url");
+            if (!redirectUrl) {
+                return;
+            }
+
             element.parentNode.classList.add('dropdown');
             const dropdown = DntRemoteAutoComplete.createElement(`<div class="dropdown-menu shadow-sm"></div>`);
             DntRemoteAutoComplete.insertAfterElement(dropdown, element);
@@ -205,6 +210,8 @@ window.DntRemoteAutoComplete = {
             element.onkeydown = (event) => {
                 if (event.key === 'Escape') {
                     hideDropdown();
+                } else if (event.key === 'Enter') {
+                    window.location.href = `${redirectUrl}/${encodeURIComponent(element.value)}`;
                 }
             };
         });

@@ -516,6 +516,7 @@ public class FullTextSearchService : IFullTextSearchService
                     query = parser.ParseQuery(searchText.SearchByPartialWords(matchingType, convertToLowercase),
                         convertToLowercase);
 
+                    collector = TopScoreDocCollector.Create(maxItems, docsScoredInOrder: true);
                     indexSearcher.Search(query, collector);
                     docs = collector.GetTopDocs(startIndex, pageSize);
 
@@ -540,7 +541,7 @@ public class FullTextSearchService : IFullTextSearchService
             return new PagedResultModel<LuceneSearchResult>
             {
                 Data = results,
-                TotalItems = docs.TotalHits
+                TotalItems = docs.TotalHits > maxItems ? maxItems : docs.TotalHits
             };
         }, new PagedResultModel<LuceneSearchResult>());
 }

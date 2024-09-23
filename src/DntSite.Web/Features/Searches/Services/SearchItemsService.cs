@@ -4,10 +4,14 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Searches.Entities;
 using DntSite.Web.Features.Searches.Services.Contracts;
+using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.Searches.Services;
 
-public class SearchItemsService(IUnitOfWork uow, IAppAntiXssService antiXssService) : ISearchItemsService
+public class SearchItemsService(
+    IUnitOfWork uow,
+    IAppAntiXssService antiXssService,
+    ICurrentUserService currentUserService) : ISearchItemsService
 {
     private readonly DbSet<SearchItem> _searchItems = uow.DbSet<SearchItem>();
 
@@ -18,9 +22,18 @@ public class SearchItemsService(IUnitOfWork uow, IAppAntiXssService antiXssServi
             return null;
         }
 
+        var sanitizedHtml = antiXssService.GetSanitizedHtml(text);
+
+        var lastTryOfCurrentUserToday = await GetLastTryOfCurrentUserTodayAsync(sanitizedHtml);
+
+        if (lastTryOfCurrentUserToday is not null)
+        {
+            return lastTryOfCurrentUserToday;
+        }
+
         var result = _searchItems.Add(new SearchItem
             {
-                Text = antiXssService.GetSanitizedHtml(text)
+                Text = sanitizedHtml
             })
             .Entity;
 
@@ -47,5 +60,20 @@ public class SearchItemsService(IUnitOfWork uow, IAppAntiXssService antiXssServi
         var list = await _searchItems.Where(x => x.Audit.CreatedAt < date).ToListAsync();
         _searchItems.RemoveRange(list);
         await uow.SaveChangesAsync();
+    }
+
+    private Task<SearchItem?> GetLastTryOfCurrentUserTodayAsync(string text)
+    {
+        var userId = currentUserService.GetCurrentUserId();
+
+        if (!userId.HasValue)
+        {
+            return Task.FromResult<SearchItem?>(result: null);
+        }
+
+        var today = DateTime.UtcNow.Date;
+
+        return _searchItems.FirstOrDefaultAsync(item => item.Text == text && item.UserId == userId.Value &&
+                                                        item.Audit.CreatedAt.Date == today);
     }
 }

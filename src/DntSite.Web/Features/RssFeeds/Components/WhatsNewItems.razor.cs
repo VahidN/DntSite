@@ -12,4 +12,6 @@ public partial class WhatsNewItems
     [Parameter] public int? CurrentPage { set; get; }
 
     [Parameter] public bool ShowPager { set; get; }
+
+    [Parameter] [EditorRequired] public required string BasePath { set; get; }
 }

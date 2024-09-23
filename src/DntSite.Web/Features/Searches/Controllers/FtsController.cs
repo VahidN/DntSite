@@ -1,5 +1,6 @@
 ﻿using DntSite.Web.Common.BlazorSsr.Utils;
 using DntSite.Web.Features.Searches.ModelsMappings;
+using DntSite.Web.Features.Searches.RoutingConstants;
 using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Searches.Controllers;
@@ -26,15 +27,22 @@ public class FtsController(IFullTextSearchService fullTextSearchService, ISearch
 
         var results = fullTextSearchService.FindPagedPosts(searchQuery, ItemsPerPage, pageNumber: 1, ItemsPerPage);
 
-        return results.TotalItems == 0
-            ? Ok(new[]
+        if (results.TotalItems == 0)
+        {
+            return Ok(new[]
             {
                 ItemNotFound
-            })
-            : Ok(results.Data.OrderBy(result => result.ItemType.Value)
-                .ThenByDescending(result => result.Score)
-                .Select(result => result.MapToTemplatedResult(searchQuery))
-                .ToList());
+            });
+        }
+
+        var items = results.Data.OrderBy(result => result.ItemType.Value)
+            .ThenByDescending(result => result.Score)
+            .Select(result => result.MapToTemplatedResult(searchQuery))
+            .ToList();
+
+        items.Add(GetMoreItemsLink(searchQuery));
+
+        return Ok(items);
     }
 
     [HttpPost(template: "[action]")]
@@ -50,4 +58,13 @@ public class FtsController(IFullTextSearchService fullTextSearchService, ISearch
 
         return Ok();
     }
+
+    private static string GetMoreItemsLink(string text)
+        => $"""
+            <a class='dropdown-item'
+               href='{"/".CombineUrl(SearchesRoutingConstants.SearchResultsBase).CombineUrl(Uri.EscapeDataString(text))}'>
+               بیشتر ...
+               <i class='{DntBootstrapIcons.BiArrowLeftCircleFill} ms-1'></i>
+            <a/>
+            """;
 }

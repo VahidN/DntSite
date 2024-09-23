@@ -16,6 +16,8 @@ public partial class DntRemoteAutoComplete
 
     [Parameter] [EditorRequired] public required string RemoteQueryApiUrl { set; get; }
 
+    [Parameter] [EditorRequired] public required string RedirectUrl { set; get; }
+
     [Parameter] [EditorRequired] public required string RemoteLogApiUrl { set; get; }
 
     [Parameter] [EditorRequired] public required string RemoteQueryString { set; get; }

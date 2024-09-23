@@ -1,0 +1,16 @@
+@using DntSite.Web.Features.RssFeeds.Components
+@attribute [Route(SearchesRoutingConstants.SearchResults)]
+@attribute [Route(SearchesRoutingConstants.SearchResultsTermPageCurrentPage)]
+
+
+<DntSitePageTitle PageTitle="@PageTitle"/>
+
+@if (FullTextSearchService.IsDatabaseIndexed)
+{
+    <WhatsNewItems
+        Posts="_posts"
+        ItemsPerPage="ItemsPerPage"
+        CurrentPage="CurrentPage"
+        BasePath="@BasePath"
+        ShowPager="true"/>
+}
