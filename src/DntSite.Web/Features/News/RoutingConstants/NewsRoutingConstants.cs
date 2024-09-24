@@ -4,6 +4,7 @@ public static class NewsRoutingConstants
 {
     public const string News = "/news";
     public const string NewsArchive = "/newsarchive";
+    public const string NewsArchivePageCurrentPage = $"{NewsArchive}/index/{{CurrentPage:int}}";
     public const string NewsPageCurrentPage = $"{News}/page/{{CurrentPage:int}}";
 
     public const string NewsFilterBase = $"{News}/filter";
