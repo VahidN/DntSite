@@ -25,7 +25,24 @@ public class IndexedDataExplorerService(
         return posts;
     }
 
-    public async Task UpdateUsersInfoAsync(PagedResultModel<LuceneSearchResult>? posts)
+    public async Task<PagedResultModel<LuceneSearchResult>> FindAllPagedIndexedDataAsync(string term,
+        int maxItems,
+        int pageNumber,
+        int pageSize)
+    {
+        var posts = fullTextSearchService.FindPagedPosts(term, maxItems, pageNumber, pageSize);
+
+        if (posts.TotalItems == 0)
+        {
+            return new PagedResultModel<LuceneSearchResult>();
+        }
+
+        await UpdateUsersInfoAsync(posts);
+
+        return posts;
+    }
+
+    private async Task UpdateUsersInfoAsync(PagedResultModel<LuceneSearchResult>? posts)
     {
         if (posts is null || posts.TotalItems == 0)
         {

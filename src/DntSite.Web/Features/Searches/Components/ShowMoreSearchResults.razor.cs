@@ -53,8 +53,9 @@ public partial class ShowMoreSearchResults
         }
 
         await SearchItemsService.AddSearchItemAsync(Term);
-        _posts = FullTextSearchService.FindPagedPosts(Term, MaxItems, CurrentPage.Value, ItemsPerPage);
-        await IndexedDataExplorerService.UpdateUsersInfoAsync(_posts);
+
+        _posts = await IndexedDataExplorerService.FindAllPagedIndexedDataAsync(Term, MaxItems, CurrentPage.Value,
+            ItemsPerPage);
     }
 
     private void AddBreadCrumbs()

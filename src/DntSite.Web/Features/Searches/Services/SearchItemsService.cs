@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+﻿using AsyncKeyedLock;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -11,8 +12,12 @@ namespace DntSite.Web.Features.Searches.Services;
 public class SearchItemsService(
     IUnitOfWork uow,
     IAppAntiXssService antiXssService,
-    ICurrentUserService currentUserService) : ISearchItemsService
+    ICurrentUserService currentUserService,
+    IHttpContextAccessor httpContextAccessor) : ISearchItemsService
 {
+    private static readonly AsyncNonKeyedLocker Locker = new(maxCount: 1);
+    private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(value: 3);
+
     private readonly DbSet<SearchItem> _searchItems = uow.DbSet<SearchItem>();
 
     public async Task<SearchItem?> AddSearchItemAsync(string? text)
@@ -21,6 +26,8 @@ public class SearchItemsService(
         {
             return null;
         }
+
+        using var @lock = await Locker.LockAsync(LockTimeout);
 
         var sanitizedHtml = antiXssService.GetSanitizedHtml(text);
 
@@ -66,14 +73,17 @@ public class SearchItemsService(
     {
         var userId = currentUserService.GetCurrentUserId();
 
-        if (!userId.HasValue)
-        {
-            return Task.FromResult<SearchItem?>(result: null);
-        }
-
         var today = DateTime.UtcNow.Date;
 
-        return _searchItems.FirstOrDefaultAsync(item => item.Text == text && item.UserId == userId.Value &&
+        if (userId.HasValue)
+        {
+            return _searchItems.FirstOrDefaultAsync(item => item.Text == text && item.UserId == userId.Value &&
+                                                            item.Audit.CreatedAt.Date == today);
+        }
+
+        var ip = httpContextAccessor.HttpContext?.GetIP();
+
+        return _searchItems.FirstOrDefaultAsync(item => item.Text == text && item.Audit.CreatedByUserIp == ip &&
                                                         item.Audit.CreatedAt.Date == today);
     }
 }

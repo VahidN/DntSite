@@ -7,5 +7,8 @@ public interface IIndexedDataExplorerService : IScopedService
 {
     Task<PagedResultModel<LuceneSearchResult>> GetAllPagedIndexedDataAsync(int pageNumber, int pageSize);
 
-    Task UpdateUsersInfoAsync(PagedResultModel<LuceneSearchResult>? posts);
+    Task<PagedResultModel<LuceneSearchResult>> FindAllPagedIndexedDataAsync(string term,
+        int maxItems,
+        int pageNumber,
+        int pageSize);
 }
