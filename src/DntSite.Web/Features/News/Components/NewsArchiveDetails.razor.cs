@@ -34,6 +34,8 @@ public partial class NewsArchiveDetails
 
     [Inject] internal IHtmlHelperService HtmlHelperService { set; get; } = null!;
 
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [Parameter] public string? Slug { set; get; }
@@ -42,6 +44,12 @@ public partial class NewsArchiveDetails
 
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);
+
+    private string DeleteScreenshotUrl
+        => NewsId.HasValue && CanUserDeleteThisPost && !string.IsNullOrWhiteSpace(CurrentPost?.PageThumbnail)
+            ? NewsRoutingConstants.WriteNewsDeleteDeleteScreenshotIdBase.CombineUrl(
+                ProtectionProvider.Encrypt(NewsId.Value.ToString(CultureInfo.InvariantCulture)))
+            : "";
 
     private List<string> GetTags() => CurrentPost?.Tags.Select(x => x.Name).ToList() ?? [];
 

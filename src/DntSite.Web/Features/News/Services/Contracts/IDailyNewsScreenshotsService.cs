@@ -7,7 +7,7 @@ public interface IDailyNewsScreenshotsService : IScopedService
 {
     Task<List<DownloadItem>> GetNeedScreenshotsItemsAsync(int count);
 
-    Task<OperationResult<string>> DeleteImageAsync(string pid);
+    Task DeleteImageAsync(DailyNewsItem? post);
 
     Task<int> DownloadScreenshotsAsync(int count);
 

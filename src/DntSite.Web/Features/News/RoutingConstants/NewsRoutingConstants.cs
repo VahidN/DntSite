@@ -48,6 +48,11 @@ public static class NewsRoutingConstants
     public const string WriteNewsEditEditId = $"{WriteNews}/edit/{{EditId:{EncryptedRouteConstraint.Name}}}";
     public const string WriteNewsDeleteDeleteId = $"{WriteNews}/delete/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
+    public const string WriteNewsDeleteDeleteScreenshotIdBase = $"{WriteNews}/delete-screenshot";
+
+    public const string WriteNewsDeleteDeleteScreenshotId =
+        $"{WriteNewsDeleteDeleteScreenshotIdBase}/{{DeleteScreenshotId:{EncryptedRouteConstraint.Name}}}";
+
     public const string CommentsUrlTemplate = $"{News}/details/{{0}}#comments";
     public const string PostUrlTemplate = $"{News}/details/{{0}}";
     public const string PostTagUrlTemplate = "/news-tag/{0}";

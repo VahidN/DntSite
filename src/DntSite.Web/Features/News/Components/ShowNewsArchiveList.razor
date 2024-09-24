@@ -42,6 +42,19 @@
             <AdditionalBodyContent>
                 <PrintNewsThumb Id="@post.Id" Title="@post.Title"/>
             </AdditionalBodyContent>
+            <AdditionalButtonsContentForOwner>
+                @{
+                    var deleteScreenshotUrl = GetDeleteScreenshotUrl(post);
+                }
+                @if (!string.IsNullOrWhiteSpace(deleteScreenshotUrl))
+                {
+                    <a href="@deleteScreenshotUrl"
+                       data-cancel-confirm-message="آیا می‌خواهید اسکرین‌شات ناقص این مطلب را حذف کنید؟"
+                       class="btn btn-warning ms-2 btn-sm">
+                        حذف اسکرین‌شات ناقص
+                    </a>
+                }
+            </AdditionalButtonsContentForOwner>
         </ShowBlogPostItem>
     }
 

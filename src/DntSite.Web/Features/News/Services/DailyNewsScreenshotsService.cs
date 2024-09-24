@@ -10,9 +10,7 @@ namespace DntSite.Web.Features.News.Services;
 
 public class DailyNewsScreenshotsService(
     IUnitOfWork uow,
-    IProtectionProviderService protectionProviderService,
     IAppFoldersService appFoldersService,
-    IDailyNewsItemsService dailyNewsItemsService,
     IHtmlToPngGenerator htmlToPngGenerator,
     ILogger<DailyNewsScreenshotsService> logger) : IDailyNewsScreenshotsService
 {
@@ -30,25 +28,22 @@ public class DailyNewsScreenshotsService(
             })
             .ToListAsync();
 
-    public async Task<OperationResult<string>> DeleteImageAsync(string pid)
+    public async Task DeleteImageAsync(DailyNewsItem? post)
     {
-        if (string.IsNullOrWhiteSpace(pid))
-        {
-            return OperationStat.Failed;
-        }
-
-        var id = protectionProviderService.Decrypt(pid)?.ToInt() ?? 0;
-        var post = await dailyNewsItemsService.FindDailyNewsItemAsync(id);
-
         if (post is null)
         {
-            return OperationStat.Failed;
+            return;
         }
 
-        var (name, path) = GetImageInfo(id);
-        File.Delete(path);
+        var (_, path) = GetImageInfo(post.Id);
 
-        return ("", OperationStat.Succeeded, name);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+
+        post.PageThumbnail = null;
+        await uow.SaveChangesAsync();
     }
 
     public async Task<int> DownloadScreenshotsAsync(int count)

@@ -26,7 +26,11 @@ public partial class WriteNews
 
     [Parameter] public string? DeleteId { set; get; }
 
+    [Parameter] public string? DeleteScreenshotId { set; get; }
+
     [InjectComponentScoped] internal IDailyNewsItemsService DailyNewsItemsService { set; get; } = null!;
+
+    [InjectComponentScoped] internal IDailyNewsScreenshotsService DailyNewsScreenshotsService { set; get; } = null!;
 
     [Inject] internal IMapper Mapper { set; get; } = null!;
 
@@ -43,9 +47,25 @@ public partial class WriteNews
         }
 
         await PerformPossibleDeleteAsync();
+        await PerformPossibleDeleteScreenshotAsync();
 
         await FillPossibleEditFormAsync();
         FillPossibleEditFormFromUrl();
+    }
+
+    private async Task PerformPossibleDeleteScreenshotAsync()
+    {
+        if (string.IsNullOrWhiteSpace(DeleteScreenshotId))
+        {
+            return;
+        }
+
+        var newsId = DeleteScreenshotId.ToInt();
+        var item = await GetUserDailyNewsItemAsync(newsId);
+        await DailyNewsScreenshotsService.DeleteImageAsync(item);
+
+        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+            $"{NewsRoutingConstants.NewsDetailsBase}/{newsId}"));
     }
 
     private async Task PerformPossibleDeleteAsync()

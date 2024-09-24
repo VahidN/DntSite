@@ -1,4 +1,4 @@
-@using DntSite.Web.Features.News.Entities
+﻿@using DntSite.Web.Features.News.Entities
 @using DntSite.Web.Features.Posts.Components
 @attribute [Route(NewsRoutingConstants.NewsDetailsNewsId)]
 @attribute [Route(NewsRoutingConstants.NewsArchiveDetailsNewsId)]
@@ -62,6 +62,16 @@
         <AdditionalBodyContent>
             <PrintNewsThumb Id="@CurrentPost.Id" Title="@CurrentPost.Title"/>
         </AdditionalBodyContent>
+        <AdditionalButtonsContentForOwner>
+            @if (!string.IsNullOrWhiteSpace(DeleteScreenshotUrl))
+            {
+                <a href="@DeleteScreenshotUrl"
+                   data-cancel-confirm-message="آیا می‌خواهید اسکرین‌شات ناقص این مطلب را حذف کنید؟"
+                   class="btn btn-warning ms-2 btn-sm">
+                    حذف اسکرین‌شات ناقص
+                </a>
+            }
+        </AdditionalButtonsContentForOwner>
     </ShowBlogPostItem>
 
     <DntSite.Web.Features.Searches.Components.ShowMoreLikeThis DocumentTypeIdHash="@_documentTypeIdHash"/>
