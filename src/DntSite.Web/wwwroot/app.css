@@ -93,6 +93,9 @@ label {
     direction: rtl !important;
 }*/
 
+.hljs {
+    border-radius: 4px;
+}
 
 pre, code {
     font-size: inherit !important;
