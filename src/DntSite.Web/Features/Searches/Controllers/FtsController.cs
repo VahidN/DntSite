@@ -14,7 +14,7 @@ public class FtsController(IFullTextSearchService fullTextSearchService, ISearch
     private const int ItemsPerPage = 12;
 
     private const string ItemNotFound =
-        $"<span class='alert alert-warning'><i class='{DntBootstrapIcons.BiXCircle} me-2'></i>اطلاعاتی یافت نشد</span>";
+        $"<span class='dropdown-item bg-light-subtle'><i class='{DntBootstrapIcons.BiXCircle} me-2'></i>اطلاعاتی یافت نشد</span>";
 
     [HttpGet(template: "[action]")]
     [IgnoreAntiforgeryToken]
