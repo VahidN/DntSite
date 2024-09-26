@@ -148,18 +148,18 @@ img {
 
 
 a.post-tag {
+    background-color: #71777b;
+    color: #f7f7f7;
     line-height: 2.4;
     margin: 0 2px;
-    background: #e1ecf4 none repeat scroll 0 0;
     padding: 3px 4px;
     text-decoration: none;
-    color: #39739d;
     transition: color 0.15s ease 0s, background 0.15s ease 0s, border 0.15s ease 0s;
 }
 
 a.post-tag:hover {
-    background-color: #3E6D8E;
-    color: #E0EAF1;
+    background: #56636c none repeat scroll 0 0;
+    color: #f7f7f7;
     text-decoration: none;
 }
 
