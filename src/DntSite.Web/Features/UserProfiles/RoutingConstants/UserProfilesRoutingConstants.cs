@@ -23,6 +23,7 @@ public static class UserProfilesRoutingConstants
     public const string ForgottenPassword = "/forgotten-password";
     public const string ForgottenPasswordResetBase = $"{ForgottenPassword}/reset";
     public const string ForgottenPasswordResetId = $"{ForgottenPasswordResetBase}/{{Id}}";
+    public const string ForgottenPasswordOldUrl = "/ForgottenPassword";
 
     public const string Login = "/login";
 
