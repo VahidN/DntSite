@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Searches.Entities;
+using DntSite.Web.Features.Searches.Models;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
@@ -13,7 +14,8 @@ public class SearchItemsService(
     IUnitOfWork uow,
     IAppAntiXssService antiXssService,
     ICurrentUserService currentUserService,
-    IHttpContextAccessor httpContextAccessor) : ISearchItemsService
+    IHttpContextAccessor httpContextAccessor,
+    IUAParserService uaParserService) : ISearchItemsService
 {
     private static readonly AsyncNonKeyedLocker Locker = new(maxCount: 1);
     private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(value: 3);
@@ -49,7 +51,7 @@ public class SearchItemsService(
         return result;
     }
 
-    public Task<PagedResultModel<SearchItem>> GetPagedSearchItemsAsync(int pageNumber,
+    public async Task<PagedResultModel<SearchItemModel>> GetPagedSearchItemsAsync(int pageNumber,
         int recordsPerPage,
         bool showDeletedItems = false)
     {
@@ -58,7 +60,24 @@ public class SearchItemsService(
             .Where(x => x.IsDeleted == showDeletedItems)
             .OrderByDescending(x => x.Id);
 
-        return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
+        var pagedItems = await query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
+
+        var data = new List<SearchItemModel>();
+
+        foreach (var pagedItem in pagedItems.Data)
+        {
+            data.Add(new SearchItemModel
+            {
+                SearchItem = pagedItem,
+                ClientInfo = await uaParserService.GetClientInfoAsync(pagedItem.Audit.CreatedByUserAgent)
+            });
+        }
+
+        return new PagedResultModel<SearchItemModel>
+        {
+            TotalItems = pagedItems.TotalItems,
+            Data = data
+        };
     }
 
     public async Task DeleteOldSearchItemsAsync(int daysToKeep = 3)

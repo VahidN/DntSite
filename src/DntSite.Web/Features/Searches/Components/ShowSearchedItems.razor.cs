@@ -1,6 +1,6 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
-using DntSite.Web.Features.Searches.Entities;
+using DntSite.Web.Features.Searches.Models;
 using DntSite.Web.Features.Searches.RoutingConstants;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Models;
@@ -12,7 +12,7 @@ public partial class ShowSearchedItems
 {
     private const int ItemsPerPage = 20;
 
-    private PagedResultModel<SearchItem>? _items;
+    private PagedResultModel<SearchItemModel>? _items;
 
     [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
 

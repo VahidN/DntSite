@@ -1,4 +1,4 @@
-﻿@using DntSite.Web.Features.Searches.Entities
+﻿@using DntSite.Web.Features.Searches.Models
 @using DntSite.Web.Features.UserProfiles.Components
 @attribute [Route(SearchesRoutingConstants.SearchedItems)]
 @attribute [Route(SearchesRoutingConstants.SearchedItemsPageCurrentPage)]
@@ -6,7 +6,7 @@
 <DntSitePageTitle PageTitle="آمار جستجوها"/>
 
 <DntLoading IsLoading="@(_items is null)">
-    <DntSimpleTable TRecord="SearchItem"
+    <DntSimpleTable TRecord="SearchItemModel"
                     Records="_items!.Data"
                     TableClass="table table-striped table-hover caption-top"
                     HeaderClass="table-secondary"
@@ -22,11 +22,11 @@
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
-                    <button class="btn btn-light btn-sm" type="button" data-dnt-search-text="@record.Text">
+                    <button class="btn btn-light btn-sm" type="button" data-dnt-search-text="@record.SearchItem.Text">
                         <span class="@DntBootstrapIcons.BiSearch text-muted" role="img"></span>
                     </button>
-                    <span dir="@record.Text.GetDir()">
-                        @record.Text
+                    <span dir="@record.SearchItem.Text.GetDir()">
+                        @record.SearchItem.Text
                     </span>
                 </CellValueTemplate>
             </DntSimpleTableColumn>
@@ -36,7 +36,7 @@
                                   RowCellClass='record => "text-center align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
-                    <PrintUser User="record.User"/>
+                    <PrintUser User="record.SearchItem.User"/>
                 </CellValueTemplate>
             </DntSimpleTableColumn>
 
@@ -46,8 +46,16 @@
                                   FooterCellClass="text-center align-middle"
                                   width="430">
                 <CellValueTemplate Context="record">
-                    <div class="badge bg-secondary text-wrap" dir="ltr">@record.Audit.CreatedByUserAgent</div>
-                    <div class="badge bg-info" dir="ltr">@record.Audit.CreatedByUserIp</div>
+                    <div dir="ltr">
+                        @if (record.ClientInfo?.Device.IsSpider == true)
+                        {
+                            <span class="@DntBootstrapIcons.BiBug ms-2 me-1"></span>
+                        }
+                        <span title="OS" class="badge bg-primary me-1">@record.ClientInfo?.OS</span>
+                        <span title="Device" class="badge bg-secondary me-1">@record.ClientInfo?.Device</span>
+                        <span title="@record.SearchItem.Audit.CreatedByUserAgent" class="badge bg-warning me-1">@record.ClientInfo?.UA</span>
+                    </div>
+                    <div class="badge bg-info" dir="ltr">@record.SearchItem.Audit.CreatedByUserIp</div>
                 </CellValueTemplate>
             </DntSimpleTableColumn>
 
@@ -56,7 +64,7 @@
                                   RowCellClass='record => "text-center align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
-                    @record.Audit.CreatedAt.ToFriendlyPersianDateTextify()
+                    @record.SearchItem.Audit.CreatedAt.ToFriendlyPersianDateTextify()
                 </CellValueTemplate>
             </DntSimpleTableColumn>
         </TableColumns>
