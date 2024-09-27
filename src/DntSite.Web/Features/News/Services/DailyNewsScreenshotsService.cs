@@ -49,6 +49,7 @@ public class DailyNewsScreenshotsService(
     public async Task<int> DownloadScreenshotsAsync(int count)
     {
         var numberOfDownloadedFiles = 0;
+        var currentUrl = "";
 
         try
         {
@@ -57,16 +58,18 @@ public class DailyNewsScreenshotsService(
             foreach (var item in items)
             {
                 var (_, path) = GetImageInfo(item.Id);
+                currentUrl = item.Url;
 
                 await htmlToPngGenerator.GeneratePngFromHtmlAsync(new HtmlToPngGeneratorOptions
                 {
-                    SourceHtmlFileOrUri = item.Url,
+                    SourceHtmlFileOrUri = currentUrl,
                     OutputPngFile = path
                 });
 
                 if (path.IsBlankImage())
                 {
                     File.Delete(path);
+                    logger.LogWarning(message: "DownloadScreenshotsAsync({URL}) failed.", currentUrl);
                 }
                 else
                 {
@@ -78,7 +81,7 @@ public class DailyNewsScreenshotsService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Demystify(), message: "DownloadScreenshotsAsync Error");
+            logger.LogError(ex.Demystify(), message: "DownloadScreenshotsAsync({URL}) Error", currentUrl);
         }
 
         return numberOfDownloadedFiles;
