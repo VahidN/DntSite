@@ -10,7 +10,14 @@ public static class GridifyUtils
     /// <summary>
     ///     Supports parameterized and special type EF-Core queries
     /// </summary>
-    static GridifyUtils() => GridifyGlobalConfiguration.EnableEntityFrameworkCompatibilityLayer();
+    static GridifyUtils()
+    {
+        GridifyGlobalConfiguration.EnableEntityFrameworkCompatibilityLayer();
+
+        // If true, string comparison operations are case insensitive by default.
+        // https://alirezanet.github.io/Gridify/guide/gridifyMapper#caseinsensitivefiltering
+        GridifyGlobalConfiguration.CaseInsensitiveFiltering = true;
+    }
 
     public static async Task<PagedResultModel<TResult>> ApplyQueryableDntGridFilterAsync<TResult, TEntity>(
         this IQueryable<TEntity> query,
