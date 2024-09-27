@@ -78,7 +78,9 @@ window.DntRemoteAutoComplete = {
             const hideDropdown = () => {
                 dropdown.classList.remove('slideIn');
                 dropdown.classList.add('slideOut');
-                dropdown.innerHTML = '';
+                setTimeout(() => {
+                    dropdown.innerHTML = '';
+                }, 50);
             };
 
             const hideDropdownOnEscKeyPress = (evt) => {
