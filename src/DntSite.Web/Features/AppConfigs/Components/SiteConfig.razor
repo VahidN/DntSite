@@ -7,7 +7,8 @@
         تنظیمات برنامه
     </FrameHeader>
     <FrameBody>
-        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync" FormName="@nameof(SiteConfig)" Enhance>
+        <EditForm Model="Model" method="post" autocomplete="off"
+                  OnValidSubmit="PerformAsync" FormName="@nameof(SiteConfig)" Enhance>
             <DataAnnotationsValidator/>
 
             <DntInputText AutoCompleteType="AutoCompleteType.On"
