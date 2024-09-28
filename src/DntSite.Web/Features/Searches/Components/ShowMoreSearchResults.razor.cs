@@ -14,7 +14,7 @@ public partial class ShowMoreSearchResults
     private PagedResultModel<LuceneSearchResult>? _posts;
 
     private string PageTitle
-        => string.Create(CultureInfo.InvariantCulture, $"نتایج جستجوی {Term}، صفحه: {CurrentPage ?? 1}");
+        => string.Create(CultureInfo.InvariantCulture, $"نتایج جستجوی «{Term}»، صفحه: {CurrentPage ?? 1}");
 
     [Parameter] public string? Term { get; set; }
 
@@ -59,5 +59,5 @@ public partial class ShowMoreSearchResults
     }
 
     private void AddBreadCrumbs()
-        => ApplicationState.BreadCrumbs.Add(SearchesBreadCrumbs.GetSearchResults(PageTitle, BasePath));
+        => ApplicationState.BreadCrumbs.Add(SearchesBreadCrumbs.GetBreadCrumb(PageTitle, BasePath));
 }

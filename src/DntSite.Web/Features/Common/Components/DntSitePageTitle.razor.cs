@@ -14,6 +14,8 @@ public partial class DntSitePageTitle
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        SitePageTitlesCacheService.AddSitePageTitle(ApplicationState.HttpContext.GetRawUrl(), PageTitle);
+
+        SitePageTitlesCacheService.AddSitePageTitle(ApplicationState.HttpContext.GetRawUrl(),
+            PageTitle.ToPersianNumbers());
     }
 }

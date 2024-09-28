@@ -42,6 +42,23 @@ public class IndexedDataExplorerService(
         return posts;
     }
 
+    public async Task<PagedResultModel<LuceneSearchResult>> FindAllMoreLikeThisItemsAsync(string documentHashId,
+        int maxItems,
+        int pageNumber,
+        int pageSize)
+    {
+        var posts = fullTextSearchService.FindPagedSimilarPosts(documentHashId, maxItems, pageNumber, pageSize);
+
+        if (posts.TotalItems == 0)
+        {
+            return new PagedResultModel<LuceneSearchResult>();
+        }
+
+        await UpdateUsersInfoAsync(posts);
+
+        return posts;
+    }
+
     private async Task UpdateUsersInfoAsync(PagedResultModel<LuceneSearchResult>? posts)
     {
         if (posts is null || posts.TotalItems == 0)

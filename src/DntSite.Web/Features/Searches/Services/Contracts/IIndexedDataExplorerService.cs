@@ -11,4 +11,9 @@ public interface IIndexedDataExplorerService : IScopedService
         int maxItems,
         int pageNumber,
         int pageSize);
+
+    Task<PagedResultModel<LuceneSearchResult>> FindAllMoreLikeThisItemsAsync(string documentHashId,
+        int maxItems,
+        int pageNumber,
+        int pageSize);
 }

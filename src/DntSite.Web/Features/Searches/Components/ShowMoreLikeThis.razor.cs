@@ -1,4 +1,5 @@
 using DntSite.Web.Features.Searches.Models;
+using DntSite.Web.Features.Searches.RoutingConstants;
 using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Searches.Components;
@@ -14,6 +15,9 @@ public partial class ShowMoreLikeThis
     [Parameter] [EditorRequired] public required string DocumentTypeIdHash { set; get; }
 
     [Parameter] public int MaxItems { set; get; } = 11;
+
+    private string MoreLikeThisUrl => "/".CombineUrl(SearchesRoutingConstants.MoreLikeThisBase)
+        .CombineUrl(Uri.EscapeDataString(DocumentTypeIdHash ?? ""));
 
     protected override void OnInitialized()
     {
