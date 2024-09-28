@@ -1,7 +1,6 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.RoutingConstants;
 using DntSite.Web.Features.News.Entities;
-using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -14,18 +13,15 @@ public class DailyNewsScreenshotsService(
     IHtmlToPngGenerator htmlToPngGenerator,
     ILogger<DailyNewsScreenshotsService> logger) : IDailyNewsScreenshotsService
 {
+    private const int MaxFetchRetries = 3;
     private readonly DbSet<DailyNewsItem> _dailyNewsItem = uow.DbSet<DailyNewsItem>();
 
-    public Task<List<DownloadItem>> GetNeedScreenshotsItemsAsync(int count)
-        => _dailyNewsItem.AsNoTracking()
-            .Where(x => !x.IsDeleted && x.PageThumbnail == null)
+    public Task<List<DailyNewsItem>> GetNeedScreenshotsItemsAsync(int count)
+        => _dailyNewsItem
+            .Where(x => !x.IsDeleted && x.PageThumbnail == null &&
+                        (!x.FetchRetries.HasValue || x.FetchRetries.Value <= MaxFetchRetries))
             .OrderByDescending(x => x.Id)
             .Take(count)
-            .Select(x => new DownloadItem
-            {
-                Id = x.Id,
-                Url = x.Url
-            })
             .ToListAsync();
 
     public async Task DeleteImageAsync(DailyNewsItem? post)
@@ -57,14 +53,23 @@ public class DailyNewsScreenshotsService(
 
             foreach (var item in items)
             {
-                var (_, path) = GetImageInfo(item.Id);
+                var (name, path) = GetImageInfo(item.Id);
                 currentUrl = item.Url;
+
+                item.FetchRetries = item.FetchRetries.HasValue ? item.FetchRetries++ : 1;
 
                 await htmlToPngGenerator.GeneratePngFromHtmlAsync(new HtmlToPngGeneratorOptions
                 {
                     SourceHtmlFileOrUri = currentUrl,
                     OutputPngFile = path
                 });
+
+                if (!File.Exists(path))
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(value: 7));
+
+                    continue;
+                }
 
                 if (path.IsBlankImage())
                 {
@@ -73,6 +78,7 @@ public class DailyNewsScreenshotsService(
                 }
                 else
                 {
+                    item.PageThumbnail = name;
                     numberOfDownloadedFiles++;
                 }
 
@@ -83,6 +89,8 @@ public class DailyNewsScreenshotsService(
         {
             logger.LogError(ex.Demystify(), message: "DownloadScreenshotsAsync({URL}) Error", currentUrl);
         }
+
+        await uow.SaveChangesAsync();
 
         return numberOfDownloadedFiles;
     }
