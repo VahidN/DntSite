@@ -1,6 +1,5 @@
 ﻿using DNTPersianUtils.Core.Normalizer;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
-using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -478,6 +477,17 @@ public class UsersInfoService(
             from r in u.Roles
             where r.Name == CustomRoles.Admin
             select u).ToListAsync();
+
+    public async Task<List<User>> GetNotLoggedInUsersToDisableAsync(int month)
+    {
+        var limit = DateTime.UtcNow.AddMonths(-month);
+
+        return await _users.Where(user => user.IsActive &&
+                                          user.EmailIsValidated && user.UserStat.NumberOfPosts == 0 &&
+                                          (user.LastVisitDateTime == null || user.LastVisitDateTime < limit))
+            .OrderBy(user => user.Id)
+            .ToListAsync();
+    }
 
     private Task<List<User?>> GetActiveLinksAuthorUsersFromToFromAsync(int count, DateTime fromDate, DateTime toDate)
         => _users.Where(x => x.IsActive)

@@ -26,6 +26,18 @@ public class UserProfilesManagerService(
 {
     public string UsersCantRegisterErrorMessage => "سایت جاری در حال حاضر کاربر جدیدی را نمی‌پذیرد.";
 
+    public async Task DisableInactiveUsersAsync(int month)
+    {
+        var users = await usersInfoService.GetNotLoggedInUsersToDisableAsync(month);
+
+        foreach (var user in users)
+        {
+            user.IsActive = false;
+        }
+
+        await uow.SaveChangesAsync();
+    }
+
     public async Task ResetRegistrationCodeAsync(User user)
     {
         ArgumentNullException.ThrowIfNull(user);

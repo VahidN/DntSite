@@ -5,6 +5,8 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IUsersInfoService : IScopedService
 {
+    Task<List<User>> GetNotLoggedInUsersToDisableAsync(int month);
+
     Task<bool> IsWriterAsync(int userId);
 
     Task<bool> CheckEMailAsync(string eMail, int? userId);

@@ -23,6 +23,9 @@ public static class SchedulersConfig
             options.AddScheduledTask<SendActivationEmailsJob>(utcNow
                 => GetNowIranTime(utcNow) is { DayOfWeek: DayOfWeek.Friday, Hour: 7, Minute: 1, Second: 1 });
 
+            options.AddScheduledTask<DisableInactiveUsersJob>(utcNow
+                => GetNowIranTime(utcNow) is { Hour: 6, Minute: 1, Second: 1 });
+
             options.AddScheduledTask<NewPersianYearEmailsJob>(utcNow => GetNowIranTime(utcNow).IsStartOfNewYear());
 
             options.AddScheduledTask<ManageBacklogsJob>(utcNow =>

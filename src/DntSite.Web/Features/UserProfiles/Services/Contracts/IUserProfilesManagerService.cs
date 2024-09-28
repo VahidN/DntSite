@@ -7,6 +7,8 @@ public interface IUserProfilesManagerService : IScopedService
 {
     string UsersCantRegisterErrorMessage { get; }
 
+    Task DisableInactiveUsersAsync(int month);
+
     Task ResetRegistrationCodeAsync(User user);
 
     Task UpdateUserLastActivityDateAsync(int userId);

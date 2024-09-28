@@ -3,6 +3,9 @@
 [ComplexType]
 public class MinimumRequiredPosts
 {
+    [Display(Name = "حداقل تعداد ماه حضور تا پیش از غیرفعال شدن")]
+    public int MinMonthToStayActive { set; get; }
+
     [Display(Name = "حداکثر تعداد روز قابل ویرایش بودن یک مطلب")]
     public int MaxDaysToCloseATopic { set; get; }
 

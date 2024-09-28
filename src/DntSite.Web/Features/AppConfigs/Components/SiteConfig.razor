@@ -101,6 +101,11 @@
             <hr/>
 
             <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiCalendar4"
+                            dir="ltr"
+                            @bind-Value="Model.MinimumRequiredPosts.MinMonthToStayActive"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
                             FieldIcon="@DntBootstrapIcons.BiCalendar"
                             dir="ltr"
                             @bind-Value="Model.MinimumRequiredPosts.MaxDaysToCloseATopic"/>
