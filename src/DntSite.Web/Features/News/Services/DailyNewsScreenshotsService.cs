@@ -56,7 +56,7 @@ public class DailyNewsScreenshotsService(
                 var (name, path) = GetImageInfo(item.Id);
                 currentUrl = item.Url;
 
-                item.FetchRetries = item.FetchRetries.HasValue ? item.FetchRetries++ : 1;
+                item.FetchRetries = item.FetchRetries.HasValue ? item.FetchRetries.Value + 1 : 1;
 
                 await htmlToPngGenerator.GeneratePngFromHtmlAsync(new HtmlToPngGeneratorOptions
                 {
@@ -74,7 +74,9 @@ public class DailyNewsScreenshotsService(
                 if (path.IsBlankImage())
                 {
                     File.Delete(path);
-                    logger.LogWarning(message: "DownloadScreenshotsAsync({URL}) failed.", currentUrl);
+
+                    logger.LogWarning(message: "DownloadScreenshotsAsync({URL}) failed. The received image is blank!",
+                        currentUrl);
                 }
                 else
                 {
