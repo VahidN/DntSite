@@ -18,7 +18,7 @@ public static class CourseMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body.GetBriefDescription(charLength: 200),
+            Content = item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -44,7 +44,7 @@ public static class CourseMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body.GetBriefDescription(charLength: 200),
+            Content = item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
