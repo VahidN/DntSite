@@ -3,6 +3,9 @@
         @if (Header is not null)
         {
             <div class="card-header entry-title shadow-sm d-flex flex-row flex-wrap align-items-center" itemprop="headline_name">
+                <button data-dnt-collapse="true" class="btn btn-sm me-1">
+                    <i class="@DntBootstrapIcons.BiChevronDown"></i>
+                </button>
                 @Header
             </div>
         }
