@@ -469,7 +469,7 @@ public class DailyNewsItemsService(
         var urlHash = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(url.Trim()));
         var data = await FindDailyNewsItemAsync(urlHash);
 
-        if (id.HasValue && data is not null)
+        if (id is > 0 && data is not null)
         {
             // Edit mode
             return data.Id == id
