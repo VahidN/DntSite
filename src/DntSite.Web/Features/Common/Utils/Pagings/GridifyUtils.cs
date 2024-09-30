@@ -48,6 +48,15 @@ public static class GridifyUtils
             OrderBy = GetSortFilter(state, defaultSortField)
         };
 
+        if (!gridifyQuery.IsValid(mappings))
+        {
+            return new PagedResultModel<TResult>
+            {
+                TotalItems = 0,
+                Data = []
+            };
+        }
+
         var filteredQuery = query.AsNoTracking().ApplyFiltering(gridifyQuery, mappings);
         var totalItems = await filteredQuery.CountAsync();
         filteredQuery = filteredQuery.ApplyOrdering(gridifyQuery, mappings).ApplyPaging(gridifyQuery);
@@ -85,6 +94,15 @@ public static class GridifyUtils
             PageSize = state.PageSize,
             OrderBy = GetSortFilter(state, defaultSortField)
         };
+
+        if (!gridifyQuery.IsValid(mappings))
+        {
+            return new PagedResultModel<TEntity>
+            {
+                TotalItems = 0,
+                Data = []
+            };
+        }
 
         var filteredQuery = query.AsNoTracking().ApplyFiltering(gridifyQuery, mappings);
         var totalItems = await filteredQuery.CountAsync();
