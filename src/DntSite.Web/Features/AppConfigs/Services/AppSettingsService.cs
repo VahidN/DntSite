@@ -101,7 +101,7 @@ public class AppSettingsService(
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        var cfg = await cachedAppSettingsProvider.GetAppSettingsAsync();
+        var cfg = await _blogConfigs.OrderBy(x => x.Id).FirstOrDefaultAsync();
 
         if (cfg is null || cfg.Id == 0)
         {

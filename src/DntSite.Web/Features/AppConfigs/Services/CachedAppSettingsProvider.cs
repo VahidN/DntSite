@@ -20,11 +20,12 @@ public class CachedAppSettingsProvider(IServiceProvider serviceProvider, ILocker
 
         _appSetting = await serviceProvider.RunScopedServiceAsync<IUnitOfWork, AppSetting>(async uow =>
         {
-            return await uow.DbSet<AppSetting>().OrderBy(x => x.Id).FirstOrDefaultAsync() ?? new AppSetting
-            {
-                BlogName = "DNT",
-                SiteRootUri = "/"
-            };
+            return await uow.DbSet<AppSetting>().AsNoTracking().OrderBy(x => x.Id).FirstOrDefaultAsync() ??
+                   new AppSetting
+                   {
+                       BlogName = "DNT",
+                       SiteRootUri = "/"
+                   };
         });
 
         return _appSetting;
