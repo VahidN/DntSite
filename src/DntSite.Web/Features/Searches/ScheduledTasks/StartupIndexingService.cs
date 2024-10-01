@@ -1,16 +1,15 @@
-using AsyncKeyedLock;
 using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Searches.ScheduledTasks;
 
-public class StartupIndexingService(IServiceScopeFactory serviceScopeFactory, ILogger<StartupIndexingService> logger)
-    : BackgroundService
+public class StartupIndexingService(
+    IServiceScopeFactory serviceScopeFactory,
+    ILogger<StartupIndexingService> logger,
+    ILockerService lockerService) : BackgroundService
 {
-    private static readonly AsyncNonKeyedLocker Lock = new(maxCount: 1);
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var lockAsync = await Lock.LockAsync(stoppingToken);
+        using var lockAsync = await lockerService.LockAsync<StartupIndexingService>(stoppingToken);
 
         try
         {
@@ -33,11 +32,5 @@ public class StartupIndexingService(IServiceScopeFactory serviceScopeFactory, IL
             logger.LogInformation(message: "{DateTime} Finished StartupIndexingService.",
                 DateTime.UtcNow.ToString(format: "HH:mm:ss.fff", CultureInfo.InvariantCulture));
         }
-    }
-
-    public override void Dispose()
-    {
-        base.Dispose();
-        Lock.Dispose();
     }
 }

@@ -1,5 +1,4 @@
-﻿using AsyncKeyedLock;
-using DntSite.Web.Features.AppConfigs.Services.Contracts;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -15,11 +14,9 @@ public class SearchItemsService(
     IAppAntiXssService antiXssService,
     ICurrentUserService currentUserService,
     IHttpContextAccessor httpContextAccessor,
-    IUAParserService uaParserService) : ISearchItemsService
+    IUAParserService uaParserService,
+    ILockerService lockerService) : ISearchItemsService
 {
-    private static readonly AsyncNonKeyedLocker Locker = new(maxCount: 1);
-    private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(value: 3);
-
     private readonly DbSet<SearchItem> _searchItems = uow.DbSet<SearchItem>();
 
     public async Task<SearchItem?> AddSearchItemAsync(string? text)
@@ -29,7 +26,7 @@ public class SearchItemsService(
             return null;
         }
 
-        using var @lock = await Locker.LockAsync(LockTimeout);
+        using var @lock = await lockerService.LockAsync<SearchItemsService>();
 
         var sanitizedHtml = antiXssService.GetSanitizedHtml(text);
 

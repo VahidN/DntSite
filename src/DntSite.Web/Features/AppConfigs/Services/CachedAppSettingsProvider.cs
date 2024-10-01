@@ -1,15 +1,12 @@
-using AsyncKeyedLock;
 using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 
 namespace DntSite.Web.Features.AppConfigs.Services;
 
-public class CachedAppSettingsProvider(IServiceProvider serviceProvider) : ICachedAppSettingsProvider
+public class CachedAppSettingsProvider(IServiceProvider serviceProvider, ILockerService lockerService)
+    : ICachedAppSettingsProvider
 {
-    private static readonly AsyncNonKeyedLocker Locker = new(maxCount: 1);
-    private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(value: 3);
-
     private AppSetting? _appSetting;
 
     public async Task<AppSetting> GetAppSettingsAsync()
@@ -19,7 +16,7 @@ public class CachedAppSettingsProvider(IServiceProvider serviceProvider) : ICach
             return _appSetting;
         }
 
-        using var @lock = await Locker.LockAsync(LockTimeout);
+        using var @lock = await lockerService.LockAsync<CachedAppSettingsProvider>();
 
         _appSetting = await serviceProvider.RunScopedServiceAsync<IUnitOfWork, AppSetting>(async uow =>
         {

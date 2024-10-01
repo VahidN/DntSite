@@ -1,4 +1,3 @@
-using AsyncKeyedLock;
 using DntSite.Web.Features.Advertisements.Services.Contracts;
 using DntSite.Web.Features.Backlogs.Services.Contracts;
 using DntSite.Web.Features.Courses.Services.Contracts;
@@ -34,13 +33,12 @@ public class FullTextSearchWriterService(
     IQuestionsCommentsService questionsCommentsService,
     IQuestionsService questionsService,
     IVoteCommentsService voteCommentsService,
-    IVotesService votesService) : IFullTextSearchWriterService
+    IVotesService votesService,
+    ILockerService lockerService) : IFullTextSearchWriterService
 {
-    private static readonly AsyncNonKeyedLocker Lock = new(maxCount: 1);
-
     public async Task IndexDatabaseAsync(bool forceStart, CancellationToken stoppingToken)
     {
-        using var @lock = await Lock.LockAsync(stoppingToken);
+        using var @lock = await lockerService.LockAsync<FullTextSearchWriterService>(stoppingToken);
 
         try
         {
