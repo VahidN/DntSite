@@ -8,7 +8,7 @@ namespace DntSite.Web.Features.Seo.Controllers;
 [Microsoft.AspNetCore.Mvc.Route(template: "[controller]")]
 public class OpenSearchController(
     IHttpRequestInfoService httpRequestInfoService,
-    IAppSettingsService appSettingsService) : ControllerBase
+    ICachedAppSettingsProvider appSettingsService) : ControllerBase
 {
     [HttpGet(template: "[action]")]
     public async Task<IActionResult> RenderOpenSearch()

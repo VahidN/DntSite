@@ -30,6 +30,7 @@ public class DailyNewsItemsService(
     IUserRatingsService userRatingsService,
     IPasswordHasherService passwordHasherService,
     IAppSettingsService appSettingsService,
+    ICachedAppSettingsProvider cachedAppSettingsProvider,
     IFullTextSearchService fullTextSearchService) : IDailyNewsItemsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<DailyNewsItem, object?>>> CustomOrders = new()
@@ -453,7 +454,7 @@ public class DailyNewsItemsService(
             return (cantAccessError, OperationStat.Failed);
         }
 
-        var siteUrl = (await appSettingsService.GetAppSettingsAsync())?.SiteRootUri;
+        var siteUrl = (await cachedAppSettingsProvider.GetAppSettingsAsync())?.SiteRootUri;
 
         if (!string.IsNullOrWhiteSpace(siteUrl) && !isAdmin && url.IsLocalReferrer(siteUrl))
         {

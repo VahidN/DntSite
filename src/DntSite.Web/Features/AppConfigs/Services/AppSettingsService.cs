@@ -7,8 +7,11 @@ using DntSite.Web.Features.Persistence.UnitOfWork;
 
 namespace DntSite.Web.Features.AppConfigs.Services;
 
-public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryService emailsFactoryService)
-    : IAppSettingsService
+public class AppSettingsService(
+    IUnitOfWork uow,
+    IMapper mapper,
+    IEmailsFactoryService emailsFactoryService,
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : IAppSettingsService
 {
     private readonly DbSet<AppSetting> _blogConfigs = uow.DbSet<AppSetting>();
 
@@ -16,12 +19,7 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
     {
         ArgumentNullException.ThrowIfNull(url);
 
-        var config = await GetAppSettingsAsync();
-
-        if (config is null)
-        {
-            return false;
-        }
+        var config = await cachedAppSettingsProvider.GetAppSettingsAsync();
 
         if (config.BannedReferrers?.Count == 0)
         {
@@ -35,12 +33,7 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
 
     public async Task<bool> IsBannedDomainAndSubDomainAsync(string url)
     {
-        var config = await GetAppSettingsAsync();
-
-        if (config is null)
-        {
-            return false;
-        }
+        var config = await cachedAppSettingsProvider.GetAppSettingsAsync();
 
         if (!url.IsValidUrl())
         {
@@ -72,12 +65,7 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
 
     public async Task<bool> IsBannedSiteAsync(string url)
     {
-        var config = await GetAppSettingsAsync();
-
-        if (config is null)
-        {
-            return false;
-        }
+        var config = await cachedAppSettingsProvider.GetAppSettingsAsync();
 
         if (!url.IsValidUrl())
         {
@@ -107,17 +95,15 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
         return false;
     }
 
-    public Task<AppSetting?> GetAppSettingsAsync() => _blogConfigs.OrderBy(x => x.Id).FirstOrDefaultAsync();
-
     public AppSetting AddAppSetting(AppSetting data) => _blogConfigs.Add(data).Entity;
 
     public async Task AddOrUpdateAppSettingsAsync(AppSettingModel model)
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        var cfg = await GetAppSettingsAsync();
+        var cfg = await cachedAppSettingsProvider.GetAppSettingsAsync();
 
-        if (cfg is null)
+        if (cfg is null || cfg.Id == 0)
         {
             var newCfg = mapper.Map<AppSettingModel, AppSetting>(model);
             AddAppSetting(newCfg);
@@ -129,16 +115,14 @@ public class AppSettingsService(IUnitOfWork uow, IMapper mapper, IEmailsFactoryS
 
         await uow.SaveChangesAsync();
 
+        cachedAppSettingsProvider.InvalidateAppSettings();
+
         await emailsFactoryService.SendTextToAllAdminsAsync(text: "تنظیمات سایت با موفقیت ویرایش گردید");
     }
 
     public async Task<AppSettingModel> GetAppSettingModelAsync()
     {
-        var cfg = await GetAppSettingsAsync() ?? new AppSetting
-        {
-            BlogName = "DNT",
-            SiteRootUri = ""
-        };
+        var cfg = await cachedAppSettingsProvider.GetAppSettingsAsync();
 
         return mapper.Map<AppSetting, AppSettingModel>(cfg);
     }

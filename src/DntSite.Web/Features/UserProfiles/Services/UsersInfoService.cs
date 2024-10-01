@@ -11,7 +11,7 @@ namespace DntSite.Web.Features.UserProfiles.Services;
 
 public class UsersInfoService(
     IUnitOfWork uow,
-    IAppSettingsService configsService,
+    ICachedAppSettingsProvider configsService,
     IPasswordHasherService passwordHasherService) : IUsersInfoService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<User, object?>>> CustomOrders = new()

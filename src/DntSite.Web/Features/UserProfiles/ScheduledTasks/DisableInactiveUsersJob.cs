@@ -5,7 +5,7 @@ namespace DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 public class DisableInactiveUsersJob(
     IUserProfilesManagerService userProfilesManagerService,
-    IAppSettingsService appSettingsService) : IScheduledTask
+    ICachedAppSettingsProvider appSettingsService) : IScheduledTask
 {
     private const int DefaultMinMonthToStayActive = 12;
 

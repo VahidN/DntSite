@@ -7,7 +7,7 @@ namespace DntSite.Web.Features.UserProfiles.Services;
 
 public class UsedPasswordsService(
     IUnitOfWork uow,
-    IAppSettingsService appSettingsService,
+    ICachedAppSettingsProvider appSettingsService,
     IPasswordHasherService passwordHasherService) : IUsedPasswordsService
 {
     private const int DefaultChangePasswordReminderDays = 90;

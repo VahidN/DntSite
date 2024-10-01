@@ -12,7 +12,7 @@ public class CurrentUserService(
     IHttpContextAccessor httpContextAccessor,
     IUserRolesService rolesService,
     IUsersInfoService usersService,
-    IAppSettingsService appSettingsService) : ICurrentUserService
+    ICachedAppSettingsProvider appSettingsService) : ICurrentUserService
 {
     public int? GetCurrentUserId() => httpContextAccessor.HttpContext?.User.GetUserId();
 

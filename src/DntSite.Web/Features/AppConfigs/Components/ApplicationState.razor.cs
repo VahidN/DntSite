@@ -20,7 +20,7 @@ public partial class ApplicationState
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [InjectComponentScoped] internal IAppSettingsService AppSettingsService { set; get; } = null!;
+    [Inject] internal ICachedAppSettingsProvider AppSettingsService { set; get; } = null!;
 
     [InjectComponentScoped] internal ICurrentUserService CurrentUserService { set; get; } = null!;
 

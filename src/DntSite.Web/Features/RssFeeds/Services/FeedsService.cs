@@ -27,7 +27,7 @@ using DntSite.Web.Features.Surveys.Services.Contracts;
 namespace DntSite.Web.Features.RssFeeds.Services;
 
 public class FeedsService(
-    IAppSettingsService appSettingsService,
+    ICachedAppSettingsProvider appSettingsService,
     IProjectsService projectsService,
     IProjectIssuesService projectIssuesService,
     IProjectReleasesService projectReleases,
