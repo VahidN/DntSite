@@ -1,4 +1,6 @@
-﻿namespace DntSite.Web.Features.Persistence.UnitOfWork;
+﻿using Microsoft.EntityFrameworkCore.Query;
+
+namespace DntSite.Web.Features.Persistence.UnitOfWork;
 
 public interface IUnitOfWork : IDisposable
 {
@@ -44,6 +46,10 @@ public interface IUnitOfWork : IDisposable
     void ExecuteSqlInterpolatedCommand(FormattableString query);
 
     void ExecuteSqlRawCommand(string query, params object[] parameters);
+
+    IQueryable<TResult> SqlQuery<TResult>([NotParameterized] FormattableString query);
+
+    IQueryable<TResult> SqlQueryRaw<TResult>([NotParameterized] string sql, params object[] parameters);
 
     int SaveChanges(bool acceptAllChangesOnSuccess);
 

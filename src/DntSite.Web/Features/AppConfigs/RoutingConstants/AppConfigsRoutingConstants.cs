@@ -2,6 +2,7 @@ namespace DntSite.Web.Features.AppConfigs.RoutingConstants;
 
 public static class AppConfigsRoutingConstants
 {
+    public const string DatabaseInfo = "/database-info";
     public const string ServerInfo = "/server-info";
     public const string SiteConfig = "/site-config";
     public const string SystemLogs = "/system-logs";

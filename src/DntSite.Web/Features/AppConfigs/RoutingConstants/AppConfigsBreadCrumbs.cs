@@ -19,6 +19,14 @@ public static class AppConfigsBreadCrumbs
         AllowAnonymous = false
     };
 
+    public static readonly BreadCrumb DatabaseInfoBreadCrumb = new()
+    {
+        Title = "مشخصات بانک اطلاعاتی",
+        Url = AppConfigsRoutingConstants.DatabaseInfo,
+        GlyphIcon = DntBootstrapIcons.BiDatabase,
+        AllowAnonymous = false
+    };
+
     public static readonly BreadCrumb SiteConfigBreadCrumb = new()
     {
         Title = "تنظیمات برنامه",

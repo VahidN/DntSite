@@ -1,0 +1,60 @@
+﻿@attribute [Route(AppConfigsRoutingConstants.DatabaseInfo)]
+
+<DntSitePageTitle PageTitle="مشخصات بانک اطلاعاتی برنامه"/>
+
+<DntLoading IsLoading="@(_databaseInfo is null)">
+    <DntCardFrame MarginTop="1">
+        <FrameHeader>
+            مشخصات بانک اطلاعاتی برنامه
+        </FrameHeader>
+        <FrameBody>
+            <div>
+                <label>حجم کلی: </label>
+                <span dir="ltr">@_databaseInfo!.DatabaseSizeInBytes.ToFormattedFileSize()</span>
+            </div>
+            <div>
+                <label>فضای خالی در بانک اطلاعاتی: </label>
+                <span dir="ltr">@_databaseInfo!.DatabaseFreeSpaceSizeInBytes.ToFormattedFileSize()</span>
+            </div>
+        </FrameBody>
+    </DntCardFrame>
+
+    <DntCardFrame MarginTop="3">
+        <FrameHeader>
+            مشخصات درایور بانک اطلاعاتی برنامه
+        </FrameHeader>
+        <FrameBody>
+            <div>
+                <label>شماره نگارش: </label>
+                <span dir="ltr">@_databaseInfo!.DatabaseVersion</span>
+            </div>
+            <div>
+                <label>گزینه‌های کامپایل: </label>
+                @foreach (var item in _databaseInfo.CompileOptions)
+                {
+                    <div dir="ltr">
+                        <span dir="ltr">@item</span>
+                    </div>
+                }
+            </div>
+        </FrameBody>
+    </DntCardFrame>
+
+    <DntCardFrame MarginTop="3">
+        <FrameHeader>
+            گزینه‌های فعال در رشته‌ی اتصالی جاری
+        </FrameHeader>
+        <FrameBody>
+            <div>
+                <label>گزینه‌های فعال: </label>
+                @foreach (var item in _databaseInfo!.Pragmas)
+                {
+                    <div dir="ltr">
+                        <label>@item.Pragma: </label>
+                        <span dir="ltr">@item.Value</span>
+                    </div>
+                }
+            </div>
+        </FrameBody>
+    </DntCardFrame>
+</DntLoading>

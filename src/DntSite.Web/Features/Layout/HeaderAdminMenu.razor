@@ -1,4 +1,4 @@
-@using DntSite.Web.Features.UserProfiles.Models
+﻿@using DntSite.Web.Features.UserProfiles.Models
 <DntSecurityTrim AllowAnonymous="false" AllowedRoles="@CustomRoles.Admin">
     <DntNavLinkMenu>
         <MainTitle>
@@ -10,6 +10,9 @@
             </DntNavLinkMenuItem>
             <DntNavLinkMenuItem Url="@AppConfigsRoutingConstants.ServerInfo" CssIcon="@DntBootstrapIcons.BiServer">
                 مشخصات سرور
+            </DntNavLinkMenuItem>
+            <DntNavLinkMenuItem Url="@AppConfigsRoutingConstants.DatabaseInfo" CssIcon="@DntBootstrapIcons.BiDatabase">
+                مشخصات بانک اطلاعاتی
             </DntNavLinkMenuItem>
             <DntNavLinkMenuItem Url="@AppConfigsRoutingConstants.SiteConfig" CssIcon="@DntBootstrapIcons.BiGear">
                 تنظیمات برنامه

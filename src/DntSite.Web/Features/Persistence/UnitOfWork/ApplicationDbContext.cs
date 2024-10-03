@@ -2,6 +2,7 @@ using DntSite.Web.Features.AppConfigs.EfConfig;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.EfConfig;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.Utils;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace DntSite.Web.Features.Persistence.UnitOfWork;
 
@@ -19,6 +20,12 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
 
     public void ExecuteSqlRawCommand(string query, params object[] parameters)
         => Database.ExecuteSqlRaw(query, parameters);
+
+    public IQueryable<TResult> SqlQuery<TResult>([NotParameterized] FormattableString query)
+        => Database.SqlQuery<TResult>(query);
+
+    public IQueryable<TResult> SqlQueryRaw<TResult>([NotParameterized] string sql, params object[] parameters)
+        => Database.SqlQueryRaw<TResult>(sql, parameters);
 
     public T? GetShadowPropertyValue<T>(object entity, string propertyName)
         where T : IConvertible
