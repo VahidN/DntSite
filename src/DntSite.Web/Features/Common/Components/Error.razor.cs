@@ -1,5 +1,4 @@
 using DntSite.Web.Features.Common.RoutingConstants;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 
 namespace DntSite.Web.Features.Common.Components;
 
@@ -11,15 +10,15 @@ public partial class Error
 
     [Inject] internal ILogger<Error> Logger { get; set; } = null!;
 
+    [Inject] internal IUAParserService UaParserService { get; set; } = null!;
+
     [Inject] public NavigationManager NavigationManager { set; get; } = null!;
 
     private bool IsThisPageCalledDirectly => string.Equals(HttpContext?.GetCurrentUrl(), b: "/error/404",
         StringComparison.OrdinalIgnoreCase);
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-
         var httpRequest = HttpContext?.Request;
 
         if (httpRequest is null)
@@ -34,7 +33,7 @@ public partial class Error
             return;
         }
 
-        if (!IsThisPageCalledDirectly)
+        if (!IsThisPageCalledDirectly && !await UaParserService.IsSpiderClientAsync(HttpContext))
         {
             Logger.LogError(message: "{Request}", httpRequest.LogRequest(ResponseCode));
         }
