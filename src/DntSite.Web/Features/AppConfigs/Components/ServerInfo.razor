@@ -126,6 +126,15 @@
                         <span dir="ltr">@item.Value</span>
                     </div>
                 }
+                @if (OperatingSystem.IsLinux() && File.Exists(path: "/etc/os-release"))
+                {
+                    foreach (var line in File.ReadLines(path: "/etc/os-release"))
+                    {
+                        <div dir="ltr">
+                            <span dir="ltr">@line</span>
+                        </div>
+                    }
+                }
             </div>
         </FrameBody>
     </DntCardFrame>
