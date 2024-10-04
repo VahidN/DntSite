@@ -11,4 +11,6 @@ public class DatabaseInfoModel
     public required string DatabaseVersion { set; get; }
 
     public IList<SQLitePragma> Pragmas { set; get; } = new List<SQLitePragma>();
+
+    public IList<SQLiteTable> Tables { set; get; } = new List<SQLiteTable>();
 }

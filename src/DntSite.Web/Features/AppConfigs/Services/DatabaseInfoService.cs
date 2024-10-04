@@ -1,3 +1,4 @@
+using System.Text;
 using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -19,7 +20,8 @@ public class DatabaseInfoService(IUnitOfWork uow) : IDatabaseInfoService
             DatabaseSizeInBytes = databaseSizeInBytes,
             CompileOptions = await GetCompileOptionsAsync(),
             DatabaseVersion = await GetDatabaseVersionAsync(),
-            Pragmas = await GetPragmasAsync()
+            Pragmas = await GetPragmasAsync(),
+            Tables = await GetSQLiteTablesAsync()
         };
     }
 
@@ -93,4 +95,27 @@ public class DatabaseInfoService(IUnitOfWork uow) : IDatabaseInfoService
                                pragma_page_count(), pragma_page_size()
                                """)
             .FirstAsync();
+
+    private async Task<List<SQLiteTable>> GetSQLiteTablesAsync()
+    {
+        var tableNames = await uow.SqlQuery<string>($"SELECT name FROM sqlite_master WHERE type='table'").ToListAsync();
+        var sb = new StringBuilder();
+        sb.AppendLine(value: "with tables(name, RowsCount) as (");
+
+        const string unionAll = " UNION all ";
+
+        foreach (var tableName in tableNames)
+        {
+            sb.AppendFormat(CultureInfo.InvariantCulture,
+                format: " SELECT '{0}' AS name, COUNT(*) AS RowsCount FROM '{0}' ", tableName);
+
+            sb.Append(unionAll);
+        }
+
+        var sql = sb.ToString();
+        sql = sql[..sql.LastIndexOf(unionAll, StringComparison.OrdinalIgnoreCase)];
+        sql += ") select name, RowsCount from tables order by RowsCount desc";
+
+        return await uow.SqlQueryRaw<SQLiteTable>(sql).ToListAsync();
+    }
 }
