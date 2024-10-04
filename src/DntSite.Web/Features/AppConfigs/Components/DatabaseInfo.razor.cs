@@ -10,6 +10,8 @@ public partial class DatabaseInfo
 {
     private DatabaseInfoModel? _databaseInfo;
 
+    private bool _needsShrinkDatabase;
+
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [InjectComponentScoped] internal IDatabaseInfoService DatabaseInfoService { set; get; } = null!;
@@ -18,6 +20,13 @@ public partial class DatabaseInfo
     {
         AddBreadCrumbs();
         _databaseInfo = await DatabaseInfoService.GetDatabaseInfoAsync();
+        _needsShrinkDatabase = await DatabaseInfoService.NeedsShrinkDatabaseAsync();
+    }
+
+    private void OnShrinkDatabase()
+    {
+        DatabaseInfoService.ShrinkDatabase();
+        ApplicationState.NavigateTo(AppConfigsRoutingConstants.DatabaseInfo);
     }
 
     private void AddBreadCrumbs()

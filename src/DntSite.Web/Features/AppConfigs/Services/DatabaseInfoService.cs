@@ -6,6 +6,8 @@ namespace DntSite.Web.Features.AppConfigs.Services;
 
 public class DatabaseInfoService(IUnitOfWork uow) : IDatabaseInfoService
 {
+    private const float MaxAllowedFreePageToPagesCount = 0.5f;
+
     public async Task<DatabaseInfoModel> GetDatabaseInfoAsync()
     {
         var databaseSizeInBytes = await GetDatabaseSizeAsync();
@@ -20,6 +22,19 @@ public class DatabaseInfoService(IUnitOfWork uow) : IDatabaseInfoService
             Pragmas = await GetPragmasAsync()
         };
     }
+
+    public async Task<bool> NeedsShrinkDatabaseAsync()
+    {
+        var freePercent = await uow.SqlQuery<float>($"""
+                                                     SELECT ((freelist_count * 1.0)/page_count) as value FROM
+                                                     pragma_page_count(), pragma_freelist_count()
+                                                     """)
+            .FirstAsync();
+
+        return freePercent > MaxAllowedFreePageToPagesCount;
+    }
+
+    public void ShrinkDatabase() => uow.ExecuteSqlRawCommand(query: "VACUUM;");
 
     private Task<string> GetDatabaseVersionAsync()
         => uow.SqlQuery<string>($"select sqlite_version() as value").FirstAsync();

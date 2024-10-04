@@ -16,6 +16,20 @@
                 <label>فضای خالی در بانک اطلاعاتی: </label>
                 <span dir="ltr">@_databaseInfo!.DatabaseFreeSpaceSizeInBytes.ToFormattedFileSize()</span>
             </div>
+            @if (_needsShrinkDatabase)
+            {
+                <EditForm Model="this" method="post"
+                          OnValidSubmit="OnShrinkDatabase"
+                          FormName="@nameof(DatabaseInfo)"
+                          Enhance>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <button type="submit"
+                                class="btn btn-sm btn-primary me-2">
+                            فشرده سازی بانک اطلاعاتی
+                        </button>
+                    </div>
+                </EditForm>
+            }
         </FrameBody>
     </DntCardFrame>
 
