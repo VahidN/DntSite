@@ -31,6 +31,7 @@ public class DatabaseInfoService(IUnitOfWork uow) : IDatabaseInfoService
                                                      SELECT ((freelist_count * 1.0)/page_count) as value FROM
                                                      pragma_page_count(), pragma_freelist_count()
                                                      """)
+            .OrderBy(value => value)
             .FirstAsync();
 
         return freePercent > MaxAllowedFreePageToPagesCount;
@@ -39,7 +40,7 @@ public class DatabaseInfoService(IUnitOfWork uow) : IDatabaseInfoService
     public void ShrinkDatabase() => uow.ExecuteSqlRawCommand(query: "VACUUM;");
 
     private Task<string> GetDatabaseVersionAsync()
-        => uow.SqlQuery<string>($"select sqlite_version() as value").FirstAsync();
+        => uow.SqlQuery<string>($"select sqlite_version() as value").OrderBy(value => value).FirstAsync();
 
     private Task<List<string>> GetCompileOptionsAsync()
         => uow.SqlQuery<string>($"PRAGMA compile_options;").ToListAsync();
@@ -87,6 +88,7 @@ public class DatabaseInfoService(IUnitOfWork uow) : IDatabaseInfoService
                                SELECT (page_count - freelist_count) * page_size as value FROM
                                pragma_page_count(), pragma_freelist_count(), pragma_page_size()
                                """)
+            .OrderBy(value => value)
             .FirstAsync();
 
     private Task<long> GetDatabaseSizeAsync()
@@ -94,6 +96,7 @@ public class DatabaseInfoService(IUnitOfWork uow) : IDatabaseInfoService
                                SELECT page_count * page_size as value FROM
                                pragma_page_count(), pragma_page_size()
                                """)
+            .OrderBy(value => value)
             .FirstAsync();
 
     private async Task<List<SQLiteTable>> GetSQLiteTablesAsync()
