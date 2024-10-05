@@ -5,13 +5,22 @@ namespace DntSite.Web.Features.Stats.Services.Contracts;
 
 public interface ISiteReferrersService : IScopedService
 {
-    Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl);
+    Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl, bool isLocalReferrer);
 
     Task<SiteReferrer?> FindSiteReferrerAsync(string referrerHash);
 
     ValueTask<SiteReferrer?> FindSiteReferrerAsync(int id);
 
-    Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(int pageNumber, int recordsPerPage);
+    Task<SiteReferrer?> FindLocalReferrerAsync(string? destinationUrl);
+
+    Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(int pageNumber,
+        int recordsPerPage,
+        bool isLocalReferrer);
+
+    Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string destinationUrl,
+        int pageNumber,
+        int recordsPerPage,
+        bool isLocalReferrer);
 
     Task RemoveSiteReferrerAsync(int id);
 }

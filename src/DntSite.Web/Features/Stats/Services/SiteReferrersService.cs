@@ -12,14 +12,13 @@ public class SiteReferrersService(
     IUnitOfWork uow,
     BaseHttpClient baseHttpClient,
     IAppSettingsService appSettingsService,
-    IHtmlHelperService htmlHelperService,
     ILogger<SiteReferrersService> logger,
     IPasswordHasherService hasherService,
     ISitePageTitlesCacheService sitePageTitlesCacheService) : ISiteReferrersService
 {
     private readonly DbSet<SiteReferrer> _referrers = uow.DbSet<SiteReferrer>();
 
-    public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl)
+    public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl, bool isLocalReferrer)
     {
         try
         {
@@ -39,7 +38,8 @@ public class SiteReferrersService(
             var destinationTitle =
                 await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(destinationUrl, fetchUrl: true);
 
-            var referrerTitle = GetReferrerTitle(referrerUrl, referrerUrlHtmlContent);
+            var referrerTitle =
+                await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(referrerUrl, fetchUrl: true);
 
             if (siteReferrer is null)
             {
@@ -51,13 +51,22 @@ public class SiteReferrersService(
                     DestinationTitle = destinationTitle,
                     VisitHash = referrerHash,
                     VisitsCount = 1,
-                    LastVisitTime = DateTime.UtcNow
+                    LastVisitTime = DateTime.UtcNow,
+                    IsLocalReferrer = isLocalReferrer
                 });
             }
             else
             {
-                siteReferrer.ReferrerTitle = referrerTitle;
-                siteReferrer.DestinationTitle = destinationTitle;
+                if (!referrerTitle.IsValidUrl())
+                {
+                    siteReferrer.ReferrerTitle = referrerTitle;
+                }
+
+                if (!destinationTitle.IsValidUrl())
+                {
+                    siteReferrer.DestinationTitle = destinationTitle;
+                }
+
                 siteReferrer.LastVisitTime = DateTime.UtcNow;
                 siteReferrer.VisitsCount++;
             }
@@ -75,17 +84,39 @@ public class SiteReferrersService(
         }
     }
 
-    public Task<SiteReferrer?> FindSiteReferrerAsync(string referrerHash)
-        => _referrers.OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.VisitHash == referrerHash);
+    public Task<SiteReferrer?> FindLocalReferrerAsync(string? destinationUrl)
+        => string.IsNullOrWhiteSpace(destinationUrl)
+            ? Task.FromResult<SiteReferrer?>(result: null)
+            : _referrers.AsNoTracking()
+                .OrderBy(x => x.Id)
+                .FirstOrDefaultAsync(x => x.DestinationUrl == destinationUrl && !x.IsDeleted);
 
     public ValueTask<SiteReferrer?> FindSiteReferrerAsync(int id) => _referrers.FindAsync(id);
 
-    public Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(int pageNumber, int recordsPerPage)
+    public Task<SiteReferrer?> FindSiteReferrerAsync(string referrerHash)
+        => _referrers.OrderBy(x => x.Id).FirstOrDefaultAsync(x => x.VisitHash == referrerHash);
+
+    public Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(int pageNumber,
+        int recordsPerPage,
+        bool isLocalReferrer)
     {
         var query = _referrers.AsNoTracking()
-            .Where(x => !x.IsDeleted)
+            .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer)
             .OrderByDescending(x => x.LastVisitTime)
             .ThenByDescending(x => x.VisitsCount);
+
+        return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
+    }
+
+    public Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string destinationUrl,
+        int pageNumber,
+        int recordsPerPage,
+        bool isLocalReferrer)
+    {
+        var query = _referrers.AsNoTracking()
+            .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer && x.DestinationUrl == destinationUrl)
+            .OrderByDescending(x => x.VisitsCount)
+            .ThenByDescending(x => x.LastVisitTime);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
     }
@@ -125,14 +156,6 @@ public class SiteReferrersService(
         }
 
         return string.Empty;
-    }
-
-    private string GetReferrerTitle(string referrerUrl, string? referrerUrlHtmlContent)
-    {
-        var title = htmlHelperService.GetHtmlPageTitle(referrerUrlHtmlContent ?? "");
-        sitePageTitlesCacheService.AddSitePageTitle(referrerUrl, title);
-
-        return string.IsNullOrWhiteSpace(title) ? referrerUrl : title;
     }
 
     private async Task<bool> IsValidReferrerAsync(string referrerUrl, string? referrerUrlHtmlContent)

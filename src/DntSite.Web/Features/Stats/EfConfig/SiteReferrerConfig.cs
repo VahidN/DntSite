@@ -15,6 +15,7 @@ public class SiteReferrerConfig : IEntityTypeConfiguration<SiteReferrer>
         builder.Property(entity => entity.VisitHash).HasMaxLength(maxLength: 50).IsRequired();
 
         builder.HasIndex(entity => entity.VisitHash).IsUnique();
+        builder.HasIndex(entity => entity.DestinationUrl);
 
         builder.HasOne(entity => entity.User)
             .WithMany(user => user.SiteReferrers)

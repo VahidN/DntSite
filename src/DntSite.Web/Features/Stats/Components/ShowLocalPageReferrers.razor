@@ -1,0 +1,33 @@
+@if (_rows is not null && _rows.TotalItems > 0)
+{
+    <DntCard MarginTop="4">
+        <Header>
+            <h5>صفحات مرتبط</h5>
+        </Header>
+        <ChildContent>
+            <ul class="list-group">
+                @foreach (var item in _rows.Data)
+                {
+                    <a class="list-group-item list-group-item-action d-flex align-items-center" href="@item.ReferrerUrl">
+                        @item.ReferrerTitle
+                    </a>
+                }
+                @if (HasMoreData)
+                {
+                    <a class="list-group-item list-group-item-action d-flex align-items-center" href="@MoreLocalPageReferrersUrl">
+                        بیشتر ...
+                        <i class='@DntBootstrapIcons.BiArrowLeftCircleFill ms-1'></i>
+                    </a>
+                }
+            </ul>
+        </ChildContent>
+    </DntCard>
+
+    @if (ShowPager)
+    {
+        <DntSimplePaginator ItemsPerPage="RecordsPerPage"
+                            TotalItemCount="_rows.TotalItems"
+                            BasePath="@BasePath"
+                            CurrentPage="PageNumber"/>
+    }
+}

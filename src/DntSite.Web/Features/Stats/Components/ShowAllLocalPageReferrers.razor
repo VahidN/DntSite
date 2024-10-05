@@ -1,0 +1,9 @@
+@attribute [Route(StatsRoutingConstants.MoreLocalPageReferrers)]
+@attribute [Route(StatsRoutingConstants.MoreLocalPageReferrersUrlPageCurrentPage)]
+
+<DntSitePageTitle PageTitle="@_pageTitle"/>
+
+<ShowLocalPageReferrers
+    LocalUrl="@Url"
+    PageNumber="@PageNumber"
+    ShowPager="true"/>

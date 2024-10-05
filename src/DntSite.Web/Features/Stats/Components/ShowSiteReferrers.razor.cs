@@ -44,7 +44,9 @@ public partial class ShowSiteReferrers
     private async Task ShowResultsAsync()
     {
         CurrentPage ??= 1;
-        _items = await SiteReferrersService.GetPagedSiteReferrersAsync(CurrentPage.Value - 1, ItemsPerPage);
+
+        _items = await SiteReferrersService.GetPagedSiteReferrersAsync(CurrentPage.Value - 1, ItemsPerPage,
+            isLocalReferrer: false);
     }
 
     private void AddBreadCrumbs()

@@ -18,4 +18,6 @@ public class SiteReferrer : BaseEntity
     [IgnoreAudit] public string VisitHash { set; get; } = default!;
 
     [IgnoreAudit] public int VisitsCount { set; get; }
+
+    public bool IsLocalReferrer { set; get; }
 }

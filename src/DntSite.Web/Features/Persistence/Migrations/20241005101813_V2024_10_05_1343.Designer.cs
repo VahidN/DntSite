@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DntSite.Web.Features.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241005101813_V2024_10_05_1343")]
+    partial class V2024_10_05_1343
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6028,8 +6031,6 @@ namespace DntSite.Web.Features.Persistence.Migrations
                         });
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DestinationUrl");
 
                     b.HasIndex("UserId");
 

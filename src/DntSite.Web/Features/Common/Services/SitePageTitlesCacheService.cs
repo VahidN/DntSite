@@ -1,10 +1,13 @@
 using System.Collections.Concurrent;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Services.Contracts;
 
 namespace DntSite.Web.Features.Common.Services;
 
-public class SitePageTitlesCacheService(BaseHttpClient baseHttpClient, ILogger<SitePageTitlesCacheService> logger)
-    : ISitePageTitlesCacheService
+public class SitePageTitlesCacheService(
+    BaseHttpClient baseHttpClient,
+    ILogger<SitePageTitlesCacheService> logger,
+    ICachedAppSettingsProvider appSettingsProvider) : ISitePageTitlesCacheService
 {
     private readonly ConcurrentDictionary<string, string> _urlTitles = new(StringComparer.OrdinalIgnoreCase);
 
@@ -74,6 +77,17 @@ public class SitePageTitlesCacheService(BaseHttpClient baseHttpClient, ILogger<S
         var destinationUrlHtmlContent = await baseHttpClient.HttpClient.GetStringAsync(destinationUrl);
         var title = destinationUrlHtmlContent.GetHtmlPageTitle();
 
-        return string.IsNullOrWhiteSpace(title) ? destinationUrl : title;
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            return destinationUrl;
+        }
+
+        var name = (await appSettingsProvider.GetAppSettingsAsync()).BlogName;
+
+        return title.Replace(name, newValue: "", StringComparison.OrdinalIgnoreCase)
+            .Trim()
+            .TrimStart(trimChar: '|')
+            .TrimEnd(trimChar: '|')
+            .Trim();
     }
 }

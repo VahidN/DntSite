@@ -48,7 +48,8 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
         {
             if (!await ShouldSkipThisRequestAsync(context, referrerUrl, destinationUrl, rootUrl))
             {
-                AddSiteReferrerItemToQueue(new SiteReferrerItem(referrerUrl, destinationUrl));
+                var isLocalReferrer = referrerUrl.IsLocalReferrer(destinationUrl);
+                AddSiteReferrerItemToQueue(new SiteReferrerItem(referrerUrl, destinationUrl, isLocalReferrer));
             }
         }
         catch (Exception ex)
@@ -64,9 +65,11 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
 
     private async Task<bool>
         ShouldSkipThisRequestAsync(HttpContext context, string referrerUrl, string destinationUrl, string rootUrl)
-        => string.IsNullOrEmpty(referrerUrl) || !referrerUrl.IsValidUrl() || context.IsProtectedRoute() ||
+        => string.IsNullOrEmpty(referrerUrl) ||
+           string.Equals(referrerUrl, destinationUrl, StringComparison.OrdinalIgnoreCase) ||
+           !referrerUrl.IsValidUrl() || context.IsProtectedRoute() ||
            await _uaParserService.IsSpiderClientAsync(context) || !destinationUrl.IsReferrerToThisSite(rootUrl) ||
-           referrerUrl.IsLocalReferrer(destinationUrl) || destinationUrl.IsStaticFileUrl() || DoNotLog(context);
+           destinationUrl.IsStaticFileUrl() || DoNotLog(context);
 
     private static bool DoNotLog(HttpContext context)
         => context.GetEndpoint()?.Metadata?.GetMetadata<DoNotLogReferrerAttribute>() is not null;
@@ -114,7 +117,8 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
                         break;
                     }
 
-                    await siteReferrersService.TryAddOrUpdateReferrerAsync(item.ReferrerUrl, item.DestinationUrl);
+                    await siteReferrersService.TryAddOrUpdateReferrerAsync(item.ReferrerUrl, item.DestinationUrl,
+                        item.IsLocalReferrer);
                 }
             });
         }
@@ -167,5 +171,5 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
         }
     }
 
-    private sealed record SiteReferrerItem(string ReferrerUrl, string DestinationUrl);
+    private sealed record SiteReferrerItem(string ReferrerUrl, string DestinationUrl, bool IsLocalReferrer);
 }

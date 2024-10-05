@@ -20,4 +20,8 @@ public static class StatsRoutingConstants
     public const string OnlineSpiderVisitors = $"{OnlineVisitors}/{{CategoryName}}";
     public const string OnlineSpiderVisitorsUrl = $"{OnlineVisitors}/spider";
     public const string OnlineSpiderVisitorsPageCurrentPage = $"{OnlineSpiderVisitors}/page/{{CurrentPage:int}}";
+
+    public const string MoreLocalPageReferrersBase = "/related-pages";
+    public const string MoreLocalPageReferrers = $"{MoreLocalPageReferrersBase}/{{Url}}";
+    public const string MoreLocalPageReferrersUrlPageCurrentPage = $"{MoreLocalPageReferrers}/page/{{CurrentPage:int}}";
 }
