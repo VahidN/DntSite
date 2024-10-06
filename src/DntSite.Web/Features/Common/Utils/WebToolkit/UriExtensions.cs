@@ -23,11 +23,15 @@ public static class UriExtensions
 
         if (uri.Segments.Length < 2)
         {
-            return null;
+            return url;
         }
 
         var id = uri.Segments[2].Replace(oldValue: "/", string.Empty, StringComparison.OrdinalIgnoreCase).ToInt();
 
-        return string.Create(CultureInfo.InvariantCulture, $"{uri.Scheme}://{uri.Host}/post/{id}");
+        var domain = uri.IsDefaultPort
+            ? uri.Host
+            : string.Create(CultureInfo.InvariantCulture, $"{uri.Host}:{uri.Port}");
+
+        return string.Create(CultureInfo.InvariantCulture, $"{uri.Scheme}://{domain}/post/{id}");
     }
 }

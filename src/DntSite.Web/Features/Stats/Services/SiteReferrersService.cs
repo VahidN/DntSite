@@ -19,7 +19,7 @@ public class SiteReferrersService(
 {
     private readonly DbSet<SiteReferrer> _referrers = uow.DbSet<SiteReferrer>();
 
-    public Task DeleteAllAsync() => _referrers.ExecuteDeleteAsync();
+    public Task DeleteAllAsync() => uow.ExecuteTransactionAsync(() => _referrers.ExecuteDeleteAsync());
 
     public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl, bool isLocalReferrer)
     {
@@ -44,12 +44,6 @@ public class SiteReferrersService(
                 return false;
             }
 
-            var referrerHash = hasherService.GetSha1Hash(string
-                .Create(CultureInfo.InvariantCulture, $"{referrerUrl}_{normalizedDestinationUrl}")
-                .ToUpperInvariant());
-
-            var siteReferrer = await FindSiteReferrerAsync(referrerHash);
-
             var destinationTitle =
                 await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(normalizedDestinationUrl, fetchUrl: true);
 
@@ -60,6 +54,12 @@ public class SiteReferrersService(
             {
                 return false;
             }
+
+            var referrerHash = hasherService.GetSha1Hash(string
+                .Create(CultureInfo.InvariantCulture, $"{referrerUrl}_{normalizedDestinationUrl}")
+                .ToUpperInvariant());
+
+            var siteReferrer = await FindSiteReferrerAsync(referrerHash);
 
             if (siteReferrer is null)
             {
@@ -97,8 +97,12 @@ public class SiteReferrersService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Demystify(), message: "TryAddOrUpdateReferrerAsync({ReferrerUrl}, {DestinationUrl}): ",
-                referrerUrl, destinationUrl);
+            if (ex is not HttpRequestException)
+            {
+                logger.LogError(ex.Demystify(),
+                    message: "TryAddOrUpdateReferrerAsync({ReferrerUrl}, {DestinationUrl}): ", referrerUrl,
+                    destinationUrl);
+            }
 
             return false;
         }
@@ -133,8 +137,15 @@ public class SiteReferrersService(
         int recordsPerPage,
         bool isLocalReferrer)
     {
+        var url = GetNormalizedDestinationUrl(destinationUrl);
+
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return Task.FromResult(new PagedResultModel<SiteReferrer>());
+        }
+
         var query = _referrers.AsNoTracking()
-            .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer && x.DestinationUrl == destinationUrl)
+            .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer && x.DestinationUrl == url)
             .OrderByDescending(x => x.VisitsCount)
             .ThenByDescending(x => x.LastVisitTime);
 
@@ -177,9 +188,9 @@ public class SiteReferrersService(
         {
             return await baseHttpClient.HttpClient.GetStringAsync(url);
         }
-        catch (HttpRequestException hre)
+        catch (Exception ex)
         {
-            if (!hre.IgnoreIfUrlExists())
+            if (ex is not HttpRequestException)
             {
                 throw;
             }

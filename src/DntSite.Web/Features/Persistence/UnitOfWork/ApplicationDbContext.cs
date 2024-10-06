@@ -60,6 +60,18 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
         where TEntity : class
         => Set<TEntity>().AsNoTracking();
 
+    public async Task ExecuteTransactionAsync(Func<Task> action)
+    {
+        var strategy = Database.CreateExecutionStrategy();
+
+        await strategy.ExecuteAsync(async () =>
+        {
+            await using var transaction = await Database.BeginTransactionAsync();
+            await action();
+            await transaction.CommitAsync();
+        });
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);

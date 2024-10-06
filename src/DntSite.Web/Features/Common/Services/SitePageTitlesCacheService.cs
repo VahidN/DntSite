@@ -41,11 +41,11 @@ public class SitePageTitlesCacheService(
 
             return title;
         }
-        catch (HttpRequestException hre)
+        catch (Exception ex)
         {
-            if (!hre.IgnoreIfUrlExists())
+            if (ex is not HttpRequestException)
             {
-                logger.LogError(hre.Demystify(), message: "GetOrAddSitePageTitleAsync({URL})", url);
+                logger.LogError(ex.Demystify(), message: "GetOrAddSitePageTitleAsync({URL})", url);
             }
 
             return null;

@@ -66,7 +66,7 @@ public static class DbContextConfig
             })
             .UseCacheKeyPrefix(prefix: "EF_")
             .CacheAllQueriesExceptContainingTypes(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(value: 5),
-                typeof(AppLogItem))
+                typeof(AppLogItem), typeof(SiteReferrer))
             .SkipCachingCommands(commandText
                 => commandText.Contains(value: "NEWID()", StringComparison.InvariantCultureIgnoreCase))
             .SkipCacheInvalidationCommands(ShouldIgnoreForAllCommands)

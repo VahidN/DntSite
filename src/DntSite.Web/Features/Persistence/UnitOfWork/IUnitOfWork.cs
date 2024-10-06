@@ -58,4 +58,6 @@ public interface IUnitOfWork : IDisposable
     Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new());
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = new());
+
+    Task ExecuteTransactionAsync(Func<Task> action);
 }
