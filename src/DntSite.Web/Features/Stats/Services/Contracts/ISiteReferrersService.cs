@@ -19,7 +19,7 @@ public interface ISiteReferrersService : IScopedService
         int recordsPerPage,
         bool isLocalReferrer);
 
-    Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string destinationUrl,
+    Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string? destinationUrl,
         int pageNumber,
         int recordsPerPage,
         bool isLocalReferrer);

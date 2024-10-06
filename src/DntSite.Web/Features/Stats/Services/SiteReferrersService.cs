@@ -132,11 +132,16 @@ public class SiteReferrersService(
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
     }
 
-    public Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string destinationUrl,
+    public Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string? destinationUrl,
         int pageNumber,
         int recordsPerPage,
         bool isLocalReferrer)
     {
+        if (string.IsNullOrWhiteSpace(destinationUrl))
+        {
+            return Task.FromResult(new PagedResultModel<SiteReferrer>());
+        }
+
         var url = GetNormalizedDestinationUrl(destinationUrl);
 
         if (string.IsNullOrWhiteSpace(url))

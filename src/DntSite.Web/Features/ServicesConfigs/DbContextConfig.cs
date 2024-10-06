@@ -9,7 +9,7 @@ namespace DntSite.Web.Features.ServicesConfigs;
 
 public static class DbContextConfig
 {
-    private static readonly string[] NamesToIgnoreForAllCommands = [nameof(AppLogItem), nameof(SiteReferrer)];
+    private static readonly string[] NamesToIgnoreForAllCommands = [nameof(AppLogItem)];
 
     public static IServiceCollection AddConfiguredDbContext(this IServiceCollection services,
         StartupSettingsModel startupSettings,
@@ -66,7 +66,7 @@ public static class DbContextConfig
             })
             .UseCacheKeyPrefix(prefix: "EF_")
             .CacheAllQueriesExceptContainingTypes(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(value: 5),
-                typeof(AppLogItem), typeof(SiteReferrer))
+                typeof(AppLogItem))
             .SkipCachingCommands(commandText
                 => commandText.Contains(value: "NEWID()", StringComparison.InvariantCultureIgnoreCase))
             .SkipCacheInvalidationCommands(ShouldIgnoreForAllCommands)
