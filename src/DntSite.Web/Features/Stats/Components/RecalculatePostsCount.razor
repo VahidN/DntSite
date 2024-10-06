@@ -14,21 +14,31 @@
                   Enhance>
             <div class="d-flex align-items-center justify-content-center">
                 <button type="submit"
+                        data-cancel-confirm-message="محاسبه مجدد تعداد مطالب؟"
                         name="@nameof(RecalculateAction)" value="@RecalculatePostsCountAction.RecalculateForm"
                         class="btn btn-sm btn-primary me-2">
                     محاسبه مجدد تعداد مطالب
                 </button>
 
                 <button type="submit"
+                        data-cancel-confirm-message="محاسبه مجدد جمع امتیازهای کلیه کاربران؟"
                         name="@nameof(RecalculateAction)" value="@RecalculatePostsCountAction.UpdateAllUsersRatings"
                         class="btn btn-sm btn-primary me-2">
                     محاسبه مجدد جمع امتیازهای کلیه کاربران
                 </button>
 
                 <button type="submit"
+                        data-cancel-confirm-message="بازسازی ایندکس جستجوی سایت؟"
                         name="@nameof(RecalculateAction)" value="@RecalculatePostsCountAction.UpdateFullTextIndex"
                         class="btn btn-sm btn-primary me-2">
                     بازسازی ایندکس جستجوی سایت
+                </button>
+
+                <button type="submit"
+                        data-cancel-confirm-message="بازسازی ارجاع دهنده‌ها؟"
+                        name="@nameof(RecalculateAction)" value="@RecalculatePostsCountAction.DeleteAllSiteReferrers"
+                        class="btn btn-sm btn-primary me-2">
+                    بازسازی ارجاع دهنده‌ها
                 </button>
             </div>
         </EditForm>

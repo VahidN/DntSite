@@ -2,6 +2,7 @@ using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Stats.Entities;
 using DntSite.Web.Features.Stats.Services.Contracts;
@@ -18,11 +19,25 @@ public class SiteReferrersService(
 {
     private readonly DbSet<SiteReferrer> _referrers = uow.DbSet<SiteReferrer>();
 
+    public Task DeleteAllAsync() => _referrers.ExecuteDeleteAsync();
+
     public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl, bool isLocalReferrer)
     {
+        if (string.IsNullOrWhiteSpace(destinationUrl))
+        {
+            return false;
+        }
+
         try
         {
-            var referrerUrlHtmlContent = await GetReferrerUrlHtmlContentAsync(referrerUrl);
+            var normalizedDestinationUrl = GetNormalizedDestinationUrl(destinationUrl);
+
+            if (string.IsNullOrWhiteSpace(normalizedDestinationUrl))
+            {
+                return false;
+            }
+
+            var referrerUrlHtmlContent = await GetUrlHtmlContentAsync(referrerUrl);
 
             if (!await IsValidReferrerAsync(referrerUrl, referrerUrlHtmlContent))
             {
@@ -30,16 +45,21 @@ public class SiteReferrersService(
             }
 
             var referrerHash = hasherService.GetSha1Hash(string
-                .Create(CultureInfo.InvariantCulture, $"{referrerUrl}_{destinationUrl}")
+                .Create(CultureInfo.InvariantCulture, $"{referrerUrl}_{normalizedDestinationUrl}")
                 .ToUpperInvariant());
 
             var siteReferrer = await FindSiteReferrerAsync(referrerHash);
 
             var destinationTitle =
-                await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(destinationUrl, fetchUrl: true);
+                await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(normalizedDestinationUrl, fetchUrl: true);
 
             var referrerTitle =
                 await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(referrerUrl, fetchUrl: true);
+
+            if (string.IsNullOrWhiteSpace(destinationTitle) || string.IsNullOrWhiteSpace(referrerTitle))
+            {
+                return false;
+            }
 
             if (siteReferrer is null)
             {
@@ -47,7 +67,7 @@ public class SiteReferrersService(
                 {
                     ReferrerTitle = referrerTitle,
                     ReferrerUrl = referrerUrl,
-                    DestinationUrl = destinationUrl,
+                    DestinationUrl = normalizedDestinationUrl,
                     DestinationTitle = destinationTitle,
                     VisitHash = referrerHash,
                     VisitsCount = 1,
@@ -134,28 +154,38 @@ public class SiteReferrersService(
         await uow.SaveChangesAsync();
     }
 
-    private async Task<string> GetReferrerUrlHtmlContentAsync(string referrerUrl)
+    private string? GetNormalizedDestinationUrl(string? destinationUrl)
+    {
+        if (!destinationUrl.IsValidUrl())
+        {
+            return null;
+        }
+
+        if (destinationUrl.Contains(value: "/post/", StringComparison.OrdinalIgnoreCase))
+        {
+            return destinationUrl.GetNormalizedPostUrl();
+        }
+
+        destinationUrl = destinationUrl.GetUrlWithoutRssQueryStrings();
+
+        return destinationUrl;
+    }
+
+    private async Task<string?> GetUrlHtmlContentAsync(string url)
     {
         try
         {
-            return await baseHttpClient.HttpClient.GetStringAsync(referrerUrl);
+            return await baseHttpClient.HttpClient.GetStringAsync(url);
         }
         catch (HttpRequestException hre)
         {
-            switch (hre.StatusCode)
+            if (!hre.IgnoreIfUrlExists())
             {
-                case HttpStatusCode.Found: // 302 = HttpStatusCode.Redirect
-                case HttpStatusCode.Moved: // 301 = HttpStatusCode.MovedPermanently
-                case HttpStatusCode.Unauthorized:
-                case HttpStatusCode.Forbidden: // fine! they have banned this server, but the link is correct!
-                case HttpStatusCode.OK:
-                    break;
-                default:
-                    throw;
+                throw;
             }
         }
 
-        return string.Empty;
+        return null;
     }
 
     private async Task<bool> IsValidReferrerAsync(string referrerUrl, string? referrerUrlHtmlContent)

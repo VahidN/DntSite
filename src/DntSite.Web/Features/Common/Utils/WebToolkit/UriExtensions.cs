@@ -1,17 +1,33 @@
-using Microsoft.AspNetCore.WebUtilities;
-
 namespace DntSite.Web.Features.Common.Utils.WebToolkit;
 
 public static class UriExtensions
 {
-    public const string FromFeedKey = "utm_source";
-
-    public static bool IsFromFeed(this NavigationManager navigationManager)
+    public static string? GetNormalizedPostUrl(this string? url)
     {
-        ArgumentNullException.ThrowIfNull(navigationManager);
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return null;
+        }
 
-        var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
+        if (!url.IsValidUrl())
+        {
+            return null;
+        }
 
-        return QueryHelpers.ParseQuery(uri.Query).TryGetValue(FromFeedKey, out _);
+        if (!url.Contains(value: "/post/", StringComparison.OrdinalIgnoreCase))
+        {
+            return url;
+        }
+
+        var uri = new Uri(url);
+
+        if (uri.Segments.Length < 2)
+        {
+            return null;
+        }
+
+        var id = uri.Segments[2].Replace(oldValue: "/", string.Empty, StringComparison.OrdinalIgnoreCase).ToInt();
+
+        return string.Create(CultureInfo.InvariantCulture, $"{uri.Scheme}://{uri.Host}/post/{id}");
     }
 }

@@ -4,5 +4,6 @@ public enum RecalculatePostsCountAction
 {
     RecalculateForm,
     UpdateAllUsersRatings,
-    UpdateFullTextIndex
+    UpdateFullTextIndex,
+    DeleteAllSiteReferrers
 }

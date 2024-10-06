@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using DntSite.Web.Features.Stats.Middlewares.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Stats.Middlewares;
@@ -14,17 +13,17 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
     private readonly BlockingCollection<SiteReferrerItem> _messageQueue = new(new ConcurrentQueue<SiteReferrerItem>());
 
     private readonly Task _outputTask;
+    private readonly IReferrersValidatorService _referrersValidatorService;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IUAParserService _uaParserService;
 
     private bool _isDisposed;
 
     public SiteReferrersMiddleware(IServiceProvider serviceProvider,
-        IUAParserService uaParserService,
+        IReferrersValidatorService referrersValidatorService,
         ILogger<SiteReferrersMiddleware> logger)
     {
         _serviceProvider = serviceProvider;
-        _uaParserService = uaParserService;
+        _referrersValidatorService = referrersValidatorService;
         _logger = logger;
         _outputTask = Task.Run(ProcessItemsQueueAsync);
     }
@@ -40,13 +39,12 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
 
-        var rootUrl = context.GetBaseUrl();
         var referrerUrl = context.GetReferrerUrl();
         var destinationUrl = context.GetRawUrl();
 
         try
         {
-            if (!await ShouldSkipThisRequestAsync(context, referrerUrl, destinationUrl, rootUrl))
+            if (!await _referrersValidatorService.ShouldSkipThisRequestAsync(context, referrerUrl, destinationUrl))
             {
                 var isLocalReferrer = referrerUrl.IsLocalReferrer(destinationUrl);
                 AddSiteReferrerItemToQueue(new SiteReferrerItem(referrerUrl, destinationUrl, isLocalReferrer));
@@ -57,22 +55,11 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
             _logger.LogError(ex.Demystify(),
                 message:
                 "SiteReferrers Error -> RootUrl: {RootUrl}, ReferrerUrl: {ReferrerUrl}, DestinationUrl: {DestinationUrl}, Log: {Log}",
-                rootUrl, referrerUrl, destinationUrl, context.Request.LogRequest(responseCode: 500));
+                context.GetBaseUrl(), referrerUrl, destinationUrl, context.Request.LogRequest(responseCode: 500));
         }
 
         await next(context);
     }
-
-    private async Task<bool>
-        ShouldSkipThisRequestAsync(HttpContext context, string referrerUrl, string destinationUrl, string rootUrl)
-        => string.IsNullOrEmpty(referrerUrl) ||
-           string.Equals(referrerUrl, destinationUrl, StringComparison.OrdinalIgnoreCase) ||
-           !referrerUrl.IsValidUrl() || context.IsProtectedRoute() ||
-           await _uaParserService.IsSpiderClientAsync(context) || !destinationUrl.IsReferrerToThisSite(rootUrl) ||
-           destinationUrl.IsStaticFileUrl() || DoNotLog(context);
-
-    private static bool DoNotLog(HttpContext context)
-        => context.GetEndpoint()?.Metadata?.GetMetadata<DoNotLogReferrerAttribute>() is not null;
 
     private async Task ProcessItemsQueueAsync()
     {

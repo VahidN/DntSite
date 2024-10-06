@@ -11,11 +11,11 @@ public class SitePageTitlesCacheService(
 {
     private readonly ConcurrentDictionary<string, string> _urlTitles = new(StringComparer.OrdinalIgnoreCase);
 
-    public async Task<string> GetOrAddSitePageTitleAsync(string? url, bool fetchUrl)
+    public async Task<string?> GetOrAddSitePageTitleAsync(string? url, bool fetchUrl)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
-            return string.Empty;
+            return null;
         }
 
         var cacheKey = GetCacheKey(url);
@@ -27,18 +27,28 @@ public class SitePageTitlesCacheService(
                 return title;
             }
 
-            title = fetchUrl ? await GetDestinationTitleAsync(url) : url;
+            if (fetchUrl)
+            {
+                title = await GetDestinationTitleAsync(url);
+            }
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                return null;
+            }
+
             _urlTitles[cacheKey] = title;
 
             return title;
         }
-        catch (Exception ex)
+        catch (HttpRequestException hre)
         {
-            logger.LogError(ex.Demystify(), message: "GetOrAddSitePageTitleAsync({URL})", url);
+            if (!hre.IgnoreIfUrlExists())
+            {
+                logger.LogError(hre.Demystify(), message: "GetOrAddSitePageTitleAsync({URL})", url);
+            }
 
-            _urlTitles[cacheKey] = url;
-
-            return url;
+            return null;
         }
     }
 
@@ -53,11 +63,11 @@ public class SitePageTitlesCacheService(
         _urlTitles[cacheKey] = title;
     }
 
-    public string GetPageTitle(string? url)
+    public string? GetPageTitle(string? url)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
-            return string.Empty;
+            return null;
         }
 
         var cacheKey = GetCacheKey(url);
@@ -67,19 +77,19 @@ public class SitePageTitlesCacheService(
             return title;
         }
 
-        return url;
+        return null;
     }
 
     private static string GetCacheKey(string url) => url.ToXxHash64(prefix: "DNT_URL");
 
-    private async Task<string> GetDestinationTitleAsync(string destinationUrl)
+    private async Task<string?> GetDestinationTitleAsync(string destinationUrl)
     {
         var destinationUrlHtmlContent = await baseHttpClient.HttpClient.GetStringAsync(destinationUrl);
         var title = destinationUrlHtmlContent.GetHtmlPageTitle();
 
         if (string.IsNullOrWhiteSpace(title))
         {
-            return destinationUrl;
+            return null;
         }
 
         var name = (await appSettingsProvider.GetAppSettingsAsync()).BlogName;

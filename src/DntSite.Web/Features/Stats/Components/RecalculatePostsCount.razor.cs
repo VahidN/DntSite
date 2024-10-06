@@ -13,6 +13,8 @@ public partial class RecalculatePostsCount
 {
     [InjectComponentScoped] internal IStatService StatService { set; get; } = null!;
 
+    [InjectComponentScoped] internal ISiteReferrersService SiteReferrersService { set; get; } = null!;
+
     [Inject] internal IFullTextSearchService FullTextSearchService { set; get; } = null!;
 
     [SupplyParameterFromForm] internal RecalculatePostsCountAction RecalculateAction { set; get; }
@@ -37,6 +39,11 @@ public partial class RecalculatePostsCount
                 break;
             case RecalculatePostsCountAction.UpdateFullTextIndex:
                 FullTextSearchService.DeleteOldIndexFiles();
+
+                break;
+
+            case RecalculatePostsCountAction.DeleteAllSiteReferrers:
+                await SiteReferrersService.DeleteAllAsync();
 
                 break;
         }

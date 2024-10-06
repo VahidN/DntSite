@@ -5,6 +5,8 @@ namespace DntSite.Web.Features.Stats.Services.Contracts;
 
 public interface ISiteReferrersService : IScopedService
 {
+    Task DeleteAllAsync();
+
     Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl, bool isLocalReferrer);
 
     Task<SiteReferrer?> FindSiteReferrerAsync(string referrerHash);

@@ -2,13 +2,14 @@ using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.Persistence.Interceptors;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.Stats.Entities;
 using EFCoreSecondLevelCacheInterceptor;
 
 namespace DntSite.Web.Features.ServicesConfigs;
 
 public static class DbContextConfig
 {
-    private static readonly string[] NamesToIgnoreForAllCommands = [nameof(AppLogItem)];
+    private static readonly string[] NamesToIgnoreForAllCommands = [nameof(AppLogItem), nameof(SiteReferrer)];
 
     public static IServiceCollection AddConfiguredDbContext(this IServiceCollection services,
         StartupSettingsModel startupSettings,
