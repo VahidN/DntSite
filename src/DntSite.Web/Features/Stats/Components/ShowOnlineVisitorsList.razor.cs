@@ -22,7 +22,9 @@ public partial class ShowOnlineVisitorsList
 
     private bool IsSpider => string.Equals(CategoryName, b: "spider", StringComparison.OrdinalIgnoreCase);
 
-    private string PageTitle => IsSpider ? StatsBreadCrumbs.OnlineSpiders.Title : StatsBreadCrumbs.OnlineVisitors.Title;
+    private string PageTitle => string.Create(CultureInfo.InvariantCulture,
+            $"{(IsSpider ? StatsBreadCrumbs.OnlineSpiders.Title : StatsBreadCrumbs.OnlineVisitors.Title)}، صفحه {CurrentPage ?? 1}")
+        .ToPersianNumbers();
 
     private string BasePath
         => IsSpider ? StatsRoutingConstants.OnlineSpiderVisitorsUrl : StatsRoutingConstants.OnlineVisitors;
