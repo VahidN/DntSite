@@ -7,7 +7,8 @@ public static class StatsRoutingConstants
     public const string TodayVisitedUsers = "/today-visited-users";
     public const string TodayVisitedUsersPageCurrentPage = $"{TodayVisitedUsers}/page/{{CurrentPage:int}}";
 
-    public const string SiteReferrers = "/site-referrers";
+    public const string SiteReferrersBase = "/site-referrers";
+    public const string SiteReferrers = $"{SiteReferrersBase}/{{ReferrerType}}";
     public const string SiteReferrerPageCurrentPage = $"{SiteReferrers}/page/{{CurrentPage:int}}";
     public const string SiteReferrersDeleteBase = $"{SiteReferrers}/delete";
 

@@ -3,7 +3,7 @@
 @attribute [Route(StatsRoutingConstants.SiteReferrerPageCurrentPage)]
 @attribute [Route(StatsRoutingConstants.SiteReferrersDeleteDeleteId)]
 
-<DntSitePageTitle PageTitle="ارجاع دهنده‌ها"/>
+<DntSitePageTitle PageTitle="@PageTitle"/>
 
 <DntLoading IsLoading="@(_items is null)">
     <DntSimpleTable TRecord="SiteReferrer"
@@ -14,7 +14,7 @@
                     TableResponsiveClass="row table-responsive"
                     RowClass='record => ""'>
         <CaptionTemplate>
-            <strong>ارجاع دهنده‌ها</strong>
+            <strong>@PageTitle</strong>
         </CaptionTemplate>
         <TableColumns>
             <DntSimpleTableColumn HeaderTitle="منبع"
@@ -24,7 +24,7 @@
                 <CellValueTemplate Context="record">
                     @if (ApplicationState.CurrentUser?.IsAdmin == true)
                     {
-                        <a href="@StatsRoutingConstants.SiteReferrersDeleteBase/@ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture))"
+                        <a href="@StatsRoutingConstants.SiteReferrersBase/@_siteReferrerType/delete/@ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture))"
                            data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"
                            class="btn btn-danger me-2 btn-sm">
                             حذف
@@ -80,6 +80,6 @@
 
     <DntSimplePaginator ItemsPerPage="ItemsPerPage"
                         TotalItemCount="_items!.TotalItems"
-                        BasePath="@StatsRoutingConstants.SiteReferrers"
+                        BasePath="@BasePath"
                         CurrentPage="CurrentPage"/>
 </DntLoading>

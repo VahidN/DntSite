@@ -1,4 +1,5 @@
 ﻿using DntSite.Web.Common.BlazorSsr.Utils;
+using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 
 namespace DntSite.Web.Features.Stats.RoutingConstants;
@@ -20,11 +21,18 @@ public static class StatsBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiCalendar2Range
     };
 
-    public static readonly BreadCrumb SiteReferrers = new()
+    public static readonly BreadCrumb SiteExternalReferrers = new()
     {
-        Title = "ارجاع دهنده‌ها",
-        Url = StatsRoutingConstants.SiteReferrers,
+        Title = "ارجاعات خارجی",
+        Url = $"{StatsRoutingConstants.SiteReferrersBase}/{nameof(SiteReferrerType.External)}",
         GlyphIcon = DntBootstrapIcons.BiSignpost
+    };
+
+    public static readonly BreadCrumb SiteInternalReferrers = new()
+    {
+        Title = "ارجاعات داخلی",
+        Url = $"{StatsRoutingConstants.SiteReferrersBase}/{nameof(SiteReferrerType.Internal)}",
+        GlyphIcon = DntBootstrapIcons.BiSignpost2
     };
 
     public static readonly BreadCrumb OnlineVisitors = new()
@@ -45,7 +53,7 @@ public static class StatsBreadCrumbs
 
     public static readonly IList<BreadCrumb> OnlineUsersStatsBreadCrumbs =
     [
-        UserProfilesBreadCrumbs.UsersBirthdays, TodayVisitedUsers, OnlineVisitors, OnlineSpiders, SiteReferrers,
-        UserProfilesBreadCrumbs.Users
+        UserProfilesBreadCrumbs.UsersBirthdays, TodayVisitedUsers, OnlineVisitors, OnlineSpiders,
+        SiteExternalReferrers, SiteInternalReferrers, UserProfilesBreadCrumbs.Users
     ];
 }
