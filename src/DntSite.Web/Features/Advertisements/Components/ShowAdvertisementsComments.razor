@@ -6,7 +6,7 @@
 @attribute [Route(AdvertisementsRoutingConstants.AdvertisementsCommentsNamePage)]
 
 
-<DntSitePageTitle PageTitle="@MainTitle"/>
+<DntSitePageTitle Group="آگهی‌ها" PageTitle="@MainTitle"/>
 
 <DntLoading IsLoading="@(_posts is null)">
     @foreach (var comment in _posts!.Data)

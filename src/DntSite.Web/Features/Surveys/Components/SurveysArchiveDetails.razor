@@ -1,10 +1,10 @@
-@using DntSite.Web.Features.Posts.Components
+﻿@using DntSite.Web.Features.Posts.Components
 @using DntSite.Web.Features.Surveys.Entities
 @attribute [Route(SurveysRoutingConstants.SurveysArchiveDetailsSurveyId)]
 @attribute [Route(SurveysRoutingConstants.VotesDetailsSurveyId)]
 
 <DntLoading IsLoading="@(_surveys is null || CurrentPost is null || _surveyComments is null)">
-    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="نظرسنجی‌ها" PageTitle="@CurrentPost!.Title"/>
 
     <DntPageSeo Description="@CurrentPost.Description"
                 Title="@CurrentPost.Title"

@@ -2,7 +2,7 @@
 @attribute [Route(PostsRoutingConstants.WriteDraftEditEditId)]
 @attribute [Route(PostsRoutingConstants.WriteDraftDeleteDeleteId)]
 
-<DntSitePageTitle PageTitle="تهیه پیش نویس مقالات"/>
+<DntSitePageTitle Group="مقالات" PageTitle="تهیه پیش نویس مقالات"/>
 
 <DntCardFrame>
     <FrameHeader>
@@ -57,9 +57,9 @@
                            Placeholder=""
                            Theme="snow"
                            Direction="rtl"/>
-						   
+
             <DntInputCheckBox @bind-Value="WriteDraftModel.IsReady"/>
-			
+
             <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
                             FieldIcon="@DntBootstrapIcons.BiStar"
                             @bind-Value="WriteDraftModel.NumberOfRequiredPoints"/>
@@ -71,7 +71,7 @@
                 FieldAddButtonTitle="افزودن تگ به لیست"
                 FieldRemoveButtonTitle="حذف تگ از لیست"
                 AutoCompleteDataList="AutoCompleteDataList"
-                @bind-InputTags="WriteDraftModel.Tags"/>            
+                @bind-InputTags="WriteDraftModel.Tags"/>
 
             <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">
                 <i class="@DntBootstrapIcons.BiSave"></i>

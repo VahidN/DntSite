@@ -4,7 +4,7 @@
 @attribute [Route(NewsRoutingConstants.NewsArchiveDetailsNewsId)]
 
 <DntLoading IsLoading="@(_news is null || CurrentPost is null || _newsComments is null)">
-    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="اشتراک‌ها" PageTitle="@CurrentPost!.Title"/>
 
     <DntPageSeo Description="@CurrentPost.BriefDescription"
                 Title="@CurrentPost.Title"

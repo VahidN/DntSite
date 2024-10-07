@@ -1,8 +1,8 @@
-@using DntSite.Web.Features.Posts.Components
+﻿@using DntSite.Web.Features.Posts.Components
 @using DntSite.Web.Features.PrivateMessages.Entities
 @attribute [Route(PrivateMessagesRoutingConstants.MyPrivateMessagePrivateMessageId)]
 
-<DntSitePageTitle PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="پیام‌ها" PageTitle="@PageTitle"/>
 
 <DntLoading IsLoading="@(_privateMessageComments is null || _firstPrivateMessage is null)">
     <ShowBlogPostItem TReactionEntity="PrivateMessageReaction"

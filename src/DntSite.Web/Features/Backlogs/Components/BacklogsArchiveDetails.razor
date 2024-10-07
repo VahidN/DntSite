@@ -3,7 +3,7 @@
 @attribute [Route(BacklogsRoutingConstants.BacklogsDetailsBacklogId)]
 
 <DntLoading IsLoading="@(_backlogs is null || CurrentPost is null)">
-    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="پیشنهادها" PageTitle="@CurrentPost!.Title"/>
 
     <DntPageSeo Description="@CurrentPost.Description"
                 Title="@CurrentPost.Title"

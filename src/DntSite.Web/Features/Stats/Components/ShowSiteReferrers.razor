@@ -3,7 +3,7 @@
 @attribute [Route(StatsRoutingConstants.SiteReferrerPageCurrentPage)]
 @attribute [Route(StatsRoutingConstants.SiteReferrersDeleteDeleteId)]
 
-<DntSitePageTitle PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="آمار برنامه" PageTitle="@PageTitle"/>
 
 <DntLoading IsLoading="@(_items is null)">
     <DntSimpleTable TRecord="SiteReferrer"

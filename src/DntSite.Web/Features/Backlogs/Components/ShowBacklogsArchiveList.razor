@@ -1,6 +1,6 @@
 @using DntSite.Web.Features.Backlogs.Entities
 @using DntSite.Web.Features.Posts.Components
-<DntSitePageTitle PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="پیشنهادها" PageTitle="@PageTitle"/>
 
 <DntLoading IsLoading="@(Posts is null)">
     @foreach (var post in Posts!.Data)

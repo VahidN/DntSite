@@ -1,5 +1,5 @@
-@attribute [Route(UserProfilesRoutingConstants.JobSeekers)]
-<DntSitePageTitle PageTitle="جویندگان کار"/>
+﻿@attribute [Route(UserProfilesRoutingConstants.JobSeekers)]
+<DntSitePageTitle Group="کاربران" PageTitle="جویندگان کار"/>
 
 <DntLoading IsLoading="@(_users is null)">
     @foreach (var user in _users!)

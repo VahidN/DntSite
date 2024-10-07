@@ -1,4 +1,4 @@
-@using DntSite.Web.Features.News.Entities
+﻿@using DntSite.Web.Features.News.Entities
 @using DntSite.Web.Features.Posts.Components
 @attribute [Route(NewsRoutingConstants.NewsComments)]
 @attribute [Route(NewsRoutingConstants.NewsCommentsOld)]
@@ -7,7 +7,7 @@
 @attribute [Route(NewsRoutingConstants.NewsCommentsUserFriendlyNamePageCurrentPage)]
 
 
-<DntSitePageTitle PageTitle="@MainTitle"/>
+<DntSitePageTitle Group="اشتراک‌ها" PageTitle="@MainTitle"/>
 
 <DntLoading IsLoading="@(_posts is null)">
     @foreach (var comment in _posts!.Data)

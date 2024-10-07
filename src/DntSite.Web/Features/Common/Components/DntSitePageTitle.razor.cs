@@ -9,6 +9,8 @@ public partial class DntSitePageTitle
 
     [Parameter] [EditorRequired] public required string PageTitle { set; get; }
 
+    [Parameter] [EditorRequired] public required string Group { set; get; }
+
     [Inject] public ISitePageTitlesCacheService SitePageTitlesCacheService { set; get; } = null!;
 
     protected override void OnInitialized()
@@ -16,6 +18,6 @@ public partial class DntSitePageTitle
         base.OnInitialized();
 
         SitePageTitlesCacheService.AddSitePageTitle(ApplicationState.HttpContext.GetRawUrl(),
-            PageTitle.ToPersianNumbers());
+            $"{Group} - {PageTitle.ToPersianNumbers()}");
     }
 }

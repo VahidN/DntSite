@@ -1,10 +1,10 @@
-@using DntSite.Web.Features.Posts.Components
+﻿@using DntSite.Web.Features.Posts.Components
 @using DntSite.Web.Features.RoadMaps.Entities
 @attribute [Route(RoadMapsRoutingConstants.LearningPathsDetailsLearningPathId1)]
 @attribute [Route(RoadMapsRoutingConstants.LearningPathsDetailsLearningPathId2)]
 
 <DntLoading IsLoading="@(_learningPath is null || CurrentPost is null)">
-    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="مسیرهای راه" PageTitle="@CurrentPost!.Title"/>
 
     <DntPageSeo Description="@CurrentPost.Description"
                 Title="@CurrentPost.Title"

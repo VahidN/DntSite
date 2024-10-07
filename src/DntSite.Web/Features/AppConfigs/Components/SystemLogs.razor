@@ -1,10 +1,9 @@
-﻿@using DntSite.Web.Features.AppConfigs.RoutingConstants
-@attribute [Route(AppConfigsRoutingConstants.SystemLogs)]
+﻿@attribute [Route(AppConfigsRoutingConstants.SystemLogs)]
 @attribute [Route(AppConfigsRoutingConstants.SystemLogsCurrentLogLevel)]
 @attribute [Route(AppConfigsRoutingConstants.SystemLogsCurrentLogLevelPageCurrentPage)]
 @attribute [Route(AppConfigsRoutingConstants.SystemLogsPageCurrentPage)]
 
-<DntSitePageTitle PageTitle="گزارش رخ‌دادهای سیستم"/>
+<DntSitePageTitle Group="مدیریت برنامه" PageTitle="گزارش رخ‌دادهای سیستم"/>
 
 <DntLoading IsLoading="@(_pagedResults is null)">
     <div class="mb-2 d-flex flex-row flex-warp justify-content-center align-items-center card shadow-sm p-2">

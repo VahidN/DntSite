@@ -5,7 +5,7 @@
 @attribute [Route(CoursesRoutingConstants.CoursesDetailsOldCourseId)]
 
 <DntLoading IsLoading="@(_courseModel is null || CurrentPost is null)">
-    <DntSitePageTitle PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="دوره‌ها" PageTitle="@CurrentPost!.Title"/>
 
     <DntPageSeo Description="@CurrentPost.Description"
                 Title="@CurrentPost.Title"

@@ -7,7 +7,7 @@
 @attribute [Route(PostsRoutingConstants.PostsCommentsUserFriendlyNamePageCurrentPage)]
 @attribute [Route(PostsRoutingConstants.OldPostsCommentsUserFriendlyName)]
 
-<DntSitePageTitle PageTitle="@MainTitle"/>
+<DntSitePageTitle Group="مقالات" PageTitle="@MainTitle"/>
 
 <DntLoading IsLoading="@(_posts is null)">
     @foreach (var comment in _posts!.Data)

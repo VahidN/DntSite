@@ -1,6 +1,6 @@
-@using DntSite.Web.Features.Posts.Components
+﻿@using DntSite.Web.Features.Posts.Components
 @using DntSite.Web.Features.Surveys.Entities
-<DntSitePageTitle PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="نظرسنجی‌ها" PageTitle="@PageTitle"/>
 
 <DntLoading IsLoading="@(Posts is null)">
     @foreach (var post in Posts!.Data)

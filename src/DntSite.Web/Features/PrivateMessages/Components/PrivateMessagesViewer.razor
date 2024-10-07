@@ -1,8 +1,8 @@
-@attribute [Route(PrivateMessagesRoutingConstants.PrivateMessagesViewer)]
+﻿@attribute [Route(PrivateMessagesRoutingConstants.PrivateMessagesViewer)]
 @attribute [Route(PrivateMessagesRoutingConstants.PrivateMessagesViewerPageCurrentPage)]
 
 
-<DntSitePageTitle PageTitle="کنترل پیام‌های خصوصی سیستم"/>
+<DntSitePageTitle Group="پیام‌ها" PageTitle="کنترل پیام‌های خصوصی سیستم"/>
 
 <DntLoading IsLoading="@(_privateMessages is null)">
     @foreach (var privateMessage in _privateMessages!.Data)
