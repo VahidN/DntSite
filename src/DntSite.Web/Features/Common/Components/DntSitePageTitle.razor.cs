@@ -18,6 +18,6 @@ public partial class DntSitePageTitle
         base.OnInitialized();
 
         SitePageTitlesCacheService.AddSitePageTitle(ApplicationState.HttpContext.GetRawUrl(),
-            $"{Group} - {PageTitle.ToPersianNumbers()}");
+            $"{Group}: {PageTitle.ToPersianNumbers()}");
     }
 }
