@@ -1,7 +1,9 @@
 using DntSite.Web.Features.Common.RoutingConstants;
+using DntSite.Web.Features.Stats.Middlewares.Contracts;
 
 namespace DntSite.Web.Features.Common.Components;
 
+[DoNotLogReferrer]
 public partial class Error
 {
     [CascadingParameter] public HttpContext? HttpContext { get; set; }

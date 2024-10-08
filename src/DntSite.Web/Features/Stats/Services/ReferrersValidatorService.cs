@@ -1,14 +1,24 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Stats.Middlewares.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace DntSite.Web.Features.Stats.Services;
 
 public class ReferrersValidatorService(IUAParserService uaParserService, ICachedAppSettingsProvider appSettingsProvider)
     : IReferrersValidatorService
 {
+    private readonly HashSet<string> _protectedUrls = new(StringComparer.OrdinalIgnoreCase);
+
     public async Task<bool> ShouldSkipThisRequestAsync(HttpContext context, string referrerUrl, string destinationUrl)
     {
+        if (context.IsProtectedRoute())
+        {
+            _protectedUrls.Add(context.GetRawUrl());
+
+            return true;
+        }
+
         var rootUrl = await GetRootUrlAsync(context);
 
         if (string.IsNullOrEmpty(referrerUrl) || string.IsNullOrEmpty(destinationUrl))
@@ -31,12 +41,18 @@ public class ReferrersValidatorService(IUAParserService uaParserService, ICached
             return true;
         }
 
+        if (string.Equals(UriHelper.Encode(new Uri(referrerUrl)), UriHelper.Encode(new Uri(destinationUrl)),
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
         if (!string.Equals(new Uri(destinationUrl).Scheme, new Uri(rootUrl).Scheme, StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }
 
-        if (context.IsProtectedRoute())
+        if (_protectedUrls.Contains(destinationUrl) || _protectedUrls.Contains(referrerUrl))
         {
             return true;
         }
