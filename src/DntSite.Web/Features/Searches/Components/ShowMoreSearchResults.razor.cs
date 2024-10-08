@@ -3,9 +3,11 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Searches.Models;
 using DntSite.Web.Features.Searches.RoutingConstants;
 using DntSite.Web.Features.Searches.Services.Contracts;
+using DntSite.Web.Features.Stats.Middlewares.Contracts;
 
 namespace DntSite.Web.Features.Searches.Components;
 
+[DoNotLogReferrer]
 public partial class ShowMoreSearchResults
 {
     private const int ItemsPerPage = 10;
@@ -29,7 +31,7 @@ public partial class ShowMoreSearchResults
     [InjectComponentScoped] internal IIndexedDataExplorerService IndexedDataExplorerService { set; get; } = null!;
 
     private string BasePath => "/".CombineUrl(SearchesRoutingConstants.SearchResultsBase)
-        .CombineUrl(Uri.EscapeDataString(Term ?? ""));
+        .CombineUrl(Uri.EscapeDataString(Term?.Trim() ?? ""));
 
     protected override async Task OnInitializedAsync()
     {
@@ -54,7 +56,7 @@ public partial class ShowMoreSearchResults
 
         await SearchItemsService.AddSearchItemAsync(Term);
 
-        _posts = await IndexedDataExplorerService.FindAllPagedIndexedDataAsync(Term, MaxItems, CurrentPage.Value,
+        _posts = await IndexedDataExplorerService.FindAllPagedIndexedDataAsync(Term.Trim(), MaxItems, CurrentPage.Value,
             ItemsPerPage);
     }
 

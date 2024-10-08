@@ -20,7 +20,7 @@ public interface IFullTextSearchService : IDisposable, ISingletonService
 
     void CommitChanges();
 
-    PagedResultModel<LuceneSearchResult> FindPagedPosts(string searchText,
+    PagedResultModel<LuceneSearchResult> FindPagedPosts(string? searchText,
         int maxItems,
         int pageNumber,
         int pageSize,

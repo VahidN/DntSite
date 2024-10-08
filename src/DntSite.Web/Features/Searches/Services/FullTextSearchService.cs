@@ -35,8 +35,8 @@ public class FullTextSearchService : IFullTextSearchService
 
     private readonly IAppAntiXssService _antiXssService;
     private readonly IAppFoldersService _appFoldersService;
-    private readonly ILogger<FullTextSearchService> _logger;
     private readonly ILockerService _lockerService;
+    private readonly ILogger<FullTextSearchService> _logger;
 
     private Analyzer? _analyzer;
     private FSDirectory? _fsDirectory;
@@ -243,12 +243,14 @@ public class FullTextSearchService : IFullTextSearchService
         return new PagedResultModel<LuceneSearchResult>();
     }
 
-    public PagedResultModel<LuceneSearchResult> FindPagedPosts(string searchText,
+    public PagedResultModel<LuceneSearchResult> FindPagedPosts(string? searchText,
         int maxItems,
         int pageNumber,
         int pageSize,
         params string[]? searchInTheseFieldNames)
     {
+        searchText = searchText?.Trim();
+
         if (string.IsNullOrWhiteSpace(searchText))
         {
             return new PagedResultModel<LuceneSearchResult>();
