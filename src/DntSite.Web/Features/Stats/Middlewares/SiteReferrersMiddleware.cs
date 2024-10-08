@@ -44,10 +44,9 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
 
         try
         {
-            if (!await _referrersValidatorService.ShouldSkipThisRequestAsync(context, referrerUrl, destinationUrl))
+            if (!await _referrersValidatorService.ShouldSkipThisRequestAsync(context))
             {
-                var isLocalReferrer = referrerUrl.IsLocalReferrer(destinationUrl);
-                AddSiteReferrerItemToQueue(new SiteReferrerItem(referrerUrl, destinationUrl, isLocalReferrer));
+                AddSiteReferrerItemToQueue(new SiteReferrerItem(referrerUrl, destinationUrl));
             }
         }
         catch (Exception ex)
@@ -104,8 +103,7 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
                         break;
                     }
 
-                    await siteReferrersService.TryAddOrUpdateReferrerAsync(item.ReferrerUrl, item.DestinationUrl,
-                        item.IsLocalReferrer);
+                    await siteReferrersService.TryAddOrUpdateReferrerAsync(item.ReferrerUrl, item.DestinationUrl);
                 }
             });
         }
@@ -158,5 +156,5 @@ public class SiteReferrersMiddleware : IMiddleware, ISingletonService, IDisposab
         }
     }
 
-    private sealed record SiteReferrerItem(string ReferrerUrl, string DestinationUrl, bool IsLocalReferrer);
+    private sealed record SiteReferrerItem(string ReferrerUrl, string DestinationUrl);
 }

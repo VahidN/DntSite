@@ -7,7 +7,7 @@ public interface ISiteReferrersService : IScopedService
 {
     Task DeleteAllAsync();
 
-    Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl, bool isLocalReferrer);
+    Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl);
 
     Task<SiteReferrer?> FindSiteReferrerAsync(string referrerHash);
 

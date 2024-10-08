@@ -2,7 +2,6 @@ using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Stats.Entities;
 using DntSite.Web.Features.Stats.Services.Contracts;
@@ -11,8 +10,8 @@ namespace DntSite.Web.Features.Stats.Services;
 
 public class SiteReferrersService(
     IUnitOfWork uow,
-    BaseHttpClient baseHttpClient,
     IAppSettingsService appSettingsService,
+    IReferrersValidatorService referrersValidatorService,
     ILogger<SiteReferrersService> logger,
     IPasswordHasherService hasherService,
     ISitePageTitlesCacheService sitePageTitlesCacheService) : ISiteReferrersService
@@ -21,25 +20,19 @@ public class SiteReferrersService(
 
     public Task DeleteAllAsync() => uow.ExecuteTransactionAsync(() => _referrers.ExecuteDeleteAsync());
 
-    public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl, bool isLocalReferrer)
+    public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl)
     {
-        if (string.IsNullOrWhiteSpace(destinationUrl))
+        if (string.IsNullOrWhiteSpace(destinationUrl) || string.IsNullOrWhiteSpace(referrerUrl))
         {
             return false;
         }
 
         try
         {
-            var normalizedDestinationUrl = GetNormalizedDestinationUrl(destinationUrl);
+            var normalizedDestinationUrl = await referrersValidatorService.GetNormalizedUrlAsync(destinationUrl);
+            var normalizedReferrerUrl = await referrersValidatorService.GetNormalizedUrlAsync(referrerUrl);
 
-            if (string.IsNullOrWhiteSpace(normalizedDestinationUrl))
-            {
-                return false;
-            }
-
-            var referrerUrlHtmlContent = await GetUrlHtmlContentAsync(referrerUrl);
-
-            if (!await IsValidReferrerAsync(referrerUrl, referrerUrlHtmlContent))
+            if (AreNullOrWhiteSpaceOrEqual(normalizedDestinationUrl, normalizedReferrerUrl))
             {
                 return false;
             }
@@ -48,15 +41,20 @@ public class SiteReferrersService(
                 await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(normalizedDestinationUrl, fetchUrl: true);
 
             var referrerTitle =
-                await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(referrerUrl, fetchUrl: true);
+                await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(normalizedReferrerUrl, fetchUrl: true);
 
-            if (string.IsNullOrWhiteSpace(destinationTitle) || string.IsNullOrWhiteSpace(referrerTitle))
+            if (AreNullOrWhiteSpaceOrEqual(destinationTitle, referrerTitle))
+            {
+                return false;
+            }
+
+            if (await appSettingsService.IsBannedReferrerAsync(normalizedReferrerUrl))
             {
                 return false;
             }
 
             var referrerHash = hasherService.GetSha1Hash(string
-                .Create(CultureInfo.InvariantCulture, $"{referrerUrl}_{normalizedDestinationUrl}")
+                .Create(CultureInfo.InvariantCulture, $"{normalizedReferrerUrl}_{normalizedDestinationUrl}")
                 .ToUpperInvariant());
 
             var siteReferrer = await FindSiteReferrerAsync(referrerHash);
@@ -66,13 +64,13 @@ public class SiteReferrersService(
                 _referrers.Add(new SiteReferrer
                 {
                     ReferrerTitle = referrerTitle,
-                    ReferrerUrl = referrerUrl,
+                    ReferrerUrl = normalizedReferrerUrl,
                     DestinationUrl = normalizedDestinationUrl,
                     DestinationTitle = destinationTitle,
                     VisitHash = referrerHash,
                     VisitsCount = 1,
                     LastVisitTime = DateTime.UtcNow,
-                    IsLocalReferrer = isLocalReferrer
+                    IsLocalReferrer = referrerUrl.IsLocalReferrer(destinationUrl)
                 });
             }
             else
@@ -132,21 +130,21 @@ public class SiteReferrersService(
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
     }
 
-    public Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string? destinationUrl,
+    public async Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string? destinationUrl,
         int pageNumber,
         int recordsPerPage,
         bool isLocalReferrer)
     {
         if (string.IsNullOrWhiteSpace(destinationUrl))
         {
-            return Task.FromResult(new PagedResultModel<SiteReferrer>());
+            return new PagedResultModel<SiteReferrer>();
         }
 
-        var url = GetNormalizedDestinationUrl(destinationUrl);
+        var url = await referrersValidatorService.GetNormalizedUrlAsync(destinationUrl);
 
         if (string.IsNullOrWhiteSpace(url))
         {
-            return Task.FromResult(new PagedResultModel<SiteReferrer>());
+            return new PagedResultModel<SiteReferrer>();
         }
 
         var query = _referrers.AsNoTracking()
@@ -154,7 +152,7 @@ public class SiteReferrersService(
             .OrderByDescending(x => x.VisitsCount)
             .ThenByDescending(x => x.LastVisitTime);
 
-        return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
+        return await query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
     }
 
     public async Task RemoveSiteReferrerAsync(int id)
@@ -170,43 +168,9 @@ public class SiteReferrersService(
         await uow.SaveChangesAsync();
     }
 
-    private string? GetNormalizedDestinationUrl(string? destinationUrl)
-    {
-        if (!destinationUrl.IsValidUrl())
-        {
-            return null;
-        }
-
-        if (destinationUrl.Contains(value: "/post/", StringComparison.OrdinalIgnoreCase))
-        {
-            return destinationUrl.GetNormalizedPostUrl();
-        }
-
-        destinationUrl = destinationUrl.GetUrlWithoutRssQueryStrings();
-
-        return destinationUrl;
-    }
-
-    private async Task<string?> GetUrlHtmlContentAsync(string url)
-    {
-        try
-        {
-            return await baseHttpClient.HttpClient.GetStringAsync(url);
-        }
-        catch (Exception ex)
-        {
-            if (ex is not HttpRequestException)
-            {
-                throw;
-            }
-        }
-
-        return null;
-    }
-
-    private async Task<bool> IsValidReferrerAsync(string referrerUrl, string? referrerUrlHtmlContent)
-        => !IsSpam(referrerUrlHtmlContent) && !await appSettingsService.IsBannedReferrerAsync(referrerUrl);
-
-    private static bool IsSpam(string? referrerUrlHtmlContent)
-        => referrerUrlHtmlContent?.Contains(value: "<iframe", StringComparison.OrdinalIgnoreCase) == true;
+    private static bool AreNullOrWhiteSpaceOrEqual([NotNullWhen(returnValue: false)] string? item1,
+        [NotNullWhen(returnValue: false)] string? item2,
+        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+        => string.IsNullOrWhiteSpace(item1) || string.IsNullOrWhiteSpace(item2) ||
+           string.Equals(item1, item2, comparisonType);
 }

@@ -2,5 +2,7 @@
 
 public interface IReferrersValidatorService : ISingletonService
 {
-    Task<bool> ShouldSkipThisRequestAsync(HttpContext context, string referrerUrl, string destinationUrl);
+    Task<bool> ShouldSkipThisRequestAsync(HttpContext context);
+
+    Task<string?> GetNormalizedUrlAsync(string? url);
 }

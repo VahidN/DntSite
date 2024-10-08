@@ -1,7 +1,7 @@
+using System.Web;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Stats.Middlewares.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
-using Microsoft.AspNetCore.Http.Extensions;
 
 namespace DntSite.Web.Features.Stats.Services;
 
@@ -10,7 +10,7 @@ public class ReferrersValidatorService(IUAParserService uaParserService, ICached
 {
     private readonly HashSet<string> _protectedUrls = new(StringComparer.OrdinalIgnoreCase);
 
-    public async Task<bool> ShouldSkipThisRequestAsync(HttpContext context, string referrerUrl, string destinationUrl)
+    public async Task<bool> ShouldSkipThisRequestAsync(HttpContext context)
     {
         if (context.IsProtectedRoute())
         {
@@ -20,6 +20,9 @@ public class ReferrersValidatorService(IUAParserService uaParserService, ICached
         }
 
         var rootUrl = await GetRootUrlAsync(context);
+
+        var referrerUrl = context.GetReferrerUrl();
+        var destinationUrl = context.GetRawUrl();
 
         if (string.IsNullOrEmpty(referrerUrl) || string.IsNullOrEmpty(destinationUrl))
         {
@@ -41,7 +44,7 @@ public class ReferrersValidatorService(IUAParserService uaParserService, ICached
             return true;
         }
 
-        if (string.Equals(UriHelper.Encode(new Uri(referrerUrl)), UriHelper.Encode(new Uri(destinationUrl)),
+        if (string.Equals(HttpUtility.UrlDecode(referrerUrl), HttpUtility.UrlDecode(destinationUrl),
                 StringComparison.OrdinalIgnoreCase))
         {
             return true;
@@ -72,7 +75,71 @@ public class ReferrersValidatorService(IUAParserService uaParserService, ICached
             return true;
         }
 
-        return DoNotLog(context);
+        if (HasDoNotLogReferrerAttribute(context))
+        {
+            _protectedUrls.Add(context.GetRawUrl());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public async Task<string?> GetNormalizedUrlAsync(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url) || !url.IsValidUrl())
+        {
+            return null;
+        }
+
+        var rootUrl = (await appSettingsProvider.GetAppSettingsAsync()).SiteRootUri;
+
+        if (!url.IsReferrerToThisSite(rootUrl))
+        {
+            return url;
+        }
+
+        if (url.Contains(value: "/post/", StringComparison.OrdinalIgnoreCase))
+        {
+            return GetNormalizedPostUrl(url);
+        }
+
+        url = url.GetUrlWithoutRssQueryStrings();
+
+        return url;
+    }
+
+    private static string? GetNormalizedPostUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return null;
+        }
+
+        if (!url.IsValidUrl())
+        {
+            return null;
+        }
+
+        if (!url.Contains(value: "/post/", StringComparison.OrdinalIgnoreCase))
+        {
+            return url;
+        }
+
+        var uri = new Uri(url);
+
+        if (uri.Segments.Length < 2)
+        {
+            return url;
+        }
+
+        var id = uri.Segments[2].Replace(oldValue: "/", string.Empty, StringComparison.OrdinalIgnoreCase).ToInt();
+
+        var domain = uri.IsDefaultPort
+            ? uri.Host
+            : string.Create(CultureInfo.InvariantCulture, $"{uri.Host}:{uri.Port}");
+
+        return string.Create(CultureInfo.InvariantCulture, $"{uri.Scheme}://{domain}/post/{id}");
     }
 
     private async Task<string> GetRootUrlAsync(HttpContext context)
@@ -82,6 +149,6 @@ public class ReferrersValidatorService(IUAParserService uaParserService, ICached
         return string.IsNullOrWhiteSpace(rootUrl) ? context.GetBaseUrl() : rootUrl;
     }
 
-    private static bool DoNotLog(HttpContext context)
+    private static bool HasDoNotLogReferrerAttribute(HttpContext context)
         => context.GetEndpoint()?.Metadata?.GetMetadata<DoNotLogReferrerAttribute>() is not null;
 }
