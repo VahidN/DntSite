@@ -1,12 +1,13 @@
-using System.Web;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Stats.Middlewares.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Stats.Services;
 
-public class ReferrersValidatorService(IUAParserService uaParserService, ICachedAppSettingsProvider appSettingsProvider)
-    : IReferrersValidatorService
+public class ReferrersValidatorService(
+    IUAParserService uaParserService,
+    ICachedAppSettingsProvider appSettingsProvider,
+    IUrlNormalizationService urlNormalizationService) : IReferrersValidatorService
 {
     private readonly HashSet<string> _protectedUrls = new(StringComparer.OrdinalIgnoreCase);
 
@@ -44,8 +45,8 @@ public class ReferrersValidatorService(IUAParserService uaParserService, ICached
             return true;
         }
 
-        if (string.Equals(HttpUtility.UrlDecode(referrerUrl), HttpUtility.UrlDecode(destinationUrl),
-                StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(urlNormalizationService.NormalizeUrl(referrerUrl),
+                urlNormalizationService.NormalizeUrl(destinationUrl), StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }
@@ -96,7 +97,7 @@ public class ReferrersValidatorService(IUAParserService uaParserService, ICached
 
         if (!url.IsReferrerToThisSite(rootUrl))
         {
-            return url;
+            return urlNormalizationService.NormalizeUrl(url);
         }
 
         if (url.Contains(value: "/post/", StringComparison.OrdinalIgnoreCase))
@@ -106,7 +107,7 @@ public class ReferrersValidatorService(IUAParserService uaParserService, ICached
 
         url = url.GetUrlWithoutRssQueryStrings();
 
-        return url;
+        return url.IsEmpty() ? null : urlNormalizationService.NormalizeUrl(url);
     }
 
     private static string? GetNormalizedPostUrl(string? url)

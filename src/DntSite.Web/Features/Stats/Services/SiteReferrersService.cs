@@ -32,7 +32,8 @@ public class SiteReferrersService(
             var normalizedDestinationUrl = await referrersValidatorService.GetNormalizedUrlAsync(destinationUrl);
             var normalizedReferrerUrl = await referrersValidatorService.GetNormalizedUrlAsync(referrerUrl);
 
-            if (AreNullOrWhiteSpaceOrEqual(normalizedDestinationUrl, normalizedReferrerUrl))
+            if (normalizedDestinationUrl.AreNullOrEmptyOrEqual(normalizedReferrerUrl,
+                    StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -43,7 +44,7 @@ public class SiteReferrersService(
             var referrerTitle =
                 await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(normalizedReferrerUrl, fetchUrl: true);
 
-            if (AreNullOrWhiteSpaceOrEqual(destinationTitle, referrerTitle))
+            if (destinationTitle.AreNullOrEmptyOrEqual(referrerTitle, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -167,10 +168,4 @@ public class SiteReferrersService(
         item.IsDeleted = true;
         await uow.SaveChangesAsync();
     }
-
-    private static bool AreNullOrWhiteSpaceOrEqual([NotNullWhen(returnValue: false)] string? item1,
-        [NotNullWhen(returnValue: false)] string? item2,
-        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
-        => string.IsNullOrWhiteSpace(item1) || string.IsNullOrWhiteSpace(item2) ||
-           string.Equals(item1, item2, comparisonType);
 }
