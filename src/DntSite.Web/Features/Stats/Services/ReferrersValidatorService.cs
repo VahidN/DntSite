@@ -97,7 +97,10 @@ public class ReferrersValidatorService(
 
         if (!url.IsReferrerToThisSite(rootUrl))
         {
-            return urlNormalizationService.NormalizeUrl(url);
+            return urlNormalizationService.NormalizeUrl(url, defaultProtocol: "https",
+                NormalizeUrlRules.LimitProtocols | NormalizeUrlRules.RemoveDefaultDirectoryIndexes |
+                NormalizeUrlRules.RemoveTheFragment | NormalizeUrlRules.RemoveDuplicateSlashes |
+                NormalizeUrlRules.RemoveTrailingSlashAndEmptyQuery);
         }
 
         if (url.Contains(value: "/post/", StringComparison.OrdinalIgnoreCase))
@@ -107,7 +110,7 @@ public class ReferrersValidatorService(
 
         url = url.GetUrlWithoutRssQueryStrings();
 
-        return url.IsEmpty() ? null : urlNormalizationService.NormalizeUrl(url);
+        return url.IsEmpty() ? null : urlNormalizationService.NormalizeUrl(url, new Uri(url).Scheme);
     }
 
     private static string? GetNormalizedPostUrl(string? url)
