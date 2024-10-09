@@ -46,6 +46,7 @@ public class FtsController(IFullTextSearchService fullTextSearchService, ISearch
     }
 
     [HttpPost(template: "[action]")]
+    [HttpGet(template: "[action]")]
     [IgnoreAntiforgeryToken]
     public async Task<IActionResult> Log([FromBody] string? searchValue)
     {

@@ -14,6 +14,7 @@ public class JavaScriptErrorsReportController(
     ICacheService cacheService) : ControllerBase
 {
     [HttpPost(template: "[action]")]
+    [HttpGet(template: "[action]")]
     [IgnoreAntiforgeryToken]
     public IActionResult Log([FromBody] string errorMessage)
     {
