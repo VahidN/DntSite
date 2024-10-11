@@ -1,5 +1,6 @@
 using DntSite.Web.Features.AppConfigs.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Models;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace DntSite.Web.Features.AppConfigs.Components;
 
@@ -9,6 +10,10 @@ public partial class ServerInfo
     private WebServerInfo? _webServerInfo;
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
+
+    [Inject] internal IKeyManager KeyManager { set; get; } = null!;
+
+    private List<IKey> GetKeysList() => KeyManager.GetAllKeys().OrderByDescending(key => key.CreationDate).ToList();
 
     protected override async Task OnInitializedAsync()
     {
