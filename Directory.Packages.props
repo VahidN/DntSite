@@ -21,6 +21,7 @@
     <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="8.0.0" />
     <PackageVersion Include="System.Net.Http.Json" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
+    <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.6.2" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
