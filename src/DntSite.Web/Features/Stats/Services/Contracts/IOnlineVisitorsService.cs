@@ -3,11 +3,11 @@ using DntSite.Web.Features.Stats.Models;
 
 namespace DntSite.Web.Features.Stats.Services.Contracts;
 
-public interface IOnlineVisitorsService : ISingletonService, IDisposable
+public interface IOnlineVisitorsService : ISingletonService
 {
     OnlineVisitorsInfoModel GetOnlineVisitorsInfo();
 
-    Task UpdateStatAsync(HttpContext context);
+    Task ProcessItemAsync(OnlineVisitorInfoModel item);
 
     PagedResultModel<OnlineVisitorInfoModel> GetPagedOnlineVisitorsList(int pageNumber,
         int recordsPerPage,

@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using DntSite.Web.Features.AppConfigs.Entities;
+﻿using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using Microsoft.Extensions.Options;
@@ -8,16 +7,13 @@ namespace DntSite.Web.Features.DbLogger.Services;
 
 public class EfDbLoggerProvider : ILoggerProvider
 {
-    private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private readonly List<EfDbLoggerItem> _currentBatch = new();
-    private readonly TimeSpan _interval = TimeSpan.FromSeconds(value: 7);
-    private readonly BlockingCollection<EfDbLoggerItem> _messageQueue = new(new ConcurrentQueue<EfDbLoggerItem>());
-    private readonly Task _outputTask;
+    private readonly IBackgroundQueueService _backgroundQueueService;
     private readonly IServiceProvider _serviceProvider;
-    private bool _isDisposed;
     private StartupSettingsModel _siteSettings;
 
-    public EfDbLoggerProvider(IOptionsMonitor<StartupSettingsModel> siteSettings, IServiceProvider serviceProvider)
+    public EfDbLoggerProvider(IOptionsMonitor<StartupSettingsModel> siteSettings,
+        IServiceProvider serviceProvider,
+        IBackgroundQueueService backgroundQueueService)
     {
         ArgumentNullException.ThrowIfNull(siteSettings);
 
@@ -25,7 +21,7 @@ public class EfDbLoggerProvider : ILoggerProvider
         siteSettings.OnChange(settings => _siteSettings = settings);
 
         _serviceProvider = serviceProvider;
-        _outputTask = Task.Run(ProcessLogQueueAsync);
+        _backgroundQueueService = backgroundQueueService;
     }
 
     public ILogger CreateLogger(string categoryName)
@@ -39,103 +35,28 @@ public class EfDbLoggerProvider : ILoggerProvider
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!_isDisposed)
+        if (disposing)
         {
-            try
-            {
-                if (disposing)
-                {
-                    Stop();
-                    _messageQueue.Dispose();
-                    _cancellationTokenSource.Dispose();
-                }
-            }
-            finally
-            {
-                _isDisposed = true;
-            }
+            // empty on purpose
         }
     }
 
     internal void AddLogItem(EfDbLoggerItem appLogItem)
-    {
-        if (!_messageQueue.IsAddingCompleted)
+        => _backgroundQueueService.QueueBackgroundWorkItem(async (cancellationToken, serviceProvider) =>
         {
-            _messageQueue.Add(appLogItem, _cancellationTokenSource.Token);
-        }
-    }
-
-    [SuppressMessage(category: "Microsoft.Usage",
-        checkId: "CA1031:catch a more specific allowed exception type, or rethrow the exception",
-        Justification = "cancellation token canceled or CompleteAdding called")]
-    private async Task ProcessLogQueueAsync()
-    {
-        while (!_cancellationTokenSource.IsCancellationRequested)
-        {
-            while (_messageQueue.TryTake(out var message))
+            try
             {
-                try
-                {
-                    _currentBatch.Add(message);
-                }
-                catch
-                {
-                    //cancellation token canceled or CompleteAdding called
-                }
+                // We need a separate context for the logger to call its SaveChanges several times,
+                // without using the current request's context and changing its internal state.
+                using var uow = serviceProvider.GetRequiredService<IUnitOfWork>();
+                uow.DbSet<AppLogItem>().Add(appLogItem.AppLogItem);
+                await uow.SaveChangesAsync(cancellationToken);
             }
-
-            await SaveLogItemsAsync(_currentBatch, _cancellationTokenSource.Token);
-            _currentBatch.Clear();
-
-            await Task.Delay(_interval, _cancellationTokenSource.Token);
-        }
-    }
-
-    [SuppressMessage(category: "Microsoft.Usage",
-        checkId: "CA1031:catch a more specific allowed exception type, or rethrow the exception",
-        Justification = "don't throw exceptions from logger")]
-    private async Task SaveLogItemsAsync(IList<EfDbLoggerItem> items, CancellationToken cancellationToken)
-    {
-        try
-        {
-            if (!items.Any())
+            catch (Exception ex)
             {
-                return;
+                // don't throw exceptions from logger
+                WriteLine(appLogItem.AppLogItem.Message);
+                WriteLine(ex);
             }
-
-            // We need a separate context for the logger to call its SaveChanges several times,
-            // without using the current request's context and changing its internal state.
-            await _serviceProvider.RunScopedServiceAsync<IUnitOfWork>(async context =>
-            {
-                foreach (var item in items)
-                {
-                    context.DbSet<AppLogItem>().Add(item.AppLogItem);
-                }
-
-                await context.SaveChangesAsync(cancellationToken);
-            });
-        }
-        catch
-        {
-            // don't throw exceptions from logger
-        }
-    }
-
-    [SuppressMessage(category: "Microsoft.Usage",
-        checkId: "CA1031:catch a more specific allowed exception type, or rethrow the exception",
-        Justification = "don't throw exceptions from logger")]
-    private void Stop()
-    {
-        _cancellationTokenSource.Cancel();
-        _messageQueue.CompleteAdding();
-
-        try
-        {
-            _outputTask.Wait(_interval);
-        }
-        catch
-        {
-            // don't throw exceptions from logger
-        }
-    }
+        });
 }

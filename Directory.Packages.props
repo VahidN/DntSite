@@ -25,9 +25,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="6.8.3" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="6.9.1" />
     <PackageVersion Include="DNTPersianUtils.Core" Version="6.3.1" />
-    <PackageVersion Include="EFCoreSecondLevelCacheInterceptor" Version="4.8.2" />
+    <PackageVersion Include="EFCoreSecondLevelCacheInterceptor" Version="4.8.3" />
     <PackageVersion Include="AutoMapper" Version="13.0.1" />
     <PackageVersion Include="Scrutor" Version="5.0.1" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
