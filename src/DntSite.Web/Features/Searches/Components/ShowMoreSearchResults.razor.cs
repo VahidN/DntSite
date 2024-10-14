@@ -30,8 +30,8 @@ public partial class ShowMoreSearchResults
 
     [InjectComponentScoped] internal IIndexedDataExplorerService IndexedDataExplorerService { set; get; } = null!;
 
-    private string BasePath => "/".CombineUrl(SearchesRoutingConstants.SearchResultsBase)
-        .CombineUrl(Uri.EscapeDataString(Term?.Trim() ?? ""));
+    private string BasePath => "/".CombineUrl(SearchesRoutingConstants.SearchResultsBase, escapeRelativeUrl: false)
+        .CombineUrl(Term?.Trim() ?? "", escapeRelativeUrl: true);
 
     protected override async Task OnInitializedAsync()
     {

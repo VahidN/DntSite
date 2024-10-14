@@ -10,7 +10,7 @@ public partial class WriteNewsHelp
     private string RootUrl
         => ApplicationState.AppSetting?.SiteRootUri ?? ApplicationState.CurrentAbsoluteUri.ToString();
 
-    private string WritePostUrl => RootUrl.CombineUrl(NewsRoutingConstants.DailyLinks);
+    private string WritePostUrl => RootUrl.CombineUrl(NewsRoutingConstants.DailyLinks, escapeRelativeUrl: false);
 
     private string SendLinkUrl
         => $"""javascript:location.href="{WritePostUrl}?url="+encodeURIComponent(location.href)+"&title="+encodeURIComponent(document.title)""";

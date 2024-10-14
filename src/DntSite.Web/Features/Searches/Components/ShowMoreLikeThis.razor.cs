@@ -16,8 +16,9 @@ public partial class ShowMoreLikeThis
 
     [Parameter] public int MaxItems { set; get; } = 11;
 
-    private string MoreLikeThisUrl => "/".CombineUrl(SearchesRoutingConstants.MoreLikeThisBase)
-        .CombineUrl(Uri.EscapeDataString(DocumentTypeIdHash ?? ""));
+    private string MoreLikeThisUrl => "/"
+        .CombineUrl(SearchesRoutingConstants.MoreLikeThisBase, escapeRelativeUrl: false)
+        .CombineUrl(DocumentTypeIdHash ?? "", escapeRelativeUrl: true);
 
     protected override void OnInitialized()
     {

@@ -42,10 +42,10 @@
 
     [Parameter] public NewProjectHelpEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectsDetailsBase).CombineUrl(Model.Id);
+    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectsDetailsBase, escapeRelativeUrl: false).CombineUrl(Model.Id, escapeRelativeUrl: false);
 
-    private string FilesUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.WriteProjectReleaseBase).CombineUrl(Model.Id);
+    private string FilesUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.WriteProjectReleaseBase, escapeRelativeUrl: false).CombineUrl(Model.Id, escapeRelativeUrl: false);
 
-    private string FaqsUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.WriteProjectFaqBase).CombineUrl(Model.Id);
+    private string FaqsUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.WriteProjectFaqBase, escapeRelativeUrl: false).CombineUrl(Model.Id, escapeRelativeUrl: false);
 
 }

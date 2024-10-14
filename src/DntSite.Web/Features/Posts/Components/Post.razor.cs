@@ -1,6 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
 using DntSite.Web.Features.Posts.ModelsMappings;
@@ -92,16 +91,18 @@ public partial class Post
 
     private async Task ManageOldBloggerLinksAsync()
     {
-        var oldUrl = ApplicationState.AppSetting?.SiteRootUri.CombineUrl(PublishYear.ToEnglishNumbers())
-            .CombineUrl(PublishMonth.ToEnglishNumbers())
-            .CombineUrl($"{OldTitle}.html");
+        var oldUrl = ApplicationState.AppSetting?.SiteRootUri
+            .CombineUrl(PublishYear.ToEnglishNumbers(), escapeRelativeUrl: false)
+            .CombineUrl(PublishMonth.ToEnglishNumbers(), escapeRelativeUrl: false)
+            .CombineUrl($"{OldTitle}.html", escapeRelativeUrl: false);
 
         var post = await BlogPostsService.FindBlogPostAsync(oldUrl.ToEnglishNumbers());
 
         if (post is not null)
         {
             ApplicationState.NavigateTo(
-                PostsRoutingConstants.PostBase.CombineUrl(post.Id.ToString(CultureInfo.InvariantCulture)));
+                PostsRoutingConstants.PostBase.CombineUrl(post.Id.ToString(CultureInfo.InvariantCulture),
+                    escapeRelativeUrl: false));
         }
         else
         {

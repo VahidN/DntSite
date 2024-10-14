@@ -21,6 +21,6 @@
 
     [Parameter] public ApplyIssueStatusEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectsDetailsBase).CombineUrl(Model.IssueTitle);
+    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectsDetailsBase, escapeRelativeUrl: false).CombineUrl(Model.IssueTitle, escapeRelativeUrl: true);
 
 }

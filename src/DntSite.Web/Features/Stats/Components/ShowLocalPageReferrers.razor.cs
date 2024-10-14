@@ -21,8 +21,9 @@ public partial class ShowLocalPageReferrers
 
     [CascadingParameter] public HttpContext HttpContext { get; set; } = null!;
 
-    private string MoreLocalPageReferrersUrl => "/".CombineUrl(StatsRoutingConstants.MoreLocalPageReferrersBase)
-        .CombineUrl(Uri.EscapeDataString(LocalUrl ?? ""));
+    private string MoreLocalPageReferrersUrl => "/"
+        .CombineUrl(StatsRoutingConstants.MoreLocalPageReferrersBase, escapeRelativeUrl: false)
+        .CombineUrl(LocalUrl ?? "", escapeRelativeUrl: true);
 
     private string BasePath => MoreLocalPageReferrersUrl;
 

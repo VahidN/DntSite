@@ -30,9 +30,8 @@ public partial class ProjectReleaseDetails
     private string DeletePostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
         $"{ProjectsRoutingConstants.WriteProjectReleaseDeleteBase}/{ProjectId}/{EncryptedReleaseId}");
 
-    private string EncryptedReleaseId => ReleaseId.HasValue
-        ? ProtectionProvider.Encrypt(ReleaseId.Value.ToString(CultureInfo.InvariantCulture))
-        : "";
+    private string EncryptedReleaseId
+        => Uri.EscapeDataString(ProtectionProvider.Encrypt(ReleaseId?.ToString(CultureInfo.InvariantCulture)) ?? "");
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 

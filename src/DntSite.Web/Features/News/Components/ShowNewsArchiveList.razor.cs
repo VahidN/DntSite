@@ -34,6 +34,6 @@ public partial class ShowNewsArchiveList
     private string GetDeleteScreenshotUrl(DailyNewsItem post)
         => CanUserDeleteThisPost && !string.IsNullOrWhiteSpace(post.PageThumbnail)
             ? NewsRoutingConstants.WriteNewsDeleteDeleteScreenshotIdBase.CombineUrl(
-                ProtectionProvider.Encrypt(post.Id.ToString(CultureInfo.InvariantCulture)))
+                ProtectionProvider.Encrypt(post.Id.ToString(CultureInfo.InvariantCulture)), escapeRelativeUrl: true)
             : "";
 }

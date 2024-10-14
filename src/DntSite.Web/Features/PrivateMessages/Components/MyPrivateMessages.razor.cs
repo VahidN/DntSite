@@ -47,8 +47,8 @@ public partial class MyPrivateMessages
     }
 
     private string GetPostUrl(PrivateMessage record)
-        => string.Create(CultureInfo.InvariantCulture,
-            $"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture))}");
+        => PrivateMessagesRoutingConstants.MyPrivateMessageBase.CombineUrl(
+            ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture)), escapeRelativeUrl: true);
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([

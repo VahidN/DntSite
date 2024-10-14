@@ -22,7 +22,8 @@ public class SitemapController(IBlogPostsService blogPostsService) : ControllerB
             {
                 LastUpdatedTime = item.Audit.CreatedAt.ToDateTimeOffset(),
                 Url = HttpContext.GetBaseUrl()
-                    .CombineUrl(string.Create(CultureInfo.InvariantCulture, $"/post/{item.Id}"))
+                    .CombineUrl(string.Create(CultureInfo.InvariantCulture, $"/post/{item.Id}"),
+                        escapeRelativeUrl: false)
             })
             .ToList();
 

@@ -47,5 +47,5 @@ public partial class ShowOnlineVisitorsList
         => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.OnlineUsersStatsBreadCrumbs]);
 
     private string GetUserUrl(string friendlyName)
-        => UserProfilesRoutingConstants.Users.CombineUrl(Uri.EscapeDataString(friendlyName));
+        => UserProfilesRoutingConstants.Users.CombineUrl(friendlyName, escapeRelativeUrl: true);
 }

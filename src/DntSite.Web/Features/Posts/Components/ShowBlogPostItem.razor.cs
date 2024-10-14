@@ -34,7 +34,7 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
     private string PostUrl => !EncryptPostUrl
         ? string.Format(CultureInfo.InvariantCulture, PostUrlTemplate, Id)
         : string.Format(CultureInfo.InvariantCulture, PostUrlTemplate,
-            ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)));
+            Uri.EscapeDataString(ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)) ?? ""));
 
     [Parameter] public bool EncryptPostUrl { set; get; }
 
@@ -75,7 +75,7 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
     private string DeletePostUrl => !EncryptEditDeleteIDs
         ? string.Format(CultureInfo.InvariantCulture, DeletePostUrlTemplate, Id)
         : string.Format(CultureInfo.InvariantCulture, DeletePostUrlTemplate,
-            ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)));
+            Uri.EscapeDataString(ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)) ?? ""));
 
     [Parameter] [EditorRequired] public required string EditPostUrlTemplate { set; get; }
 
@@ -98,7 +98,7 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
     private string EditPostUrl => !EncryptEditDeleteIDs
         ? string.Format(CultureInfo.InvariantCulture, EditPostUrlTemplate, Id)
         : string.Format(CultureInfo.InvariantCulture, EditPostUrlTemplate,
-            ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)));
+            Uri.EscapeDataString(ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)) ?? ""));
 
     private string TextToShow => !ShowBriefDescription ? Body : BriefDescription ?? "";
 

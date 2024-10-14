@@ -1,6 +1,5 @@
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
 using DntSite.Web.Features.Projects.RoutingConstants;
@@ -21,16 +20,14 @@ public partial class ProjectFaqDetails
         $"{ProjectsRoutingConstants.ProjectFaqsBase}/{ProjectId}/{FaqId}");
 
     private string EditPostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
-        $"{ProjectsRoutingConstants.WriteProjectFaqEditBase}/{ProjectId}/{EncryptedFaqId}");
+        $"{ProjectsRoutingConstants.WriteProjectFaqEditBase}/{ProjectId}/{Uri.EscapeDataString(EncryptedFaqId)}");
 
     private string DeletePostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
-        $"{ProjectsRoutingConstants.WriteProjectFaqDeleteBase}/{ProjectId}/{EncryptedFaqId}");
+        $"{ProjectsRoutingConstants.WriteProjectFaqDeleteBase}/{ProjectId}/{Uri.EscapeDataString(EncryptedFaqId)}");
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
-    private string EncryptedFaqId => FaqId.HasValue
-        ? ProtectionProvider.Encrypt(FaqId.Value.ToString(CultureInfo.InvariantCulture))
-        : "";
+    private string EncryptedFaqId => ProtectionProvider.Encrypt(FaqId?.ToString(CultureInfo.InvariantCulture)) ?? "";
 
     private ProjectFaq? CurrentPost => _faqs?.CurrentItem;
 

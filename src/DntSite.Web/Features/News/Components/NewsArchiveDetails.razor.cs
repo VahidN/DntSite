@@ -48,7 +48,8 @@ public partial class NewsArchiveDetails
     private string DeleteScreenshotUrl
         => NewsId.HasValue && CanUserDeleteThisPost && !string.IsNullOrWhiteSpace(CurrentPost?.PageThumbnail)
             ? NewsRoutingConstants.WriteNewsDeleteDeleteScreenshotIdBase.CombineUrl(
-                ProtectionProvider.Encrypt(NewsId.Value.ToString(CultureInfo.InvariantCulture)))
+                ProtectionProvider.Encrypt(NewsId.Value.ToString(CultureInfo.InvariantCulture)),
+                escapeRelativeUrl: true)
             : "";
 
     private List<string> GetTags() => CurrentPost?.Tags.Select(x => x.Name).ToList() ?? [];

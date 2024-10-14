@@ -29,7 +29,8 @@ public partial class ChangeUserPassword
 
     [InjectComponentScoped] internal IUsersManagerEmailsService UsersManagerEmailsService { set; get; } = null!;
 
-    private string EncryptedUserId => ProtectionProvider.Encrypt(UserId.ToInt().ToString(CultureInfo.InvariantCulture));
+    private string EncryptedUserId
+        => ProtectionProvider.Encrypt(UserId.ToInt().ToString(CultureInfo.InvariantCulture)) ?? "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,8 +98,8 @@ public partial class ChangeUserPassword
             UserProfilesBreadCrumbs.Users, new BreadCrumb
             {
                 Title = "تغییر کلمه‌ی عبور کاربر",
-                Url = string.Create(CultureInfo.InvariantCulture,
-                    $"{UserProfilesRoutingConstants.ChangeUserPasswordBase}/{EncryptedUserId}"),
+                Url = UserProfilesRoutingConstants.ChangeUserPasswordBase.CombineUrl(EncryptedUserId,
+                    escapeRelativeUrl: true),
                 GlyphIcon = DntBootstrapIcons.BiPerson
             }
         ]);

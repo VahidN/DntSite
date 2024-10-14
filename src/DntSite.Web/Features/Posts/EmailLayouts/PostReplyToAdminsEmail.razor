@@ -34,6 +34,6 @@
 
     [Parameter] public PostReplyToAdminsEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(PostsRoutingConstants.PostBase).CombineUrl($"/{Model.PmId}#comment-{Model.CommentId}");
+    private string PostUrl => Model.SiteRootUri.CombineUrl(PostsRoutingConstants.PostBase, escapeRelativeUrl: false).CombineUrl($"/{Model.PmId}#comment-{Model.CommentId}", escapeRelativeUrl: false);
 
 }

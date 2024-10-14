@@ -34,6 +34,6 @@
 
     [Parameter] public NewDraftEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(PostsRoutingConstants.ShowDraftBase).CombineUrl($"/{Model.PmId}");
+    private string PostUrl => Model.SiteRootUri.CombineUrl(PostsRoutingConstants.ShowDraftBase, escapeRelativeUrl: false).CombineUrl(Model.PmId, escapeRelativeUrl: true);
 
 }

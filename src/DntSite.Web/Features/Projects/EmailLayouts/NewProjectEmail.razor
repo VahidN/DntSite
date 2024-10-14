@@ -49,6 +49,6 @@
 
     [Parameter] public NewProjectEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectsDetailsBase).CombineUrl(Model.Id);
+    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectsDetailsBase, escapeRelativeUrl: false).CombineUrl(Model.Id, escapeRelativeUrl: false);
 
 }

@@ -31,6 +31,6 @@
 
     [Parameter] public QuestionsReplyToWritersEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(QuestionsRoutingConstants.QuestionsDetailsBase).CombineUrl($"/{Model.PmId}#comment-{Model.CommentId}");
+    private string PostUrl => Model.SiteRootUri.CombineUrl(QuestionsRoutingConstants.QuestionsDetailsBase, escapeRelativeUrl: false).CombineUrl($"/{Model.PmId}#comment-{Model.CommentId}", escapeRelativeUrl: false);
 
 }

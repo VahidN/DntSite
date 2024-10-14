@@ -120,10 +120,13 @@ public class DailyNewsScreenshotsService(
         }
 
         var imageUrl = siteRootUri.CombineUrl(
-            $"{ApiUrlsRoutingConstants.File.HttpAny.NewsThumb}?name={Uri.EscapeDataString(fileName)}");
+            $"{ApiUrlsRoutingConstants.File.HttpAny.NewsThumb}?name={Uri.EscapeDataString(fileName)}",
+            escapeRelativeUrl: false);
 
-        var redirectUrl = siteRootUri.CombineUrl(string.Create(CultureInfo.InvariantCulture,
-            $"{NewsRoutingConstants.NewsRedirectBase}/{item.Id}"));
+        var redirectUrl =
+            siteRootUri.CombineUrl(
+                string.Create(CultureInfo.InvariantCulture, $"{NewsRoutingConstants.NewsRedirectBase}/{item.Id}"),
+                escapeRelativeUrl: false);
 
         return $"""
                 <br/>

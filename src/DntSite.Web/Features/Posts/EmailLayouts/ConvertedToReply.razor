@@ -19,6 +19,6 @@
 
     [Parameter] public ConvertedToReplyModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(PostsRoutingConstants.PostBase).CombineUrl($"/{Model.PostId}");
+    private string PostUrl => Model.SiteRootUri.CombineUrl(PostsRoutingConstants.PostBase, escapeRelativeUrl: false).CombineUrl(Model.PostId, escapeRelativeUrl: true);
 
 }

@@ -85,8 +85,8 @@
                         @if (canUserEditThisDraft)
                         {
                             <div>
-                                <a href="@PostsRoutingConstants.WriteDraftEditBase/@ProtectionProvider.Encrypt(item.Id.ToString(CultureInfo.InvariantCulture))" class="btn btn-success btn-sm">ویرایش</a>
-                                <a href="@PostsRoutingConstants.WriteDraftDeleteBase/@ProtectionProvider.Encrypt(item.Id.ToString(CultureInfo.InvariantCulture))"
+                                <a href="@PostsRoutingConstants.WriteDraftEditBase/@Uri.EscapeDataString(ProtectionProvider.Encrypt(item.Id.ToString(CultureInfo.InvariantCulture)) ?? "")" class="btn btn-success btn-sm">ویرایش</a>
+                                <a href="@PostsRoutingConstants.WriteDraftDeleteBase/@Uri.EscapeDataString(ProtectionProvider.Encrypt(item.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
                                    data-cancel-confirm-message="آیا می‌خواهید این پیش‌نویس را حذف کنید؟"
                                    class="btn btn-danger me-2 btn-sm">
                                     حذف

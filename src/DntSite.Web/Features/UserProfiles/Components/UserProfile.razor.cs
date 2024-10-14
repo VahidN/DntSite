@@ -24,13 +24,12 @@ public partial class UserProfile
     private static string GetEscapedUrl(string href, string? queryStringValue)
         => string.IsNullOrWhiteSpace(queryStringValue)
             ? href
-            : href.CombineUrl($"/{Uri.EscapeDataString(queryStringValue)}");
+            : href.CombineUrl(queryStringValue, escapeRelativeUrl: true);
 
     private static string GetEscapedUrl(string href, int? queryStringValue)
         => !queryStringValue.HasValue
             ? href
-            : href.CombineUrl(
-                $"/{Uri.EscapeDataString(queryStringValue.Value.ToString(CultureInfo.InvariantCulture))}");
+            : href.CombineUrl(queryStringValue.Value.ToString(CultureInfo.InvariantCulture), escapeRelativeUrl: true);
 
     private string? GetUserHomePage()
     {

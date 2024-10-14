@@ -28,8 +28,8 @@ public partial class ShowMoreLikeThisSearchResults
 
     [InjectComponentScoped] internal IIndexedDataExplorerService IndexedDataExplorerService { set; get; } = null!;
 
-    private string BasePath => "/".CombineUrl(SearchesRoutingConstants.MoreLikeThisBase)
-        .CombineUrl(Uri.EscapeDataString(DocumentTypeIdHash ?? ""));
+    private string BasePath => "/".CombineUrl(SearchesRoutingConstants.MoreLikeThisBase, escapeRelativeUrl: false)
+        .CombineUrl(DocumentTypeIdHash ?? "", escapeRelativeUrl: true);
 
     protected override async Task OnInitializedAsync()
     {

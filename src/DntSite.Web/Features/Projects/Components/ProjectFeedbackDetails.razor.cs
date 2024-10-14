@@ -1,6 +1,5 @@
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Posts.Models;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
@@ -62,9 +61,8 @@ public partial class ProjectFeedbackDetails
     private string DeletePostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
         $"{ProjectsRoutingConstants.WriteProjectFeedbackDeleteBase}/{ProjectId}/{EncryptedFeedbackId}");
 
-    private string EncryptedFeedbackId => FeedbackId.HasValue
-        ? ProtectionProvider.Encrypt(FeedbackId.Value.ToString(CultureInfo.InvariantCulture))
-        : "";
+    private string EncryptedFeedbackId
+        => Uri.EscapeDataString(ProtectionProvider.Encrypt(FeedbackId?.ToString(CultureInfo.InvariantCulture)) ?? "");
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 

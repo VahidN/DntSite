@@ -27,6 +27,6 @@
 
     [Parameter] public NewCourseHelpEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesDetailsBase).CombineUrl(string.Create(CultureInfo.InvariantCulture, $"/{Model.Id}"));
+    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesDetailsBase, escapeRelativeUrl: false).CombineUrl(Model.Id, escapeRelativeUrl: true);
 
 }

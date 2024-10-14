@@ -35,7 +35,8 @@ public class AppAntiXssService(
             HostUri = httpContext.GetBaseUri(),
             ImageUrlBuilder = savedFileName
                 => baseUrl.CombineUrl(
-                    $"{ApiUrlsRoutingConstants.File.HttpAny.Image}?name={Uri.EscapeDataString(savedFileName)}")
+                    $"{ApiUrlsRoutingConstants.File.HttpAny.Image}?name={Uri.EscapeDataString(savedFileName)}",
+                    escapeRelativeUrl: false)
         }, htmlModificationRules: rules);
     }
 }

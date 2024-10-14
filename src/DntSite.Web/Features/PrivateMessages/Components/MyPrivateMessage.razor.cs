@@ -31,8 +31,7 @@ public partial class MyPrivateMessage
 
     [InjectComponentScoped] internal IPrivateMessageCommentsService PrivateMessageCommentsService { set; get; } = null!;
 
-    private string EncryptedId
-        => string.IsNullOrWhiteSpace(PrivateMessageId) ? "" : ProtectionProvider.Encrypt(PrivateMessageId);
+    private string EncryptedId => ProtectionProvider.Encrypt(PrivateMessageId) ?? "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,8 +76,8 @@ public partial class MyPrivateMessage
             PrivateMessagesBreadCrumbs.Users, PrivateMessagesBreadCrumbs.MyPrivateMessages, new BreadCrumb
             {
                 Title = PageTitle,
-                Url = string.Create(CultureInfo.InvariantCulture,
-                    $"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{EncryptedId}"),
+                Url = PrivateMessagesRoutingConstants.MyPrivateMessageBase.CombineUrl(EncryptedId,
+                    escapeRelativeUrl: true),
                 GlyphIcon = DntBootstrapIcons.BiInbox
             }
         ]);

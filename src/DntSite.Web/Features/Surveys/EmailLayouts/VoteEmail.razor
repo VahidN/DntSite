@@ -32,6 +32,6 @@
 
     [Parameter] public VoteEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(SurveysRoutingConstants.SurveysArchiveDetailsBase).CombineUrl($"/{Model.PmId}");
+    private string PostUrl => Model.SiteRootUri.CombineUrl(SurveysRoutingConstants.SurveysArchiveDetailsBase, escapeRelativeUrl: false).CombineUrl(Model.PmId, escapeRelativeUrl: true);
 
 }

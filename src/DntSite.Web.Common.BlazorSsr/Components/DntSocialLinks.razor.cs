@@ -31,7 +31,7 @@ public partial class DntSocialLinks
 
         if (Uri.IsWellFormedUriString(Url, UriKind.Relative))
         {
-            return HttpUtility.UrlEncode(NavigationManager.BaseUri.CombineUrl(Url));
+            return HttpUtility.UrlEncode(NavigationManager.BaseUri.CombineUrl(Url, false));
         }
 
         return string.Empty;

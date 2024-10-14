@@ -55,8 +55,8 @@ public partial class ShowAllLocalPageReferrers
             {
                 Title = string.Create(CultureInfo.InvariantCulture, $"صفحات مرتبط، صفحه: {CurrentPage ?? 1}"),
                 GlyphIcon = DntBootstrapIcons.BiSearch,
-                Url = "/".CombineUrl(StatsRoutingConstants.MoreLocalPageReferrersBase)
-                    .CombineUrl(Uri.EscapeDataString(Url ?? ""))
+                Url = "/".CombineUrl(StatsRoutingConstants.MoreLocalPageReferrersBase, escapeRelativeUrl: false)
+                    .CombineUrl(Url ?? "", escapeRelativeUrl: true)
             }
         ]);
 }

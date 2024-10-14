@@ -38,6 +38,6 @@
 
     [Parameter] public NewIssueSendEmailToAdminsModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectFeedbacksBase).CombineUrl(Model.ProjectId).CombineUrl(Model.PmId);
+    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectFeedbacksBase, escapeRelativeUrl: false).CombineUrl(Model.ProjectId, escapeRelativeUrl: false).CombineUrl(Model.PmId, escapeRelativeUrl: false);
 
 }

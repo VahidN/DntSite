@@ -33,6 +33,6 @@
 
     [Parameter] public WriteAdvertisementEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(AdvertisementsRoutingConstants.AdvertisementsDetailsBase).CombineUrl($"/{Model.PmId}");
+    private string PostUrl => Model.SiteRootUri.CombineUrl(AdvertisementsRoutingConstants.AdvertisementsDetailsBase, escapeRelativeUrl: false).CombineUrl(Model.PmId, escapeRelativeUrl: true);
 
 }

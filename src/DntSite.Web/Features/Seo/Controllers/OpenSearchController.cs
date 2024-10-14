@@ -17,16 +17,16 @@ public class OpenSearchController(
         var shortName = appSettings?.BlogName ?? "DNT";
         var baseUrl = appSettings?.SiteRootUri ?? httpRequestInfoService.GetBaseUrl() ?? "/";
 
-        var searchUrlTemplate =
-            baseUrl.CombineUrl(
-                $"{PostsRoutingConstants.PostsFilterFilterBase}/{Uri.EscapeDataString(stringToEscape: "title={{searchTerms}}")}");
+        var searchUrlTemplate = baseUrl
+            .CombineUrl(PostsRoutingConstants.PostsFilterFilterBase, escapeRelativeUrl: false)
+            .CombineUrl(relativeUrl: "title={{searchTerms}}", escapeRelativeUrl: true);
 
         return new OpenSearchResult
         {
             ShortName = shortName,
             Description = $"{shortName} Contents Search",
             SearchForm = baseUrl,
-            FavIconUrl = baseUrl.CombineUrl(relativeUrl: "favicon.ico"),
+            FavIconUrl = baseUrl.CombineUrl(relativeUrl: "favicon.ico", escapeRelativeUrl: false),
             SearchUrlTemplate = searchUrlTemplate
         };
     }

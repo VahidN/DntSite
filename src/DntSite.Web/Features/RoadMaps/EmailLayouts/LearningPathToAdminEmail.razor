@@ -27,6 +27,6 @@
 
     [Parameter] public LearningPathToAdminEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(RoadMapsRoutingConstants.LearningPathsDetailsBase).CombineUrl($"/{Model.Id}");
+    private string PostUrl => Model.SiteRootUri.CombineUrl(RoadMapsRoutingConstants.LearningPathsDetailsBase, escapeRelativeUrl: false).CombineUrl(Model.Id, escapeRelativeUrl: true);
 
 }

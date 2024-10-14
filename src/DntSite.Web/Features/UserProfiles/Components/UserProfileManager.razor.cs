@@ -26,7 +26,7 @@ public partial class UserProfileManager
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
     private string EncryptedUserId
-        => User is null ? "" : ProtectionProvider.Encrypt(User.Id.ToString(CultureInfo.InvariantCulture));
+        => Uri.EscapeDataString(ProtectionProvider.Encrypt(User?.Id.ToString(CultureInfo.InvariantCulture)) ?? "");
 
     private async Task PerformAsync()
     {

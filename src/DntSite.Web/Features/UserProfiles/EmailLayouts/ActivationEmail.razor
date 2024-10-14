@@ -48,8 +48,8 @@
 
     [Parameter] public ActivationEmailModel Model { set; get; } = null!;
 
-    private string ActivationUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.ActivationBase).CombineUrl($"/{Uri.EscapeDataString(Model.QueryString)}");
+    private string ActivationUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.ActivationBase, escapeRelativeUrl: false).CombineUrl(Model.QueryString, escapeRelativeUrl: true);
 
-    private string ForgottenPasswordUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.ForgottenPassword);
+    private string ForgottenPasswordUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.ForgottenPassword, escapeRelativeUrl: false);
 
 }

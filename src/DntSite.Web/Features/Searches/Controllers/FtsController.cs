@@ -63,7 +63,7 @@ public class FtsController(IFullTextSearchService fullTextSearchService, ISearch
     private static string GetMoreItemsLink(string text)
         => $"""
             <a class='dropdown-item'
-               href='{"/".CombineUrl(SearchesRoutingConstants.SearchResultsBase).CombineUrl(Uri.EscapeDataString(text))}'>
+               href='{"/".CombineUrl(SearchesRoutingConstants.SearchResultsBase, escapeRelativeUrl: false).CombineUrl(text, escapeRelativeUrl: true)}'>
                بیشتر ...
                <i class='{DntBootstrapIcons.BiArrowLeftCircleFill} ms-1'></i>
             <a/>

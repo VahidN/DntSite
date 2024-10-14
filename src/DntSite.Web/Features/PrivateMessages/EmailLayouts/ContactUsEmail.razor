@@ -37,8 +37,8 @@
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(PrivateMessagesRoutingConstants.MyPrivateMessageBase).CombineUrl(EncryptedId);
+    private string PostUrl => Model.SiteRootUri.CombineUrl(PrivateMessagesRoutingConstants.MyPrivateMessageBase, escapeRelativeUrl: false).CombineUrl(EncryptedId, escapeRelativeUrl: true);
 
-    private string EncryptedId => ProtectionProvider.Encrypt(Model.PmId);
+    private string EncryptedId => ProtectionProvider.Encrypt(Model.PmId) ?? "";
 
 }

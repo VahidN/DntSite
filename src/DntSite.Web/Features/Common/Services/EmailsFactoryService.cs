@@ -110,7 +110,9 @@ public class EmailsFactoryService(
                 InReplyTo = inReplyTo,
                 MessageId = messageId,
                 References = references,
-                UnSubscribeUrl = appSetting.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.EditProfile)
+                UnSubscribeUrl =
+                    appSetting.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.EditProfile,
+                        escapeRelativeUrl: false)
             }, shouldValidateServerCertificate: smtpServerSetting.ShouldValidateServerCertificate);
     }
 

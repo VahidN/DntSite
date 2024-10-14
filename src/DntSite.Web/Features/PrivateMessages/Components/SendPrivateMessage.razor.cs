@@ -115,7 +115,9 @@ public partial class SendPrivateMessage
     private async Task EditPrivateMessageAsync(int id)
     {
         await PrivateMessagesService.EditFirstPrivateMessageAsync(id, ApplicationState.CurrentUser?.UserId, Model);
-        var encryptedId = ProtectionProvider.Encrypt(id.ToString(CultureInfo.InvariantCulture));
+
+        var encryptedId =
+            Uri.EscapeDataString(ProtectionProvider.Encrypt(id.ToString(CultureInfo.InvariantCulture)) ?? "");
 
         ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
             $"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{encryptedId}#main"));

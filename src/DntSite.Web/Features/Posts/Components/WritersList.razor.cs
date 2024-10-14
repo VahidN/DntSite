@@ -28,6 +28,6 @@ public partial class WritersList
 
     private string GetUrl(string name)
         => string.IsNullOrWhiteSpace(BaseUsersPath)
-            ? BasePath.CombineUrl(Uri.EscapeDataString(name))
-            : BaseUsersPath.CombineUrl(Uri.EscapeDataString(name));
+            ? BasePath.CombineUrl(name, escapeRelativeUrl: true)
+            : BaseUsersPath.CombineUrl(name, escapeRelativeUrl: true);
 }

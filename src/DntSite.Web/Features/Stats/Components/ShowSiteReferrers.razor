@@ -24,7 +24,7 @@
                 <CellValueTemplate Context="record">
                     @if (ApplicationState.CurrentUser?.IsAdmin == true)
                     {
-                        <a href="@StatsRoutingConstants.SiteReferrersBase/@_siteReferrerType/delete/@ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture))"
+                        <a href="@StatsRoutingConstants.SiteReferrersBase/@_siteReferrerType/delete/@Uri.EscapeDataString(ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
                            data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"
                            class="btn btn-danger me-2 btn-sm">
                             حذف

@@ -19,6 +19,6 @@
 
     [Parameter] public ConvertedToLinkModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(NewsRoutingConstants.News);
+    private string PostUrl => Model.SiteRootUri.CombineUrl(NewsRoutingConstants.News, escapeRelativeUrl: false);
 
 }

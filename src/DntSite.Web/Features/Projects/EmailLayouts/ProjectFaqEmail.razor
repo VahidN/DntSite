@@ -30,6 +30,6 @@
 
     [Parameter] public ProjectFaqEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectFaqsBase).CombineUrl(Model.ProjectId).CombineUrl(Model.FaqId);
+    private string PostUrl => Model.SiteRootUri.CombineUrl(ProjectsRoutingConstants.ProjectFaqsBase, escapeRelativeUrl: false).CombineUrl(Model.ProjectId, escapeRelativeUrl: false).CombineUrl(Model.FaqId, escapeRelativeUrl: false);
 
 }

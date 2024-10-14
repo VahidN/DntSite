@@ -1,7 +1,6 @@
 using DntSite.Web.Common.BlazorSsr.Utils;
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.Models;
 using DntSite.Web.Features.Courses.ModelsMappings;
@@ -61,16 +60,17 @@ public partial class CourseTopicDetails
     private string NextPostUrl => string.Create(CultureInfo.InvariantCulture,
         $"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{_courseTopic!.NextTopic?.DisplayId:D}");
 
-    private string EditPostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
-        $"{CoursesRoutingConstants.WriteCourseTopicEditBase}/{CourseId}/{EncryptedDisplayId}");
+    private string EditPostUrlTemplate => CoursesRoutingConstants.WriteCourseTopicEditBase
+        .CombineUrl(CourseId?.ToString(CultureInfo.InvariantCulture), escapeRelativeUrl: false)
+        .CombineUrl(EncryptedDisplayId, escapeRelativeUrl: true);
 
-    private string DeletePostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
-        $"{CoursesRoutingConstants.WriteCourseTopicDeleteBase}/{CourseId}/{EncryptedDisplayId}");
+    private string DeletePostUrlTemplate => CoursesRoutingConstants.WriteCourseTopicDeleteBase
+        .CombineUrl(CourseId?.ToString(CultureInfo.InvariantCulture), escapeRelativeUrl: false)
+        .CombineUrl(EncryptedDisplayId, escapeRelativeUrl: true);
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
-    private string EncryptedDisplayId
-        => DisplayId.HasValue ? ProtectionProvider.Encrypt(DisplayId.Value.ToString(format: "D")) : "";
+    private string EncryptedDisplayId => ProtectionProvider.Encrypt(DisplayId?.ToString(format: "D")) ?? "";
 
     private List<string> GetTags() => CurrentPost?.Tags.Select(x => x.Name).ToList() ?? [];
 

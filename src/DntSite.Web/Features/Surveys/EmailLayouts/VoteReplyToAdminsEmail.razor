@@ -34,6 +34,6 @@
 
     [Parameter] public VoteReplyToAdminsEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(SurveysRoutingConstants.SurveysArchiveDetailsBase).CombineUrl($"/{Model.VoteId}#comment-{Model.CommentId}");
+    private string PostUrl => Model.SiteRootUri.CombineUrl(SurveysRoutingConstants.SurveysArchiveDetailsBase, escapeRelativeUrl: false).CombineUrl($"/{Model.VoteId}#comment-{Model.CommentId}", escapeRelativeUrl: false);
 
 }

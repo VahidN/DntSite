@@ -53,6 +53,11 @@ public class UsersManagerEmailsService(
         var salt = string.Create(CultureInfo.InvariantCulture, $"{userInfo.RegistrationCode}-{userInfo.Id}");
         var queryString = protectionProviderService.Encrypt(salt);
 
+        if (queryString.IsEmpty())
+        {
+            throw new InvalidOperationException(message: "queryString is null");
+        }
+
         return emailsFactoryService.SendEmailAsync<ActivationEmail, ActivationEmailModel>(
             string.Create(CultureInfo.InvariantCulture, $"ActivateYourAccount/{DateTime.UtcNow.Ticks}"), inReplyTo: "",
             references: "", new ActivationEmailModel
@@ -69,6 +74,11 @@ public class UsersManagerEmailsService(
 
         var queryString = protectionProviderService.Encrypt(string.Create(CultureInfo.InvariantCulture,
             $"{userInfo.RegistrationCode}-{userInfo.Id}"));
+
+        if (queryString.IsEmpty())
+        {
+            throw new InvalidOperationException(message: "queryString is null");
+        }
 
         return emailsFactoryService.SendEmailAsync<ForgottenPasswordConfirmEmail, ForgottenPasswordConfirmEmailModel>(
             string.Create(CultureInfo.InvariantCulture, $"ForgottenPasswordConfirm/{DateTime.UtcNow.Ticks}"),

@@ -31,6 +31,6 @@
 
     [Parameter] public TopicReplyToWritersEmailModel Model { set; get; } = null!;
 
-    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesTopicBase).CombineUrl(string.Create(CultureInfo.InvariantCulture, $"/{Model.CId}/{Model.PmId}#comment-{Model.CommentId}"));
+    private string PostUrl => Model.SiteRootUri.CombineUrl(CoursesRoutingConstants.CoursesTopicBase, escapeRelativeUrl: false).CombineUrl(string.Create(CultureInfo.InvariantCulture, $"/{Model.CId}/{Model.PmId}#comment-{Model.CommentId}"), escapeRelativeUrl: false);
 
 }

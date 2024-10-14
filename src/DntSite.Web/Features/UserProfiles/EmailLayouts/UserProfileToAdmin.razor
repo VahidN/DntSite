@@ -37,8 +37,8 @@
 
     [Parameter] public UserProfileToAdminModel Model { set; get; } = null!;
 
-    private string UserUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.Users).CombineUrl($"/{Uri.EscapeDataString(Model.FriendlyName)}");
+    private string UserUrl => Model.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.Users, escapeRelativeUrl: false).CombineUrl(Model.FriendlyName, escapeRelativeUrl: true);
 
-    private string ImageUrl => $"{Model.SiteRootUri.CombineUrl(ApiUrlsRoutingConstants.File.HttpAny.Avatar)}?name={Uri.EscapeDataString(Model.Photo)}";
+    private string ImageUrl => $"{Model.SiteRootUri.CombineUrl(ApiUrlsRoutingConstants.File.HttpAny.Avatar, escapeRelativeUrl: false)}?name={Uri.EscapeDataString(Model.Photo)}";
 
 }
