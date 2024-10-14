@@ -30,7 +30,6 @@
   <ItemGroup>
     <TypeScriptCompile Include="tsconfig.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </TypeScriptCompile>
-    <TypeScriptCompile Remove="Scripts\modules\dntBlazor.ts"/>
+    </TypeScriptCompile>    
   </ItemGroup>
 </Project>
