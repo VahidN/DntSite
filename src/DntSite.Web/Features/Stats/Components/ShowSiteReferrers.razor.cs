@@ -36,16 +36,17 @@ public partial class ShowSiteReferrers
     protected override async Task OnInitializedAsync()
     {
         SetSiteReferrerType();
-
-        if (!string.IsNullOrWhiteSpace(DeleteId))
-        {
-            await TryDeleteItemAsync(DeleteId.ToInt());
-
-            return;
-        }
-
+        await TryDeleteItemAsync();
         await ShowResultsAsync();
         AddBreadCrumbs();
+    }
+
+    private async Task TryDeleteItemAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(DeleteId))
+        {
+            await SiteReferrersService.RemoveSiteReferrerAsync(DeleteId.ToInt());
+        }
     }
 
     private void SetSiteReferrerType()
@@ -58,12 +59,6 @@ public partial class ShowSiteReferrers
         {
             Enum.TryParse(ReferrerType, ignoreCase: true, out _siteReferrerType);
         }
-    }
-
-    private async Task TryDeleteItemAsync(int id)
-    {
-        await SiteReferrersService.RemoveSiteReferrerAsync(id);
-        ApplicationState.NavigateTo($"{BasePath}#main");
     }
 
     private async Task ShowResultsAsync()
