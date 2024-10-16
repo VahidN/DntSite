@@ -16,6 +16,8 @@ public partial class ApplicationState
 
     public Uri CurrentAbsoluteUri => NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
 
+    public bool DoNotLogPageReferrer { set; get; }
+
     [CascadingParameter] public HttpContext HttpContext { set; get; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }

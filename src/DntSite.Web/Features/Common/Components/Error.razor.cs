@@ -1,9 +1,8 @@
+using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.RoutingConstants;
-using DntSite.Web.Features.Stats.Middlewares.Contracts;
 
 namespace DntSite.Web.Features.Common.Components;
 
-[DoNotLogReferrer]
 public partial class Error
 {
     [CascadingParameter] public HttpContext? HttpContext { get; set; }
@@ -16,11 +15,15 @@ public partial class Error
 
     [Inject] public NavigationManager NavigationManager { set; get; } = null!;
 
+    [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
+
     private bool IsThisPageCalledDirectly => string.Equals(HttpContext?.GetCurrentUrl(), b: "/error/404",
         StringComparison.OrdinalIgnoreCase);
 
     protected override async Task OnInitializedAsync()
     {
+        ApplicationState.DoNotLogPageReferrer = true;
+
         var httpRequest = HttpContext?.Request;
 
         if (httpRequest is null)

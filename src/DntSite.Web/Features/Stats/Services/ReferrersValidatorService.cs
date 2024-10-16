@@ -1,5 +1,4 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
-using DntSite.Web.Features.Stats.Middlewares.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Stats.Services;
@@ -76,13 +75,6 @@ public class ReferrersValidatorService(
             return true;
         }
 
-        if (HasDoNotLogReferrerAttribute(context))
-        {
-            _protectedUrls.Add(context.GetRawUrl());
-
-            return true;
-        }
-
         return false;
     }
 
@@ -152,7 +144,4 @@ public class ReferrersValidatorService(
 
         return string.IsNullOrWhiteSpace(rootUrl) ? context.GetBaseUrl() : rootUrl;
     }
-
-    private static bool HasDoNotLogReferrerAttribute(HttpContext context)
-        => context.GetEndpoint()?.Metadata?.GetMetadata<DoNotLogReferrerAttribute>() is not null;
 }

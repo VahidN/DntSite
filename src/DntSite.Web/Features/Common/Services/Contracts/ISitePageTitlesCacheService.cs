@@ -6,5 +6,5 @@ public interface ISitePageTitlesCacheService : ISingletonService
 
     string? GetPageTitle(string? url);
 
-    void AddSitePageTitle(string? url, string? title);
+    void AddSitePageTitle(string? url, string? title, bool dontLog);
 }

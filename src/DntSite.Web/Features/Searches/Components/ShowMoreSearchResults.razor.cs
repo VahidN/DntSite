@@ -3,11 +3,9 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Searches.Models;
 using DntSite.Web.Features.Searches.RoutingConstants;
 using DntSite.Web.Features.Searches.Services.Contracts;
-using DntSite.Web.Features.Stats.Middlewares.Contracts;
 
 namespace DntSite.Web.Features.Searches.Components;
 
-[DoNotLogReferrer]
 public partial class ShowMoreSearchResults
 {
     private const int ItemsPerPage = 10;
@@ -35,6 +33,8 @@ public partial class ShowMoreSearchResults
 
     protected override async Task OnInitializedAsync()
     {
+        ApplicationState.DoNotLogPageReferrer = true;
+
         AddBreadCrumbs();
 
         if (FullTextSearchService.IsDatabaseIndexed)

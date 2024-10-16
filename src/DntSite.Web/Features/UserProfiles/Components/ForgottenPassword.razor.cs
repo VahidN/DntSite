@@ -1,13 +1,11 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
-using DntSite.Web.Features.Stats.Middlewares.Contracts;
 using DntSite.Web.Features.UserProfiles.Models;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.UserProfiles.Components;
 
-[DoNotLogReferrer]
 public partial class ForgottenPassword
 {
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
@@ -26,6 +24,7 @@ public partial class ForgottenPassword
     {
         base.OnInitialized();
 
+        ApplicationState.DoNotLogPageReferrer = true;
         AddBreadCrumbs();
     }
 

@@ -9,11 +9,12 @@ public class SitePageTitlesCacheService(
     ILogger<SitePageTitlesCacheService> logger,
     ICachedAppSettingsProvider appSettingsProvider) : ISitePageTitlesCacheService
 {
+    private readonly HashSet<string> _dontLogUrls = new(StringComparer.OrdinalIgnoreCase);
     private readonly ConcurrentDictionary<string, string> _urlTitles = new(StringComparer.OrdinalIgnoreCase);
 
     public async Task<string?> GetOrAddSitePageTitleAsync(string? url, bool fetchUrl)
     {
-        if (string.IsNullOrWhiteSpace(url))
+        if (string.IsNullOrWhiteSpace(url) || DoNotLog(url))
         {
             return null;
         }
@@ -52,7 +53,7 @@ public class SitePageTitlesCacheService(
         }
     }
 
-    public void AddSitePageTitle(string? url, string? title)
+    public void AddSitePageTitle(string? url, string? title, bool dontLog)
     {
         if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(title))
         {
@@ -60,12 +61,17 @@ public class SitePageTitlesCacheService(
         }
 
         var cacheKey = GetCacheKey(url);
-        _urlTitles[cacheKey] = title;
+        _urlTitles[cacheKey] = dontLog ? string.Empty : title;
+
+        if (dontLog)
+        {
+            _dontLogUrls.Add(url);
+        }
     }
 
     public string? GetPageTitle(string? url)
     {
-        if (string.IsNullOrWhiteSpace(url))
+        if (string.IsNullOrWhiteSpace(url) || DoNotLog(url))
         {
             return null;
         }
@@ -79,6 +85,10 @@ public class SitePageTitlesCacheService(
 
         return null;
     }
+
+    private bool DoNotLog(string? url)
+        => url.IsEmpty() || _dontLogUrls.Contains(url) ||
+           _dontLogUrls.Any(item => url.Contains(item, StringComparison.OrdinalIgnoreCase));
 
     private static string GetCacheKey(string url) => url.ToXxHash64(prefix: "DNT_URL");
 

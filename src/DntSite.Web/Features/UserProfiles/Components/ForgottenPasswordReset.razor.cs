@@ -1,11 +1,9 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
-using DntSite.Web.Features.Stats.Middlewares.Contracts;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.UserProfiles.Components;
 
-[DoNotLogReferrer]
 public partial class ForgottenPasswordReset
 {
     private string? _alertMessage;
@@ -21,6 +19,8 @@ public partial class ForgottenPasswordReset
 
     protected override async Task OnInitializedAsync()
     {
+        ApplicationState.DoNotLogPageReferrer = true;
+
         AddBreadCrumbs();
 
         if (string.IsNullOrWhiteSpace(Id))
