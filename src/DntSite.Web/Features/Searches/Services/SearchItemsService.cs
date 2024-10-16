@@ -21,6 +21,11 @@ public class SearchItemsService(
 
     public async Task<SearchItem?> AddSearchItemAsync(string? text)
     {
+        if (await currentUserService.IsCurrentUserSpiderAsync())
+        {
+            return null;
+        }
+
         text = text?.Trim();
 
         if (string.IsNullOrWhiteSpace(text))

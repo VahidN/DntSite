@@ -12,6 +12,7 @@ public class CurrentUserService(
     IHttpContextAccessor httpContextAccessor,
     IUserRolesService rolesService,
     IUsersInfoService usersService,
+    IUAParserService uaParserService,
     ICachedAppSettingsProvider appSettingsService) : ICurrentUserService
 {
     public int? GetCurrentUserId() => httpContextAccessor.HttpContext?.User.GetUserId();
@@ -42,6 +43,9 @@ public class CurrentUserService(
         return httpContext is not null && IsCurrentUserAuthenticated() &&
                httpContext.User.HasClaim(ClaimTypes.Role, roleName);
     }
+
+    public Task<bool> IsCurrentUserSpiderAsync()
+        => uaParserService.IsSpiderClientAsync(httpContextAccessor.HttpContext?.GetUserAgent() ?? "Unknown");
 
     public bool IsCurrentUserAuthenticated() => httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true;
 

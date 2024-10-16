@@ -5,6 +5,8 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface ICurrentUserService : IScopedService
 {
+    Task<bool> IsCurrentUserSpiderAsync();
+
     bool IsCurrentUserAuthenticated();
 
     int? GetCurrentUserId();
