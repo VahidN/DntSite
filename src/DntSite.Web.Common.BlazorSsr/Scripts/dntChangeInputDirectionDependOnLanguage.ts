@@ -19,10 +19,18 @@ namespace DntBlazorSsr {
             return DntChangeInputDirectionDependOnLanguage.containsRtlText(text) ? "rtl" : "ltr";
         }
 
+        static setDirection(element: HTMLInputElement) {
+            if (element.value) {
+                element.style.direction = DntChangeInputDirectionDependOnLanguage.getDirection(element.value);
+            }
+        }
+
         static enable() {
-            document.querySelectorAll<HTMLInputElement>("input[type=text]").forEach(element => {
+            document.querySelectorAll<HTMLInputElement>("input[type=text],input[type=search]").forEach(element => {
+                DntChangeInputDirectionDependOnLanguage.setDirection(element);
+                
                 element.onkeyup = () => {
-                    element.style.direction = DntChangeInputDirectionDependOnLanguage.getDirection(element.value);
+                    DntChangeInputDirectionDependOnLanguage.setDirection(element);
                 };
             });
         }

@@ -236,10 +236,16 @@ var DntBlazorSsr;
         static getDirection(text) {
             return DntChangeInputDirectionDependOnLanguage.containsRtlText(text) ? "rtl" : "ltr";
         }
+        static setDirection(element) {
+            if (element.value) {
+                element.style.direction = DntChangeInputDirectionDependOnLanguage.getDirection(element.value);
+            }
+        }
         static enable() {
-            document.querySelectorAll("input[type=text]").forEach(element => {
+            document.querySelectorAll("input[type=text],input[type=search]").forEach(element => {
+                DntChangeInputDirectionDependOnLanguage.setDirection(element);
                 element.onkeyup = () => {
-                    element.style.direction = DntChangeInputDirectionDependOnLanguage.getDirection(element.value);
+                    DntChangeInputDirectionDependOnLanguage.setDirection(element);
                 };
             });
         }
