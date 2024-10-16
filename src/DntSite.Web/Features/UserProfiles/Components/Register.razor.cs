@@ -24,6 +24,8 @@ public partial class Register
 
     protected override async Task OnInitializedAsync()
     {
+        ApplicationState.DoNotLogPageReferrer = true;
+
         await CurrentUserService.ClearExistingAuthenticationCookiesAsync(clearAdminCookies: false);
         _canUsersRegister = await CurrentUserService.CanCurrentUserRegisterAsync();
 

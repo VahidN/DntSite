@@ -16,6 +16,8 @@ public partial class Activation
 
     protected override async Task OnInitializedAsync()
     {
+        ApplicationState.DoNotLogPageReferrer = true;
+
         if (string.IsNullOrWhiteSpace(Data))
         {
             ApplicationState.NavigateToNotFoundPage();
