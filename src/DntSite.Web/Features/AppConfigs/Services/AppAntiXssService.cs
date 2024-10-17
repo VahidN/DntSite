@@ -12,19 +12,17 @@ public class AppAntiXssService(
     {
         var httpContext = httpContextAccessor.HttpContext;
 
+        var baseUri = httpContext?.GetBaseUri();
+        var baseUrl = httpContext?.GetBaseUrl();
+
         var rules = new HtmlModificationRules
         {
-            ConvertPToDiv = true
+            ConvertPToDiv = true,
+            RemoveRelAndTargetFromInternalUrls = true,
+            HostUri = baseUri
         };
 
-        if (httpContext is null)
-        {
-            return antiXssService.GetSanitizedHtml(html, htmlModificationRules: rules);
-        }
-
-        var baseUrl = httpContext.GetBaseUrl();
-
-        if (string.IsNullOrWhiteSpace(baseUrl))
+        if (baseUrl.IsEmpty() || baseUri is null)
         {
             return antiXssService.GetSanitizedHtml(html, htmlModificationRules: rules);
         }
@@ -32,7 +30,7 @@ public class AppAntiXssService(
         return antiXssService.GetSanitizedHtml(html, remoteImagesOptions: new FixRemoteImagesOptions
         {
             OutputImageFolder = appFoldersService.ArticleImagesFolderPath,
-            HostUri = httpContext.GetBaseUri(),
+            HostUri = baseUri,
             ImageUrlBuilder = savedFileName
                 => baseUrl.CombineUrl(
                     $"{ApiUrlsRoutingConstants.File.HttpAny.Image}?name={Uri.EscapeDataString(savedFileName)}",
