@@ -25,6 +25,7 @@ public static class ServicesRegistry
         services.AddDNTCommonWeb();
         services.AddAutoMapper();
         services.AddSchedulers();
+        services.RunHostedServicesConcurrently();
         services.AddCustomizedControllers();
         services.AddCustomizedAuthentication(siteSettings, environment);
     }
