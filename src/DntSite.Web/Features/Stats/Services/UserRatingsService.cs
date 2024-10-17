@@ -75,11 +75,21 @@ public class UserRatingsService(IUnitOfWork uow) : IUserRatingsService
 
         parentEntity.Rating.TotalRaters = await entityReactionsQuery.AsNoTracking().CountAsync(x => x.ParentId == fkId);
 
-        parentEntity.Rating.TotalRating = await entityReactionsQuery.AsNoTracking()
-            .Where(x => x.ParentId == fkId)
-            .SumAsync(x => (int?)x.Reaction) ?? 0;
+        if (parentEntity.Rating.TotalRaters == 0)
+        {
+            parentEntity.Rating.TotalRating = 0;
+            parentEntity.Rating.AverageRating = 0;
+        }
+        else
+        {
+            parentEntity.Rating.TotalRating = await entityReactionsQuery.AsNoTracking()
+                .Where(x => x.ParentId == fkId)
+                .SumAsync(x => (int?)x.Reaction) ?? 0;
 
-        parentEntity.Rating.AverageRating = (decimal)parentEntity.Rating.TotalRating / parentEntity.Rating.TotalRaters;
+            parentEntity.Rating.AverageRating =
+                (decimal)parentEntity.Rating.TotalRating / parentEntity.Rating.TotalRaters;
+        }
+
         await uow.SaveChangesAsync();
 
         return true;
