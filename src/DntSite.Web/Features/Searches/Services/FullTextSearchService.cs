@@ -330,6 +330,8 @@ public class FullTextSearchService : IFullTextSearchService
             return null;
         }
 
+        documentTypeIdHash = documentTypeIdHash.ToUpperInvariant();
+
         return DoSearch(indexSearcher =>
         {
             var parser = new QueryParser(LuceneVersion, nameof(WhatsNewItemModel.DocumentTypeIdHash), _analyzer);
