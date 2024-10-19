@@ -11,6 +11,8 @@ public partial class SystemLogs
 {
     private const int ItemsPerPage = 10;
 
+    private const string MainTitle = "گزارش رخ‌دادهای سیستم";
+
     private PagedResultModel<AppLogItemModel>? _pagedResults;
 
     [Parameter] public int? CurrentPage { set; get; }
@@ -30,6 +32,8 @@ public partial class SystemLogs
     [SupplyParameterFromForm] internal int? CutOffDays { set; get; }
 
     private LogLevel? CurrentLogLevelValue => CurrentLogLevel.ToLogLevel();
+
+    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
 
     protected override async Task OnInitializedAsync()
     {

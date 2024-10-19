@@ -11,7 +11,11 @@ namespace DntSite.Web.Features.PrivateMessages.Components;
 public partial class PrivateMessagesViewer
 {
     private const int ItemsPerPage = 10;
+
+    private const string MainTitle = "کنترل پیام‌های خصوصی سیستم";
     private PagedResultModel<PrivateMessage>? _privateMessages;
+
+    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
 
     [InjectComponentScoped] internal IPrivateMessagesService PrivateMessagesService { set; get; } = null!;
 

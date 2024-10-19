@@ -688,4 +688,6 @@ public class User : BaseInteractiveEntity<User, UserProfileVisitor, UserProfileB
         new List<AdvertisementCommentReaction>();
 
     public virtual ICollection<SiteReferrer> SiteReferrers { get; set; } = new List<SiteReferrer>();
+
+    public virtual ICollection<SiteUrl> SiteUrls { get; set; } = new List<SiteUrl>();
 }

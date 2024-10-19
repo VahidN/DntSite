@@ -1,6 +1,6 @@
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
-using DntSite.Web.Features.Stats.Models;
+using DntSite.Web.Features.Stats.Entities;
 using DntSite.Web.Features.Stats.RoutingConstants;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
@@ -10,9 +10,9 @@ namespace DntSite.Web.Features.Stats.Components;
 public partial class ShowOnlineVisitorsList
 {
     private const int ItemsPerPage = 15;
-    private PagedResultModel<OnlineVisitorInfoModel>? _items;
+    private PagedResultModel<SiteUrl>? _items;
 
-    [Inject] internal IOnlineVisitorsService OnlineVisitorsService { set; get; } = null!;
+    [InjectComponentScoped] internal ISiteUrlsService SiteUrlsService { set; get; } = null!;
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
@@ -29,18 +29,16 @@ public partial class ShowOnlineVisitorsList
     private string BasePath
         => IsSpider ? StatsRoutingConstants.OnlineSpiderVisitorsUrl : StatsRoutingConstants.OnlineVisitors;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-
-        ShowResults();
+        await ShowResultsAsync();
         AddBreadCrumbs();
     }
 
-    private void ShowResults()
+    private async Task ShowResultsAsync()
     {
         CurrentPage ??= 1;
-        _items = OnlineVisitorsService.GetPagedOnlineVisitorsList(CurrentPage.Value - 1, ItemsPerPage, IsSpider);
+        _items = await SiteUrlsService.GetPagedSiteUrlsAsync(CurrentPage.Value - 1, ItemsPerPage, IsSpider);
     }
 
     private void AddBreadCrumbs()

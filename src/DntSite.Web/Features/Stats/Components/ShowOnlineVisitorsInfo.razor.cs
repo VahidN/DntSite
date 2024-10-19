@@ -7,7 +7,7 @@ public partial class ShowOnlineVisitorsInfo
 {
     private OnlineVisitorsInfoModel? _visitorsInfo;
 
-    [Inject] internal IOnlineVisitorsService OnlineVisitorsService { set; get; } = null!;
+    [InjectComponentScoped] internal IOnlineVisitorsService OnlineVisitorsService { set; get; } = null!;
 
     protected override void OnInitialized()
     {

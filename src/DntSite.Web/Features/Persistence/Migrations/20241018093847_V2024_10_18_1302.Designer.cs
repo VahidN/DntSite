@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DntSite.Web.Features.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241018093847_V2024_10_18_1302")]
+    partial class V2024_10_18_1302
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6054,6 +6057,9 @@ namespace DntSite.Web.Features.Persistence.Migrations
                     b.Property<bool>("IsStaticFileUrl")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("LastVisitTime")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(1500)
@@ -6116,31 +6122,6 @@ namespace DntSite.Web.Features.Persistence.Migrations
                             b1.Property<string>("UserName")
                                 .IsRequired()
                                 .HasMaxLength(450)
-                                .HasColumnType("TEXT");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("LastSiteUrlVisitorStat", "DntSite.Web.Features.Stats.Entities.SiteUrl.LastSiteUrlVisitorStat#LastSiteUrlVisitorStat", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("DisplayName")
-                                .HasMaxLength(1000)
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Ip")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("TEXT");
-
-                            b1.Property<bool>("IsSpider")
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<string>("UserAgent")
-                                .IsRequired()
-                                .HasMaxLength(1000)
-                                .HasColumnType("TEXT");
-
-                            b1.Property<DateTime>("VisitTime")
                                 .HasColumnType("TEXT");
                         });
 

@@ -85,7 +85,6 @@ void ConfigureEndpoints(WebApplication app)
     app.UseRequestTimeouts();
 
     app.UseOnlineVisitorsMiddleware();
-    app.UseSiteReferrersMiddleware();
 }
 
 void InitApplication(IHost app)

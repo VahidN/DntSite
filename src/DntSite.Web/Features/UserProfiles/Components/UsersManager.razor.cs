@@ -14,8 +14,12 @@ public partial class UsersManager
 {
     private const int ItemsPerPage = 10;
 
+    private const string MainTitle = "مدیریت کاربران";
+
     private string? _basePath;
     private PagedResultModel<User>? _users;
+
+    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 

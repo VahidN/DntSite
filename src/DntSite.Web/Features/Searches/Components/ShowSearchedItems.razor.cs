@@ -12,7 +12,11 @@ public partial class ShowSearchedItems
 {
     private const int ItemsPerPage = 20;
 
+    private const string MainTitle = "آمار جستجوها";
+
     private PagedResultModel<SearchItemModel>? _items;
+
+    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
 
     [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
 

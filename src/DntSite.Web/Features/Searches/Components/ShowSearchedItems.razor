@@ -3,7 +3,7 @@
 @attribute [Route(SearchesRoutingConstants.SearchedItems)]
 @attribute [Route(SearchesRoutingConstants.SearchedItemsPageCurrentPage)]
 
-<DntSitePageTitle Group="مدیریت برنامه" PageTitle="آمار جستجوها"/>
+<DntSitePageTitle Group="مدیریت برنامه" PageTitle="@PageTitle"/>
 
 <DntLoading IsLoading="@(_items is null)">
     <DntSimpleTable TRecord="SearchItemModel"

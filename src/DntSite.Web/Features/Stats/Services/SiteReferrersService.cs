@@ -1,5 +1,4 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
-using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -14,13 +13,16 @@ public class SiteReferrersService(
     IReferrersValidatorService referrersValidatorService,
     ILogger<SiteReferrersService> logger,
     IPasswordHasherService hasherService,
-    ISitePageTitlesCacheService sitePageTitlesCacheService) : ISiteReferrersService
+    ISiteUrlsService siteUrlsService) : ISiteReferrersService
 {
     private readonly DbSet<SiteReferrer> _referrers = uow.DbSet<SiteReferrer>();
 
     public Task DeleteAllAsync() => uow.ExecuteTransactionAsync(() => _referrers.ExecuteDeleteAsync());
 
-    public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl, string destinationUrl)
+    public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl,
+        string destinationUrl,
+        bool isDestinationUrlProtected,
+        LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
     {
         if (string.IsNullOrWhiteSpace(destinationUrl) || string.IsNullOrWhiteSpace(referrerUrl))
         {
@@ -38,18 +40,22 @@ public class SiteReferrersService(
                 return false;
             }
 
-            var destinationTitle =
-                await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(normalizedDestinationUrl, fetchUrl: true);
-
-            var referrerTitle =
-                await sitePageTitlesCacheService.GetOrAddSitePageTitleAsync(normalizedReferrerUrl, fetchUrl: true);
-
-            if (destinationTitle.AreNullOrEmptyOrEqual(referrerTitle, StringComparison.OrdinalIgnoreCase))
+            if (await appSettingsService.IsBannedReferrerAsync(normalizedReferrerUrl))
             {
                 return false;
             }
 
-            if (await appSettingsService.IsBannedReferrerAsync(normalizedReferrerUrl))
+            var destinationSiteUrl = await siteUrlsService.GetOrAddOrUpdateSiteUrlAsync(normalizedDestinationUrl,
+                title: "", isDestinationUrlProtected, updateVisitsCount: false, lastSiteUrlVisitorStat);
+
+            var destinationTitle = destinationSiteUrl?.IsHidden == true ? null : destinationSiteUrl?.Title;
+
+            var referrerSiteUrl = await siteUrlsService.GetOrAddOrUpdateSiteUrlAsync(normalizedReferrerUrl, title: "",
+                isProtectedPage: null, updateVisitsCount: false, lastSiteUrlVisitorStat);
+
+            var referrerTitle = referrerSiteUrl?.IsHidden == true ? null : referrerSiteUrl?.Title;
+
+            if (destinationTitle.AreNullOrEmptyOrEqual(referrerTitle, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }

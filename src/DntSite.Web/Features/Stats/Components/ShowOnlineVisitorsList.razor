@@ -1,4 +1,4 @@
-﻿@using DntSite.Web.Features.Stats.Models
+﻿@using DntSite.Web.Features.Stats.Entities
 @attribute [Route(StatsRoutingConstants.OnlineVisitors)]
 @attribute [Route(StatsRoutingConstants.OnlineVisitorsPageCurrentPage)]
 @attribute [Route(StatsRoutingConstants.OnlineSpiderVisitors)]
@@ -9,7 +9,7 @@
 <ShowOnlineVisitorsInfo/>
 
 <DntLoading IsLoading="@(_items is null)">
-    <DntSimpleTable TRecord="OnlineVisitorInfoModel"
+    <DntSimpleTable TRecord="SiteUrl"
                     Records="_items!.Data"
                     TableClass="table table-striped table-hover caption-top"
                     HeaderClass="table-secondary"
@@ -20,20 +20,22 @@
             <strong>@PageTitle</strong>
         </CaptionTemplate>
         <TableColumns>
-            <DntSimpleTableColumn HeaderTitle="مراجعه کننده"
+            <DntSimpleTableColumn HeaderTitle="آخرین بازدید کننده"
                                   HeaderCellClass="text-center"
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
-                    @if (record.IsSpider)
+                    @if (record.LastSiteUrlVisitorStat.IsSpider)
                     {
                         <span class="@DntBootstrapIcons.BiBug ms-2 me-1"></span>
                     }
-                    else if (!string.IsNullOrWhiteSpace(record.DisplayName))
+                    else if (!string.IsNullOrWhiteSpace(record.LastSiteUrlVisitorStat.DisplayName))
                     {
                         <span class="@DntBootstrapIcons.BiPersonGear ms-2 me-1"></span>
                         <span class="badge bg-light-subtle me-1">
-                            <a href="@GetUserUrl(record.DisplayName)">@record.DisplayName</a>
+                            <a href="@GetUserUrl(record.LastSiteUrlVisitorStat.DisplayName)">
+                                @record.LastSiteUrlVisitorStat.DisplayName
+                            </a>
                         </span>
                     }
                     else
@@ -44,20 +46,24 @@
                         </span>
                     }
 
-                    @if (record.ClientInfo is not null)
+                    @if (record.LastSiteUrlVisitorStat.ClientInfo is not null)
                     {
-                        <span title="OS" class="badge bg-primary me-1">@record.ClientInfo.OS</span>
-                        <span title="Device" class="badge bg-secondary me-1">@record.ClientInfo.Device</span>
-                        <span title="@record.UserAgent" class="badge bg-warning me-1">@record.ClientInfo.UA</span>
+                        <span title="OS" class="badge bg-primary me-1">
+                            @record.LastSiteUrlVisitorStat.ClientInfo.OS
+                        </span>
+                        <span title="Device" class="badge bg-secondary me-1">
+                            @record.LastSiteUrlVisitorStat.ClientInfo.Device
+                        </span>
+                        <span title="@record.LastSiteUrlVisitorStat.UserAgent" class="badge bg-warning me-1">
+                            @record.LastSiteUrlVisitorStat.ClientInfo.UA
+                        </span>
                     }
                     else
                     {
-                        <span title="@record.UserAgent" dir="ltr" class="badge bg-primary me-1 text-wrap text-break">
-                            @record.UserAgent
+                        <span title="@record.LastSiteUrlVisitorStat.UserAgent" dir="ltr" class="badge bg-primary me-1 text-wrap text-break">
+                            @record.LastSiteUrlVisitorStat.UserAgent
                         </span>
                     }
-
-                    <span dir="rtl" class="badge bg-success me-1">@record.VisitTime.ToFriendlyPersianDateTextify()</span>
                 </CellValueTemplate>
             </DntSimpleTableColumn>
 
@@ -66,26 +72,32 @@
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
-                    <DntLink IsExternal="true" Url="@record.VisitedUrl">
+                    <DntLink IsExternal="true" Url="@record.Url">
                         <div>
                             <span class="@DntBootstrapIcons.BiNewspaper ms-2 me-1"></span>
-                            <span dir="@record.VisitedUrlTitle.GetDir()">
-                                @record.VisitedUrlTitle
+                            <span dir="@record.Title.GetDir()">
+                                @record.Title
                             </span>
                         </div>
-                        <div>
-                            @if (!string.IsNullOrWhiteSpace(record.ReferrerUrl) && !record.IsLocalReferrer)
-                            {
-                                <span title="Device" class="badge bg-secondary me-1">ارجاع دهنده</span>
-
-                                <DntLink IsExternal="true" Url="@record.ReferrerUrl">
-                                    <span dir="@record.ReferrerUrl.GetDir()">
-                                        @record.ReferrerUrlTitle
-                                    </span>
-                                </DntLink>
-                            }
-                        </div>
                     </DntLink>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="آخرین بازدید"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    @record.LastSiteUrlVisitorStat.VisitTime.ToFriendlyPersianDateTextify()
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
+            <DntSimpleTableColumn HeaderTitle="تعداد کل بازدیدها"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    @record.VisitsCount.ToString(format: "n0", CultureInfo.InvariantCulture).ToPersianNumbers()
                 </CellValueTemplate>
             </DntSimpleTableColumn>
         </TableColumns>
