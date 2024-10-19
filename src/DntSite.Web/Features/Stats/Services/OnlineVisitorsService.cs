@@ -7,24 +7,25 @@ namespace DntSite.Web.Features.Stats.Services;
 public class OnlineVisitorsService : IOnlineVisitorsService
 {
     public const int PurgeInterval = 10; // 10 minutes
-    private readonly List<LastSiteUrlVisitorStat> _visitors = [];
+    private readonly HashSet<LastSiteUrlVisitorStat> _visitors = [];
 
     public OnlineVisitorsInfoModel GetOnlineVisitorsInfo()
     {
         var localVisitors = _visitors.ToList();
 
-        var totalOnlineVisitorsCount = localVisitors.DistinctBy(x => x.Ip).Count();
+        var totalOnlineVisitorsCount = localVisitors.Count;
 
-        var totalOnlineAuthenticatedUsersCount = localVisitors
-            .Where(x => !string.IsNullOrWhiteSpace(x.DisplayName) && !x.IsSpider)
-            .DistinctBy(x => x.Ip)
-            .Count();
+        var totalOnlineAuthenticatedUsersCount =
+            localVisitors.Count(x => !string.IsNullOrWhiteSpace(x.DisplayName) && !x.IsSpider);
+
+        var onlineSpidersCount = localVisitors.Count(x => x.IsSpider);
 
         return new OnlineVisitorsInfoModel
         {
             TotalOnlineAuthenticatedUsersCount = totalOnlineAuthenticatedUsersCount,
-            TotalOnlineGuestUsersCount = totalOnlineVisitorsCount - totalOnlineAuthenticatedUsersCount,
-            OnlineSpidersCount = localVisitors.Where(x => x.IsSpider).DistinctBy(x => x.Ip).Count(),
+            TotalOnlineGuestUsersCount =
+                totalOnlineVisitorsCount - (totalOnlineAuthenticatedUsersCount + onlineSpidersCount),
+            OnlineSpidersCount = onlineSpidersCount,
             TotalOnlineVisitorsCount = totalOnlineVisitorsCount
         };
     }
@@ -45,6 +46,6 @@ public class OnlineVisitorsService : IOnlineVisitorsService
         }
 
         var purgeDateTime = DateTime.UtcNow.AddMinutes(-PurgeInterval);
-        _visitors.RemoveAll(visitor => visitor.VisitTime < purgeDateTime);
+        _visitors.RemoveWhere(visitor => visitor.VisitTime < purgeDateTime);
     }
 }
