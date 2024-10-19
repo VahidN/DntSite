@@ -27,7 +27,6 @@ jobs:
     #   - https://gh.io/using-larger-runners
     # Consider using larger runners for possible analysis time improvements.
     runs-on: windows-2019
-    needs: build
     permissions:
       actions: read
       contents: read
