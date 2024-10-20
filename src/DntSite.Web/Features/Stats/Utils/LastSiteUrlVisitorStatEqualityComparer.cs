@@ -1,22 +1,9 @@
-﻿using UAParser;
+using DntSite.Web.Features.Stats.Entities;
 
-namespace DntSite.Web.Features.Stats.Entities;
+namespace DntSite.Web.Features.Stats.Utils;
 
-[ComplexType]
-public class LastSiteUrlVisitorStat : IEqualityComparer<LastSiteUrlVisitorStat>
+public class LastSiteUrlVisitorStatEqualityComparer : IEqualityComparer<LastSiteUrlVisitorStat>
 {
-    public DateTime VisitTime { set; get; } = default!;
-
-    [StringLength(maximumLength: 100)] public string Ip { set; get; } = default!;
-
-    [StringLength(maximumLength: 1000)] public string UserAgent { set; get; } = default!;
-
-    [StringLength(maximumLength: 1000)] public string? DisplayName { set; get; }
-
-    public bool IsSpider { set; get; }
-
-    [NotMapped] public ClientInfo? ClientInfo { set; get; }
-
     public bool Equals(LastSiteUrlVisitorStat? x, LastSiteUrlVisitorStat? y)
     {
         if (ReferenceEquals(x, y))

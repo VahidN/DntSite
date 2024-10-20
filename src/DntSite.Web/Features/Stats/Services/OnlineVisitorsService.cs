@@ -1,23 +1,21 @@
 using DntSite.Web.Features.Stats.Entities;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.Services.Contracts;
+using DntSite.Web.Features.Stats.Utils;
 
 namespace DntSite.Web.Features.Stats.Services;
 
 public class OnlineVisitorsService : IOnlineVisitorsService
 {
     public const int PurgeInterval = 10; // 10 minutes
-    private readonly HashSet<LastSiteUrlVisitorStat> _visitors = [];
+    private readonly HashSet<LastSiteUrlVisitorStat> _visitors = new(new LastSiteUrlVisitorStatEqualityComparer());
 
     public OnlineVisitorsInfoModel GetOnlineVisitorsInfo()
     {
         var localVisitors = _visitors.ToList();
 
         var totalOnlineVisitorsCount = localVisitors.Count;
-
-        var totalOnlineAuthenticatedUsersCount =
-            localVisitors.Count(x => !string.IsNullOrWhiteSpace(x.DisplayName) && !x.IsSpider);
-
+        var totalOnlineAuthenticatedUsersCount = localVisitors.Count(x => !x.DisplayName.IsEmpty() && !x.IsSpider);
         var onlineSpidersCount = localVisitors.Count(x => x.IsSpider);
 
         return new OnlineVisitorsInfoModel
