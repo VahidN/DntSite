@@ -35,7 +35,7 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
             }
 
             data.AppendFormat(CultureInfo.InvariantCulture, format: "<a dir='{2}' href='{0}'><b>{1}</b></a><br/>",
-                post.Url, post.Title, post.Title.GetDir());
+                post.Url, post.Title.SanitizeXmlString(), post.Title.GetDir());
 
             data.AppendFormat(CultureInfo.InvariantCulture, format: "<b>{0}</b>{1}<br/>", post.User!.FriendlyName, Hr);
 
