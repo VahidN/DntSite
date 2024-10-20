@@ -12,9 +12,6 @@ public class SiteUrlsService(
     IUnitOfWork uow,
     IUAParserService uaParserService,
     IReferrersValidatorService referrersValidatorService,
-    ICacheService cacheService,
-    BaseHttpClient baseHttpClient,
-    ILogger<SiteUrlsService> logger,
     ICachedAppSettingsProvider appSettingsProvider) : ISiteUrlsService
 {
     private readonly DbSet<SiteUrl> _siteUrls = uow.DbSet<SiteUrl>();
@@ -27,31 +24,26 @@ public class SiteUrlsService(
     {
         url = await referrersValidatorService.GetNormalizedUrlAsync(url);
 
-        if (url.IsEmpty())
+        if (!url.IsValidUrl())
         {
             return null;
         }
 
         var appSettings = await appSettingsProvider.GetAppSettingsAsync();
 
-        var cacheKey = GetUrlHash(url);
-        var siteUrl = await _siteUrls.OrderBy(x => x.UrlHash).FirstOrDefaultAsync(x => x.UrlHash == cacheKey);
-
-        if (title.IsEmpty() && siteUrl?.Title.IsEmpty() == true)
-        {
-            title = await GetDestinationTitleAsync(url, appSettings.BlogName);
-        }
-
         if (!url.IsReferrerToThisSite(appSettings.SiteRootUri))
         {
-            return cacheService.GetOrAdd($"__Site_Url__{cacheKey}", () => new SiteUrl
+            return new SiteUrl
             {
-                Title = title ?? "",
+                Title = url.GetUrlDomain().Domain,
                 IsProtectedPage = false,
                 IsStaticFileUrl = false,
                 Url = url
-            }, DateTimeOffset.UtcNow.AddDays(days: 1));
+            };
         }
+
+        var cacheKey = GetUrlHash(url);
+        var siteUrl = await _siteUrls.OrderBy(x => x.UrlHash).FirstOrDefaultAsync(x => x.UrlHash == cacheKey);
 
         if (siteUrl is null)
         {
@@ -127,38 +119,4 @@ public class SiteUrlsService(
     }
 
     public string GetUrlHash(string? url) => url.IsEmpty() ? "".GetSha1Hash() : url.NormalizeUrl().GetSha1Hash();
-
-    private async Task<string?> GetDestinationTitleAsync(string? destinationUrl, string blogName)
-    {
-        try
-        {
-            if (destinationUrl.IsEmpty())
-            {
-                return null;
-            }
-
-            var destinationUrlHtmlContent = await baseHttpClient.HttpClient.GetStringAsync(destinationUrl);
-            var title = destinationUrlHtmlContent.GetHtmlPageTitle();
-
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                return null;
-            }
-
-            return title.Replace(blogName, newValue: "", StringComparison.OrdinalIgnoreCase)
-                .Trim()
-                .TrimStart(trimChar: '|')
-                .TrimEnd(trimChar: '|')
-                .Trim();
-        }
-        catch (Exception ex)
-        {
-            if (ex is not HttpRequestException)
-            {
-                logger.LogError(ex.Demystify(), message: "GetDestinationTitleAsync({URL})", destinationUrl);
-            }
-
-            return null;
-        }
-    }
 }
