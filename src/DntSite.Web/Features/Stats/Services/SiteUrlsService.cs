@@ -16,6 +16,21 @@ public class SiteUrlsService(
 {
     private readonly DbSet<SiteUrl> _siteUrls = uow.DbSet<SiteUrl>();
 
+    public async Task<string?> GetUrlTitleAsync(string url, LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
+    {
+        var externalTitle = await GetExternalUrlTitleAsync(url);
+
+        if (!externalTitle.IsEmpty())
+        {
+            return externalTitle;
+        }
+
+        var referrerSiteUrl = await GetOrAddOrUpdateSiteUrlAsync(url, title: null, isProtectedPage: null,
+            updateVisitsCount: false, lastSiteUrlVisitorStat);
+
+        return referrerSiteUrl?.IsHidden == true ? null : referrerSiteUrl?.Title;
+    }
+
     public async Task<SiteUrl?> GetOrAddOrUpdateSiteUrlAsync(string? url,
         string? title,
         bool? isProtectedPage,
@@ -29,19 +44,6 @@ public class SiteUrlsService(
             return null;
         }
 
-        var appSettings = await appSettingsProvider.GetAppSettingsAsync();
-
-        if (!url.IsReferrerToThisSite(appSettings.SiteRootUri))
-        {
-            return new SiteUrl
-            {
-                Title = url.GetUrlDomain().Domain,
-                IsProtectedPage = false,
-                IsStaticFileUrl = false,
-                Url = url
-            };
-        }
-
         var cacheKey = GetUrlHash(url);
         var siteUrl = await _siteUrls.OrderBy(x => x.UrlHash).FirstOrDefaultAsync(x => x.UrlHash == cacheKey);
 
@@ -50,7 +52,7 @@ public class SiteUrlsService(
             siteUrl = _siteUrls.Add(new SiteUrl
                 {
                     LastSiteUrlVisitorStat = lastSiteUrlVisitorStat,
-                    Title = title ?? "",
+                    Title = title ?? new Uri(url).PathAndQuery,
                     Url = url,
                     UrlHash = cacheKey,
                     VisitsCount = 1,
@@ -61,7 +63,11 @@ public class SiteUrlsService(
         }
         else
         {
-            siteUrl.Title = title ?? "";
+            if (title is not null)
+            {
+                siteUrl.Title = title;
+            }
+
             siteUrl.LastSiteUrlVisitorStat = lastSiteUrlVisitorStat;
 
             if (updateVisitsCount)
@@ -116,6 +122,23 @@ public class SiteUrlsService(
             IsSpider = await uaParserService.IsSpiderClientAsync(ua),
             ClientInfo = await uaParserService.GetClientInfoAsync(context)
         };
+    }
+
+    private async Task<string?> GetExternalUrlTitleAsync(string? url)
+    {
+        if (!url.IsValidUrl())
+        {
+            return null;
+        }
+
+        var appSettings = await appSettingsProvider.GetAppSettingsAsync();
+
+        if (url.IsReferrerToThisSite(appSettings.SiteRootUri))
+        {
+            return null;
+        }
+
+        return url.GetUrlDomain().Domain;
     }
 
     public string GetUrlHash(string? url) => url.IsEmpty() ? "".GetSha1Hash() : url.NormalizeUrl().GetSha1Hash();

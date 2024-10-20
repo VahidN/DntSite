@@ -15,16 +15,21 @@ public class SiteReferrersService(
     IPasswordHasherService hasherService,
     ISiteUrlsService siteUrlsService) : ISiteReferrersService
 {
+    private static readonly string[] IgnoresList = ["/api/", "/file/"];
     private readonly DbSet<SiteReferrer> _referrers = uow.DbSet<SiteReferrer>();
 
     public Task DeleteAllAsync() => uow.ExecuteTransactionAsync(() => _referrers.ExecuteDeleteAsync());
 
     public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl,
         string destinationUrl,
-        bool isDestinationUrlProtected,
         LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
     {
         if (string.IsNullOrWhiteSpace(destinationUrl) || string.IsNullOrWhiteSpace(referrerUrl))
+        {
+            return false;
+        }
+
+        if (IgnoresList.Any(item => destinationUrl.Contains(item, StringComparison.OrdinalIgnoreCase)))
         {
             return false;
         }
@@ -37,26 +42,28 @@ public class SiteReferrersService(
             if (normalizedDestinationUrl.AreNullOrEmptyOrEqual(normalizedReferrerUrl,
                     StringComparison.OrdinalIgnoreCase))
             {
+                LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl, reason: "AreNullOrEmptyOrEqual");
+
                 return false;
             }
 
             if (await appSettingsService.IsBannedReferrerAsync(normalizedReferrerUrl))
             {
+                LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl, reason: "IsBannedReferrerAsync");
+
                 return false;
             }
 
-            var destinationSiteUrl = await siteUrlsService.GetOrAddOrUpdateSiteUrlAsync(normalizedDestinationUrl,
-                title: "", isDestinationUrlProtected, updateVisitsCount: false, lastSiteUrlVisitorStat);
+            var destinationTitle = await siteUrlsService.GetUrlTitleAsync(normalizedDestinationUrl,
+                lastSiteUrlVisitorStat);
 
-            var destinationTitle = destinationSiteUrl?.IsHidden == true ? null : destinationSiteUrl?.Title;
-
-            var referrerSiteUrl = await siteUrlsService.GetOrAddOrUpdateSiteUrlAsync(normalizedReferrerUrl, title: "",
-                isProtectedPage: null, updateVisitsCount: false, lastSiteUrlVisitorStat);
-
-            var referrerTitle = referrerSiteUrl?.IsHidden == true ? null : referrerSiteUrl?.Title;
+            var referrerTitle = await siteUrlsService.GetUrlTitleAsync(normalizedReferrerUrl, lastSiteUrlVisitorStat);
 
             if (destinationTitle.AreNullOrEmptyOrEqual(referrerTitle, StringComparison.OrdinalIgnoreCase))
             {
+                LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl,
+                    $"Titles (`{referrerTitle}`,`{destinationTitle}`) are null or equal.");
+
                 return false;
             }
 
@@ -174,4 +181,8 @@ public class SiteReferrersService(
         item.IsDeleted = true;
         await uow.SaveChangesAsync();
     }
+
+    private void LogIgnoredReferrer(string? normalizedReferrerUrl, string? normalizedDestinationUrl, string reason)
+        => logger.LogWarning(message: "Ignored referrer: `{ReferrerUrl}` ❱ `{DestinationUrl}` ❱ {Reason}",
+            normalizedReferrerUrl, normalizedDestinationUrl, reason);
 }

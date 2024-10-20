@@ -22,7 +22,7 @@ public partial class DntSitePageTitle
         var context = ApplicationState.HttpContext;
         var url = context.GetRawUrl();
         var isProtectedPage = ApplicationState.DoNotLogPageReferrer || context.IsProtectedRoute();
-        var title = $"{Group}: {PageTitle.ToPersianNumbers()}";
+        var title = isProtectedPage ? "" : $"{Group}: {PageTitle.ToPersianNumbers()}";
         var lastVisitorStat = await SiteUrlsService.GetLastSiteUrlVisitorStatAsync(context);
 
         BackgroundQueueService.QueueBackgroundWorkItem(async (_, serviceProvider) =>

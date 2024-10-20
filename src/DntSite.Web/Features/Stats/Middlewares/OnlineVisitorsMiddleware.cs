@@ -33,7 +33,6 @@ public class OnlineVisitorsMiddleware(
 
         var referrerUrl = context.GetReferrerUrl();
         var destinationUrl = context.GetRawUrl();
-        var isProtectedRoute = context.IsProtectedRoute();
 
         var lastSiteUrlVisitorStat = await context.RequestServices.GetRequiredService<ISiteUrlsService>()
             .GetLastSiteUrlVisitorStatAsync(context);
@@ -42,8 +41,7 @@ public class OnlineVisitorsMiddleware(
         {
             var siteReferrersService = serviceProvider.GetRequiredService<ISiteReferrersService>();
 
-            await siteReferrersService.TryAddOrUpdateReferrerAsync(referrerUrl, destinationUrl, isProtectedRoute,
-                lastSiteUrlVisitorStat);
+            await siteReferrersService.TryAddOrUpdateReferrerAsync(referrerUrl, destinationUrl, lastSiteUrlVisitorStat);
         });
     }
 }

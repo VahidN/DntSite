@@ -14,4 +14,6 @@ public interface ISiteUrlsService : IScopedService
         bool? isProtectedPage,
         bool updateVisitsCount,
         LastSiteUrlVisitorStat lastSiteUrlVisitorStat);
+
+    Task<string?> GetUrlTitleAsync(string url, LastSiteUrlVisitorStat lastSiteUrlVisitorStat);
 }
