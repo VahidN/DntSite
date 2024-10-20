@@ -15,7 +15,8 @@ public static class LuceneDocumentMapper
     public const string IndexedTitle = nameof(IndexedTitle);
 
     private static readonly CompositeFormat ParsedSearchResultTemplate =
-        CompositeFormat.Parse(format: "<a class='{0}' href='{1}'><span class='{2} {3}'>{4}</span> {5}</a>");
+        CompositeFormat.Parse(
+            format: "<a class='{0}' rel='noopener noreferrer' href='{1}'><span class='{2} {3}'>{4}</span> {5}</a>");
 
     public static string MapToTemplatedResult(this LuceneSearchResult? result,
         string? searchQuery,
