@@ -38,6 +38,16 @@ namespace DntBlazorSsr {
                         return;
                     }
 
+                    const enteredTags: string[] = [];
+                    document.querySelectorAll<HTMLInputElement>("input[type=hidden]").forEach(element => {
+                        enteredTags.push(element.value);
+                    });
+                    if (enteredTags.includes(tagValue)) {
+                        input.value = '';
+                        input.focus();
+                        return;
+                    }
+
                     const dir = DntChangeInputDirectionDependOnLanguage.getDirection(tagValue);
 
                     const tagDiv = document.createElement('div');

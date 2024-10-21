@@ -746,6 +746,15 @@ var DntBlazorSsr;
                     if (!tagValue) {
                         return;
                     }
+                    const enteredTags = [];
+                    document.querySelectorAll("input[type=hidden]").forEach(element => {
+                        enteredTags.push(element.value);
+                    });
+                    if (enteredTags.includes(tagValue)) {
+                        input.value = '';
+                        input.focus();
+                        return;
+                    }
                     const dir = DntBlazorSsr.DntChangeInputDirectionDependOnLanguage.getDirection(tagValue);
                     const tagDiv = document.createElement('div');
                     tagDiv.classList.add('badge', 'bg-secondary', 'me-2');
