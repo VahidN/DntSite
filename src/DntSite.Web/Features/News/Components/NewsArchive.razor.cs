@@ -1,7 +1,6 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
@@ -24,42 +23,12 @@ public partial class NewsArchive
 
     [Parameter] public string? Filter { set; get; }
 
-    [Parameter] public int? RedirectId { set; get; }
-
     [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        if (RedirectId.HasValue)
-        {
-            await RedirectToOriginalUrlAsync(RedirectId.Value);
-        }
-        else
-        {
-            await ShowDailyNewsItemsAsync(Filter);
-            AddBreadCrumbs();
-        }
-    }
-
-    private async Task RedirectToOriginalUrlAsync(int redirectId)
-    {
-        if (ApplicationState.HttpContext.IsPostRequest())
-        {
-            return;
-        }
-
-        var newsItem = await DailyNewsItemsService.FindDailyNewsItemAsync(redirectId);
-
-        if (newsItem is null || newsItem.IsDeleted)
-        {
-            ApplicationState.NavigateToNotFoundPage();
-
-            return;
-        }
-
-        await DailyNewsItemsService.UpdateStatAsync(redirectId, ApplicationState.NavigationManager.IsFromFeed());
-
-        ApplicationState.NavigateTo(newsItem.Url);
+        await ShowDailyNewsItemsAsync(Filter);
+        AddBreadCrumbs();
     }
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..NewsBreadCrumbs.DefaultBreadCrumbs]);

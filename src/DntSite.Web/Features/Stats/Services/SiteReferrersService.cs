@@ -15,7 +15,6 @@ public class SiteReferrersService(
     IPasswordHasherService hasherService,
     ISiteUrlsService siteUrlsService) : ISiteReferrersService
 {
-    private static readonly string[] IgnoresList = ["/api/", "/file/"];
     private readonly DbSet<SiteReferrer> _referrers = uow.DbSet<SiteReferrer>();
 
     public Task DeleteAllAsync() => uow.ExecuteTransactionAsync(() => _referrers.ExecuteDeleteAsync());
@@ -25,11 +24,6 @@ public class SiteReferrersService(
         LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
     {
         if (string.IsNullOrWhiteSpace(destinationUrl) || string.IsNullOrWhiteSpace(referrerUrl))
-        {
-            return false;
-        }
-
-        if (IgnoresList.Any(item => destinationUrl.Contains(item, StringComparison.OrdinalIgnoreCase)))
         {
             return false;
         }

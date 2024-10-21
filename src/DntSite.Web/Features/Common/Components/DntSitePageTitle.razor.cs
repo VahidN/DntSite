@@ -19,6 +19,11 @@ public partial class DntSitePageTitle
 
     private async Task AddToSiteUrlsBackgroundQueueAsync()
     {
+        if (PageTitle.IsEmpty())
+        {
+            return;
+        }
+
         var context = ApplicationState.HttpContext;
         var url = context.GetRawUrl();
         var isProtectedPage = ApplicationState.DoNotLogPageReferrer || context.IsProtectedRoute();

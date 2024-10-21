@@ -47,12 +47,14 @@ public class SiteUrlsService(
         var cacheKey = GetUrlHash(url);
         var siteUrl = await _siteUrls.OrderBy(x => x.UrlHash).FirstOrDefaultAsync(x => x.UrlHash == cacheKey);
 
+        var titlesNeedUpdate = false;
+
         if (siteUrl is null)
         {
             siteUrl = _siteUrls.Add(new SiteUrl
                 {
                     LastSiteUrlVisitorStat = lastSiteUrlVisitorStat,
-                    Title = title ?? new Uri(url).PathAndQuery,
+                    Title = title.IsEmpty() ? new Uri(url).PathAndQuery : title,
                     Url = url,
                     UrlHash = cacheKey,
                     VisitsCount = 1,
@@ -63,7 +65,9 @@ public class SiteUrlsService(
         }
         else
         {
-            if (title is not null)
+            titlesNeedUpdate = ShouldUpdateTitle(title, siteUrl);
+
+            if (titlesNeedUpdate && title is not null)
             {
                 siteUrl.Title = title;
             }
@@ -82,6 +86,11 @@ public class SiteUrlsService(
         }
 
         await uow.SaveChangesAsync();
+
+        if (titlesNeedUpdate)
+        {
+            await UpdateSiteReferrerTitleAsync(url, title);
+        }
 
         return siteUrl;
     }
@@ -122,6 +131,21 @@ public class SiteUrlsService(
             IsSpider = await uaParserService.IsSpiderClientAsync(ua),
             ClientInfo = await uaParserService.GetClientInfoAsync(context)
         };
+    }
+
+    private static bool ShouldUpdateTitle([NotNullWhen(returnValue: true)] string? title, SiteUrl? siteUrl)
+        => title is not null && !string.Equals(siteUrl?.Title, title, StringComparison.Ordinal);
+
+    private async Task UpdateSiteReferrerTitleAsync(string url, string? title)
+    {
+        if (title is null)
+        {
+            return;
+        }
+
+        await uow.DbSet<SiteReferrer>()
+            .Where(referrer => referrer.DestinationUrl == url)
+            .ExecuteUpdateAsync(pc => pc.SetProperty(su => su.DestinationTitle, title));
     }
 
     private async Task<string?> GetExternalUrlTitleAsync(string? url)

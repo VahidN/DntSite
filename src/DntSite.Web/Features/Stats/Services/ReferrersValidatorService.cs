@@ -8,6 +8,7 @@ public class ReferrersValidatorService(
     ICachedAppSettingsProvider appSettingsProvider,
     IUrlNormalizationService urlNormalizationService) : IReferrersValidatorService
 {
+    private static readonly string[] IgnoresList = ["/api/", "/file/", "/feed/", "/error/", "/search-results/"];
     private readonly HashSet<string> _protectedUrls = new(StringComparer.OrdinalIgnoreCase);
 
     public async Task<bool> ShouldSkipThisRequestAsync(HttpContext context)
@@ -40,6 +41,11 @@ public class ReferrersValidatorService(
         }
 
         if (!referrerUrl.IsValidUrl())
+        {
+            return true;
+        }
+
+        if (HasIgnorePattern(destinationUrl, rootUrl) || HasIgnorePattern(referrerUrl, rootUrl))
         {
             return true;
         }
@@ -104,6 +110,10 @@ public class ReferrersValidatorService(
 
         return url.IsEmpty() ? null : urlNormalizationService.NormalizeUrl(url, new Uri(url).Scheme);
     }
+
+    private static bool HasIgnorePattern(string url, string rootUrl)
+        => url.IsReferrerToThisSite(rootUrl) &&
+           IgnoresList.Any(item => url.Contains(item, StringComparison.OrdinalIgnoreCase));
 
     private static string? GetNormalizedPostUrl(string? url)
     {
