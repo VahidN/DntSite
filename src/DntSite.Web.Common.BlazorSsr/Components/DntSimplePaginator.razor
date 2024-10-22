@@ -12,10 +12,10 @@ else if (_hasPagination)
                 @if (_pagerStart != 1)
                 {
                     <li class="@PaginationItemClass">
-                        <a class="@PaginationPageLinkClass" href="@BasePath/page/1#main">&laquo;</a>
+                        <a class="@PaginationPageLinkClass" href="@BasePath/page/1#@PaginationScrollToId">&laquo;</a>
                     </li>
                     <li class="@PaginationItemClass">
-                        <a class="@PaginationPageLinkClass" href="@BasePath/page/@(_pagerStart - 1)#main">...</a>
+                        <a class="@PaginationPageLinkClass" href="@BasePath/page/@(_pagerStart - 1)#@PaginationScrollToId">...</a>
                     </li>
                 }
 
@@ -30,7 +30,7 @@ else if (_hasPagination)
                     else
                     {
                         <li class="@PaginationItemClass">
-                            <a class="@PaginationPageLinkClass" href="@BasePath/page/@pageNo#main">@pageNo.ToPersianNumbers()</a>
+                            <a class="@PaginationPageLinkClass" href="@BasePath/page/@pageNo#@PaginationScrollToId">@pageNo.ToPersianNumbers()</a>
                         </li>
                     }
                 }
@@ -41,7 +41,7 @@ else if (_hasPagination)
                         <a class="@PaginationPageLinkClass" href="@BasePath/page/@(_pagerEnd + 1)">...</a>
                     </li>
                     <li class="@PaginationItemClass">
-                        <a class="@PaginationPageLinkClass" href="@BasePath/page/@_totalPages#main">&raquo;</a>
+                        <a class="@PaginationPageLinkClass" href="@BasePath/page/@_totalPages#@PaginationScrollToId">&raquo;</a>
                     </li>
                 }
             </ul>

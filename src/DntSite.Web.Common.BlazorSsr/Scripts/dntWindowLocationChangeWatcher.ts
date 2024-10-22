@@ -2,6 +2,15 @@ namespace DntBlazorSsr {
     export class DntWindowLocationChangeWatcher {
 
         private static _isInitialized: boolean = false;
+        private static _previousPageUrl: string = window.location.href;
+
+        static scrollToTopIfPageUrlHasChanged() {
+            const newUrl = window.location.href;
+            if (DntWindowLocationChangeWatcher._previousPageUrl != newUrl) {
+                window.scrollTo({top: 0, left: 0, behavior: 'instant'});
+            }
+            DntWindowLocationChangeWatcher._previousPageUrl = newUrl;
+        }
 
         static showLoadingSpinner() {
             const spinnerId = `dnt-loading-spinner`;
@@ -42,9 +51,10 @@ namespace DntBlazorSsr {
 
         static locationChanged() {
             DntWindowLocationChangeWatcher.showLoadingSpinner();
+            DntWindowLocationChangeWatcher.scrollToTopIfPageUrlHasChanged();
         }
 
-        static enable(): void {
+        static startNavigationInterception() {
             if (DntWindowLocationChangeWatcher._isInitialized) {
                 return;
             }
@@ -66,6 +76,10 @@ namespace DntBlazorSsr {
             window.addEventListener('pushState', DntWindowLocationChangeWatcher.locationChanged);
 
             DntWindowLocationChangeWatcher._isInitialized = true;
+        }
+
+        static enable(): void {
+            DntWindowLocationChangeWatcher.startNavigationInterception();
         }
     }
 }

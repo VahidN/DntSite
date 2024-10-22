@@ -43,7 +43,7 @@ public partial class PostsArchive
     private void ActivateOldSearchPattern()
     {
         var searchFilter = Uri.EscapeDataString($"(Title =* {Term})");
-        ApplicationState.NavigateTo($"{PostsRoutingConstants.PostsFilterFilterBase}/{searchFilter}/page/1#main");
+        ApplicationState.NavigateTo($"{PostsRoutingConstants.PostsFilterFilterBase}/{searchFilter}/page/1#header");
     }
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..PostsBreadCrumbs.DefaultBreadCrumbs]);

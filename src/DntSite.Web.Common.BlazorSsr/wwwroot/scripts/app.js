@@ -1607,6 +1607,13 @@ var DntBlazorSsr;
 var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntWindowLocationChangeWatcher {
+        static scrollToTopIfPageUrlHasChanged() {
+            const newUrl = window.location.href;
+            if (DntWindowLocationChangeWatcher._previousPageUrl != newUrl) {
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            }
+            DntWindowLocationChangeWatcher._previousPageUrl = newUrl;
+        }
         static showLoadingSpinner() {
             const spinnerId = `dnt-loading-spinner`;
             const existingSpinner = document.getElementById(spinnerId);
@@ -1641,8 +1648,9 @@ var DntBlazorSsr;
         }
         static locationChanged() {
             DntWindowLocationChangeWatcher.showLoadingSpinner();
+            DntWindowLocationChangeWatcher.scrollToTopIfPageUrlHasChanged();
         }
-        static enable() {
+        static startNavigationInterception() {
             if (DntWindowLocationChangeWatcher._isInitialized) {
                 return;
             }
@@ -1660,8 +1668,12 @@ var DntBlazorSsr;
             window.addEventListener('pushState', DntWindowLocationChangeWatcher.locationChanged);
             DntWindowLocationChangeWatcher._isInitialized = true;
         }
+        static enable() {
+            DntWindowLocationChangeWatcher.startNavigationInterception();
+        }
     }
     DntWindowLocationChangeWatcher._isInitialized = false;
+    DntWindowLocationChangeWatcher._previousPageUrl = window.location.href;
     DntBlazorSsr.DntWindowLocationChangeWatcher = DntWindowLocationChangeWatcher;
 })(DntBlazorSsr || (DntBlazorSsr = {}));
 (() => {

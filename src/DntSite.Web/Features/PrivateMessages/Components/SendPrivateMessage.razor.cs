@@ -83,7 +83,7 @@ public partial class SendPrivateMessage
         }
 
         await PrivateMessagesService.RemovePrivateMessageAsync(id);
-        ApplicationState.NavigateTo($"{PrivateMessagesRoutingConstants.MyPrivateMessages}#main");
+        ApplicationState.NavigateTo($"{PrivateMessagesRoutingConstants.MyPrivateMessages}#header");
     }
 
     private async Task InitFriendlyNameAsync()
@@ -120,7 +120,7 @@ public partial class SendPrivateMessage
             Uri.EscapeDataString(ProtectionProvider.Encrypt(id.ToString(CultureInfo.InvariantCulture)) ?? "");
 
         ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
-            $"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{encryptedId}#main"));
+            $"{PrivateMessagesRoutingConstants.MyPrivateMessageBase}/{encryptedId}#header"));
     }
 
     private async Task AddPrivateMessageAsync()
@@ -135,7 +135,7 @@ public partial class SendPrivateMessage
 
                 break;
             case OperationStat.Succeeded:
-                ApplicationState.NavigateTo($"{PrivateMessagesRoutingConstants.MyPrivateMessages}#main");
+                ApplicationState.NavigateTo($"{PrivateMessagesRoutingConstants.MyPrivateMessages}#header");
 
                 break;
         }

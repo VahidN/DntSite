@@ -64,6 +64,12 @@ public partial class DntSimplePaginator
 
     [Parameter] [EditorRequired] public int ItemsPerPage { set; get; }
 
+    /// <summary>
+    ///     Its default value is `header`.
+    /// </summary>
+    [Parameter]
+    public string PaginationScrollToId { get; set; } = "header";
+
     protected override void OnParametersSet()
     {
         ReDrawPagination();
