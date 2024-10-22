@@ -53,10 +53,10 @@ public class SiteReferrersService(
 
             var referrerTitle = await siteUrlsService.GetUrlTitleAsync(normalizedReferrerUrl, lastSiteUrlVisitorStat);
 
-            if (destinationTitle.AreNullOrEmptyOrEqual(referrerTitle, StringComparison.OrdinalIgnoreCase))
+            if (destinationTitle.IsEmpty() || referrerTitle.IsEmpty())
             {
                 LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl,
-                    $"Titles (`{referrerTitle}`,`{destinationTitle}`) are null or equal.");
+                    $"Titles (`{referrerTitle}`,`{destinationTitle}`) are null.");
 
                 return false;
             }
