@@ -1,5 +1,8 @@
 namespace DntBlazorSsr {
     export class DntWindowLocationChangeWatcher {
+
+        private static _isInitialized: boolean = false;
+
         static showLoadingSpinner() {
             const spinnerId = `dnt-loading-spinner`;
 
@@ -42,6 +45,10 @@ namespace DntBlazorSsr {
         }
 
         static enable(): void {
+            if (DntWindowLocationChangeWatcher._isInitialized) {
+                return;
+            }
+
             const {pushState, replaceState} = window.history;
 
             window.history.pushState = function (...args) {
@@ -54,9 +61,11 @@ namespace DntBlazorSsr {
                 window.dispatchEvent(new Event('replaceState'));
             };
 
-            window.addEventListener('popstate', () => DntWindowLocationChangeWatcher.locationChanged());
-            window.addEventListener('replaceState', () => DntWindowLocationChangeWatcher.locationChanged());
-            window.addEventListener('pushState', () => DntWindowLocationChangeWatcher.locationChanged());
+            window.addEventListener('popstate', DntWindowLocationChangeWatcher.locationChanged);
+            window.addEventListener('replaceState', DntWindowLocationChangeWatcher.locationChanged);
+            window.addEventListener('pushState', DntWindowLocationChangeWatcher.locationChanged);
+
+            DntWindowLocationChangeWatcher._isInitialized = true;
         }
     }
 }
