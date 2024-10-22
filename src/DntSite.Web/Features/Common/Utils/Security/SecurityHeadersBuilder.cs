@@ -2,9 +2,16 @@ namespace DntSite.Web.Features.Common.Utils.Security;
 
 public static class SecurityHeadersBuilder
 {
+    private static HeaderPolicyCollection? _policy;
+
     public static HeaderPolicyCollection GetCsp(bool isDevelopment, bool enableCrossOriginPolicy)
     {
-        var policy = new HeaderPolicyCollection().AddFrameOptionsDeny()
+        if (_policy is not null)
+        {
+            return _policy;
+        }
+
+        _policy = new HeaderPolicyCollection().AddFrameOptionsDeny()
             .AddXssProtectionBlock()
             .AddContentTypeOptionsNoSniff()
             .EnableCrossOriginPolicy(enableCrossOriginPolicy)
@@ -56,12 +63,12 @@ public static class SecurityHeadersBuilder
         if (!isDevelopment)
         {
             // Default maxAge => one year in seconds
-            policy.AddStrictTransportSecurityMaxAgeIncludeSubDomains();
+            _policy.AddStrictTransportSecurityMaxAgeIncludeSubDomains();
         }
 
-        policy.ApplyDocumentHeadersToAllResponses();
+        _policy.ApplyDocumentHeadersToAllResponses();
 
-        return policy;
+        return _policy;
     }
 
     /// <summary>
