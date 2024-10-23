@@ -36,11 +36,15 @@ public class SiteReferrersService(
             if (normalizedDestinationUrl.AreNullOrEmptyOrEqual(normalizedReferrerUrl,
                     StringComparison.OrdinalIgnoreCase))
             {
+                LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl, reason: "AreNullOrEmptyOrEqual");
+
                 return false;
             }
 
             if (await appSettingsService.IsBannedReferrerAsync(normalizedReferrerUrl))
             {
+                LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl, reason: "IsBannedReferrerAsync");
+
                 return false;
             }
 
@@ -51,6 +55,9 @@ public class SiteReferrersService(
 
             if (destinationTitle.IsEmpty() || referrerTitle.IsEmpty())
             {
+                LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl,
+                    $"Titles (`{referrerTitle}`,`{destinationTitle}`) are null.");
+
                 return false;
             }
 
@@ -168,4 +175,8 @@ public class SiteReferrersService(
         item.IsDeleted = true;
         await uow.SaveChangesAsync();
     }
+
+    private void LogIgnoredReferrer(string? normalizedReferrerUrl, string? normalizedDestinationUrl, string reason)
+        => logger.LogInformation(message: "Ignored referrer: `{ReferrerUrl}` ❱ `{DestinationUrl}` ❱ {Reason}",
+            normalizedReferrerUrl, normalizedDestinationUrl, reason);
 }
