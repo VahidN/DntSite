@@ -3,7 +3,7 @@ namespace DntSite.Web.Features.PrivateMessages.RoutingConstants;
 public static class PrivateMessagesRoutingConstants
 {
     public const string MyPrivateMessages = "/my-private-messages";
-    public const string MyPrivateMessagesPageCurrentPage = $"{MyPrivateMessages}/page/{{CurrentPage:int}}";
+    public const string MyPrivateMessagesPageCurrentPage = $"{MyPrivateMessages}/page/{{CurrentPage:int?}}";
 
     public const string MyPrivateMessageBase = "/my-private-message";
 
@@ -11,7 +11,7 @@ public static class PrivateMessagesRoutingConstants
         $"{MyPrivateMessageBase}/{{PrivateMessageId:{EncryptedRouteConstraint.Name}}}";
 
     public const string PrivateMessagesViewer = "/private-messages-viewer";
-    public const string PrivateMessagesViewerPageCurrentPage = $"{PrivateMessagesViewer}/page/{{CurrentPage:int}}";
+    public const string PrivateMessagesViewerPageCurrentPage = $"{PrivateMessagesViewer}/page/{{CurrentPage:int?}}";
 
     public const string PublicContactUs1 = "/PublicContactUs";
     public const string PublicContactUs2 = "/public-contact-us";

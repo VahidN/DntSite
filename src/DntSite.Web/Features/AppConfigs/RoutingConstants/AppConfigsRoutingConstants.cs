@@ -9,7 +9,7 @@ public static class AppConfigsRoutingConstants
     public const string SystemLogsCurrentLogLevel = "/system-logs/{CurrentLogLevel}";
 
     public const string SystemLogsCurrentLogLevelPageCurrentPage =
-        "/system-logs/{CurrentLogLevel}/page/{CurrentPage:int}";
+        "/system-logs/{CurrentLogLevel}/page/{CurrentPage:int?}";
 
-    public const string SystemLogsPageCurrentPage = "/system-logs/page/{CurrentPage:int}";
+    public const string SystemLogsPageCurrentPage = "/system-logs/page/{CurrentPage:int?}";
 }

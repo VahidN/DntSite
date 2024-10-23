@@ -36,21 +36,21 @@ public static class UserProfilesRoutingConstants
     public const string SendMassMail = "/send-mass-mail";
 
     public const string Users = "/users";
-    public const string UsersPageCurrentPage = $"{Users}/page/{{CurrentPage:int}}";
+    public const string UsersPageCurrentPage = $"{Users}/page/{{CurrentPage:int?}}";
 
     public const string OldUsers = "/siteusers";
-    public const string OldUsersPageCurrentPage = $"{OldUsers}/index/{{CurrentPage:int}}";
+    public const string OldUsersPageCurrentPage = $"{OldUsers}/index/{{CurrentPage:int?}}";
 
     public const string UsersFilterBase = $"{Users}/filter";
-    public const string UsersFilterFilterPageCurrentPage = $"{UsersFilterBase}/{{Filter}}/page/{{CurrentPage:int}}";
+    public const string UsersFilterFilterPageCurrentPage = $"{UsersFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
     public const string UsersName = $"{Users}/{{Name}}";
 
     public const string User = "/user";
-    public const string UserPageCurrentPage = $"{User}/page/{{CurrentPage:int}}";
+    public const string UserPageCurrentPage = $"{User}/page/{{CurrentPage:int?}}";
 
     public const string UserFilterBase = $"{User}/filter";
-    public const string UserFilterFilterPageCurrentPage = $"{UserFilterBase}/{{Filter}}/page/{{CurrentPage:int}}";
+    public const string UserFilterFilterPageCurrentPage = $"{UserFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
     public const string UserName = $"{User}/{{Name}}";
 
@@ -61,7 +61,7 @@ public static class UserProfilesRoutingConstants
     public const string UsersManagerFilterBase = $"{UsersManager}/filter";
 
     public const string UsersManagerFilterFilterPageCurrentPage =
-        $"{UsersManagerFilterBase}/{{Filter}}/page/{{CurrentPage:int}}";
+        $"{UsersManagerFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
     public const string JobSeekers = "/job-seekers";
 }

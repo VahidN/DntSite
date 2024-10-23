@@ -3,19 +3,21 @@ namespace DntSite.Web.Features.Courses.RoutingConstants;
 public static class CoursesRoutingConstants
 {
     public const string Courses = "/courses";
-    public const string CoursesPageCurrentPage = "/courses/page/{CurrentPage:int}";
+    public const string CoursesPageCurrentPage = "/courses/page/{CurrentPage:int?}";
     public const string CoursesFilterBase = "/courses/filter";
-    public const string CoursesFilterFilterPageCurrentPage = $"{CoursesFilterBase}/{{Filter}}/page/{{CurrentPage:int}}";
+
+    public const string CoursesFilterFilterPageCurrentPage =
+        $"{CoursesFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
     public const string CoursesDetailsBase = "/courses/details";
     public const string CoursesDetailsCourseId = $"{CoursesDetailsBase}/{{CourseId:int}}";
     public const string CoursesCourseId = "/courses/{CourseId:int}";
     public const string CoursesTag = "/courses-tag";
-    public const string CoursesTagPageCurrentPage = $"{CoursesTag}/page/{{CurrentPage:int}}";
+    public const string CoursesTagPageCurrentPage = $"{CoursesTag}/page/{{CurrentPage:int?}}";
     public const string CoursesTagTagName = $"{CoursesTag}/{{TagName}}";
-    public const string CoursesTagTagNamePageCurrentPage = $"{CoursesTag}/{{TagName}}/page/{{CurrentPage:int}}";
+    public const string CoursesTagTagNamePageCurrentPage = $"{CoursesTag}/{{TagName}}/page/{{CurrentPage:int?}}";
     public const string CoursesWriters = "/courses-writers";
-    public const string CoursesWritersPageCurrentPage = "/courses-writers/page/{CurrentPage:int}";
+    public const string CoursesWritersPageCurrentPage = "/courses-writers/page/{CurrentPage:int?}";
     public const string CoursesWritersUserFriendlyName = "/courses-writers/{UserFriendlyName}";
 
     public const string CoursesTagOldTagName = "/courses/tag/{TagName}";
@@ -23,22 +25,22 @@ public static class CoursesRoutingConstants
     public const string CoursesDetailsOldCourseId = "/courses/additionaltopics/{CourseId:int}";
 
     public const string CoursesWritersUserFriendlyNamePageCurrentPage =
-        "/courses-writers/{UserFriendlyName}/page/{CurrentPage:int}";
+        "/courses-writers/{UserFriendlyName}/page/{CurrentPage:int?}";
 
     public const string CoursesTopicBase = "/courses/topic";
     public const string CoursesTopicCourseIdDisplayId = $"{CoursesTopicBase}/{{CourseId:int}}/{{DisplayId:guid}}";
     public const string CoursesComments = "/courses-comments";
-    public const string CoursesCommentsPageCurrentPage = $"{CoursesComments}/page/{{CurrentPage:int}}";
+    public const string CoursesCommentsPageCurrentPage = $"{CoursesComments}/page/{{CurrentPage:int?}}";
     public const string CoursesCommentsUserFriendlyName = $"{CoursesComments}/{{UserFriendlyName}}";
 
     public const string CoursesCommentsUserFriendlyNamePageCurrentPage =
-        $"{CoursesComments}/{{UserFriendlyName}}/page/{{CurrentPage:int}}";
+        $"{CoursesComments}/{{UserFriendlyName}}/page/{{CurrentPage:int?}}";
 
     public const string CourseCommentsBase = "/course-comments";
     public const string CourseCommentsCourseId = $"{CourseCommentsBase}/{{CourseId:int}}";
 
     public const string CourseCommentsCourseIdPageCurrentPage =
-        $"{CourseCommentsBase}/{{CourseId:int}}/page/{{CurrentPage:int}}";
+        $"{CourseCommentsBase}/{{CourseId:int}}/page/{{CurrentPage:int?}}";
 
     public const string WriteCourse = "/write-course";
     public const string WriteCourseEditEditId = $"{WriteCourse}/edit/{{EditId:{EncryptedRouteConstraint.Name}}}";
