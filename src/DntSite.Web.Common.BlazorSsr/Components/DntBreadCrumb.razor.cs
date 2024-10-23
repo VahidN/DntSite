@@ -5,6 +5,7 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 /// </summary>
 public partial class DntBreadCrumb
 {
+    private string? _currentRelativeUrl;
     private BreadCrumb? _lastBreadCrumbItem;
 
     private IEnumerable<BreadCrumb>? BreadCrumbsToShow => BreadCrumbs
@@ -13,6 +14,8 @@ public partial class DntBreadCrumb
         .DistinctBy(breadCrumb => breadCrumb.Url);
 
     [CascadingParameter] internal HttpContext? HttpContext { set; get; }
+
+    [Inject] internal NavigationManager NavigationManager { set; get; } = null!;
 
     /// <summary>
     ///     Additional user attributes
@@ -45,6 +48,14 @@ public partial class DntBreadCrumb
     [Parameter]
     public bool MakeLastItemActive { set; get; }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _currentRelativeUrl = "/".CombineUrl(NavigationManager.ToBaseRelativePath(NavigationManager.Uri),
+            escapeRelativeUrl: false);
+    }
+
     /// <summary>
     ///     Method invoked when the component has received parameters from its parent
     /// </summary>
@@ -65,6 +76,9 @@ public partial class DntBreadCrumb
 
         return item.IsActive ? "active" : "";
     }
+
+    private string GetFontWeight(BreadCrumb item)
+        => string.Equals(item.Url, _currentRelativeUrl, StringComparison.OrdinalIgnoreCase) ? "fw-bold" : "";
 
     private bool IsBreadCrumbVisible(BreadCrumb? breadCrumb)
         => breadCrumb is not null && HttpContext.HasUserAccess(breadCrumb.AllowAnonymous, breadCrumb.AllowedClaims,

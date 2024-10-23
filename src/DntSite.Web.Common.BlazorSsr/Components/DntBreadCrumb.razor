@@ -13,7 +13,7 @@
                     }
                     @if (string.IsNullOrWhiteSpace(activeClass))
                     {
-                        <a href="@item.Url" class="text-decoration-none">@item.Title</a>
+                        <a href="@item.Url" class="text-decoration-none @GetFontWeight(item)">@item.Title</a>
                     }
                     else
                     {
