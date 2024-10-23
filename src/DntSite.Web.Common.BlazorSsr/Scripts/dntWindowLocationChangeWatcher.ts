@@ -2,10 +2,16 @@ namespace DntBlazorSsr {
     export class DntWindowLocationChangeWatcher {
 
         private static _isInitialized: boolean = false;
-        private static _previousPageUrl: string = window.location.href;
+        private static _previousPageUrl: string = DntWindowLocationChangeWatcher.getCurrentUrlWithoutHash();
+
+        static getCurrentUrlWithoutHash(): string {
+            const url = new URL(window.location.href);
+            url.hash = '';
+            return url.toString();
+        }
 
         static scrollToTopIfPageUrlHasChanged() {
-            const newUrl = window.location.href;
+            const newUrl = DntWindowLocationChangeWatcher.getCurrentUrlWithoutHash();
             if (DntWindowLocationChangeWatcher._previousPageUrl != newUrl) {
                 window.scrollTo({top: 0, left: 0, behavior: 'instant'});
             }

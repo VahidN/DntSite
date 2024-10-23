@@ -1607,8 +1607,13 @@ var DntBlazorSsr;
 var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntWindowLocationChangeWatcher {
+        static getCurrentUrlWithoutHash() {
+            const url = new URL(window.location.href);
+            url.hash = '';
+            return url.toString();
+        }
         static scrollToTopIfPageUrlHasChanged() {
-            const newUrl = window.location.href;
+            const newUrl = DntWindowLocationChangeWatcher.getCurrentUrlWithoutHash();
             if (DntWindowLocationChangeWatcher._previousPageUrl != newUrl) {
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
             }
@@ -1673,7 +1678,7 @@ var DntBlazorSsr;
         }
     }
     DntWindowLocationChangeWatcher._isInitialized = false;
-    DntWindowLocationChangeWatcher._previousPageUrl = window.location.href;
+    DntWindowLocationChangeWatcher._previousPageUrl = DntWindowLocationChangeWatcher.getCurrentUrlWithoutHash();
     DntBlazorSsr.DntWindowLocationChangeWatcher = DntWindowLocationChangeWatcher;
 })(DntBlazorSsr || (DntBlazorSsr = {}));
 (() => {
