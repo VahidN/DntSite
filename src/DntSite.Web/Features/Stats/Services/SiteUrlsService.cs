@@ -133,7 +133,7 @@ public class SiteUrlsService(
         };
     }
 
-    private static bool ShouldUpdateTitle([NotNullWhen(returnValue: true)] string? title, SiteUrl? siteUrl)
+    private static bool ShouldUpdateTitle(string? title, SiteUrl? siteUrl)
         => title is not null && !string.Equals(siteUrl?.Title, title, StringComparison.Ordinal);
 
     private async Task UpdateSiteReferrerTitleAsync(string url, string? title)
