@@ -48,6 +48,12 @@ public partial class DntBreadCrumb
     [Parameter]
     public bool MakeLastItemActive { set; get; }
 
+    /// <summary>
+    ///     Its default value is `fw-bold`.
+    /// </summary>
+    [Parameter]
+    public string ActiveItemFontWeightClass { set; get; } = "fw-bold";
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -78,7 +84,16 @@ public partial class DntBreadCrumb
     }
 
     private string GetFontWeight(BreadCrumb item)
-        => string.Equals(item.Url, _currentRelativeUrl, StringComparison.OrdinalIgnoreCase) ? "fw-bold" : "";
+    {
+        if (_currentRelativeUrl.IsEmpty() || item.Url.IsEmpty())
+        {
+            return "";
+        }
+
+        return string.Equals(item.Url, _currentRelativeUrl, StringComparison.OrdinalIgnoreCase)
+            ? ActiveItemFontWeightClass
+            : "";
+    }
 
     private bool IsBreadCrumbVisible(BreadCrumb? breadCrumb)
         => breadCrumb is not null && HttpContext.HasUserAccess(breadCrumb.AllowAnonymous, breadCrumb.AllowedClaims,
