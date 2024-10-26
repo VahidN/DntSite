@@ -1,8 +1,8 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Stats.Models;
-using DntSite.Web.Features.Stats.RoutingConstants;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
+using DntSite.Web.Features.UserProfiles.RoutingConstants;
 
 namespace DntSite.Web.Features.UserProfiles.Components;
 
@@ -23,5 +23,5 @@ public partial class UsersBirthdays
     }
 
     private void AddBreadCrumbs()
-        => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.OnlineUsersStatsBreadCrumbs]);
+        => ApplicationState.BreadCrumbs.AddRange([..UserProfilesBreadCrumbs.DefaultBreadCrumbs]);
 }

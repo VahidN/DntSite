@@ -69,6 +69,5 @@ public partial class ShowSiteReferrers
             _siteReferrerType == SiteReferrerType.Internal);
     }
 
-    private void AddBreadCrumbs()
-        => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.OnlineUsersStatsBreadCrumbs]);
+    private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.SiteStatsBreadCrumbs]);
 }

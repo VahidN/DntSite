@@ -83,6 +83,10 @@
                                          BadgeValue="_model!.NumberOfJobsSeekers"
                                          IsVisible="@(_model!.NumberOfJobsSeekers > 0)"/>
 
+        <DntLinkedOrderedListNavMenuItem Title="آمار بازدیدها"
+                                         GlyphIcon="@DntBootstrapIcons.BiCalendar2Range"
+                                         Url="@StatsRoutingConstants.OnlineVisitors"/>
+
         <DntLinkedOrderedListNavMenuItem Title="فید آخرین تغییرات"
                                          GlyphIcon="@DntBootstrapIcons.BiRss"
                                          Url="@ApiUrlsRoutingConstants.Feed.HttpAny.Index"/>

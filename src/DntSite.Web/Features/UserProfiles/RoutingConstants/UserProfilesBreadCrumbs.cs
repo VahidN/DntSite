@@ -1,4 +1,5 @@
 using DntSite.Web.Common.BlazorSsr.Utils;
+using DntSite.Web.Features.Stats.RoutingConstants;
 
 namespace DntSite.Web.Features.UserProfiles.RoutingConstants;
 
@@ -56,5 +57,8 @@ public static class UserProfilesBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiPersonWorkspace
     };
 
-    public static readonly IList<BreadCrumb> DefaultBreadCrumbs = [];
+    public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
+    [
+        UsersBirthdays, StatsBreadCrumbs.TodayVisitedUsers, Users
+    ];
 }

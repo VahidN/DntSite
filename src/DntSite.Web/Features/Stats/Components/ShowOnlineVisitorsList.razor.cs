@@ -41,8 +41,7 @@ public partial class ShowOnlineVisitorsList
         _items = await SiteUrlsService.GetPagedSiteUrlsAsync(CurrentPage.Value - 1, ItemsPerPage, IsSpider);
     }
 
-    private void AddBreadCrumbs()
-        => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.OnlineUsersStatsBreadCrumbs]);
+    private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.SiteStatsBreadCrumbs]);
 
     private string GetUserUrl(string friendlyName)
         => UserProfilesRoutingConstants.Users.CombineUrl(friendlyName, escapeRelativeUrl: true);
