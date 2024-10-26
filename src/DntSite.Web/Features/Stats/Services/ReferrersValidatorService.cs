@@ -134,12 +134,17 @@ public class ReferrersValidatorService(
 
         var uri = new Uri(url);
 
-        if (uri.Segments.Length < 2)
+        if (uri.Segments.Length <= 2)
         {
             return url;
         }
 
         var id = uri.Segments[2].Replace(oldValue: "/", string.Empty, StringComparison.OrdinalIgnoreCase).ToInt();
+
+        if (id == 0)
+        {
+            return url;
+        }
 
         var domain = uri.IsDefaultPort
             ? uri.Host
