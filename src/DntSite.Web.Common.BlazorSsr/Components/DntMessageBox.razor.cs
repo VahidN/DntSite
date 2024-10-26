@@ -51,4 +51,10 @@ public partial class DntMessageBox
     /// </summary>
     [Parameter]
     public int MarginTop { get; set; } = 2;
+
+    /// <summary>
+    ///     Its default value is `false`.
+    /// </summary>
+    [Parameter]
+    public bool EnableDataEnhancedNavigation { set; get; }
 }
