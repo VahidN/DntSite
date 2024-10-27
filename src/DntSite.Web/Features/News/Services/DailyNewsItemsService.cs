@@ -219,39 +219,6 @@ public class DailyNewsItemsService(
             .OrderBy(x => x.Id)
             .ToListAsync();
 
-    public async Task UpdateAllNewsLastHttpStatusCodeAsync()
-    {
-        var itemsNeedUpdate = await _dailyNewsItem.Where(x => !x.IsDeleted).OrderByDescending(x => x.Id).ToListAsync();
-
-        foreach (var item in itemsNeedUpdate)
-        {
-            try
-            {
-                var url = item.Url;
-                item.LastHttpStatusCodeCheckDateTime = DateTime.UtcNow;
-
-                item.LastHttpStatusCode =
-                    await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, throwOnException: true);
-
-                item.IsDeleted = item.LastHttpStatusCode == HttpStatusCode.NotFound;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Demystify(), message: "UpdateAllNewsLastHttpStatusCodeAsync({Id}, {Url}): ", item.Id,
-                    item.Url);
-
-                if (IsOutdatedLink(ex))
-                {
-                    item.IsDeleted = true;
-                    DeleteFromLuceneIndex(item);
-                }
-            }
-
-            await uow.SaveChangesAsync();
-            await Task.Delay(TimeSpan.FromSeconds(value: 3));
-        }
-    }
-
     public async Task<NewsDetailsModel> GetNewsLastAndNextIncludeAuthorTagsAsync(int id, bool showDeletedItems = false)
 
         // این شماره‌ها پشت سر هم نیستند
@@ -359,9 +326,11 @@ public class DailyNewsItemsService(
         }
 
         item.IsDeleted = true;
+        item.LastHttpStatusCode = null;
+        item.LastHttpStatusCodeCheckDateTime = null;
         await uow.SaveChangesAsync();
 
-        DeleteFromLuceneIndex(item);
+        UpdateLuceneIndex(item);
     }
 
     public async Task NotifyAddOrUpdateChangesAsync(DailyNewsItem? newsItem,
@@ -412,8 +381,7 @@ public class DailyNewsItemsService(
         var result = AddDailyNewsItem(newsItem);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(
-            result.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: ""));
+        UpdateLuceneIndex(result);
 
         return result;
     }
@@ -435,8 +403,7 @@ public class DailyNewsItemsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(
-            newsItem.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: ""));
+        UpdateLuceneIndex(newsItem);
     }
 
     public async Task<OperationResult> CheckUrlHashAsync(string url, int? id, bool isAdmin)
@@ -502,10 +469,58 @@ public class DailyNewsItemsService(
             => item.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: "")));
     }
 
-    private void DeleteFromLuceneIndex(DailyNewsItem item)
-        => fullTextSearchService.DeleteLuceneDocument(item
-            .MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: "")
-            .DocumentTypeIdHash);
+    public async Task UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction updateNewsStatusAction)
+    {
+        var itemsNeedUpdate = updateNewsStatusAction == UpdateNewsStatusAction.UpdatePublicOnes
+            ? await _dailyNewsItem.Where(x => !x.IsDeleted).OrderByDescending(x => x.Id).ToListAsync()
+            : await _dailyNewsItem.Where(x => x.IsDeleted &&
+                                              x.LastHttpStatusCode.HasValue &&
+                                              x.LastHttpStatusCode != HttpStatusCode.OK)
+                .OrderByDescending(x => x.Id)
+                .ToListAsync();
+
+        foreach (var item in itemsNeedUpdate)
+        {
+            try
+            {
+                var url = item.Url;
+                item.LastHttpStatusCodeCheckDateTime = DateTime.UtcNow;
+
+                item.LastHttpStatusCode =
+                    await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, throwOnException: true);
+
+                item.IsDeleted = item.LastHttpStatusCode == HttpStatusCode.NotFound;
+            }
+            catch (Exception ex)
+            {
+                item.IsDeleted = IsOutdatedLink(ex);
+
+                logger.LogError(ex.Demystify(), message: "UpdateAllNewsLastHttpStatusCodeAsync({Id}, {Url}): ", item.Id,
+                    item.Url);
+            }
+
+            await uow.SaveChangesAsync();
+
+            UpdateLuceneIndex(item);
+
+            await Task.Delay(TimeSpan.FromSeconds(value: 1));
+        }
+    }
+
+    private void UpdateLuceneIndex(DailyNewsItem item)
+    {
+        if (item.IsDeleted)
+        {
+            fullTextSearchService.DeleteLuceneDocument(item
+                .MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: "")
+                .DocumentTypeIdHash);
+        }
+        else
+        {
+            fullTextSearchService.AddOrUpdateLuceneDocument(
+                item.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: ""));
+        }
+    }
 
     private static bool IsOutdatedLink(Exception exception)
     {
