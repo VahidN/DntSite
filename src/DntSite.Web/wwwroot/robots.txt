@@ -15,3 +15,5 @@ Disallow: /forgotten-password/
 Disallow: /search-results/
 Disallow: /more-like-this/
 Disallow: /whats-new/
+Disallow: /online-visitors/
+Disallow: /site-referrers/
