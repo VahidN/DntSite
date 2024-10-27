@@ -12,10 +12,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 8.0.x
-        
-    - name: Build the project
-      run: dotnet build ./src/DntSite.Web/DntSite.Web.csproj -p:RunAnalyzers=false -c Release
+        dotnet-version: 8.0.x        
 
     - name: Get current date
       id: date
