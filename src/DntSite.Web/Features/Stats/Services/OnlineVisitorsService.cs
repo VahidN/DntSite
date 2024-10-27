@@ -5,18 +5,18 @@ using DntSite.Web.Features.Stats.Utils;
 
 namespace DntSite.Web.Features.Stats.Services;
 
-public class OnlineVisitorsService : IOnlineVisitorsService
+public class OnlineVisitorsService(ILockerService lockerService) : IOnlineVisitorsService
 {
     public const int PurgeInterval = 10; // 10 minutes
     private readonly HashSet<LastSiteUrlVisitorStat> _visitors = new(new LastSiteUrlVisitorStatEqualityComparer());
 
     public OnlineVisitorsInfoModel GetOnlineVisitorsInfo()
     {
-        var localVisitors = _visitors.ToList();
+        using var @lock = lockerService.Lock<OnlineVisitorsService>();
 
-        var totalOnlineVisitorsCount = localVisitors.Count;
-        var totalOnlineAuthenticatedUsersCount = localVisitors.Count(x => !x.DisplayName.IsEmpty() && !x.IsSpider);
-        var onlineSpidersCount = localVisitors.Count(x => x.IsSpider);
+        var totalOnlineVisitorsCount = _visitors.Count;
+        var totalOnlineAuthenticatedUsersCount = _visitors.Count(x => !x.DisplayName.IsEmpty() && !x.IsSpider);
+        var onlineSpidersCount = _visitors.Count(x => x.IsSpider);
 
         return new OnlineVisitorsInfoModel
         {
@@ -32,6 +32,7 @@ public class OnlineVisitorsService : IOnlineVisitorsService
     {
         ArgumentNullException.ThrowIfNull(item);
 
+        using var @lock = lockerService.Lock<OnlineVisitorsService>();
         _visitors.Add(item);
         RemoveOldItems();
     }
