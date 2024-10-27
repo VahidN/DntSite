@@ -11,6 +11,7 @@ public class DailyNewsScreenshotsService(
     IUnitOfWork uow,
     IAppFoldersService appFoldersService,
     IHtmlToPngGenerator htmlToPngGenerator,
+    IYoutubeScreenshotsService youtubeScreenshotsService,
     ILogger<DailyNewsScreenshotsService> logger) : IDailyNewsScreenshotsService
 {
     private const int MaxFetchRetries = 3;
@@ -58,11 +59,7 @@ public class DailyNewsScreenshotsService(
 
                 item.FetchRetries = item.FetchRetries.HasValue ? item.FetchRetries.Value + 1 : 1;
 
-                await htmlToPngGenerator.GeneratePngFromHtmlAsync(new HtmlToPngGeneratorOptions
-                {
-                    SourceHtmlFileOrUri = currentUrl,
-                    OutputPngFile = path
-                });
+                await TryDownloadScreenshotAsync(currentUrl, path);
 
                 if (!File.Exists(path))
                 {
@@ -137,6 +134,29 @@ public class DailyNewsScreenshotsService(
                         style='border: 0 none; max-width: 100%; display: block; margin-left: auto; margin-right: auto;' />
                 </a>
                 """;
+    }
+
+    private async Task TryDownloadScreenshotAsync(string currentUrl, string path)
+    {
+        var (success, videoId) = youtubeScreenshotsService.IsYoutubeVideo(currentUrl);
+
+        if (success)
+        {
+            var imageData = await youtubeScreenshotsService.TryGetYoutubeVideoThumbnailDataAsync(videoId);
+
+            if (imageData is not null)
+            {
+                await File.WriteAllBytesAsync(path, imageData);
+            }
+
+            return;
+        }
+
+        await htmlToPngGenerator.GeneratePngFromHtmlAsync(new HtmlToPngGeneratorOptions
+        {
+            SourceHtmlFileOrUri = currentUrl,
+            OutputPngFile = path
+        });
     }
 
     private Task<List<DailyNewsItem>> GetItemsNeedUpdateAsync()
