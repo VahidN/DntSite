@@ -526,9 +526,10 @@ public class DailyNewsItemsService(
     {
         string[] errors =
         [
-            "Name or service not known", "The SSL connection could not be established",
-            "The request was canceled due to the configured HttpClient.Timeout", "Connection refused",
-            "The remote certificate is invalid because of errors in the certificate chain"
+            "Name or service not known", "The SSL connection could not be established", "Connection refused",
+            "The remote certificate is invalid because of errors in the certificate chain",
+            "System.Threading.Tasks.TaskCanceledException", "System.TimeoutException",
+            "The request was canceled due to the configured HttpClient", "A task was canceled"
         ];
 
         var message = exception.ToString();
