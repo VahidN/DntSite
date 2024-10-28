@@ -1,4 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
+using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Models;
@@ -14,6 +15,8 @@ public partial class RecalculatePostsCount
     [InjectComponentScoped] internal IStatService StatService { set; get; } = null!;
 
     [InjectComponentScoped] internal ISiteReferrersService SiteReferrersService { set; get; } = null!;
+
+    [InjectComponentScoped] internal IDailyNewsScreenshotsService DailyNewsScreenshotsService { set; get; } = null!;
 
     [Inject] internal IFullTextSearchService FullTextSearchService { set; get; } = null!;
 
@@ -44,6 +47,11 @@ public partial class RecalculatePostsCount
 
             case RecalculatePostsCountAction.DeleteAllSiteReferrers:
                 await SiteReferrersService.DeleteAllAsync();
+
+                break;
+
+            case RecalculatePostsCountAction.InvalidateAllYoutubeScreenshots:
+                await DailyNewsScreenshotsService.InvalidateAllYoutubeScreenshotsAsync();
 
                 break;
         }

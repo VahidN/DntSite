@@ -5,5 +5,6 @@ public enum RecalculatePostsCountAction
     RecalculateForm,
     UpdateAllUsersRatings,
     UpdateFullTextIndex,
-    DeleteAllSiteReferrers
+    DeleteAllSiteReferrers,
+    InvalidateAllYoutubeScreenshots
 }

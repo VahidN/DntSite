@@ -27,19 +27,7 @@ public class DailyNewsScreenshotsService(
 
     public async Task DeleteImageAsync(DailyNewsItem? post)
     {
-        if (post is null)
-        {
-            return;
-        }
-
-        var (_, path) = GetImageInfo(post.Id);
-
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
-
-        post.PageThumbnail = null;
+        InvalidateScreenshot(post);
         await uow.SaveChangesAsync();
     }
 
@@ -134,6 +122,36 @@ public class DailyNewsScreenshotsService(
                         style='border: 0 none; max-width: 100%; display: block; margin-left: auto; margin-right: auto;' />
                 </a>
                 """;
+    }
+
+    public async Task InvalidateAllYoutubeScreenshotsAsync()
+    {
+        foreach (var item in _dailyNewsItem.OrderBy(x => x.Id))
+        {
+            if (youtubeScreenshotsService.IsYoutubeVideo(item.Url).Success)
+            {
+                InvalidateScreenshot(item);
+            }
+        }
+
+        await uow.SaveChangesAsync();
+    }
+
+    private void InvalidateScreenshot(DailyNewsItem? post)
+    {
+        if (post is null)
+        {
+            return;
+        }
+
+        var (_, path) = GetImageInfo(post.Id);
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+
+        post.PageThumbnail = null;
     }
 
     private async Task TryDownloadScreenshotAsync(string currentUrl, string path)
