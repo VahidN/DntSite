@@ -4,7 +4,7 @@
 @attribute [Route(AdvertisementsRoutingConstants.AdvertisementsOldDetails)]
 
 <DntLoading IsLoading="@(_advertisements is null || CurrentPost is null || _advertisementComments is null)">
-    <DntSitePageTitle Group="آگهی‌ها" PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="آگهی‌ها" PageTitle="@CurrentPost!.Title" CurrentPage="@null"/>
 
     <DntPageSeo Description="@CurrentPost.Body"
                 OpenSearchUrl="@ApiUrlsRoutingConstants.OpenSearch.HttpGet.RenderOpenSearch"

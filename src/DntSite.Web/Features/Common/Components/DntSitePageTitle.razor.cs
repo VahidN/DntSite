@@ -11,11 +11,25 @@ public partial class DntSitePageTitle
 
     [Parameter] [EditorRequired] public required string Group { set; get; }
 
+    [Parameter] [EditorRequired] public int? CurrentPage { set; get; }
+
     [Inject] internal IBackgroundQueueService BackgroundQueueService { set; get; } = null!;
 
     [InjectComponentScoped] internal ISiteUrlsService SiteUrlsService { set; get; } = null!;
 
     protected override Task OnInitializedAsync() => AddToSiteUrlsBackgroundQueueAsync();
+
+    private string GetTitle()
+    {
+        var page = "";
+
+        if (CurrentPage is > 0)
+        {
+            page = string.Create(CultureInfo.InvariantCulture, $"، صفحه {CurrentPage.Value}");
+        }
+
+        return $"{ApplicationState.AppSetting?.BlogName} | {Group}: {PageTitle}{page}".ToPersianNumbers();
+    }
 
     private async Task AddToSiteUrlsBackgroundQueueAsync()
     {

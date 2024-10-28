@@ -4,7 +4,7 @@
 @attribute [Route(SurveysRoutingConstants.VotesDetailsSurveyId)]
 
 <DntLoading IsLoading="@(_surveys is null || CurrentPost is null || _surveyComments is null)">
-    <DntSitePageTitle Group="نظرسنجی‌ها" PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="نظرسنجی‌ها" PageTitle="@CurrentPost!.Title" CurrentPage="@null"/>
 
     <DntPageSeo Description="@CurrentPost.Description"
                 Title="@CurrentPost.Title"

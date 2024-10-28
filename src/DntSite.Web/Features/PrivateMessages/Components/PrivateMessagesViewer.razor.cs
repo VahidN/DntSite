@@ -15,8 +15,6 @@ public partial class PrivateMessagesViewer
     private const string MainTitle = "کنترل پیام‌های خصوصی سیستم";
     private PagedResultModel<PrivateMessage>? _privateMessages;
 
-    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
-
     [InjectComponentScoped] internal IPrivateMessagesService PrivateMessagesService { set; get; } = null!;
 
     [Parameter] public int? CurrentPage { set; get; }

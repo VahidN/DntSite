@@ -4,7 +4,7 @@
 @attribute [Route(ProjectsRoutingConstants.ProjectFeedbacksOldProjectIdFeedbackId)]
 
 <DntLoading IsLoading="@(_issueTopic is null || CurrentPost is null || _issueComments is null)">
-    <DntSitePageTitle Group="پروژه‌ها" PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="پروژه‌ها" PageTitle="@CurrentPost!.Title" CurrentPage="@null"/>
 
     <DntPageSeo Description="@CurrentPost.Description"
                 Title="@CurrentPost.Title"

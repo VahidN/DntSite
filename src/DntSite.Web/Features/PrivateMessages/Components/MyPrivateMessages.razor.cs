@@ -16,8 +16,6 @@ public partial class MyPrivateMessages
 
     private PagedResultModel<PrivateMessage>? _privateMessages;
 
-    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
-
     [InjectComponentScoped] internal IPrivateMessagesService PrivateMessagesService { set; get; } = null!;
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;

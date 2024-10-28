@@ -25,7 +25,7 @@ public partial class SurveysTag
     private string MainTitle => !HasTag ? MainPageTitle : MainTagPageTitle;
 
     private string MainTagPageTitle => string.Create(CultureInfo.InvariantCulture,
-        $"آرشیو گروه‌های نظرسنجی‌های {TagName}، صفحه: {CurrentPage ?? 1}");
+        $"آرشیو گروه‌های نظرسنجی‌های {TagName}");
 
     private string MainTagPageUrl => !HasTag ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(TagName)}";
 

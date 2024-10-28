@@ -6,7 +6,7 @@
 @attribute [Route(SurveysRoutingConstants.SurveysCommentsUserFriendlyNamePageCurrentPage)]
 
 
-<DntSitePageTitle Group="نظرسنجی‌ها" PageTitle="@MainTitle"/>
+<DntSitePageTitle Group="نظرسنجی‌ها" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_posts is null)">
     @foreach (var comment in _posts!.Data)

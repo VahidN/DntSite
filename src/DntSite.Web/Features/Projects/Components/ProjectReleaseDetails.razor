@@ -3,7 +3,7 @@
 @attribute [Route(ProjectsRoutingConstants.ProjectReleasesProjectIdReleaseId)]
 
 <DntLoading IsLoading="@(_releases is null || CurrentPost is null)">
-    <DntSitePageTitle Group="پروژه‌ها" PageTitle="@CurrentPost!.FileName"/>
+    <DntSitePageTitle Group="پروژه‌ها" PageTitle="@CurrentPost!.FileName" CurrentPage="@null"/>
 
     <DntPageSeo Description="@CurrentPost.FileDescription"
                 Title="@CurrentPost.FileName"

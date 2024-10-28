@@ -7,7 +7,7 @@
 @attribute [Route(ProjectsRoutingConstants.ProjectFaqsProjectId)]
 @attribute [Route(ProjectsRoutingConstants.ProjectFaqsProjectIdPageCurrentPage)]
 
-<DntSitePageTitle Group="پروژه‌ها" PageTitle="@_pageTitle"/>
+<DntSitePageTitle Group="پروژه‌ها" PageTitle="@_pageTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_posts is null)">
     @foreach (var faq in _posts!.Data)

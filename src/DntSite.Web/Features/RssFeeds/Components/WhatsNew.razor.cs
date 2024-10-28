@@ -8,13 +8,10 @@ namespace DntSite.Web.Features.RssFeeds.Components;
 
 public partial class WhatsNew
 {
-    private const string MainPageTitle = "تازه چه‌خبر";
+    private const string MainTitle = "تازه چه‌خبر";
     private const int ItemsPerPage = 15;
 
     private PagedResultModel<LuceneSearchResult>? _posts;
-
-    private string PageTitle
-        => string.Create(CultureInfo.InvariantCulture, $"{MainPageTitle}، صفحه: {CurrentPage ?? 1}");
 
     [Parameter] public int? CurrentPage { set; get; }
 

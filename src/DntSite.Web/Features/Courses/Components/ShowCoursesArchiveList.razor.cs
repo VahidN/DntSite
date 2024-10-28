@@ -7,8 +7,6 @@ namespace DntSite.Web.Features.Courses.Components;
 
 public partial class ShowCoursesArchiveList
 {
-    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
-
     [Parameter] [EditorRequired] public required string MainTitle { set; get; }
 
     [Parameter] [EditorRequired] public PagedResultModel<Course>? Posts { set; get; }

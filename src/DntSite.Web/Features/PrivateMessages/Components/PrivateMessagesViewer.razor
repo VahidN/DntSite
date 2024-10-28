@@ -2,7 +2,7 @@
 @attribute [Route(PrivateMessagesRoutingConstants.PrivateMessagesViewerPageCurrentPage)]
 
 
-<DntSitePageTitle Group="پیام‌ها" PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="پیام‌ها" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_privateMessages is null)">
     @foreach (var privateMessage in _privateMessages!.Data)

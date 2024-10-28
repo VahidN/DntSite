@@ -6,8 +6,6 @@ public partial class TagsList
 {
     [Parameter] [EditorRequired] public IList<(string Name, int InUseCount)>? Tags { set; get; }
 
-    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
-
     [Parameter] [EditorRequired] public required string MainTitle { set; get; }
 
     [Parameter] public string? GlyphIcon { set; get; } = DntBootstrapIcons.BiTag;

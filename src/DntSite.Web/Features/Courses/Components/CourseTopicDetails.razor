@@ -3,7 +3,7 @@
 @attribute [Route(CoursesRoutingConstants.CoursesTopicCourseIdDisplayId)]
 
 <DntLoading IsLoading="@(_courseTopic is null || CurrentPost is null || _courseTopicComments is null)">
-    <DntSitePageTitle Group="دوره‌ها" PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="دوره‌ها" PageTitle="@CurrentPost!.Title" CurrentPage="@null"/>
 
     <DntPageSeo Description="@CurrentPost.Body"
                 Title="@CurrentPost.Title"

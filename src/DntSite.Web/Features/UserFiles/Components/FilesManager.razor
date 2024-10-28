@@ -2,7 +2,7 @@
 @attribute [Route(UserFilesRoutingConstants.FilesManagerType)]
 @attribute [Route(UserFilesRoutingConstants.FilesManagerTypePageCurrentPage)]
 
-<DntSitePageTitle Group="مدیریت برنامه" PageTitle="@Title"/>
+<DntSitePageTitle Group="مدیریت برنامه" PageTitle="@Title" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_files is null)">
     <DntSimpleTable TRecord="FileModel"

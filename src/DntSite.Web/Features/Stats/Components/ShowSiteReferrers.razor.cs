@@ -30,7 +30,7 @@ public partial class ShowSiteReferrers
     private string BasePath => $"{StatsRoutingConstants.SiteReferrersBase}/{_siteReferrerType}";
 
     private string PageTitle => string.Create(CultureInfo.InvariantCulture,
-            $"ارجاع دهنده‌های {(_siteReferrerType == SiteReferrerType.External ? "خارجی" : "داخلی")}، صفحه {CurrentPage ?? 1}")
+            $"ارجاع دهنده‌های {(_siteReferrerType == SiteReferrerType.External ? "خارجی" : "داخلی")}")
         .ToPersianNumbers();
 
     protected override async Task OnInitializedAsync()

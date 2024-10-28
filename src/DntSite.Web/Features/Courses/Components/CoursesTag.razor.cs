@@ -25,7 +25,7 @@ public partial class CoursesTag
     private string MainTitle => !HasTag ? MainPageTitle : MainTagPageTitle;
 
     private string MainTagPageTitle => string.Create(CultureInfo.InvariantCulture,
-        $"آرشیو گروه‌های دوره‌های {TagName}، صفحه: {CurrentPage ?? 1}");
+        $"آرشیو گروه‌های دوره‌های {TagName}");
 
     private string MainTagPageUrl => !HasTag ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(TagName)}";
 

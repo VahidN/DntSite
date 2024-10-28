@@ -1,6 +1,6 @@
 @using DntSite.Web.Features.Advertisements.Entities
 @using DntSite.Web.Features.Posts.Components
-<DntSitePageTitle Group="آگهی‌ها" PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="آگهی‌ها" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(Posts is null)">
     @foreach (var post in Posts!.Data)

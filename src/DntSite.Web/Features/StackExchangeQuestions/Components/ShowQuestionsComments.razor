@@ -6,7 +6,7 @@
 @attribute [Route(QuestionsRoutingConstants.QuestionsCommentsUserFriendlyNamePageCurrentPage)]
 
 
-<DntSitePageTitle Group="پرسش‌ها" PageTitle="@MainTitle"/>
+<DntSitePageTitle Group="پرسش‌ها" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_posts is null)">
     @foreach (var comment in _posts!.Data)

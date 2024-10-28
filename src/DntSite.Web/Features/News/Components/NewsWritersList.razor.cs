@@ -25,7 +25,7 @@ public partial class NewsWritersList
     private string MainTitle => !HasUserFriendlyName ? MainPageTitle : MainUserPageTitle;
 
     private string MainUserPageTitle => string.Create(CultureInfo.InvariantCulture,
-        $"آرشیو اشتراک‌های {UserFriendlyName}، صفحه: {CurrentPage ?? 1}");
+        $"آرشیو اشتراک‌های {UserFriendlyName}");
 
     private string MainUserPageUrl
         => !HasUserFriendlyName ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(UserFriendlyName)}";

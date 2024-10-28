@@ -7,8 +7,6 @@ namespace DntSite.Web.Features.Posts.Components;
 
 public partial class ShowBlogPostsList
 {
-    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
-
     [Parameter] [EditorRequired] public required string MainTitle { set; get; }
 
     [Parameter] [EditorRequired] public PagedResultModel<BlogPost>? BlogPosts { set; get; }

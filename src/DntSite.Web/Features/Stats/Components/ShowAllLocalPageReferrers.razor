@@ -1,7 +1,7 @@
 @attribute [Route(StatsRoutingConstants.MoreLocalPageReferrers)]
 @attribute [Route(StatsRoutingConstants.MoreLocalPageReferrersUrlPageCurrentPage)]
 
-<DntSitePageTitle Group="آمار برنامه" PageTitle="@_pageTitle"/>
+<DntSitePageTitle Group="آمار برنامه" PageTitle="@_pageTitle" CurrentPage="@CurrentPage"/>
 
 <ShowLocalPageReferrers
     LocalUrl="@Url"

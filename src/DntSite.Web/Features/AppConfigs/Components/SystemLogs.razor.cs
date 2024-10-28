@@ -33,8 +33,6 @@ public partial class SystemLogs
 
     private LogLevel? CurrentLogLevelValue => CurrentLogLevel.ToLogLevel();
 
-    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
-
     protected override async Task OnInitializedAsync()
     {
         await ShowResultsAsync();

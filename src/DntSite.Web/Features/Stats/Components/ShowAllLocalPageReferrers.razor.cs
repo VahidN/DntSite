@@ -40,7 +40,7 @@ public partial class ShowAllLocalPageReferrers
         }
 
         _pageTitle = string.Create(CultureInfo.InvariantCulture,
-            $"صفحات مرتبط «{_referrer.DestinationTitle}»، صفحه: {CurrentPage ?? 1}");
+            $"صفحات مرتبط «{_referrer.DestinationTitle}»");
     }
 
     private void AddBreadCrumbs()
@@ -53,7 +53,7 @@ public partial class ShowAllLocalPageReferrers
             },
             new BreadCrumb
             {
-                Title = string.Create(CultureInfo.InvariantCulture, $"صفحات مرتبط، صفحه: {CurrentPage ?? 1}"),
+                Title = string.Create(CultureInfo.InvariantCulture, $"{_pageTitle}، صفحه: {CurrentPage ?? 1}"),
                 GlyphIcon = DntBootstrapIcons.BiSearch,
                 Url = "/".CombineUrl(StatsRoutingConstants.MoreLocalPageReferrersBase, escapeRelativeUrl: false)
                     .CombineUrl(Url ?? "", escapeRelativeUrl: true)

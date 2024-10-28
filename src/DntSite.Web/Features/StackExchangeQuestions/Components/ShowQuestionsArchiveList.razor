@@ -1,6 +1,6 @@
 @using DntSite.Web.Features.Posts.Components
 @using DntSite.Web.Features.StackExchangeQuestions.Entities
-<DntSitePageTitle Group="پرسش‌ها" PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="پرسش‌ها" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(Posts is null)">
     @foreach (var post in Posts!.Data)

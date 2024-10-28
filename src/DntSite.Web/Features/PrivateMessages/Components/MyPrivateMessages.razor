@@ -3,7 +3,7 @@
 @attribute [Route(PrivateMessagesRoutingConstants.MyPrivateMessages)]
 @attribute [Route(PrivateMessagesRoutingConstants.MyPrivateMessagesPageCurrentPage)]
 
-<DntSitePageTitle Group="پیام‌ها" PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="پیام‌ها" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_privateMessages is null)">
     <DntSimpleTable TRecord="PrivateMessage"

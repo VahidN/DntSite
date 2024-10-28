@@ -8,7 +8,7 @@
 @attribute [Route(ProjectsRoutingConstants.ProjectCommentsProjectIdPageCurrentPage)]
 
 
-<DntSitePageTitle Group="پروژه‌ها" PageTitle="@_pageTitle"/>
+<DntSitePageTitle Group="پروژه‌ها" PageTitle="@_pageTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_posts is null)">
     @foreach (var comment in _posts!.Data)

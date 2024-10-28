@@ -10,7 +10,7 @@
 @attribute [Route(UserProfilesRoutingConstants.OldUsers)]
 @attribute [Route(UserProfilesRoutingConstants.OldUsersPageCurrentPage)]
 
-<DntSitePageTitle Group="کاربران" PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="کاربران" PageTitle="@PageTitle" CurrentPage="@CurrentPage"/>
 
 @if (!string.IsNullOrWhiteSpace(Name))
 {

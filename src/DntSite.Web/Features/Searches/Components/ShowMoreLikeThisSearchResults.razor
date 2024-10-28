@@ -3,7 +3,7 @@
 @attribute [Route(SearchesRoutingConstants.MoreLikeThisDocumentTypeIdHashPageCurrentPage)]
 
 
-<DntSitePageTitle Group="جستجوها" PageTitle="@_pageTitle"/>
+<DntSitePageTitle Group="جستجوها" PageTitle="@_pageTitle" CurrentPage="@CurrentPage"/>
 
 @if (FullTextSearchService.IsDatabaseIndexed)
 {

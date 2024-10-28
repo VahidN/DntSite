@@ -4,7 +4,7 @@
 @attribute [Route(ProjectsRoutingConstants.ProjectsDetailsOldProjectId)]
 
 <DntLoading IsLoading="@(_projects is null || CurrentPost is null)">
-    <DntSitePageTitle Group="پروژه‌ها" PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="پروژه‌ها" PageTitle="@CurrentPost!.Title" CurrentPage="@null"/>
 
     <DntPageSeo Description="@CurrentPost.Description"
                 Title="@CurrentPost.Title"

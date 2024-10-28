@@ -2,7 +2,7 @@
 @using DntSite.Web.Features.PrivateMessages.Entities
 @attribute [Route(PrivateMessagesRoutingConstants.MyPrivateMessagePrivateMessageId)]
 
-<DntSitePageTitle Group="پیام‌ها" PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="پیام‌ها" PageTitle="@PageTitle" CurrentPage="@null"/>
 
 <DntLoading IsLoading="@(_privateMessageComments is null || _firstPrivateMessage is null)">
     <ShowBlogPostItem TReactionEntity="PrivateMessageReaction"

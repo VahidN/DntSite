@@ -69,13 +69,13 @@ public partial class ShowMoreLikeThisSearchResults
 
     private void SetPageTitle()
         => _pageTitle = string.Create(CultureInfo.InvariantCulture,
-            $"نتایج مشابه «{_luceneDocument?.OriginalTitle}»، صفحه: {CurrentPage ?? 1}");
+            $"نتایج مشابه «{_luceneDocument?.OriginalTitle}»");
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([
             SearchesBreadCrumbs.GetBreadCrumb(_luceneDocument?.OriginalTitle, _luceneDocument?.Url,
                 DntBootstrapIcons.BiNewspaper),
             SearchesBreadCrumbs.GetBreadCrumb(
-                string.Create(CultureInfo.InvariantCulture, $"نتایج مشابه، صفحه: {CurrentPage ?? 1}"), BasePath)
+                string.Create(CultureInfo.InvariantCulture, $"{_pageTitle}، صفحه: {CurrentPage ?? 1}"), BasePath)
         ]);
 }

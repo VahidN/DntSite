@@ -25,7 +25,7 @@ public partial class LearningPathsWritersList
     private string MainTitle => !HasUserFriendlyName ? MainPageTitle : MainUserPageTitle;
 
     private string MainUserPageTitle => string.Create(CultureInfo.InvariantCulture,
-        $"آرشیو نقشه‌های راه {UserFriendlyName}، صفحه: {CurrentPage ?? 1}");
+        $"آرشیو نقشه‌های راه {UserFriendlyName}");
 
     private string MainUserPageUrl
         => !HasUserFriendlyName ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(UserFriendlyName)}";

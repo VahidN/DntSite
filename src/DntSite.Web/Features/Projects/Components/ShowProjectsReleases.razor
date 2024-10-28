@@ -7,7 +7,7 @@
 @attribute [Route(ProjectsRoutingConstants.ProjectReleasesProjectId)]
 @attribute [Route(ProjectsRoutingConstants.ProjectReleasesProjectIdPageCurrentPage)]
 
-<DntSitePageTitle Group="پروژه‌ها" PageTitle="@_pageTitle"/>
+<DntSitePageTitle Group="پروژه‌ها" PageTitle="@_pageTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_posts is null)">
     @foreach (var release in _posts!.Data)

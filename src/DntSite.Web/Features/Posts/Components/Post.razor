@@ -4,7 +4,7 @@
 @attribute [Route(PostsRoutingConstants.OldBloggerPostUrls)]
 
 <DntLoading IsLoading="@(_blogPost is null || CurrentPost is null || _postComments is null)">
-    <DntSitePageTitle Group="مقالات" PageTitle="@CurrentPost!.Title"/>
+    <DntSitePageTitle Group="مقالات" PageTitle="@CurrentPost!.Title" CurrentPage="@null"/>
 
     <DntPageSeo Description="@CurrentPost.BriefDescription"
                 Title="@CurrentPost.Title"

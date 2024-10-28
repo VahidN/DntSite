@@ -16,8 +16,6 @@ public partial class ShowSearchedItems
 
     private PagedResultModel<SearchItemModel>? _items;
 
-    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
-
     [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;

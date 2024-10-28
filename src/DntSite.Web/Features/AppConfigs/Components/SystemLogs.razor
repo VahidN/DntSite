@@ -3,7 +3,7 @@
 @attribute [Route(AppConfigsRoutingConstants.SystemLogsCurrentLogLevelPageCurrentPage)]
 @attribute [Route(AppConfigsRoutingConstants.SystemLogsPageCurrentPage)]
 
-<DntSitePageTitle Group="مدیریت برنامه" PageTitle="@PageTitle"/>
+<DntSitePageTitle Group="مدیریت برنامه" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_pagedResults is null)">
     <div class="mb-2 d-flex flex-row flex-warp justify-content-center align-items-center card shadow-sm p-2">

@@ -7,7 +7,7 @@
 @attribute [Route(NewsRoutingConstants.NewsCommentsUserFriendlyNamePageCurrentPage)]
 
 
-<DntSitePageTitle Group="اشتراک‌ها" PageTitle="@MainTitle"/>
+<DntSitePageTitle Group="اشتراک‌ها" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_posts is null)">
     @foreach (var comment in _posts!.Data)

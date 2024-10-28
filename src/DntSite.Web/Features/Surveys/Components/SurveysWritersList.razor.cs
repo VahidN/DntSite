@@ -25,7 +25,7 @@ public partial class SurveysWritersList
     private string MainTitle => !HasUserFriendlyName ? MainPageTitle : MainUserPageTitle;
 
     private string MainUserPageTitle => string.Create(CultureInfo.InvariantCulture,
-        $"آرشیو نظرسنجی‌های {UserFriendlyName}، صفحه: {CurrentPage ?? 1}");
+        $"آرشیو نظرسنجی‌های {UserFriendlyName}");
 
     private string MainUserPageUrl
         => !HasUserFriendlyName ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(UserFriendlyName)}";

@@ -19,8 +19,6 @@ public partial class UsersManager
     private string? _basePath;
     private PagedResultModel<User>? _users;
 
-    private string PageTitle => string.Create(CultureInfo.InvariantCulture, $"{MainTitle}، صفحه: {CurrentPage ?? 1}");
-
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [InjectComponentScoped] internal IUsersInfoService UsersService { set; get; } = null!;
