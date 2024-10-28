@@ -24,7 +24,8 @@ public partial class BacklogsTag
 
     private string MainTitle => !HasTag ? MainPageTitle : MainTagPageTitle;
 
-    private string MainTagPageTitle => $@"آرشیو گروه‌های پیشنهاد‌های {TagName}";
+    private string MainTagPageTitle => string.Create(CultureInfo.InvariantCulture,
+        $"آرشیو گروه‌های پیشنهاد‌های {TagName}، صفحه: {CurrentPage ?? 1}");
 
     private string MainTagPageUrl => !HasTag ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(TagName)}";
 

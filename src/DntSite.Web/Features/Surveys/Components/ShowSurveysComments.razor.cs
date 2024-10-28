@@ -20,7 +20,8 @@ public partial class ShowSurveysComments
 
     private string MainTitle => !HasUserFriendlyName ? MainPageTitle : MainUserPageTitle;
 
-    private string MainUserPageTitle => $@"آرشیو نظرات نظرسنجی‌های {UserFriendlyName}";
+    private string MainUserPageTitle => string.Create(CultureInfo.InvariantCulture,
+        $"آرشیو نظرات نظرسنجی‌های {UserFriendlyName}، صفحه: {CurrentPage ?? 1}");
 
     private string MainUserPageUrl
         => !HasUserFriendlyName ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(UserFriendlyName)}";

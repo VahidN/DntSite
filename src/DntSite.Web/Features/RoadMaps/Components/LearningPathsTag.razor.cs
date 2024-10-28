@@ -24,7 +24,8 @@ public partial class LearningPathsTag
 
     private string MainTitle => !HasTag ? MainPageTitle : MainTagPageTitle;
 
-    private string MainTagPageTitle => $@"آرشیو گروه نقشه‌های راه {TagName}";
+    private string MainTagPageTitle => string.Create(CultureInfo.InvariantCulture,
+        $"آرشیو گروه نقشه‌های راه {TagName}، صفحه: {CurrentPage ?? 1}");
 
     private string MainTagPageUrl => !HasTag ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(TagName)}";
 

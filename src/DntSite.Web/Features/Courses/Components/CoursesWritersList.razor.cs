@@ -24,7 +24,8 @@ public partial class CoursesWritersList
 
     private string MainTitle => !HasUserFriendlyName ? MainPageTitle : MainUserPageTitle;
 
-    private string MainUserPageTitle => $@"آرشیو دوره‌های {UserFriendlyName}";
+    private string MainUserPageTitle => string.Create(CultureInfo.InvariantCulture,
+        $"آرشیو دوره‌های {UserFriendlyName}، صفحه: {CurrentPage ?? 1}");
 
     private string MainUserPageUrl
         => !HasUserFriendlyName ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(UserFriendlyName)}";

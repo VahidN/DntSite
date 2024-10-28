@@ -24,7 +24,8 @@ public partial class BacklogsWritersList
 
     private string MainTitle => !HasUserFriendlyName ? MainPageTitle : MainUserPageTitle;
 
-    private string MainUserPageTitle => $@"آرشیو پیشنهادهای {UserFriendlyName}";
+    private string MainUserPageTitle => string.Create(CultureInfo.InvariantCulture,
+        $"آرشیو پیشنهادهای {UserFriendlyName}، صفحه: {CurrentPage ?? 1}");
 
     private string MainUserPageUrl
         => !HasUserFriendlyName ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(UserFriendlyName)}";
