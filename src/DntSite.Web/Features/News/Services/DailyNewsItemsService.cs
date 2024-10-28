@@ -503,7 +503,25 @@ public class DailyNewsItemsService(
 
             UpdateLuceneIndex(item);
 
+            LogUpdateNewsHttpStatusCode(updateNewsStatusAction, item);
+
             await Task.Delay(TimeSpan.FromSeconds(value: 1));
+        }
+    }
+
+    private void LogUpdateNewsHttpStatusCode(UpdateNewsStatusAction updateNewsStatusAction, DailyNewsItem item)
+    {
+        switch (updateNewsStatusAction)
+        {
+            case UpdateNewsStatusAction.UpdateDeletesOnes when !item.IsDeleted:
+                logger.LogWarning(message: "Restored a deleted news record with Id={Id} and Url={Url}", item.Id,
+                    item.Url);
+
+                break;
+            case UpdateNewsStatusAction.UpdatePublicOnes when item.IsDeleted:
+                logger.LogWarning(message: "Deleted a news record with Id={Id} and Url={Url}", item.Id, item.Url);
+
+                break;
         }
     }
 
