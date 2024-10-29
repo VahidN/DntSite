@@ -19,8 +19,13 @@ public partial class DntSitePageTitle
 
     protected override Task OnInitializedAsync() => AddToSiteUrlsBackgroundQueueAsync();
 
-    private string GetTitle()
+    private (string PulicTitle, string LocalTitle) GetCurrentPageTitle()
     {
+        if (PageTitle.IsEmpty())
+        {
+            return ("", "");
+        }
+
         var page = "";
 
         if (CurrentPage is > 0)
@@ -28,20 +33,18 @@ public partial class DntSitePageTitle
             page = string.Create(CultureInfo.InvariantCulture, $"، صفحه {CurrentPage.Value}");
         }
 
-        return $"{ApplicationState.AppSetting?.BlogName} | {Group}: {PageTitle}{page}".ToPersianNumbers();
+        var localTitle = $"{Group}: {PageTitle}{page}".ToPersianNumbers();
+        var publicTitle = $"{ApplicationState.AppSetting?.BlogName} | {localTitle}".ToPersianNumbers();
+
+        return (publicTitle, localTitle);
     }
 
     private async Task AddToSiteUrlsBackgroundQueueAsync()
     {
-        if (PageTitle.IsEmpty())
-        {
-            return;
-        }
-
         var context = ApplicationState.HttpContext;
         var url = context.GetRawUrl();
         var isProtectedPage = ApplicationState.DoNotLogPageReferrer || context.IsProtectedRoute();
-        var title = isProtectedPage ? "" : $"{Group}: {PageTitle.ToPersianNumbers()}";
+        var title = isProtectedPage ? "" : GetCurrentPageTitle().LocalTitle;
         var lastVisitorStat = await SiteUrlsService.GetLastSiteUrlVisitorStatAsync(context);
 
         BackgroundQueueService.QueueBackgroundWorkItem(async (_, serviceProvider) =>

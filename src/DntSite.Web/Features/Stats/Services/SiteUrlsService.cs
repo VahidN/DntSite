@@ -39,6 +39,7 @@ public class SiteUrlsService(
         bool updateVisitsCount,
         LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
     {
+        title = title?.Trim();
         url = await referrersValidatorService.GetNormalizedUrlAsync(url);
 
         if (!url.IsValidUrl())
@@ -136,7 +137,7 @@ public class SiteUrlsService(
     }
 
     private static bool ShouldUpdateTitle(string? title, SiteUrl? siteUrl)
-        => title is not null && !string.Equals(siteUrl?.Title, title, StringComparison.Ordinal);
+        => title is not null && !string.Equals(siteUrl?.Title, title, StringComparison.OrdinalIgnoreCase);
 
     private async Task UpdateSiteReferrerTitleAsync(string url, string? title)
     {
