@@ -5,6 +5,8 @@ namespace DntSite.Web.Features.Stats.Services.Contracts;
 
 public interface ISiteUrlsService : IScopedService
 {
+    Task DeleteAllAsync();
+
     Task<LastSiteUrlVisitorStat> GetLastSiteUrlVisitorStatAsync(HttpContext context);
 
     Task<PagedResultModel<SiteUrl>> GetPagedSiteUrlsAsync(int pageNumber, int recordsPerPage, bool isSpider);

@@ -16,6 +16,8 @@ public class SiteUrlsService(
 {
     private readonly DbSet<SiteUrl> _siteUrls = uow.DbSet<SiteUrl>();
 
+    public Task DeleteAllAsync() => uow.ExecuteTransactionAsync(() => _siteUrls.ExecuteDeleteAsync());
+
     public async Task<string?> GetUrlTitleAsync(string url, LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
     {
         var externalTitle = await GetExternalUrlTitleAsync(url);

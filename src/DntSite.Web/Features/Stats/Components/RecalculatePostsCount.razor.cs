@@ -16,9 +16,13 @@ public partial class RecalculatePostsCount
 
     [InjectComponentScoped] internal ISiteReferrersService SiteReferrersService { set; get; } = null!;
 
+    [InjectComponentScoped] internal ISiteUrlsService SiteUrlsService { set; get; } = null!;
+
     [InjectComponentScoped] internal IDailyNewsScreenshotsService DailyNewsScreenshotsService { set; get; } = null!;
 
     [Inject] internal IFullTextSearchService FullTextSearchService { set; get; } = null!;
+
+    [Inject] internal ILogger<RecalculatePostsCount> Logger { set; get; } = null!;
 
     [SupplyParameterFromForm] internal RecalculatePostsCountAction RecalculateAction { set; get; }
 
@@ -28,6 +32,8 @@ public partial class RecalculatePostsCount
 
     private async Task OnValidSubmitAsync()
     {
+        Logger.LogWarning(message: "Performing {Action}.", RecalculateAction);
+
         switch (RecalculateAction)
         {
             case RecalculatePostsCountAction.RecalculateForm:
@@ -47,6 +53,7 @@ public partial class RecalculatePostsCount
 
             case RecalculatePostsCountAction.DeleteAllSiteReferrers:
                 await SiteReferrersService.DeleteAllAsync();
+                await SiteUrlsService.DeleteAllAsync();
 
                 break;
 
