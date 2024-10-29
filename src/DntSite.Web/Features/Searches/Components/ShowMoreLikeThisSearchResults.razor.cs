@@ -10,7 +10,7 @@ namespace DntSite.Web.Features.Searches.Components;
 public partial class ShowMoreLikeThisSearchResults
 {
     private const int ItemsPerPage = 10;
-    private const int MaxItems = 1000;
+    private const int MaxItems = 70;
 
     private LuceneSearchResult? _luceneDocument;
 
@@ -68,8 +68,7 @@ public partial class ShowMoreLikeThisSearchResults
     }
 
     private void SetPageTitle()
-        => _pageTitle = string.Create(CultureInfo.InvariantCulture,
-            $"نتایج مشابه «{_luceneDocument?.OriginalTitle}»");
+        => _pageTitle = string.Create(CultureInfo.InvariantCulture, $"نتایج مشابه «{_luceneDocument?.OriginalTitle}»");
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([

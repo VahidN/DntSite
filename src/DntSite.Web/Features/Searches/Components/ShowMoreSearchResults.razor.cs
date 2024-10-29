@@ -9,7 +9,7 @@ namespace DntSite.Web.Features.Searches.Components;
 public partial class ShowMoreSearchResults
 {
     private const int ItemsPerPage = 10;
-    private const int MaxItems = 1000;
+    private const int MaxItems = 70;
 
     private PagedResultModel<LuceneSearchResult>? _posts;
 
