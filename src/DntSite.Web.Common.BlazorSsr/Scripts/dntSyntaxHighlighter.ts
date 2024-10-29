@@ -74,7 +74,7 @@ namespace DntBlazorSsr {
             });
 
             // @ts-ignore
-            hljs.highlightAll();
+            hljs?.highlightAll();
         }
     }
 }

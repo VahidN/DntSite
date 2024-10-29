@@ -2,7 +2,7 @@ namespace DntBlazorSsr {
     export class DntHljsCopyToClipboardPlugin {
         static enable(): void {
             // @ts-ignore
-            hljs.addPlugin({
+            hljs?.addPlugin({
                 // @ts-ignore
                 "after:highlightElement": ({el, text}) => {
                     const wrapper = el.parentElement;
