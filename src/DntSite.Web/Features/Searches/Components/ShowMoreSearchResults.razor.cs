@@ -10,6 +10,7 @@ public partial class ShowMoreSearchResults
 {
     private const int ItemsPerPage = 10;
     private const int MaxItems = 70;
+    private const int MaxPageNumber = MaxItems / ItemsPerPage;
 
     private PagedResultModel<LuceneSearchResult>? _posts;
 
@@ -46,9 +47,9 @@ public partial class ShowMoreSearchResults
     {
         CurrentPage ??= 1;
 
-        if (string.IsNullOrWhiteSpace(Term))
+        if (string.IsNullOrWhiteSpace(Term) || CurrentPage.Value > MaxPageNumber)
         {
-            _posts = new PagedResultModel<LuceneSearchResult>();
+            ApplicationState.NavigateToNotFoundPage();
 
             return;
         }

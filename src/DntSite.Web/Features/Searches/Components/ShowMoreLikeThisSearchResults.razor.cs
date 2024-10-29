@@ -11,6 +11,7 @@ public partial class ShowMoreLikeThisSearchResults
 {
     private const int ItemsPerPage = 10;
     private const int MaxItems = 70;
+    private const int MaxPageNumber = MaxItems / ItemsPerPage;
 
     private LuceneSearchResult? _luceneDocument;
 
@@ -45,8 +46,9 @@ public partial class ShowMoreLikeThisSearchResults
     {
         CurrentPage ??= 1;
 
-        if (string.IsNullOrWhiteSpace(DocumentTypeIdHash))
+        if (string.IsNullOrWhiteSpace(DocumentTypeIdHash) || CurrentPage.Value > MaxPageNumber)
         {
+            ApplicationState.DoNotLogPageReferrer = true;
             ApplicationState.NavigateToNotFoundPage();
 
             return;
