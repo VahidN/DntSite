@@ -3,7 +3,7 @@
 @attribute [Route(SearchesRoutingConstants.SearchedItems)]
 @attribute [Route(SearchesRoutingConstants.SearchedItemsPageCurrentPage)]
 
-<DntSitePageTitle Group="مدیریت برنامه" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
+<DntSitePageTitle Group="آمار برنامه" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(_items is null)">
     <DntSimpleTable TRecord="SearchItemModel"
@@ -33,6 +33,7 @@
 
             <DntSimpleTableColumn HeaderTitle="از طرف"
                                   HeaderCellClass="text-center"
+                                  IsVisible="IsCurrentUserAdmin"
                                   RowCellClass='record => "text-center align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
@@ -40,7 +41,7 @@
                 </CellValueTemplate>
             </DntSimpleTableColumn>
 
-            <DntSimpleTableColumn HeaderTitle="مشخصات"
+            <DntSimpleTableColumn HeaderTitle="توسط"
                                   HeaderCellClass="text-center"
                                   RowCellClass='record => "text-center align-middle"'
                                   FooterCellClass="text-center align-middle"
@@ -55,7 +56,10 @@
                         <span title="Device" class="badge bg-secondary me-1">@record.ClientInfo?.Device</span>
                         <span title="@record.SearchItem.Audit.CreatedByUserAgent" class="badge bg-warning me-1">@record.ClientInfo?.UA</span>
                     </div>
-                    <div class="badge bg-info" dir="ltr">@record.SearchItem.Audit.CreatedByUserIp</div>
+                    @if (IsCurrentUserAdmin)
+                    {
+                        <div class="badge bg-info" dir="ltr">@record.SearchItem.Audit.CreatedByUserIp</div>
+                    }
                 </CellValueTemplate>
             </DntSimpleTableColumn>
 

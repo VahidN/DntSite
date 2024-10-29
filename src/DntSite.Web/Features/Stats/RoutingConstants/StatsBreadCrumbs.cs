@@ -1,4 +1,5 @@
 ﻿using DntSite.Web.Common.BlazorSsr.Utils;
+using DntSite.Web.Features.Searches.RoutingConstants;
 using DntSite.Web.Features.Stats.Models;
 
 namespace DntSite.Web.Features.Stats.RoutingConstants;
@@ -52,6 +53,7 @@ public static class StatsBreadCrumbs
 
     public static readonly IList<BreadCrumb> SiteStatsBreadCrumbs =
     [
-        OnlineVisitors, OnlineSpiders, SiteExternalReferrers, SiteInternalReferrers
+        OnlineVisitors, OnlineSpiders, SiteExternalReferrers, SiteInternalReferrers,
+        SearchesBreadCrumbs.SearchedItems
     ];
 }

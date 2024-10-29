@@ -1,5 +1,4 @@
 ﻿using DntSite.Web.Common.BlazorSsr.Utils;
-using DntSite.Web.Features.UserProfiles.Models;
 
 namespace DntSite.Web.Features.Searches.RoutingConstants;
 
@@ -9,9 +8,7 @@ public static class SearchesBreadCrumbs
     {
         Title = "آمار جستجوها",
         Url = SearchesRoutingConstants.SearchedItems,
-        GlyphIcon = DntBootstrapIcons.BiSearch,
-        AllowAnonymous = false,
-        AllowedRoles = CustomRoles.Admin
+        GlyphIcon = DntBootstrapIcons.BiSearch
     };
 
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs = [SearchedItems];

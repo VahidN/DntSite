@@ -391,7 +391,7 @@ var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntHljsCopyToClipboardPlugin {
         static enable() {
-            hljs.addPlugin({
+            hljs?.addPlugin({
                 "after:highlightElement": ({ el, text }) => {
                     const wrapper = el.parentElement;
                     if (!wrapper) {
@@ -1563,7 +1563,7 @@ var DntBlazorSsr;
                     element.innerHTML = preHtml;
                 }
             });
-            hljs.highlightAll();
+            hljs?.highlightAll();
         }
     }
     DntBlazorSsr.DntSyntaxHighlighter = DntSyntaxHighlighter;
