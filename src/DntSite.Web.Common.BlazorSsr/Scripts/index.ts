@@ -5,7 +5,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
         // @ts-ignore
-        Blazor.addEventListener('enhancedload', () => {
+        Blazor?.addEventListener('enhancedload', () => {
             DntBlazorSsr.DntUtilities.enable();
         });
     });
