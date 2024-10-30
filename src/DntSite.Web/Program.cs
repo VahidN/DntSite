@@ -83,8 +83,6 @@ void ConfigureEndpoints(WebApplication app)
     app.AddChangePasswordEndpoint();
     app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
     app.UseRequestTimeouts();
-
-    app.UseOnlineVisitorsMiddleware();
 }
 
 void InitApplication(IHost app)

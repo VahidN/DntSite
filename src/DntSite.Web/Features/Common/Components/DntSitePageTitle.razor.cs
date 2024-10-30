@@ -42,17 +42,35 @@ public partial class DntSitePageTitle
     private async Task AddToSiteUrlsBackgroundQueueAsync()
     {
         var context = ApplicationState.HttpContext;
-        var url = context.GetRawUrl();
+        var referrerUrl = context.GetReferrerUrl();
+        var destinationUrl = context.GetRawUrl();
         var isProtectedPage = ApplicationState.DoNotLogPageReferrer || context.IsProtectedRoute();
         var title = isProtectedPage ? "" : GetCurrentPageTitle().LocalTitle;
         var lastVisitorStat = await SiteUrlsService.GetLastSiteUrlVisitorStatAsync(context);
 
         BackgroundQueueService.QueueBackgroundWorkItem(async (_, serviceProvider) =>
         {
-            serviceProvider.GetRequiredService<IOnlineVisitorsService>().ProcessNewVisitor(lastVisitorStat);
-
-            await serviceProvider.GetRequiredService<ISiteUrlsService>()
-                .GetOrAddOrUpdateSiteUrlAsync(url, title, isProtectedPage, updateVisitsCount: true, lastVisitorStat);
+            UpdateOnlineVisitorsInfo(serviceProvider);
+            await UpdateSiteUrlAsync(serviceProvider);
+            await UpdateReferrerAsync(serviceProvider);
         });
+
+        void UpdateOnlineVisitorsInfo(IServiceProvider serviceProvider)
+            => serviceProvider.GetRequiredService<IOnlineVisitorsService>().ProcessNewVisitor(lastVisitorStat);
+
+        Task UpdateSiteUrlAsync(IServiceProvider serviceProvider)
+            => serviceProvider.GetRequiredService<ISiteUrlsService>()
+                .GetOrAddOrUpdateSiteUrlAsync(destinationUrl, title, isProtectedPage, updateVisitsCount: true,
+                    lastVisitorStat);
+
+        async Task UpdateReferrerAsync(IServiceProvider serviceProvider)
+        {
+            if (!await serviceProvider.GetRequiredService<IReferrersValidatorService>()
+                    .ShouldSkipThisRequestAsync(context))
+            {
+                await serviceProvider.GetRequiredService<ISiteReferrersService>()
+                    .TryAddOrUpdateReferrerAsync(referrerUrl, destinationUrl, lastVisitorStat);
+            }
+        }
     }
 }
