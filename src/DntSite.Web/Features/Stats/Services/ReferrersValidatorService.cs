@@ -8,7 +8,11 @@ public class ReferrersValidatorService(
     ICachedAppSettingsProvider appSettingsProvider,
     IUrlNormalizationService urlNormalizationService) : IReferrersValidatorService
 {
-    private static readonly string[] IgnoresList = ["/api/", "/file/", "/feed/", "/error/", "/search-results/"];
+    private static readonly string[] IgnoresList =
+    [
+        "/api/", "/file/", "/feed/", "/feeds/", "/error/", "/search-results/"
+    ];
+
     private readonly HashSet<string> _protectedUrls = new(StringComparer.OrdinalIgnoreCase);
 
     public async Task<bool> ShouldSkipThisRequestAsync(HttpContext context)
