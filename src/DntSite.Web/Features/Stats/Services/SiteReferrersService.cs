@@ -21,8 +21,16 @@ public class SiteReferrersService(
 
     public async Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl,
         string destinationUrl,
-        LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
+        string baseUrl,
+        LastSiteUrlVisitorStat lastSiteUrlVisitorStat,
+        bool isProtectedPage)
     {
+        if (await referrersValidatorService.ShouldSkipThisRequestAsync(referrerUrl, destinationUrl, baseUrl,
+                lastSiteUrlVisitorStat.IsSpider, isProtectedPage))
+        {
+            return false;
+        }
+
         if (string.IsNullOrWhiteSpace(destinationUrl) || string.IsNullOrWhiteSpace(referrerUrl))
         {
             return false;
@@ -48,15 +56,16 @@ public class SiteReferrersService(
                 return false;
             }
 
-            var destinationTitle = await siteUrlsService.GetUrlTitleAsync(normalizedDestinationUrl,
+            var destinationSiteUrl = await siteUrlsService.GetUrlTitleAsync(normalizedDestinationUrl,
                 lastSiteUrlVisitorStat);
 
-            var referrerTitle = await siteUrlsService.GetUrlTitleAsync(normalizedReferrerUrl, lastSiteUrlVisitorStat);
+            var referrerSiteUrl = await siteUrlsService.GetUrlTitleAsync(normalizedReferrerUrl, lastSiteUrlVisitorStat);
+            var referrerTitle = referrerSiteUrl.Title;
 
-            if (destinationTitle.IsEmpty() || referrerTitle.IsEmpty())
+            if (destinationSiteUrl.Title.IsEmpty() || referrerTitle.IsEmpty())
             {
                 LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl,
-                    $"Titles (`{referrerTitle}`,`{destinationTitle}`) are null.");
+                    $"Titles (`{referrerTitle}`,`{destinationSiteUrl.Title}`) are null.");
 
                 return false;
             }
@@ -73,26 +82,17 @@ public class SiteReferrersService(
                 {
                     ReferrerTitle = referrerTitle,
                     ReferrerUrl = normalizedReferrerUrl,
-                    DestinationUrl = normalizedDestinationUrl,
-                    DestinationTitle = destinationTitle,
                     VisitHash = referrerHash,
                     VisitsCount = 1,
                     LastVisitTime = DateTime.UtcNow,
-                    IsLocalReferrer = referrerUrl.IsLocalReferrer(destinationUrl)
+                    IsLocalReferrer = referrerUrl.IsLocalReferrer(destinationUrl),
+                    DestinationSiteUrlId = destinationSiteUrl.SiteUrlId
                 });
             }
             else
             {
-                if (!referrerTitle.IsValidUrl())
-                {
-                    siteReferrer.ReferrerTitle = referrerTitle;
-                }
-
-                if (!destinationTitle.IsValidUrl())
-                {
-                    siteReferrer.DestinationTitle = destinationTitle;
-                }
-
+                siteReferrer.ReferrerTitle = referrerTitle;
+                siteReferrer.DestinationSiteUrlId = destinationSiteUrl.SiteUrlId;
                 siteReferrer.LastVisitTime = DateTime.UtcNow;
                 siteReferrer.VisitsCount++;
             }
@@ -118,8 +118,10 @@ public class SiteReferrersService(
         => string.IsNullOrWhiteSpace(destinationUrl)
             ? Task.FromResult<SiteReferrer?>(result: null)
             : _referrers.AsNoTracking()
+                .Include(x => x.DestinationSiteUrl)
                 .OrderBy(x => x.Id)
-                .FirstOrDefaultAsync(x => x.DestinationUrl == destinationUrl && !x.IsDeleted);
+                .FirstOrDefaultAsync(x => x.DestinationSiteUrl != null &&
+                                          x.DestinationSiteUrl.Url == destinationUrl && !x.IsDeleted);
 
     public ValueTask<SiteReferrer?> FindSiteReferrerAsync(int id) => _referrers.FindAsync(id);
 
@@ -131,6 +133,7 @@ public class SiteReferrersService(
         bool isLocalReferrer)
     {
         var query = _referrers.AsNoTracking()
+            .Include(x => x.DestinationSiteUrl)
             .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer)
             .OrderByDescending(x => x.LastVisitTime)
             .ThenByDescending(x => x.VisitsCount);
@@ -156,7 +159,9 @@ public class SiteReferrersService(
         }
 
         var query = _referrers.AsNoTracking()
-            .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer && x.DestinationUrl == url)
+            .Include(x => x.DestinationSiteUrl)
+            .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer && x.DestinationSiteUrl != null &&
+                        x.DestinationSiteUrl.Url == url)
             .OrderByDescending(x => x.VisitsCount)
             .ThenByDescending(x => x.LastVisitTime);
 

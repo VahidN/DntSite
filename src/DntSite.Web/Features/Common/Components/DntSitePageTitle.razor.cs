@@ -50,6 +50,7 @@ public partial class DntSitePageTitle
     private async Task AddToSiteUrlsBackgroundQueueAsync()
     {
         var context = ApplicationState.HttpContext;
+        var baseUrl = context.GetBaseUrl();
         var referrerUrl = context.GetReferrerUrl();
         var destinationUrl = context.GetRawUrl();
         var isProtectedPage = ApplicationState.DoNotLogPageReferrer || context.IsProtectedRoute();
@@ -71,14 +72,8 @@ public partial class DntSitePageTitle
                 .GetOrAddOrUpdateSiteUrlAsync(destinationUrl, title, isProtectedPage, updateVisitsCount: true,
                     lastVisitorStat);
 
-        async Task UpdateReferrerAsync(IServiceProvider serviceProvider)
-        {
-            if (!await serviceProvider.GetRequiredService<IReferrersValidatorService>()
-                    .ShouldSkipThisRequestAsync(context))
-            {
-                await serviceProvider.GetRequiredService<ISiteReferrersService>()
-                    .TryAddOrUpdateReferrerAsync(referrerUrl, destinationUrl, lastVisitorStat);
-            }
-        }
+        Task UpdateReferrerAsync(IServiceProvider serviceProvider)
+            => serviceProvider.GetRequiredService<ISiteReferrersService>()
+                .TryAddOrUpdateReferrerAsync(referrerUrl, destinationUrl, baseUrl, lastVisitorStat, isProtectedPage);
     }
 }

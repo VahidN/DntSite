@@ -9,7 +9,9 @@ public interface ISiteReferrersService : IScopedService
 
     Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl,
         string destinationUrl,
-        LastSiteUrlVisitorStat lastSiteUrlVisitorStat);
+        string baseUrl,
+        LastSiteUrlVisitorStat lastSiteUrlVisitorStat,
+        bool isProtectedPage);
 
     Task<SiteReferrer?> FindSiteReferrerAsync(string referrerHash);
 

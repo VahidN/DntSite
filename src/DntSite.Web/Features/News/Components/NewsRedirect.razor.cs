@@ -1,4 +1,4 @@
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.News.Services.Contracts;
 
 namespace DntSite.Web.Features.News.Components;
@@ -26,7 +26,7 @@ public partial class NewsRedirect
             return;
         }
 
-        _pageTitle = newsItem.Title;
+        _pageTitle = $"هدایت به {newsItem.Title}";
         await DailyNewsItemsService.UpdateStatAsync(redirectId, ApplicationState.NavigationManager.IsFromFeed());
         ApplicationState.NavigateTo(newsItem.Url);
     }

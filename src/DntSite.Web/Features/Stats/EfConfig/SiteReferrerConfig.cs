@@ -10,16 +10,18 @@ public class SiteReferrerConfig : IEntityTypeConfiguration<SiteReferrer>
 
         builder.Property(entity => entity.ReferrerTitle).HasMaxLength(maxLength: 1500).IsRequired();
         builder.Property(entity => entity.ReferrerUrl).HasMaxLength(maxLength: 1500).IsRequired();
-        builder.Property(entity => entity.DestinationUrl).HasMaxLength(maxLength: 1500).IsRequired();
-        builder.Property(entity => entity.DestinationTitle).HasMaxLength(maxLength: 1500).IsRequired();
         builder.Property(entity => entity.VisitHash).HasMaxLength(maxLength: 50).IsRequired();
 
         builder.HasIndex(entity => entity.VisitHash).IsUnique();
-        builder.HasIndex(entity => entity.DestinationUrl);
 
         builder.HasOne(entity => entity.User)
             .WithMany(user => user.SiteReferrers)
             .HasForeignKey(entity => entity.UserId)
+            .IsRequired(required: false);
+
+        builder.HasOne(entity => entity.DestinationSiteUrl)
+            .WithMany(siteUrl => siteUrl.SiteReferrers)
+            .HasForeignKey(entity => entity.DestinationSiteUrlId)
             .IsRequired(required: false);
     }
 }

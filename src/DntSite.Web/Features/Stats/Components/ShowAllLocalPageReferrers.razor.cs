@@ -40,16 +40,16 @@ public partial class ShowAllLocalPageReferrers
         }
 
         _pageTitle = string.Create(CultureInfo.InvariantCulture,
-            $"صفحات مرتبط «{_referrer.DestinationTitle}»");
+            $"صفحات مرتبط «{_referrer.DestinationSiteUrl?.Title}»");
     }
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([
             new BreadCrumb
             {
-                Title = _referrer?.DestinationTitle ?? "مطالب",
+                Title = _referrer?.DestinationSiteUrl?.Title ?? "مطالب",
                 GlyphIcon = DntBootstrapIcons.BiNewspaper,
-                Url = _referrer?.DestinationUrl ?? "/"
+                Url = _referrer?.DestinationSiteUrl?.Url ?? "/"
             },
             new BreadCrumb
             {

@@ -1685,7 +1685,7 @@ var DntBlazorSsr;
     'use strict';
     DntBlazorSsr.DntUtilities.enable();
     window.addEventListener('DOMContentLoaded', () => {
-        Blazor.addEventListener('enhancedload', () => {
+        Blazor?.addEventListener('enhancedload', () => {
             DntBlazorSsr.DntUtilities.enable();
         });
     });

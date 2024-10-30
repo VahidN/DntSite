@@ -20,4 +20,6 @@ public class SiteUrl : BaseEntity
     [IgnoreAudit] public bool IsStaticFileUrl { set; get; }
 
     [NotMapped] public bool IsHidden => IsStaticFileUrl || IsDeleted || IsProtectedPage || Title.IsEmpty();
+
+    public virtual ICollection<SiteReferrer> SiteReferrers { set; get; } = new List<SiteReferrer>();
 }

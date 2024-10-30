@@ -17,5 +17,5 @@ public interface ISiteUrlsService : IScopedService
         bool updateVisitsCount,
         LastSiteUrlVisitorStat lastSiteUrlVisitorStat);
 
-    Task<string?> GetUrlTitleAsync(string url, LastSiteUrlVisitorStat lastSiteUrlVisitorStat);
+    Task<(string? Title, int? SiteUrlId)> GetUrlTitleAsync(string url, LastSiteUrlVisitorStat lastSiteUrlVisitorStat);
 }

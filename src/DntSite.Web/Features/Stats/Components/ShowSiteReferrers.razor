@@ -44,9 +44,9 @@
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
-                    <DntLink IsExternal="true" Url="@record.DestinationUrl">
-                        <span dir="@record.DestinationTitle.GetDir()">
-                            @record.DestinationTitle
+                    <DntLink IsExternal="true" Url="@record.DestinationSiteUrl?.Url">
+                        <span dir="@record.DestinationSiteUrl?.Title.GetDir()">
+                            @record.DestinationSiteUrl?.Title
                         </span>
                     </DntLink>
                 </CellValueTemplate>

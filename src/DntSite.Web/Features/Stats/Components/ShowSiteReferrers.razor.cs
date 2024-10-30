@@ -45,6 +45,7 @@ public partial class ShowSiteReferrers
     {
         if (!string.IsNullOrWhiteSpace(DeleteId))
         {
+            ApplicationState.DoNotLogPageReferrer = true;
             await SiteReferrersService.RemoveSiteReferrerAsync(DeleteId.ToInt());
         }
     }

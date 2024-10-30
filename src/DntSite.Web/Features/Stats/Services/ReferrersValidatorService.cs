@@ -4,7 +4,6 @@ using DntSite.Web.Features.Stats.Services.Contracts;
 namespace DntSite.Web.Features.Stats.Services;
 
 public class ReferrersValidatorService(
-    IUAParserService uaParserService,
     ICachedAppSettingsProvider appSettingsProvider,
     IUrlNormalizationService urlNormalizationService) : IReferrersValidatorService
 {
@@ -15,19 +14,47 @@ public class ReferrersValidatorService(
 
     private readonly HashSet<string> _protectedUrls = new(StringComparer.OrdinalIgnoreCase);
 
-    public async Task<bool> ShouldSkipThisRequestAsync(HttpContext context)
+    public async Task<string?> GetNormalizedUrlAsync(string? url)
     {
-        if (context.IsProtectedRoute())
+        if (string.IsNullOrWhiteSpace(url) || !url.IsValidUrl())
         {
-            _protectedUrls.Add(context.GetRawUrl());
+            return null;
+        }
+
+        var rootUrl = (await appSettingsProvider.GetAppSettingsAsync()).SiteRootUri;
+
+        if (!url.IsReferrerToThisSite(rootUrl))
+        {
+            return urlNormalizationService.NormalizeUrl(url, defaultProtocol: "https",
+                NormalizeUrlRules.LimitProtocols | NormalizeUrlRules.RemoveDefaultDirectoryIndexes |
+                NormalizeUrlRules.RemoveTheFragment | NormalizeUrlRules.RemoveDuplicateSlashes |
+                NormalizeUrlRules.RemoveTrailingSlashAndEmptyQuery);
+        }
+
+        if (url.Contains(value: "/post/", StringComparison.OrdinalIgnoreCase))
+        {
+            return GetNormalizedPostUrl(url);
+        }
+
+        url = url.GetUrlWithoutRssQueryStrings();
+
+        return url.IsEmpty() ? null : urlNormalizationService.NormalizeUrl(url, new Uri(url).Scheme);
+    }
+
+    public async Task<bool> ShouldSkipThisRequestAsync(string referrerUrl,
+        string destinationUrl,
+        string baseUrl,
+        bool isSpider,
+        bool isProtectedRoute)
+    {
+        if (isProtectedRoute)
+        {
+            _protectedUrls.Add(destinationUrl);
 
             return true;
         }
 
-        var rootUrl = await GetRootUrlAsync(context);
-
-        var referrerUrl = context.GetReferrerUrl();
-        var destinationUrl = context.GetRawUrl();
+        var rootUrl = await GetRootUrlAsync(baseUrl);
 
         if (string.IsNullOrEmpty(referrerUrl) || string.IsNullOrEmpty(destinationUrl))
         {
@@ -70,7 +97,7 @@ public class ReferrersValidatorService(
             return true;
         }
 
-        if (await uaParserService.IsSpiderClientAsync(context))
+        if (isSpider)
         {
             return true;
         }
@@ -86,33 +113,6 @@ public class ReferrersValidatorService(
         }
 
         return false;
-    }
-
-    public async Task<string?> GetNormalizedUrlAsync(string? url)
-    {
-        if (string.IsNullOrWhiteSpace(url) || !url.IsValidUrl())
-        {
-            return null;
-        }
-
-        var rootUrl = (await appSettingsProvider.GetAppSettingsAsync()).SiteRootUri;
-
-        if (!url.IsReferrerToThisSite(rootUrl))
-        {
-            return urlNormalizationService.NormalizeUrl(url, defaultProtocol: "https",
-                NormalizeUrlRules.LimitProtocols | NormalizeUrlRules.RemoveDefaultDirectoryIndexes |
-                NormalizeUrlRules.RemoveTheFragment | NormalizeUrlRules.RemoveDuplicateSlashes |
-                NormalizeUrlRules.RemoveTrailingSlashAndEmptyQuery);
-        }
-
-        if (url.Contains(value: "/post/", StringComparison.OrdinalIgnoreCase))
-        {
-            return GetNormalizedPostUrl(url);
-        }
-
-        url = url.GetUrlWithoutRssQueryStrings();
-
-        return url.IsEmpty() ? null : urlNormalizationService.NormalizeUrl(url, new Uri(url).Scheme);
     }
 
     private static bool HasIgnorePattern(string url, string rootUrl)
@@ -157,10 +157,10 @@ public class ReferrersValidatorService(
         return string.Create(CultureInfo.InvariantCulture, $"{uri.Scheme}://{domain}/post/{id}");
     }
 
-    private async Task<string> GetRootUrlAsync(HttpContext context)
+    private async Task<string> GetRootUrlAsync(string baseUrl)
     {
         var rootUrl = (await appSettingsProvider.GetAppSettingsAsync()).SiteRootUri;
 
-        return string.IsNullOrWhiteSpace(rootUrl) ? context.GetBaseUrl() : rootUrl;
+        return string.IsNullOrWhiteSpace(rootUrl) ? baseUrl : rootUrl;
     }
 }

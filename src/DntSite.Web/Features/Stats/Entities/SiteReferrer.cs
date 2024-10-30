@@ -11,13 +11,13 @@ public class SiteReferrer : BaseEntity
 
     public string ReferrerUrl { set; get; } = default!;
 
-    public string DestinationUrl { set; get; } = default!;
-
-    public string DestinationTitle { set; get; } = default!;
-
     [IgnoreAudit] public string VisitHash { set; get; } = default!;
 
     [IgnoreAudit] public int VisitsCount { set; get; }
 
     public bool IsLocalReferrer { set; get; }
+
+    public virtual SiteUrl? DestinationSiteUrl { set; get; }
+
+    public int? DestinationSiteUrlId { set; get; }
 }

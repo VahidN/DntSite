@@ -18,19 +18,20 @@ public class SiteUrlsService(
 
     public Task DeleteAllAsync() => uow.ExecuteTransactionAsync(() => _siteUrls.ExecuteDeleteAsync());
 
-    public async Task<string?> GetUrlTitleAsync(string url, LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
+    public async Task<(string? Title, int? SiteUrlId)> GetUrlTitleAsync(string url,
+        LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
     {
         var externalTitle = await GetExternalUrlTitleAsync(url);
 
         if (!externalTitle.IsEmpty())
         {
-            return externalTitle;
+            return (externalTitle, null);
         }
 
         var referrerSiteUrl = await GetOrAddOrUpdateSiteUrlAsync(url, title: null, isProtectedPage: null,
             updateVisitsCount: false, lastSiteUrlVisitorStat);
 
-        return referrerSiteUrl?.IsHidden == true ? null : referrerSiteUrl?.Title;
+        return referrerSiteUrl?.IsHidden == true ? (null, null) : (referrerSiteUrl?.Title, referrerSiteUrl?.Id);
     }
 
     public async Task<SiteUrl?> GetOrAddOrUpdateSiteUrlAsync(string? url,
@@ -50,8 +51,6 @@ public class SiteUrlsService(
         var cacheKey = GetUrlHash(url);
         var siteUrl = await _siteUrls.OrderBy(x => x.UrlHash).FirstOrDefaultAsync(x => x.UrlHash == cacheKey);
 
-        var titlesNeedUpdate = false;
-
         if (siteUrl is null)
         {
             siteUrl = _siteUrls.Add(new SiteUrl
@@ -68,9 +67,7 @@ public class SiteUrlsService(
         }
         else
         {
-            titlesNeedUpdate = ShouldUpdateTitle(title, siteUrl);
-
-            if (titlesNeedUpdate && title is not null)
+            if (ShouldUpdateTitle(title, siteUrl))
             {
                 siteUrl.Title = title;
             }
@@ -89,11 +86,6 @@ public class SiteUrlsService(
         }
 
         await uow.SaveChangesAsync();
-
-        if (titlesNeedUpdate)
-        {
-            await UpdateSiteReferrerTitleAsync(url, title);
-        }
 
         return siteUrl;
     }
@@ -136,20 +128,8 @@ public class SiteUrlsService(
         };
     }
 
-    private static bool ShouldUpdateTitle(string? title, SiteUrl? siteUrl)
+    private static bool ShouldUpdateTitle([NotNullWhen(returnValue: true)] string? title, SiteUrl? siteUrl)
         => title is not null && !string.Equals(siteUrl?.Title, title, StringComparison.OrdinalIgnoreCase);
-
-    private async Task UpdateSiteReferrerTitleAsync(string url, string? title)
-    {
-        if (title is null)
-        {
-            return;
-        }
-
-        await uow.DbSet<SiteReferrer>()
-            .Where(referrer => referrer.DestinationUrl == url)
-            .ExecuteUpdateAsync(pc => pc.SetProperty(su => su.DestinationTitle, title));
-    }
 
     private async Task<string?> GetExternalUrlTitleAsync(string? url)
     {
