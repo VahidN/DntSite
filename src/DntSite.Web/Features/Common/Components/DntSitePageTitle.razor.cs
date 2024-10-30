@@ -5,6 +5,10 @@ namespace DntSite.Web.Features.Common.Components;
 
 public partial class DntSitePageTitle
 {
+    private string? _localTitle;
+
+    private string? _publicTitle;
+
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [Parameter] [EditorRequired] public required string PageTitle { set; get; }
@@ -17,7 +21,11 @@ public partial class DntSitePageTitle
 
     [InjectComponentScoped] internal ISiteUrlsService SiteUrlsService { set; get; } = null!;
 
-    protected override Task OnInitializedAsync() => AddToSiteUrlsBackgroundQueueAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        (_publicTitle, _localTitle) = GetCurrentPageTitle();
+        await AddToSiteUrlsBackgroundQueueAsync();
+    }
 
     private (string PulicTitle, string LocalTitle) GetCurrentPageTitle()
     {
@@ -45,7 +53,7 @@ public partial class DntSitePageTitle
         var referrerUrl = context.GetReferrerUrl();
         var destinationUrl = context.GetRawUrl();
         var isProtectedPage = ApplicationState.DoNotLogPageReferrer || context.IsProtectedRoute();
-        var title = isProtectedPage ? "" : GetCurrentPageTitle().LocalTitle;
+        var title = isProtectedPage ? "" : _localTitle;
         var lastVisitorStat = await SiteUrlsService.GetLastSiteUrlVisitorStatAsync(context);
 
         BackgroundQueueService.QueueBackgroundWorkItem(async (_, serviceProvider) =>
