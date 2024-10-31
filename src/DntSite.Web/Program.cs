@@ -1,5 +1,4 @@
 using DntSite.Web.Features;
-using DntSite.Web.Features.Common.Utils.Security;
 using DntSite.Web.Features.DbLogger.Services;
 using DntSite.Web.Features.DbSeeder.Services;
 using DntSite.Web.Features.ServicesConfigs;
@@ -52,8 +51,7 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
 
     app.UseExceptionHandler(errorHandlingPath: "/Error", createScopeForErrors: true);
 
-    var headerPolicyCollection = SecurityHeadersBuilder.GetCsp(env.IsDevelopment(), enableCrossOriginPolicy: false);
-    app.UseSecurityHeaders(headerPolicyCollection);
+    app.UseCsp(env, enableCrossOriginPolicy: false);
 
     if (!env.IsDevelopment())
     {
