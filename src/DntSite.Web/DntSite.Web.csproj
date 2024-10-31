@@ -49,7 +49,6 @@
     <PackageReference Include="Gridify.EntityFramework"/>
     <PackageReference Include="Humanizer.Core"/>
     <PackageReference Include="Scrutor"/>
-    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders"/>
     <PackageReference Include="EFCoreSecondLevelCacheInterceptor"/>    
     <PackageReference Include="Lucene.Net"/>
     <PackageReference Include="Lucene.Net.Analysis.Common"/>

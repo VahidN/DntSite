@@ -25,16 +25,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="7.1.0" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="7.2.0" />
     <PackageVersion Include="DNTPersianUtils.Core" Version="6.3.1" />
     <PackageVersion Include="EFCoreSecondLevelCacheInterceptor" Version="4.8.4" />
     <PackageVersion Include="AutoMapper" Version="13.0.1" />
     <PackageVersion Include="Scrutor" Version="5.0.1" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.4.0" />
-    <PackageVersion Include="Gridify.EntityFramework" Version="2.15.0-preview7" />
+    <PackageVersion Include="Gridify.EntityFramework" Version="2.15.0" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
-    <PackageVersion Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.24.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Lucene.Net" Version="4.8.0-beta00016"/>
@@ -42,7 +41,7 @@
     <PackageVersion Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.176" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.177" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.32.0.97167" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="8.0.10" />
