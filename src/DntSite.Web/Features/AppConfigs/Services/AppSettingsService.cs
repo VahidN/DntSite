@@ -15,9 +15,12 @@ public class AppSettingsService(
 {
     private readonly DbSet<AppSetting> _blogConfigs = uow.DbSet<AppSetting>();
 
-    public async Task<bool> IsBannedReferrerAsync(string url)
+    public async Task<bool> IsBannedReferrerAsync(string? url)
     {
-        ArgumentNullException.ThrowIfNull(url);
+        if (url.IsEmpty())
+        {
+            return false;
+        }
 
         var config = await cachedAppSettingsProvider.GetAppSettingsAsync();
 

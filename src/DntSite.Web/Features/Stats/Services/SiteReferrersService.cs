@@ -25,13 +25,10 @@ public class SiteReferrersService(
         LastSiteUrlVisitorStat lastSiteUrlVisitorStat,
         bool isProtectedPage)
     {
-        if (await referrersValidatorService.ShouldSkipThisRequestAsync(referrerUrl, destinationUrl, baseUrl,
-                lastSiteUrlVisitorStat.IsSpider, isProtectedPage))
-        {
-            return false;
-        }
+        ArgumentNullException.ThrowIfNull(lastSiteUrlVisitorStat);
 
-        if (string.IsNullOrWhiteSpace(destinationUrl) || string.IsNullOrWhiteSpace(referrerUrl))
+        if (await referrersValidatorService.ShouldSkipThisRequestAsync(referrerUrl, destinationUrl, baseUrl,
+                isProtectedPage))
         {
             return false;
         }
@@ -40,14 +37,6 @@ public class SiteReferrersService(
         {
             var normalizedDestinationUrl = await referrersValidatorService.GetNormalizedUrlAsync(destinationUrl);
             var normalizedReferrerUrl = await referrersValidatorService.GetNormalizedUrlAsync(referrerUrl);
-
-            if (normalizedDestinationUrl.AreNullOrEmptyOrEqual(normalizedReferrerUrl,
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl, reason: "AreNullOrEmptyOrEqual");
-
-                return false;
-            }
 
             if (await appSettingsService.IsBannedReferrerAsync(normalizedReferrerUrl))
             {
@@ -62,7 +51,7 @@ public class SiteReferrersService(
             var referrerSiteUrl = await siteUrlsService.GetUrlTitleAsync(normalizedReferrerUrl, lastSiteUrlVisitorStat);
             var referrerTitle = referrerSiteUrl.Title;
 
-            if (destinationSiteUrl.Title.IsEmpty() || referrerTitle.IsEmpty())
+            if (!destinationSiteUrl.SiteUrlId.HasValue || referrerTitle.IsEmpty())
             {
                 LogIgnoredReferrer(normalizedReferrerUrl, normalizedDestinationUrl,
                     $"Titles (`{referrerTitle}`,`{destinationSiteUrl.Title}`) are null.");
@@ -81,7 +70,7 @@ public class SiteReferrersService(
                 _referrers.Add(new SiteReferrer
                 {
                     ReferrerTitle = referrerTitle,
-                    ReferrerUrl = normalizedReferrerUrl,
+                    ReferrerUrl = normalizedReferrerUrl ?? referrerUrl,
                     VisitHash = referrerHash,
                     VisitsCount = 1,
                     LastVisitTime = DateTime.UtcNow,
@@ -134,7 +123,8 @@ public class SiteReferrersService(
     {
         var query = _referrers.AsNoTracking()
             .Include(x => x.DestinationSiteUrl)
-            .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer)
+            .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer && x.DestinationSiteUrl != null &&
+                        !x.DestinationSiteUrl.IsProtectedPage && x.DestinationSiteUrl.Title != "")
             .OrderByDescending(x => x.LastVisitTime)
             .ThenByDescending(x => x.VisitsCount);
 
@@ -161,7 +151,8 @@ public class SiteReferrersService(
         var query = _referrers.AsNoTracking()
             .Include(x => x.DestinationSiteUrl)
             .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer && x.DestinationSiteUrl != null &&
-                        x.DestinationSiteUrl.Url == url)
+                        x.DestinationSiteUrl.Url == url && !x.DestinationSiteUrl.IsProtectedPage &&
+                        x.DestinationSiteUrl.Title != "")
             .OrderByDescending(x => x.VisitsCount)
             .ThenByDescending(x => x.LastVisitTime);
 

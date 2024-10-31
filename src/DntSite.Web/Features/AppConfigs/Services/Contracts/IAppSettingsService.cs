@@ -13,7 +13,7 @@ public interface IAppSettingsService : IScopedService
 
     Task<bool> IsBannedDomainAndSubDomainAsync(string url);
 
-    Task<bool> IsBannedReferrerAsync(string url);
+    Task<bool> IsBannedReferrerAsync(string? url);
 
     Task<bool> IsBannedSiteAsync(string url);
 }

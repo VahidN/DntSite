@@ -26,7 +26,7 @@ public partial class NewsRedirect
             return;
         }
 
-        _pageTitle = $"هدایت به {newsItem.Title}";
+        _pageTitle = $"هدایت به «{newsItem.Title}»";
         await DailyNewsItemsService.UpdateStatAsync(redirectId, ApplicationState.NavigationManager.IsFromFeed());
         ApplicationState.NavigateTo(newsItem.Url);
     }

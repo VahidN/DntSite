@@ -18,9 +18,14 @@ public class SiteUrlsService(
 
     public Task DeleteAllAsync() => uow.ExecuteTransactionAsync(() => _siteUrls.ExecuteDeleteAsync());
 
-    public async Task<(string? Title, int? SiteUrlId)> GetUrlTitleAsync(string url,
+    public async Task<(string? Title, int? SiteUrlId)> GetUrlTitleAsync(string? url,
         LastSiteUrlVisitorStat lastSiteUrlVisitorStat)
     {
+        if (url.IsEmpty())
+        {
+            return (null, null);
+        }
+
         var externalTitle = await GetExternalUrlTitleAsync(url);
 
         if (!externalTitle.IsEmpty())

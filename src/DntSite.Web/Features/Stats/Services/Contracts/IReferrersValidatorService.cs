@@ -2,11 +2,10 @@
 
 public interface IReferrersValidatorService : ISingletonService
 {
-    Task<bool> ShouldSkipThisRequestAsync(string referrerUrl,
-        string destinationUrl,
+    Task<bool> ShouldSkipThisRequestAsync([NotNullWhen(returnValue: false)] string? referrerUrl,
+        [NotNullWhen(returnValue: false)] string? destinationUrl,
         string baseUrl,
-        bool isSpider,
         bool isProtectedRoute);
 
-    Task<string?> GetNormalizedUrlAsync(string? url);
+    Task<string?> GetNormalizedUrlAsync([NotNullIfNotNull(nameof(url))] string? url);
 }

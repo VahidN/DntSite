@@ -14,7 +14,7 @@ public class ReferrersValidatorService(
 
     private readonly HashSet<string> _protectedUrls = new(StringComparer.OrdinalIgnoreCase);
 
-    public async Task<string?> GetNormalizedUrlAsync(string? url)
+    public async Task<string?> GetNormalizedUrlAsync([NotNullIfNotNull(nameof(url))] string? url)
     {
         if (string.IsNullOrWhiteSpace(url) || !url.IsValidUrl())
         {
@@ -41,15 +41,17 @@ public class ReferrersValidatorService(
         return url.IsEmpty() ? null : urlNormalizationService.NormalizeUrl(url, new Uri(url).Scheme);
     }
 
-    public async Task<bool> ShouldSkipThisRequestAsync(string referrerUrl,
-        string destinationUrl,
+    public async Task<bool> ShouldSkipThisRequestAsync([NotNullWhen(returnValue: false)] string? referrerUrl,
+        [NotNullWhen(returnValue: false)] string? destinationUrl,
         string baseUrl,
-        bool isSpider,
         bool isProtectedRoute)
     {
         if (isProtectedRoute)
         {
-            _protectedUrls.Add(destinationUrl);
+            if (!destinationUrl.IsEmpty())
+            {
+                _protectedUrls.Add(destinationUrl);
+            }
 
             return true;
         }
@@ -93,11 +95,6 @@ public class ReferrersValidatorService(
         }
 
         if (_protectedUrls.Contains(destinationUrl) || _protectedUrls.Contains(referrerUrl))
-        {
-            return true;
-        }
-
-        if (isSpider)
         {
             return true;
         }
