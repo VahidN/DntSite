@@ -493,7 +493,7 @@ public class DailyNewsItemsService(
             }
             catch (Exception ex)
             {
-                item.IsDeleted = IsOutdatedLink(ex);
+                item.IsDeleted = ex.IsOutdatedUrl();
 
                 logger.LogError(ex.Demystify(), message: "UpdateAllNewsLastHttpStatusCodeAsync({Id}, {Url}): ", item.Id,
                     item.Url);
@@ -538,21 +538,6 @@ public class DailyNewsItemsService(
             fullTextSearchService.AddOrUpdateLuceneDocument(
                 item.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: ""));
         }
-    }
-
-    private static bool IsOutdatedLink(Exception exception)
-    {
-        string[] errors =
-        [
-            "Name or service not known", "The SSL connection could not be established", "Connection refused",
-            "The remote certificate is invalid because of errors in the certificate chain",
-            "System.Threading.Tasks.TaskCanceledException", "System.TimeoutException",
-            "The request was canceled due to the configured HttpClient", "A task was canceled"
-        ];
-
-        var message = exception.ToString();
-
-        return errors.Any(error => message.Contains(error, StringComparison.OrdinalIgnoreCase));
     }
 
     private static void UpdateNumberOfViews(bool fromFeed, DailyNewsItem item)
