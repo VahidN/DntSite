@@ -26,7 +26,8 @@ public class BacklogsService(
     IEmailsFactoryService emailsFactoryService,
     IBacklogEmailsService emailsService,
     IUserRatingsService userRatingsService,
-    IFullTextSearchService fullTextSearchService) : IBacklogsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<BacklogsService> logger) : IBacklogsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Backlog, object?>>> CustomOrders = new()
     {
@@ -261,6 +262,8 @@ public class BacklogsService(
 
         backlog.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a Backlog record with Id={Id} and Title={Text}", backlog.Id, backlog.Title);
 
         fullTextSearchService.DeleteLuceneDocument(backlog.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
     }

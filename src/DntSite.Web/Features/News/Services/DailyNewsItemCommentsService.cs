@@ -18,7 +18,8 @@ public class DailyNewsItemCommentsService(
     IStatService statService,
     IDailyNewsEmailsService dailyNewsEmailsService,
     IUserRatingsService userRatingsService,
-    IFullTextSearchService fullTextSearchService) : IDailyNewsItemCommentsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<DailyNewsItemCommentsService> logger) : IDailyNewsItemCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<DailyNewsItemComment, object?>>> CustomOrders =
         new()
@@ -121,6 +122,9 @@ public class DailyNewsItemCommentsService(
 
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a DailyNewsItemComment record with Id={Id} and Text={Text}", comment.Id,
+            comment.Body);
 
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 

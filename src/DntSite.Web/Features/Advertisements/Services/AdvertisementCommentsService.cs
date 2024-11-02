@@ -18,7 +18,8 @@ public class AdvertisementCommentsService(
     IAppAntiXssService antiXssService,
     IAdvertisementsEmailsService emailsService,
     IStatService statService,
-    IFullTextSearchService fullTextSearchService) : IAdvertisementCommentsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<AdvertisementCommentsService> logger) : IAdvertisementCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<AdvertisementComment, object?>>> CustomOrders =
         new()
@@ -168,6 +169,9 @@ public class AdvertisementCommentsService(
 
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a AdvertisementComment record with Id={Id} and Text={Text}", comment.Id,
+            comment.Body);
 
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 

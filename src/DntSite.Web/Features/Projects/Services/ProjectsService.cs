@@ -26,7 +26,8 @@ public class ProjectsService(
     ITagsService tagsService,
     IAppFoldersService appFoldersService,
     IProjectsEmailsService emailsService,
-    IFullTextSearchService fullTextSearchService) : IProjectsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<ProjectsService> logger) : IProjectsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Project, object?>>> CustomOrders = new()
     {
@@ -174,6 +175,8 @@ public class ProjectsService(
 
         project.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a Project record with Id={Id} and Title={Text}", project.Id, project.Title);
 
         fullTextSearchService.DeleteLuceneDocument(project.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
     }

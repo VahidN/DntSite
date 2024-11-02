@@ -18,7 +18,8 @@ public class VoteCommentsService(
     IStatService statService,
     IAppAntiXssService antiXssService,
     IVotesEmailsService votesEmailsService,
-    IFullTextSearchService fullTextSearchService) : IVoteCommentsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<VoteCommentsService> logger) : IVoteCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<SurveyComment, object?>>> CustomOrders = new()
     {
@@ -167,6 +168,9 @@ public class VoteCommentsService(
 
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a SurveyComment record with Id={Id} and Body={Text}", comment.Id,
+            comment.Body);
 
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
         await statService.RecalculateThisVoteCommentsCountsAsync(comment.ParentId);

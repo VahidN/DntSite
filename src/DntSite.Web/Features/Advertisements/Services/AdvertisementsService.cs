@@ -23,7 +23,8 @@ public class AdvertisementsService(
     ITagsService tagsService,
     IStatService statService,
     IAdvertisementCommentsService advertisementCommentsService,
-    IFullTextSearchService fullTextSearchService) : IAdvertisementsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<AdvertisementsService> logger) : IAdvertisementsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Advertisement, object?>>> CustomOrders = new()
     {
@@ -122,6 +123,9 @@ public class AdvertisementsService(
         }
 
         advertisement.IsDeleted = true;
+
+        logger.LogWarning(message: "Deleted a Advertisement record with Id={Id} and Title={Text}", advertisement.Id,
+            advertisement.Title);
 
         await advertisementCommentsService.MarkAllOfAdvertisementCommentsAsDeletedAsync(advertisement.Id);
 

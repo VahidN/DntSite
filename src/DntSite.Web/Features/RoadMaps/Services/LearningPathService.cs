@@ -24,7 +24,8 @@ public class LearningPathService(
     IEmailsFactoryService emailsFactoryService,
     ILearningPathEmailsService emailsService,
     IUserRatingsService userRatingsService,
-    IFullTextSearchService fullTextSearchService) : ILearningPathService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<LearningPathService> logger) : ILearningPathService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<LearningPath, object?>>> CustomOrders = new()
     {
@@ -263,6 +264,9 @@ public class LearningPathService(
 
         learningPathItem.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a LearningPath record with Id={Id} and Title={Text}", learningPathItem.Id,
+            learningPathItem.Title);
 
         fullTextSearchService.DeleteLuceneDocument(learningPathItem.MapToWhatsNewItemModel(siteRootUri: "")
             .DocumentTypeIdHash);

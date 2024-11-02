@@ -21,7 +21,8 @@ public class QuestionsService(
     IStatService statService,
     IQuestionsEmailsService questionsEmailsService,
     IMapper mapper,
-    IFullTextSearchService fullTextSearchService) : IQuestionsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<QuestionsService> logger) : IQuestionsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<StackExchangeQuestion, object?>>> CustomOrders =
         new()
@@ -221,6 +222,9 @@ public class QuestionsService(
 
         question.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a StackExchangeQuestion record with Id={Id} and Title={Text}", question.Id,
+            question.Title);
 
         fullTextSearchService.DeleteLuceneDocument(question.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
     }

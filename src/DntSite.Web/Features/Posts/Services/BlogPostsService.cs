@@ -29,7 +29,8 @@ public class BlogPostsService(
     IMapper mapper,
     IBlogCommentsService blogCommentsService,
     IHtmlHelperService htmlHelperService,
-    IFullTextSearchService fullTextSearchService) : IBlogPostsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<BlogPostsService> logger) : IBlogPostsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<BlogPost, object?>>> CustomOrders = new()
     {
@@ -485,6 +486,8 @@ public class BlogPostsService(
         post.IsDeleted = true;
         await blogCommentsService.MarkAllOfPostCommentsAsDeletedAsync(deleteId.Value);
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a BlogPost record with Id={Id} and Title={Text}", post.Id, post.Title);
 
         fullTextSearchService.DeleteLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 

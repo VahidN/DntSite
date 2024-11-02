@@ -18,7 +18,8 @@ public class BlogCommentsService(
     IStatService statService,
     IBlogCommentsEmailsService blogCommentsEmailsService,
     IAppAntiXssService antiXssService,
-    IFullTextSearchService fullTextSearchService) : IBlogCommentsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<BlogCommentsService> logger) : IBlogCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<BlogPostComment, object?>>> CustomOrders = new()
     {
@@ -182,6 +183,9 @@ public class BlogCommentsService(
 
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a BlogPostComment record with Id={Id} and Text={Text}", comment.Id,
+            comment.Body);
 
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 

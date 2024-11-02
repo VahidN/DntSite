@@ -170,6 +170,9 @@ public class SiteReferrersService(
 
         item.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a SiteReferrer record with Id={Id} and Title={Text}", item.Id,
+            item.ReferrerTitle);
     }
 
     private void LogIgnoredReferrer(string? normalizedReferrerUrl, string? normalizedDestinationUrl, string reason)

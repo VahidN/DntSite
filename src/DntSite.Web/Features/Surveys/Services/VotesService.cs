@@ -22,7 +22,8 @@ public class VotesService(
     IVoteItemsService voteItemsService,
     IMapper mapper,
     IEmailsFactoryService emailsFactoryService,
-    IFullTextSearchService fullTextSearchService) : IVotesService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<VotesService> logger) : IVotesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Survey, object?>>> CustomOrders = new()
     {
@@ -243,6 +244,9 @@ public class VotesService(
 
         fullTextSearchService.DeleteLuceneDocument(
             surveyItem.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+
+        logger.LogWarning(message: "Deleted a SurveyItem record with Id={Id} and Title={Text}", surveyItem.Id,
+            surveyItem.Title);
     }
 
     public async Task NotifyDeleteChangesAsync(Survey? surveyItem, User? currentUserUser)

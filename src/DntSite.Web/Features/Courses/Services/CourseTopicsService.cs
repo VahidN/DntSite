@@ -21,7 +21,8 @@ public class CourseTopicsService(
     ICoursesEmailsService emailsService,
     IUserRatingsService userRatingsService,
     ICoursesService coursesService,
-    IFullTextSearchService fullTextSearchService) : ICourseTopicsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<CourseTopicsService> logger) : ICourseTopicsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<CourseTopic, object?>>> CustomOrders = new()
     {
@@ -217,6 +218,9 @@ public class CourseTopicsService(
 
         courseTopic.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a CourseTopic record with Id={Id} and Title={Text}", courseTopic.Id,
+            courseTopic.Title);
 
         fullTextSearchService.DeleteLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: "")
             .DocumentTypeIdHash);

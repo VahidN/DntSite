@@ -19,7 +19,8 @@ public class ProjectFaqsService(
     IProjectsEmailsService emailsService,
     IStatService statService,
     IMapper mapper,
-    IFullTextSearchService fullTextSearchService) : IProjectFaqsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<ProjectFaqsService> logger) : IProjectFaqsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<ProjectFaq, object?>>> CustomOrders = new()
     {
@@ -202,6 +203,9 @@ public class ProjectFaqsService(
 
         projectFaq.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a ProjectFaq record with Id={Id} and Title={Text}", projectFaq.Id,
+            projectFaq.Title);
 
         fullTextSearchService.AddOrUpdateLuceneDocument(projectFaq.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: ""));
     }

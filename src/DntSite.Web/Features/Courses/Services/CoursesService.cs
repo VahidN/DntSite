@@ -25,7 +25,8 @@ public class CoursesService(
     IMapper mapper,
     ITagsService tagsService,
     IStatService statService,
-    IFullTextSearchService fullTextSearchService) : ICoursesService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<CoursesService> logger) : ICoursesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Course, object?>>> CustomOrders = new()
     {
@@ -437,6 +438,8 @@ public class CoursesService(
 
         course.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a Course record with Id={Id} and Title={Text}", course.Id, course.Title);
 
         fullTextSearchService.DeleteLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
     }

@@ -24,7 +24,8 @@ public class ProjectReleasesService(
     IAppFoldersService appFoldersService,
     IMapper mapper,
     IEmailsFactoryService emailsService,
-    IFullTextSearchService fullTextSearchService) : IProjectReleasesService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<ProjectReleasesService> logger) : IProjectReleasesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<ProjectRelease, object?>>> CustomOrders = new()
     {
@@ -123,6 +124,9 @@ public class ProjectReleasesService(
 
         projectRelease.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a ProjectRelease record with Id={Id} and Title={Text}", projectRelease.Id,
+            projectRelease.FileDescription);
 
         fullTextSearchService.DeleteLuceneDocument(projectRelease
             .MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "")

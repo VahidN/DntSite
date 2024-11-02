@@ -15,7 +15,8 @@ public class SearchItemsService(
     ICurrentUserService currentUserService,
     IHttpContextAccessor httpContextAccessor,
     IUAParserService uaParserService,
-    ILockerService lockerService) : ISearchItemsService
+    ILockerService lockerService,
+    ILogger<SearchItemsService> logger) : ISearchItemsService
 {
     private readonly DbSet<SearchItem> _searchItems = uow.DbSet<SearchItem>();
 
@@ -103,6 +104,8 @@ public class SearchItemsService(
 
         item.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a SearchItem record with Id={Id} and Text={Text}", item.Id, item.Text);
     }
 
     private Task<SearchItem?> GetLastTryOfCurrentUserTodayAsync(string text)

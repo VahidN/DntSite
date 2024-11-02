@@ -18,7 +18,8 @@ public class ProjectIssueCommentsService(
     IAppAntiXssService antiXssService,
     IProjectsEmailsService projectsEmailsService,
     IStatService statService,
-    IFullTextSearchService fullTextSearchService) : IProjectIssueCommentsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<ProjectIssueCommentsService> logger) : IProjectIssueCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<ProjectIssueComment, object?>>> CustomOrders = new()
     {
@@ -169,6 +170,9 @@ public class ProjectIssueCommentsService(
 
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a  ProjectIssueComment record with Id={Id} and Text={Text}", comment.Id,
+            comment.Body);
 
         fullTextSearchService.DeleteLuceneDocument(comment.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")
             .DocumentTypeIdHash);

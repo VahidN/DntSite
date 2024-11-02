@@ -330,6 +330,8 @@ public class DailyNewsItemsService(
         item.LastHttpStatusCodeCheckDateTime = null;
         await uow.SaveChangesAsync();
 
+        logger.LogWarning(message: "Deleted a DailyNewsItem record with Id={Id} and Title={Text}", item.Id, item.Title);
+
         UpdateLuceneIndex(item);
     }
 

@@ -18,7 +18,8 @@ public class CourseTopicCommentsService(
     IStatService statService,
     IAppAntiXssService antiXssService,
     ICoursesEmailsService emailsService,
-    IFullTextSearchService fullTextSearchService) : ICourseTopicCommentsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<CourseTopicCommentsService> logger) : ICourseTopicCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<CourseTopicComment, object?>>> CustomOrders = new()
     {
@@ -149,6 +150,9 @@ public class CourseTopicCommentsService(
 
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a CourseTopicComment record with Id={Id} and Title={Text}", comment.Id,
+            comment.Body);
 
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
         await UpdateStatAsync(comment.ParentId, comment.Parent.CourseId, comment.UserId);

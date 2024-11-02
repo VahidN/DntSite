@@ -16,7 +16,8 @@ public class QuestionsCommentsService(
     IStatService statService,
     IAppAntiXssService antiXssService,
     IQuestionsEmailsService questionsEmailsService,
-    IFullTextSearchService fullTextSearchService) : IQuestionsCommentsService
+    IFullTextSearchService fullTextSearchService,
+    ILogger<QuestionsCommentsService> logger) : IQuestionsCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<StackExchangeQuestionComment, object?>>>
         CustomOrders = new()
@@ -104,6 +105,9 @@ public class QuestionsCommentsService(
 
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a QuestionsCommentsService record with Id={Id} and Text={Text}", comment.Id,
+            comment.Body);
 
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 

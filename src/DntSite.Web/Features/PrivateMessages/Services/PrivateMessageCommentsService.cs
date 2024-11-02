@@ -12,7 +12,8 @@ public class PrivateMessageCommentsService(
     IUnitOfWork uow,
     IAppAntiXssService antiXssService,
     IPrivateMessagesEmailsService privateMessagesEmailsService,
-    IPrivateMessagesService privateMessagesService) : IPrivateMessageCommentsService
+    IPrivateMessagesService privateMessagesService,
+    ILogger<PrivateMessageCommentsService> logger) : IPrivateMessageCommentsService
 {
     private readonly DbSet<PrivateMessageComment> _privateMessageComments = uow.DbSet<PrivateMessageComment>();
 
@@ -48,6 +49,9 @@ public class PrivateMessageCommentsService(
 
         comment.IsDeleted = true;
         await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a PrivateMessageComment record with Id={Id} and Text={Text}", comment.Id,
+            comment.Body);
     }
 
     public async Task EditReplyAsync(int? commentId, string message)
