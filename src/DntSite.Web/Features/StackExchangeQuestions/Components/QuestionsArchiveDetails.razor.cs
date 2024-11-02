@@ -1,6 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Posts.Models;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.Models;
@@ -39,7 +38,7 @@ public partial class QuestionsArchiveDetails
 
     [Parameter] public string? Slug { set; get; }
 
-    private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);

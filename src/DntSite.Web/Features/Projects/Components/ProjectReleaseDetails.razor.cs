@@ -50,7 +50,7 @@ public partial class ProjectReleaseDetails
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
-    private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);

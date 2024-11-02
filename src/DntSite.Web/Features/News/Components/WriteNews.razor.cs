@@ -133,7 +133,7 @@ public partial class WriteNews
     private async Task PerformAsync()
     {
         var checkUrlHashResult = await DailyNewsItemsService.CheckUrlHashAsync(WriteNewsModel.Url, EditId.ToInt(),
-            ApplicationState.CurrentUser?.IsAdmin == true);
+            ApplicationState.IsCurrentUserAdmin);
 
         if (checkUrlHashResult.Stat == OperationStat.Failed)
         {

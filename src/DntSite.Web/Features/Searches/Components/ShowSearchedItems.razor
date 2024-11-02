@@ -23,7 +23,7 @@
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
-                    @if (IsCurrentUserAdmin)
+                    @if (ApplicationState.IsCurrentUserAdmin)
                     {
                         <a href="@SearchesRoutingConstants.SearchedItemsDeleteBase/delete/@Uri.EscapeDataString(ProtectionProvider.Encrypt(record.SearchItem.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
                            data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"
@@ -43,7 +43,7 @@
 
             <DntSimpleTableColumn HeaderTitle="از طرف"
                                   HeaderCellClass="text-center"
-                                  IsVisible="IsCurrentUserAdmin"
+                                  IsVisible="ApplicationState.IsCurrentUserAdmin"
                                   RowCellClass='record => "text-center align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
@@ -66,7 +66,7 @@
                         <span title="Device" class="badge bg-secondary me-1">@record.ClientInfo?.Device</span>
                         <span title="@record.SearchItem.Audit.CreatedByUserAgent" class="badge bg-warning me-1">@record.ClientInfo?.UA</span>
                     </div>
-                    @if (IsCurrentUserAdmin)
+                    @if (ApplicationState.IsCurrentUserAdmin)
                     {
                         <div class="badge bg-info" dir="ltr">@record.SearchItem.Audit.CreatedByUserIp</div>
                     }

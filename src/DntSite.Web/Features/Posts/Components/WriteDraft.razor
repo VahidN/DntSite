@@ -15,7 +15,7 @@
                   FormName="@nameof(WriteDraft)" Enhance>
             <DataAnnotationsValidator/>
 
-            @if (ApplicationState.CurrentUser?.IsAdmin == true)
+            @if (ApplicationState.IsCurrentUserAdmin)
             {
                 <DntInputPersianDate LabelName="تاریخ انتشار"
                                      @bind-Year="WriteDraftModel.PersianDateYear"
@@ -81,7 +81,7 @@
     </FrameBody>
 </DntCardFrame>
 
-@if (ApplicationState.CurrentUser?.IsAdmin == true && !string.IsNullOrWhiteSpace(EditId))
+@if (ApplicationState.IsCurrentUserAdmin && !string.IsNullOrWhiteSpace(EditId))
 {
     <DntCardFrame MarginTop="3">
         <FrameHeader>

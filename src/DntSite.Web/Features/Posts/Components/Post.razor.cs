@@ -47,7 +47,7 @@ public partial class Post
 
     private bool CanUserViewThisPost => ApplicationState.CurrentUser.CanUserViewThisPost(CurrentPost);
 
-    private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);

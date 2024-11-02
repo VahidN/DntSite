@@ -38,7 +38,7 @@ public partial class ProjectFeedbackDetails
 
     [Parameter] public string? Slug { set; get; }
 
-    private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);

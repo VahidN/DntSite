@@ -43,7 +43,7 @@ public partial class ShowSiteReferrers
 
     private async Task TryDeleteItemAsync()
     {
-        if (!string.IsNullOrWhiteSpace(DeleteId))
+        if (!string.IsNullOrWhiteSpace(DeleteId) && ApplicationState.IsCurrentUserAdmin)
         {
             ApplicationState.DoNotLogPageReferrer = true;
             await SiteReferrersService.RemoveSiteReferrerAsync(DeleteId.ToInt());

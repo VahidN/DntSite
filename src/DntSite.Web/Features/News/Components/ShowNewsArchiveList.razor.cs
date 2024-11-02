@@ -22,7 +22,7 @@ public partial class ShowNewsArchiveList
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
-    private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
     private static List<string> GetTags(DailyNewsItem? post) => post?.Tags.Select(x => x.Name).ToList() ?? [];
 

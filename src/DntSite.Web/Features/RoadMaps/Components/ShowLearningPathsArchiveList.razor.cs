@@ -19,7 +19,7 @@ public partial class ShowLearningPathsArchiveList
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
-    private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
     private static List<string> GetTags(LearningPath? post) => post?.Tags.Select(x => x.Name).ToList() ?? [];
 

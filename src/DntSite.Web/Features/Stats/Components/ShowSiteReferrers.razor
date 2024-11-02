@@ -22,7 +22,7 @@
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
-                    @if (ApplicationState.CurrentUser?.IsAdmin == true)
+                    @if (ApplicationState.IsCurrentUserAdmin)
                     {
                         <a href="@StatsRoutingConstants.SiteReferrersBase/@_siteReferrerType/delete/@Uri.EscapeDataString(ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
                            data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"

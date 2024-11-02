@@ -12,6 +12,8 @@ public partial class ApplicationState
 
     public CurrentUserModel? CurrentUser { set; get; }
 
+    public bool IsCurrentUserAdmin => CurrentUser?.IsAdmin == true;
+
     public IList<BreadCrumb> BreadCrumbs { set; get; } = [AppConfigsBreadCrumbs.RootBreadCrumb];
 
     public Uri CurrentAbsoluteUri => NavigationManager.ToAbsoluteUri(NavigationManager.Uri);

@@ -1,6 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.RoadMaps.Entities;
 using DntSite.Web.Features.RoadMaps.Models;
 using DntSite.Web.Features.RoadMaps.ModelsMappings;
@@ -33,7 +32,7 @@ public partial class LearningPathsArchiveDetails
 
     [Parameter] public string? Slug { set; get; }
 
-    private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);

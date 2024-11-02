@@ -5,7 +5,6 @@ using DntSite.Web.Features.Backlogs.Models;
 using DntSite.Web.Features.Backlogs.ModelsMappings;
 using DntSite.Web.Features.Backlogs.RoutingConstants;
 using DntSite.Web.Features.Backlogs.Services.Contracts;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 
 namespace DntSite.Web.Features.Backlogs.Components;
 
@@ -34,7 +33,7 @@ public partial class BacklogsArchiveDetails
 
     [Parameter] public string? Slug { set; get; }
 
-    private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);

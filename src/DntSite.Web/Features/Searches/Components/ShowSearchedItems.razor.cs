@@ -24,8 +24,6 @@ public partial class ShowSearchedItems
 
     [Parameter] public string? DeleteId { set; get; }
 
-    private bool IsCurrentUserAdmin => ApplicationState.CurrentUser?.IsAdmin == true;
-
     protected override async Task OnInitializedAsync()
     {
         await TryDeleteItemAsync();
@@ -35,7 +33,7 @@ public partial class ShowSearchedItems
 
     private async Task TryDeleteItemAsync()
     {
-        if (!string.IsNullOrWhiteSpace(DeleteId) && IsCurrentUserAdmin)
+        if (!string.IsNullOrWhiteSpace(DeleteId) && ApplicationState.IsCurrentUserAdmin)
         {
             ApplicationState.DoNotLogPageReferrer = true;
             await SearchItemsService.RemoveSearchItemAsync(DeleteId.ToInt());

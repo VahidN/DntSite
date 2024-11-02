@@ -17,7 +17,7 @@ public partial class FilesManager
 
     private FileType CurrentFileType => IsUsersFilesList ? FileType.UserFile : FileType.Image;
 
-    private bool IsCurrentUserAdmin => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool IsCurrentUserAdmin => ApplicationState.IsCurrentUserAdmin;
 
     private bool IsUsersFilesList => string.Equals(Type, b: "users-files", StringComparison.OrdinalIgnoreCase);
 

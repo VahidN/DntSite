@@ -12,7 +12,7 @@ public partial class BacklogActionForm
 
     private string FormName => string.Create(CultureInfo.InvariantCulture, $"BacklogStat_{Model?.Id}");
 
-    private bool IsTakenByCurrentUser => ApplicationState.CurrentUser?.IsAdmin == true ||
+    private bool IsTakenByCurrentUser => ApplicationState.IsCurrentUserAdmin ||
                                          (Model?.TakenByUser is not null && Model.TakenByUser.Id ==
                                              ApplicationState.CurrentUser?.UserId);
 

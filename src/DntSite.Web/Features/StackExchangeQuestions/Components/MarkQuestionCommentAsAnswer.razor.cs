@@ -12,7 +12,7 @@ public partial class MarkQuestionCommentAsAnswer
         => string.Create(CultureInfo.InvariantCulture, $"MarkQuestionCommentAsAnswer_{QuestionComment?.Id}");
 
     private bool CanCurrentUserMarkAsAnswer => ApplicationState.CurrentUser?.UserId == QuestionComment?.Parent.UserId ||
-                                               ApplicationState.CurrentUser?.IsAdmin == true;
+                                               ApplicationState.IsCurrentUserAdmin;
 
     private bool IsThisCommentAnswer => QuestionComment?.IsAnswer == true;
 

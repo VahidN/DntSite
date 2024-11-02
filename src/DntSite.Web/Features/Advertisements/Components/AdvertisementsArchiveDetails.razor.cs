@@ -4,7 +4,6 @@ using DntSite.Web.Features.Advertisements.RoutingConstants;
 using DntSite.Web.Features.Advertisements.Services.Contracts;
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.Posts.Models;
 
 namespace DntSite.Web.Features.Advertisements.Components;
@@ -36,7 +35,7 @@ public partial class AdvertisementsArchiveDetails
 
     [Parameter] public string? Slug { set; get; }
 
-    private bool CanUserDeleteThisPost => ApplicationState.CurrentUser?.IsAdmin == true;
+    private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
     private bool CanUserEditThisPost => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId,
         CurrentPost?.Audit.CreatedAt);
