@@ -25,7 +25,7 @@
                 <CellValueTemplate Context="record">
                     @if (ApplicationState.IsCurrentUserAdmin)
                     {
-                        <a href="@SearchesRoutingConstants.SearchedItemsDeleteBase/delete/@Uri.EscapeDataString(ProtectionProvider.Encrypt(record.SearchItem.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
+                        <a href="@SearchesRoutingConstants.SearchedItemsDeleteBase/@Uri.EscapeDataString(ProtectionProvider.Encrypt(record.SearchItem.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
                            data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"
                            class="btn btn-danger me-2 btn-sm">
                             حذف
