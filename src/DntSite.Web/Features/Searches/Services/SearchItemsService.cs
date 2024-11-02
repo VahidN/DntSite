@@ -92,6 +92,19 @@ public class SearchItemsService(
         await uow.SaveChangesAsync();
     }
 
+    public async Task RemoveSearchItemAsync(int id)
+    {
+        var item = await _searchItems.FindAsync(id);
+
+        if (item is null)
+        {
+            return;
+        }
+
+        item.IsDeleted = true;
+        await uow.SaveChangesAsync();
+    }
+
     private Task<SearchItem?> GetLastTryOfCurrentUserTodayAsync(string text)
     {
         var userId = currentUserService.GetCurrentUserId();

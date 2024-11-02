@@ -2,6 +2,7 @@
 @using DntSite.Web.Features.UserProfiles.Components
 @attribute [Route(SearchesRoutingConstants.SearchedItems)]
 @attribute [Route(SearchesRoutingConstants.SearchedItemsPageCurrentPage)]
+@attribute [Route(SearchesRoutingConstants.SearchedItemsDeleteDeleteId)]
 
 <DntSitePageTitle Group="آمار برنامه" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
@@ -22,6 +23,15 @@
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
+                    @if (IsCurrentUserAdmin)
+                    {
+                        <a href="@SearchesRoutingConstants.SearchedItemsDeleteBase/delete/@Uri.EscapeDataString(ProtectionProvider.Encrypt(record.SearchItem.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
+                           data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"
+                           class="btn btn-danger me-2 btn-sm">
+                            حذف
+                        </a>
+                    }
+
                     <button class="btn btn-light btn-sm" type="button" data-dnt-search-text="@record.SearchItem.Text">
                         <span class="@DntBootstrapIcons.BiSearch text-muted" role="img"></span>
                     </button>

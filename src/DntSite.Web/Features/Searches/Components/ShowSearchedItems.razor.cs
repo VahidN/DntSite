@@ -16,16 +16,30 @@ public partial class ShowSearchedItems
 
     [InjectComponentScoped] internal ISearchItemsService SearchItemsService { set; get; } = null!;
 
+    [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
+
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [Parameter] public int? CurrentPage { set; get; }
+
+    [Parameter] public string? DeleteId { set; get; }
 
     private bool IsCurrentUserAdmin => ApplicationState.CurrentUser?.IsAdmin == true;
 
     protected override async Task OnInitializedAsync()
     {
+        await TryDeleteItemAsync();
         await ShowResultsAsync();
         AddBreadCrumbs();
+    }
+
+    private async Task TryDeleteItemAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(DeleteId) && IsCurrentUserAdmin)
+        {
+            ApplicationState.DoNotLogPageReferrer = true;
+            await SearchItemsService.RemoveSearchItemAsync(DeleteId.ToInt());
+        }
     }
 
     private async Task ShowResultsAsync()

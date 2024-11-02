@@ -8,6 +8,8 @@ public interface ISearchItemsService : IScopedService
 {
     Task<SearchItem?> AddSearchItemAsync(string? text);
 
+    Task RemoveSearchItemAsync(int id);
+
     Task<PagedResultModel<SearchItemModel>> GetPagedSearchItemsAsync(int pageNumber,
         int recordsPerPage,
         bool showDeletedItems = false);
