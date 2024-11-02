@@ -31,7 +31,7 @@ public static class SchedulersConfig
                 => GetNowIranTime(utcNow) is { DayOfWeek: DayOfWeek.Monday, Hour: 1, Minute: 1, Second: 1 });
 
             options.AddScheduledTask<SendActivationEmailsJob>(utcNow
-                => GetNowIranTime(utcNow) is { DayOfWeek: DayOfWeek.Friday, Hour: 7, Minute: 1, Second: 1 });
+                => GetNowIranTime(utcNow) is { Hour: 7, Minute: 1, Second: 1 });
 
             options.AddScheduledTask<DisableInactiveUsersJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 6, Minute: 1, Second: 1 });
