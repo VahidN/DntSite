@@ -11,4 +11,6 @@ public interface IQuestionsEmailsService : IScopedService
     Task PostQuestionCommentsReplySendEmailToWritersAsync(StackExchangeQuestionComment comment);
 
     Task PostQuestionCommentsReplySendEmailToPersonAsync(StackExchangeQuestionComment comment);
+
+    Task QuestionCommentIsApprovedSendEmailToWritersAsync(StackExchangeQuestionComment? comment);
 }

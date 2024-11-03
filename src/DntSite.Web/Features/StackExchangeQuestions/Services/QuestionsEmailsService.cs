@@ -169,6 +169,43 @@ public class QuestionsEmailsService(ICommonService commonService, IEmailsFactory
             }, post.UserId, $"پاسخ به : {post.Title}");
     }
 
+    public async Task QuestionCommentIsApprovedSendEmailToWritersAsync(StackExchangeQuestionComment? comment)
+    {
+        if (comment is null)
+        {
+            return;
+        }
+
+        if (comment.IsDeleted)
+        {
+            return;
+        }
+
+        var post = comment.Parent;
+
+        if (post is null)
+        {
+            return;
+        }
+
+        if (comment.UserId.HasValue && IsPostCommentatorAuthorOfPost(comment, post))
+        {
+            return; //don't send emails to me again.
+        }
+
+        await emailsFactoryService.SendEmailToIdAsync<QuestionsReplyIsApprovedEmail, QuestionsReplyToWritersEmailModel>(
+            string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/CId/{comment.Id}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"StackExchangeQuestion/CId/{comment.Id}"),
+            new QuestionsReplyToWritersEmailModel
+            {
+                Title = post.Title,
+                Username = comment.GuestUser.UserName,
+                Body = comment.Body,
+                PmId = comment.ParentId.ToString(CultureInfo.InvariantCulture),
+                CommentId = comment.Id.ToString(CultureInfo.InvariantCulture)
+            }, comment.UserId, $"پاسخ شما به «{post.Title}» پذیرفته شد!");
+    }
+
     private static bool IsQuestionCommentAnonymousUser(StackExchangeQuestionComment replyToComment)
         => replyToComment.UserId is null;
 

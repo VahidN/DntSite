@@ -36,7 +36,10 @@ public partial class MarkQuestionCommentAsAnswer
         switch (AnswerReaction)
         {
             case MarkAsAnswerAction.ThumbsUp:
-                await QuestionsCommentsService.MarkQuestionCommentAsAnswerAsync(QuestionComment, isAnswer: true);
+                var comment =
+                    await QuestionsCommentsService.MarkQuestionCommentAsAnswerAsync(QuestionComment, isAnswer: true);
+
+                await QuestionsCommentsService.NotifyQuestionCommentIsApprovedAsync(comment);
 
                 break;
             case MarkAsAnswerAction.Cancel:

@@ -40,7 +40,10 @@ public interface IQuestionsCommentsService : IScopedService
         int currentUserUserId,
         bool userIsRestricted);
 
-    Task MarkQuestionCommentAsAnswerAsync(StackExchangeQuestionComment? questionComment, bool isAnswer);
+    Task<StackExchangeQuestionComment?> MarkQuestionCommentAsAnswerAsync(StackExchangeQuestionComment? questionComment,
+        bool isAnswer);
+
+    Task NotifyQuestionCommentIsApprovedAsync(StackExchangeQuestionComment? comment);
 
     Task IndexStackExchangeQuestionCommentsAsync();
 }

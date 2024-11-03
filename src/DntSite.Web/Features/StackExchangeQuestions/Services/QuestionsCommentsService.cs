@@ -168,25 +168,32 @@ public class QuestionsCommentsService(
     public StackExchangeQuestionComment AddStackExchangeQuestionComment(StackExchangeQuestionComment comment)
         => _questionComments.Add(comment).Entity;
 
-    public async Task MarkQuestionCommentAsAnswerAsync(StackExchangeQuestionComment? questionComment, bool isAnswer)
+    public async Task<StackExchangeQuestionComment?> MarkQuestionCommentAsAnswerAsync(
+        StackExchangeQuestionComment? questionComment,
+        bool isAnswer)
     {
         if (questionComment is null)
         {
-            return;
+            return null;
         }
 
         var comment = await FindStackExchangeQuestionCommentIncludeParentAsync(questionComment.Id);
 
         if (comment is null)
         {
-            return;
+            return null;
         }
 
         comment.IsAnswer = isAnswer;
         comment.Parent.IsAnswered = isAnswer;
 
         await uow.SaveChangesAsync();
+
+        return comment;
     }
+
+    public Task NotifyQuestionCommentIsApprovedAsync(StackExchangeQuestionComment? comment)
+        => questionsEmailsService.QuestionCommentIsApprovedSendEmailToWritersAsync(comment);
 
     public async Task IndexStackExchangeQuestionCommentsAsync()
     {
