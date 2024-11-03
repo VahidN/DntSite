@@ -5,14 +5,6 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 /// </summary>
 public partial class DntBreadCrumb
 {
-    private string? _currentRelativeUrl;
-    private BreadCrumb? _lastBreadCrumbItem;
-
-    private IEnumerable<BreadCrumb>? BreadCrumbsToShow => BreadCrumbs
-        ?.Where(breadCrumb => !string.IsNullOrWhiteSpace(breadCrumb.Title) && IsBreadCrumbVisible(breadCrumb))
-        .OrderBy(breadCrumb => breadCrumb.Order)
-        .DistinctBy(breadCrumb => breadCrumb.Url);
-
     [CascadingParameter] internal HttpContext? HttpContext { set; get; }
 
     [Inject] internal NavigationManager NavigationManager { set; get; } = null!;
@@ -54,45 +46,85 @@ public partial class DntBreadCrumb
     [Parameter]
     public string ActiveItemFontWeightClass { set; get; } = "fw-bold";
 
-    protected override void OnInitialized()
+    private List<BreadCrumb>? GetBreadCrumbs()
     {
-        base.OnInitialized();
+        if (BreadCrumbs is null)
+        {
+            return null;
+        }
 
-        _currentRelativeUrl = "/".CombineUrl(NavigationManager.ToBaseRelativePath(NavigationManager.Uri),
+        var visibleItems = BreadCrumbs
+            .Where(breadCrumb => !string.IsNullOrWhiteSpace(breadCrumb.Title) && IsBreadCrumbVisible(breadCrumb))
+            .OrderBy(breadCrumb => breadCrumb.Order)
+            .DistinctBy(breadCrumb => breadCrumb.Url)
+            .ToList();
+
+        SetFontWeightClass(visibleItems);
+        SetActiveClass(visibleItems);
+
+        return visibleItems;
+    }
+
+    private void SetActiveClass(List<BreadCrumb> visibleItems)
+    {
+        var lastBreadCrumbItem = BreadCrumbs is not null && BreadCrumbs.Count > 0 ? BreadCrumbs[^1] : null;
+
+        foreach (var item in visibleItems)
+        {
+            if (lastBreadCrumbItem is not null && lastBreadCrumbItem == item && MakeLastItemActive)
+            {
+                item.ActiveClass = "active";
+
+                continue;
+            }
+
+            item.ActiveClass = item.IsActive ? "active" : "";
+        }
+    }
+
+    private void SetFontWeightClass(List<BreadCrumb> visibleItems)
+    {
+        var currentRelativeUrl = "/".CombineUrl(NavigationManager.ToBaseRelativePath(NavigationManager.Uri),
             escapeRelativeUrl: false);
-    }
 
-    /// <summary>
-    ///     Method invoked when the component has received parameters from its parent
-    /// </summary>
-    protected override void OnParametersSet()
-    {
-        if (BreadCrumbs is not null && BreadCrumbs.Count > 0)
+        if (currentRelativeUrl.IsEmpty())
         {
-            _lastBreadCrumbItem = BreadCrumbs[^1];
-        }
-    }
-
-    private string GetActiveClass(BreadCrumb item)
-    {
-        if (_lastBreadCrumbItem is not null && _lastBreadCrumbItem == item && MakeLastItemActive)
-        {
-            return "active";
+            return;
         }
 
-        return item.IsActive ? "active" : "";
-    }
-
-    private string GetFontWeight(BreadCrumb item)
-    {
-        if (_currentRelativeUrl.IsEmpty() || item.Url.IsEmpty())
+        foreach (var item in visibleItems)
         {
-            return "";
+            item.FontWeightClass = "";
         }
 
-        return string.Equals(item.Url, _currentRelativeUrl, StringComparison.OrdinalIgnoreCase)
-            ? ActiveItemFontWeightClass
-            : "";
+        var currentRelativeUrlSegments =
+            currentRelativeUrl.Split(separator: '/', StringSplitOptions.RemoveEmptyEntries);
+
+        Dictionary<BreadCrumb, int> matchedMap = [];
+
+        foreach (var item in visibleItems.Where(item => !item.Url.IsEmpty()))
+        {
+            if (string.Equals(item.Url, currentRelativeUrl, StringComparison.OrdinalIgnoreCase))
+            {
+                item.FontWeightClass = ActiveItemFontWeightClass;
+
+                return;
+            }
+
+            var itemUrlSegments = item.Url.Split(separator: '/', StringSplitOptions.RemoveEmptyEntries);
+
+            var matchedSegmentsCount = itemUrlSegments.Count(itemUrlSegment
+                => currentRelativeUrlSegments.Contains(itemUrlSegment, StringComparer.OrdinalIgnoreCase));
+
+            matchedMap[item] = matchedSegmentsCount;
+        }
+
+        var itemWithMaxMatchedSegments = matchedMap.MaxBy(x => x.Value);
+
+        if (itemWithMaxMatchedSegments.Value > 0)
+        {
+            itemWithMaxMatchedSegments.Key.FontWeightClass = ActiveItemFontWeightClass;
+        }
     }
 
     private bool IsBreadCrumbVisible(BreadCrumb? breadCrumb)

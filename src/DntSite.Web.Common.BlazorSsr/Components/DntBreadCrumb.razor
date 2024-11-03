@@ -1,19 +1,21 @@
-@if (BreadCrumbs is { Count: > 0 } && BreadCrumbsToShow is not null)
+@{
+    var visibleBreadCrumbs = GetBreadCrumbs();
+}
+@if (visibleBreadCrumbs is { Count: > 0 })
 {
     <nav style="--bs-breadcrumb-divider: '@BreadCrumbDivider';" aria-label="breadcrumb" @attributes="@AdditionalAttributes"
          class="mt-@Margin card shadow-sm">
         <ol class="breadcrumb pt-@Margin ps-@Margin">
-            @foreach (var item in BreadCrumbsToShow)
+            @foreach (var item in visibleBreadCrumbs)
             {
-                var activeClass = GetActiveClass(item);
-                <li class='breadcrumb-item @activeClass'>
+                <li class='breadcrumb-item @item.ActiveClass'>
                     @if (!string.IsNullOrWhiteSpace(item.GlyphIcon))
                     {
                         <span class='@item.GlyphIcon me-2' aria-hidden='true'></span>
                     }
-                    @if (string.IsNullOrWhiteSpace(activeClass))
+                    @if (string.IsNullOrWhiteSpace(item.ActiveClass))
                     {
-                        <a href="@item.Url" class="text-decoration-none @GetFontWeight(item)">@item.Title</a>
+                        <a href="@item.Url" class="text-decoration-none @item.FontWeightClass">@item.Title</a>
                     }
                     else
                     {

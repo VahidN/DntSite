@@ -48,6 +48,13 @@ public class BreadCrumb : IEqualityComparer<BreadCrumb>
     /// </summary>
     public IReadOnlyList<Claim>? AllowedClaims { set; get; }
 
+    /// <summary>
+    ///     FontWeightClass of the current item
+    /// </summary>
+    internal string? FontWeightClass { set; get; }
+
+    internal string? ActiveClass { set; get; }
+
     public bool Equals(BreadCrumb? x, BreadCrumb? y)
     {
         if (ReferenceEquals(x, y))
