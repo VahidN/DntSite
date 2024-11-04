@@ -1,6 +1,12 @@
 namespace DntBlazorSsr {
     export class DntSyntaxHighlighter {
         static enable(): void {
+            // @ts-ignore
+            if (typeof hljs === 'undefined') {
+                console.error('Please include the `highlightjs/cdn-assets/highlight.min.js` file first!');
+                return;
+            }
+
             document.querySelectorAll('pre').forEach((element) => {
                 let language = element.getAttribute("language") || element.getAttribute("data-language");
                 if (!language) {
@@ -74,7 +80,7 @@ namespace DntBlazorSsr {
             });
 
             // @ts-ignore
-            hljs?.highlightAll();
+            hljs.highlightAll();
         }
     }
 }

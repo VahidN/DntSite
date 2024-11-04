@@ -391,7 +391,11 @@ var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntHljsCopyToClipboardPlugin {
         static enable() {
-            hljs?.addPlugin({
+            if (typeof hljs === 'undefined') {
+                console.error('Please include the `highlightjs/cdn-assets/highlight.min.js` file first!');
+                return;
+            }
+            hljs.addPlugin({
                 "after:highlightElement": ({ el, text }) => {
                     const wrapper = el.parentElement;
                     if (!wrapper) {
@@ -642,6 +646,10 @@ var DntBlazorSsr;
             }
         }
         static enable() {
+            if (typeof Quill === 'undefined') {
+                console.error('Please include the `quill/dist/quill.js` file first!');
+                return;
+            }
             const dntHtmlEditorIdentifier = 'data-dnt-html-editor';
             document.querySelectorAll(`[${dntHtmlEditorIdentifier}]`).forEach(outerDivElement => {
                 let dntHtmlEditor = DntHtmlEditor;
@@ -1495,6 +1503,10 @@ var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntSyntaxHighlighter {
         static enable() {
+            if (typeof hljs === 'undefined') {
+                console.error('Please include the `highlightjs/cdn-assets/highlight.min.js` file first!');
+                return;
+            }
             document.querySelectorAll('pre').forEach((element) => {
                 let language = element.getAttribute("language") || element.getAttribute("data-language");
                 if (!language) {
@@ -1563,7 +1575,7 @@ var DntBlazorSsr;
                     element.innerHTML = preHtml;
                 }
             });
-            hljs?.highlightAll();
+            hljs.highlightAll();
         }
     }
     DntBlazorSsr.DntSyntaxHighlighter = DntSyntaxHighlighter;
@@ -1685,8 +1697,13 @@ var DntBlazorSsr;
     'use strict';
     DntBlazorSsr.DntUtilities.enable();
     window.addEventListener('DOMContentLoaded', () => {
-        Blazor?.addEventListener('enhancedload', () => {
-            DntBlazorSsr.DntUtilities.enable();
-        });
+        if (typeof Blazor !== 'undefined') {
+            Blazor.addEventListener('enhancedload', () => {
+                DntBlazorSsr.DntUtilities.enable();
+            });
+        }
+        else {
+            console.error('Please include the `_framework/blazor.web.js` file first!');
+        }
     });
 })();

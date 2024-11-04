@@ -2,7 +2,13 @@ namespace DntBlazorSsr {
     export class DntHljsCopyToClipboardPlugin {
         static enable(): void {
             // @ts-ignore
-            hljs?.addPlugin({
+            if (typeof hljs === 'undefined') {
+                console.error('Please include the `highlightjs/cdn-assets/highlight.min.js` file first!');
+                return;
+            }
+
+            // @ts-ignore
+            hljs.addPlugin({
                 // @ts-ignore
                 "after:highlightElement": ({el, text}) => {
                     const wrapper = el.parentElement;

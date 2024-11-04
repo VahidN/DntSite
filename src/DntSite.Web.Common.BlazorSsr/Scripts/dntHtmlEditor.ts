@@ -253,6 +253,12 @@ namespace DntBlazorSsr {
         }
 
         static enable() {
+            // @ts-ignore
+            if (typeof Quill === 'undefined') {
+                console.error('Please include the `quill/dist/quill.js` file first!');
+                return;
+            }
+
             const dntHtmlEditorIdentifier = 'data-dnt-html-editor';
             document.querySelectorAll<HTMLElement>(`[${dntHtmlEditorIdentifier}]`).forEach(outerDivElement => {
                 let dntHtmlEditor = DntHtmlEditor;

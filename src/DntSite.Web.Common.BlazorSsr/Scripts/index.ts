@@ -5,8 +5,13 @@
 
     window.addEventListener('DOMContentLoaded', () => {
         // @ts-ignore
-        Blazor?.addEventListener('enhancedload', () => {
-            DntBlazorSsr.DntUtilities.enable();
-        });
+        if (typeof Blazor !== 'undefined') {
+            // @ts-ignore
+            Blazor.addEventListener('enhancedload', () => {
+                DntBlazorSsr.DntUtilities.enable();
+            });
+        } else {
+            console.error('Please include the `_framework/blazor.web.js` file first!');
+        }
     });
 })();
