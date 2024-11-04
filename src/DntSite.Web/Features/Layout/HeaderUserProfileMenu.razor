@@ -1,14 +1,14 @@
 @using DntSite.Web.Features.UserProfiles.Components
 <DntNavLinkMenu>
     <MainTitle>
-        <PrintUser User="ApplicationState.CurrentUser?.User" ShowAsUrl="@false"/>
+        <PrintUser User="_currentUser?.User" ShowAsUrl="@false"/>
         <DntBadge BadgeValue="_unreadPrivateMessagesCount"
                   Title="پیام‌های خوانده نشده"
                   BadgeValueBgColor="TextBgColor.Danger"
                   IsBadgeValueVisible="@(_unreadPrivateMessagesCount > 0)"/>
     </MainTitle>
     <MenuItems>
-        <DntNavLinkMenuItem Url="@ApplicationState.CurrentUser?.ProfileUrl" CssIcon="@DntBootstrapIcons.BiPerson">
+        <DntNavLinkMenuItem Url="@_currentUser?.ProfileUrl" CssIcon="@DntBootstrapIcons.BiPerson">
             مشخصات من
         </DntNavLinkMenuItem>
         <DntNavLinkMenuItem IsDivider="@true"></DntNavLinkMenuItem>

@@ -1,10 +1,12 @@
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.PrivateMessages.Services.Contracts;
+using DntSite.Web.Features.UserProfiles.Models;
 
 namespace DntSite.Web.Features.Layout;
 
 public partial class HeaderUserProfileMenu
 {
+    private CurrentUserModel? _currentUser;
     private int _unreadPrivateMessagesCount;
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
@@ -12,9 +14,13 @@ public partial class HeaderUserProfileMenu
     [InjectComponentScoped] internal IPrivateMessagesService PrivateMessagesService { set; get; } = null!;
 
     private string GetUserUrl(string baseHref)
-        => $"{baseHref}/{Uri.EscapeDataString(ApplicationState.CurrentUser?.User?.FriendlyName ?? "")}";
+        => $"{baseHref}/{Uri.EscapeDataString(_currentUser?.User?.FriendlyName ?? "")}";
 
     protected override async Task OnInitializedAsync()
-        => _unreadPrivateMessagesCount =
-            await PrivateMessagesService.GetUserUnReadPrivateMessagesCountAsync(ApplicationState.CurrentUser?.UserId);
+    {
+        _currentUser = ApplicationState.CurrentUser;
+
+        _unreadPrivateMessagesCount =
+            await PrivateMessagesService.GetUserUnReadPrivateMessagesCountAsync(_currentUser?.UserId);
+    }
 }
