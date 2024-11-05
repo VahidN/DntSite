@@ -371,6 +371,10 @@ public class UserProfilesManagerService(
 
             await usersManagerEmailsService.SendActivateYourAccountEmailAsync(user);
         }
+        else
+        {
+            await usersManagerEmailsService.SendUserActivatedEmailAsync(user.UserName, user.EMail);
+        }
     }
 
     public async Task<OperationResult> RegisterUserAsync(RegisterModel? model,

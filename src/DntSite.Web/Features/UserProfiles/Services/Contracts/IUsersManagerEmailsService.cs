@@ -7,6 +7,8 @@ public interface IUsersManagerEmailsService : IScopedService
 {
     Task ResetNotActivatedUsersAndSendEmailAsync(DateTime? from);
 
+    Task SendUserActivatedEmailAsync(string userName, string email);
+
     Task SendActivateYourAccountEmailAsync(User userInfo);
 
     Task SendForgottenPasswordConfirmEmailAsync(User userInfo);

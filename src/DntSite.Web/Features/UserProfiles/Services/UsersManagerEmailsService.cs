@@ -152,4 +152,12 @@ public class UsersManagerEmailsService(
                 Operation = message
             }, emailSubject: "تغییر مشخصات حساب کاربری توسط مدیر");
     }
+
+    public Task SendUserActivatedEmailAsync(string userName, string email)
+        => emailsFactoryService.SendEmailAsync<UserActivatedEmail, ActivatedAccountModel>(
+            string.Create(CultureInfo.InvariantCulture, $"UserProfile/{userName}"), inReplyTo: "",
+            string.Create(CultureInfo.InvariantCulture, $"UserProfile/{userName}"), new ActivatedAccountModel
+            {
+                Username = userName
+            }, email, emailSubject: "اکانت شما فعال گردید", addIp: false);
 }
