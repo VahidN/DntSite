@@ -35,7 +35,7 @@ public partial class CoursesArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
-        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
+        await SearchItemsService.SaveSearchItemAsync(gridifyFilter);
         await ShowCoursesAsync(gridifyFilter);
         StateHasChanged();
     }

@@ -36,7 +36,7 @@ public partial class AdvertisementsArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
-        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
+        await SearchItemsService.SaveSearchItemAsync(gridifyFilter);
         await ShowAdvertisementsAsync(gridifyFilter);
         StateHasChanged();
     }

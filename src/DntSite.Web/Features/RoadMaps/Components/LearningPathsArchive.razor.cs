@@ -35,7 +35,7 @@ public partial class LearningPathsArchive
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
-        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
+        await SearchItemsService.SaveSearchItemAsync(gridifyFilter);
         await ShowLearningPathsAsync(gridifyFilter);
         StateHasChanged();
     }

@@ -64,7 +64,7 @@ public partial class UserInfo
 
     private async Task DoSearchAsync(string gridifyFilter)
     {
-        await SearchItemsService.AddSearchItemAsync(gridifyFilter);
+        await SearchItemsService.SaveSearchItemAsync(gridifyFilter);
 
         ApplicationState.NavigateTo(
             $"{UserProfilesRoutingConstants.UsersFilterBase}/{Uri.EscapeDataString(gridifyFilter ?? "*")}/page/1");

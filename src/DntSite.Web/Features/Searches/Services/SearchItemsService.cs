@@ -20,18 +20,18 @@ public class SearchItemsService(
 {
     private readonly DbSet<SearchItem> _searchItems = uow.DbSet<SearchItem>();
 
-    public async Task<SearchItem?> AddSearchItemAsync(string? text)
+    public async Task SaveSearchItemAsync(string? text)
     {
-        if (await currentUserService.IsCurrentUserSpiderAsync())
-        {
-            return null;
-        }
-
         text = text?.Trim();
 
         if (string.IsNullOrWhiteSpace(text))
         {
-            return null;
+            return;
+        }
+
+        if (await IgnoreSearchItemOfCurrentUserAsync())
+        {
+            return;
         }
 
         using var @lock = await lockerService.LockAsync<SearchItemsService>();
@@ -42,18 +42,15 @@ public class SearchItemsService(
 
         if (lastTryOfCurrentUserToday is not null)
         {
-            return lastTryOfCurrentUserToday;
+            return;
         }
 
-        var result = _searchItems.Add(new SearchItem
-            {
-                Text = sanitizedHtml
-            })
-            .Entity;
+        _searchItems.Add(new SearchItem
+        {
+            Text = sanitizedHtml
+        });
 
         await uow.SaveChangesAsync();
-
-        return result;
     }
 
     public async Task<PagedResultModel<SearchItemModel>> GetPagedSearchItemsAsync(int pageNumber,
@@ -107,6 +104,9 @@ public class SearchItemsService(
 
         logger.LogWarning(message: "Deleted a SearchItem record with Id={Id} and Text={Text}", item.Id, item.Text);
     }
+
+    private async Task<bool> IgnoreSearchItemOfCurrentUserAsync()
+        => await currentUserService.IsCurrentUserSpiderAsync() || await currentUserService.IsCurrentUserAdminAsync();
 
     private Task<SearchItem?> GetLastTryOfCurrentUserTodayAsync(string text)
     {

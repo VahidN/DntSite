@@ -54,7 +54,7 @@ public partial class ShowMoreSearchResults
             return;
         }
 
-        await SearchItemsService.AddSearchItemAsync(Term);
+        await SearchItemsService.SaveSearchItemAsync(Term);
 
         _posts = await IndexedDataExplorerService.FindAllPagedIndexedDataAsync(Term.Trim(), MaxItems, CurrentPage.Value,
             ItemsPerPage);

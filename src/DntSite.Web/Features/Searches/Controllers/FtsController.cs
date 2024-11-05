@@ -55,7 +55,7 @@ public class FtsController(IFullTextSearchService fullTextSearchService, ISearch
             return BadRequest();
         }
 
-        await searchItemsService.AddSearchItemAsync(searchValue);
+        await searchItemsService.SaveSearchItemAsync(searchValue);
 
         return Ok();
     }
