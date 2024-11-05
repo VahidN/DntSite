@@ -6,20 +6,12 @@ namespace DntSite.Web.Features.Layout;
 
 public partial class MainHeaderMenu
 {
-    private string? _loginUrl;
-    private string? _siteName;
+    private string LoginUrl
+        => $"{UserProfilesRoutingConstants.Login}?returnUrl={Uri.EscapeDataString(ApplicationState.CurrentAbsoluteUri.ToString())}";
+
+    private string? SiteName => ApplicationState.AppSetting?.BlogName;
 
     [Inject] internal IFullTextSearchService FullTextSearchService { set; get; } = null!;
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        _siteName = ApplicationState.AppSetting?.BlogName;
-
-        _loginUrl =
-            $"{UserProfilesRoutingConstants.Login}?returnUrl={Uri.EscapeDataString(ApplicationState.CurrentAbsoluteUri.ToString())}";
-    }
 }

@@ -10,7 +10,7 @@
                                ExpiresAfter="TimeSpan.FromMinutes(value: 5)"/>
         </div>
         <div id="main" class="col-md-10 bg-body-tertiary">
-            <DntBreadCrumb BreadCrumbs="_breadCrumbs"/>
+            <DntBreadCrumb BreadCrumbs="ApplicationState.BreadCrumbs"/>
             <div class="mt-4 mb-3 container-fluid">
                 @Body
             </div>
@@ -19,7 +19,7 @@
     <div id="footer" class="row">
         <DntCacheComponent TComponent="FooterMenu"
                            CacheKey="footer-menu-1"
-                           Parameters="_footerMenuParameters"
+                           Parameters="FooterMenuParameters"
                            ExpiresAfter="TimeSpan.FromMinutes(value: 5)"/>
     </div>
 </div>

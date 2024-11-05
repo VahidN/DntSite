@@ -4,13 +4,13 @@
         <ul class="navbar-nav align-items-center">
             <AuthorizeView>
                 <Authorized>
-                    <HeaderUserProfileMenu/>
+                    <HeaderUserProfileMenu CurrentUser="ApplicationState.CurrentUser"/>
                     <HeaderUserOptionsMenu/>
                     <HeaderAdminMenu/>
                 </Authorized>
                 <NotAuthorized>
                     <li class="nav-item">
-                        <NavLink class="nav-link" href="@_loginUrl">
+                        <NavLink class="nav-link" href="@LoginUrl">
                             <span class="@DntBootstrapIcons.BiDoorOpen" aria-hidden="true"></span> ورود
                         </NavLink>
                     </li>
@@ -31,8 +31,8 @@
                href="https://github.com/VahidN/DntSite">
                 <span class="@DntBootstrapIcons.BiGithub"></span>
             </a>
-            <a dir="@_siteName.GetDir()" class="navbar-brand mb-0 h1 ms-0" href="/">
-                @_siteName
+            <a dir="@SiteName.GetDir()" class="navbar-brand mb-0 h1 ms-0" href="/">
+                @SiteName
             </a>
         </div>
     </nav>
