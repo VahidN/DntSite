@@ -53,7 +53,6 @@ public partial class RecalculatePostsCount
 
             case RecalculatePostsCountAction.DeleteAllSiteReferrers:
                 await SiteReferrersService.DeleteAllAsync();
-                await SiteUrlsService.DeleteAllAsync();
 
                 break;
 

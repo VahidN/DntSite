@@ -34,6 +34,8 @@ public partial class ShowMoreLikeThisSearchResults
 
     protected override async Task OnInitializedAsync()
     {
+        ApplicationState.DoNotLogPageReferrer = true;
+
         if (FullTextSearchService.IsDatabaseIndexed)
         {
             await ShowSearchResultsAsync();
@@ -48,7 +50,6 @@ public partial class ShowMoreLikeThisSearchResults
 
         if (string.IsNullOrWhiteSpace(DocumentTypeIdHash) || CurrentPage.Value > MaxPageNumber)
         {
-            ApplicationState.DoNotLogPageReferrer = true;
             ApplicationState.NavigateToNotFoundPage();
 
             return;

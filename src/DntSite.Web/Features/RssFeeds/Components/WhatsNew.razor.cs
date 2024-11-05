@@ -23,6 +23,8 @@ public partial class WhatsNew
 
     protected override async Task OnInitializedAsync()
     {
+        ApplicationState.DoNotLogPageReferrer = true;
+
         AddBreadCrumbs();
 
         if (FullTextSearchService.IsDatabaseIndexed)

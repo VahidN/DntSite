@@ -26,6 +26,8 @@ public partial class ShowSearchedItems
 
     protected override async Task OnInitializedAsync()
     {
+        ApplicationState.DoNotLogPageReferrer = true;
+
         await TryDeleteItemAsync();
         await ShowResultsAsync();
         AddBreadCrumbs();
