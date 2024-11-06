@@ -49,6 +49,7 @@ public static class ServicesRegistry
     {
         services.AddOptions<StartupSettingsModel>().Bind(configuration);
         services.Configure<AntiXssConfig>(options => configuration.GetSection(key: "AntiXssConfig").Bind(options));
+        services.Configure<AntiDosConfig>(options => configuration.GetSection(key: "AntiDosConfig").Bind(options));
     }
 
     private static void ScanAllServices(this IServiceCollection services)

@@ -51,6 +51,8 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
 
     app.UseExceptionHandler(errorHandlingPath: "/Error", createScopeForErrors: true);
 
+    app.UseAntiDos();
+
     app.UseCsp(env, enableCrossOriginPolicy: false);
 
     if (!env.IsDevelopment())
