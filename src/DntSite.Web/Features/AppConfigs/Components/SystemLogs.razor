@@ -61,7 +61,7 @@
                         <div class="badge bg-success" dir="ltr">@item.UserIp</div>
                         <div class="badge bg-secondary">@item.CreatedAt.ToFriendlyPersianDateTextify()</div>
                         <div class="mt-3">
-                            @item.Message.HtmlRaw()
+                            @item.Message.HtmlRaw(wrapInSpanWithDir: true)
                         </div>
                     </div>
                     </Body>

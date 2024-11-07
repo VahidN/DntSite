@@ -12,14 +12,14 @@
                     <span aria-hidden="true" class="@DntBootstrapIcons.BiCardChecklist"></span>
                     پیشنیاز‌های دوره
                 </h5>
-                <span>@Course!.Requirements.HtmlRaw()</span>
+                <span>@Course!.Requirements.HtmlRaw(wrapInSpanWithDir: true)</span>
             </div>
             <div class="col-md-6">
                 <h5>
                     <span aria-hidden="true" class="@DntBootstrapIcons.BiPass"></span>
                     سطح دوره
                 </h5>
-                <span>@Course.TopicsList.HtmlRaw()</span>
+                <span>@Course.TopicsList.HtmlRaw(wrapInSpanWithDir: true)</span>
             </div>
         </div>
         <div class="row mt-3">

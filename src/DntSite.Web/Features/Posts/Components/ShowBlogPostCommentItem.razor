@@ -46,7 +46,7 @@
     </Header>
     <Body>
     <div class="main" data-enhance-nav="false">
-        @Body.HtmlRaw()
+        @Body.HtmlRaw(wrapInSpanWithDir: true)
         @if (AdditionalBodyContent is not null)
         {
             @AdditionalBodyContent

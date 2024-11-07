@@ -31,11 +31,11 @@
         {
             if (!TextToShow.ContainsFarsi())
             {
-                <div align="left" dir="ltr">@TextToShow.HtmlRaw()</div>
+                <div align="left" dir="ltr">@TextToShow.HtmlRaw(wrapInSpanWithDir: true)</div>
             }
             else
             {
-                @TextToShow.HtmlRaw()
+                @TextToShow.HtmlRaw(wrapInSpanWithDir: true)
             }
         }
         @if (AdditionalBodyContent is not null)

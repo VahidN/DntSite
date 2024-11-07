@@ -13,7 +13,7 @@
                     <span class="@FieldIcon" role="img" aria-label="@LabelName"></span>
                 </div>
             }
-            @Value.HtmlRaw()
+            @Value.HtmlRaw(wrapInSpanWithDir: true)
         </div>
         @if (OptionalDescription is not null)
         {

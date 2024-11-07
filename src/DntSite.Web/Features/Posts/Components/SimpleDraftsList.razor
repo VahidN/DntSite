@@ -42,11 +42,11 @@
                             <div class="mt-4">
                                 @if (ShowBriefDescription)
                                 {
-                                    @item.Body.GetBriefDescription(charLength: 450).HtmlRaw()
+                                    @item.Body.GetBriefDescription(charLength: 450).HtmlRaw(wrapInSpanWithDir: true)
                                 }
                                 else
                                 {
-                                    @item.Body.HtmlRaw()
+                                    @item.Body.HtmlRaw(wrapInSpanWithDir: true)
                                 }
                             </div>
                         </div>

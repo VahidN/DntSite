@@ -1,6 +1,6 @@
 @using DntSite.Web.Features.PrivateMessages.Models
 <LayoutView Layout="@typeof(EmailsLayout)">
-    @Model.Body.HtmlRaw()
+    @Model.Body.HtmlRaw(wrapInSpanWithDir: true)
     <br/>
     <br/>
     با احترام<br/>
