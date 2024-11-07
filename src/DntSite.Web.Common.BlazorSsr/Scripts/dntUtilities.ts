@@ -2,6 +2,7 @@ namespace DntBlazorSsr {
     export class DntUtilities {
         static enable(): void {
             DntReportErrors.enable();
+            DntStyleSiteImages.enable();
             DntCardAccordion.enable();
             DntHljsCopyToClipboardPlugin.enable();
             DntAddActiveClassToLists.enable();

@@ -1484,6 +1484,19 @@ var DntBlazorSsr;
 })(DntBlazorSsr || (DntBlazorSsr = {}));
 var DntBlazorSsr;
 (function (DntBlazorSsr) {
+    class DntStyleSiteImages {
+        static enable() {
+            document.querySelectorAll('img').forEach(el => {
+                if (el.src && el.src.toLowerCase().includes("/file/")) {
+                    el.classList.add("rounded", "border", "shadow-sm", "border-secondary-subtle");
+                }
+            });
+        }
+    }
+    DntBlazorSsr.DntStyleSiteImages = DntStyleSiteImages;
+})(DntBlazorSsr || (DntBlazorSsr = {}));
+var DntBlazorSsr;
+(function (DntBlazorSsr) {
     class DntStyleValidationMessages {
         static enable() {
             const validationMessages = document.querySelectorAll("div.validation-message");
@@ -1585,6 +1598,7 @@ var DntBlazorSsr;
     class DntUtilities {
         static enable() {
             DntBlazorSsr.DntReportErrors.enable();
+            DntBlazorSsr.DntStyleSiteImages.enable();
             DntBlazorSsr.DntCardAccordion.enable();
             DntBlazorSsr.DntHljsCopyToClipboardPlugin.enable();
             DntBlazorSsr.DntAddActiveClassToLists.enable();
