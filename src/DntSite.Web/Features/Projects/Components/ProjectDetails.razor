@@ -28,7 +28,7 @@
                         <span aria-hidden="true" class="@DntBootstrapIcons.BiPuzzle"></span>
                         وابستگی‌های پروژه
                     </h5>
-                    <div class="editorText">@Project.RequiredDependencies.HtmlRaw(wrapInSpanWithDir: true)</div>
+                    <div class="editorText">@Project.RequiredDependencies.HtmlRaw()</div>
                 }
             </div>
         </div>
@@ -41,7 +41,7 @@
                         <span aria-hidden="true" class="@DntBootstrapIcons.BiFileText"></span>
                         مقالات و مطالب مرتبط
                     </h5>
-                    <div class="editorText">@Project.RelatedArticles.HtmlRaw(wrapInSpanWithDir: true)</div>
+                    <div class="editorText">@Project.RelatedArticles.HtmlRaw()</div>
                 }
             </div>
             <div class="col-md-6">
@@ -51,7 +51,7 @@
                         <span aria-hidden="true" class="@DntBootstrapIcons.BiPeople"></span>
                         همکاران
                     </h5>
-                    <div class="editorText">@Project.DevelopersDescription.HtmlRaw(wrapInSpanWithDir: true)</div>
+                    <div class="editorText">@Project.DevelopersDescription.HtmlRaw()</div>
                 }
             </div>
         </div>
@@ -61,7 +61,7 @@
                     <span aria-hidden="true" class="@DntBootstrapIcons.BiLock"></span>
                     نوع مجوز استفاده از پروژه
                 </h5>
-                <div class="editorText">@Project.License.HtmlRaw(wrapInSpanWithDir: true)</div>
+                <div class="editorText">@Project.License.HtmlRaw()</div>
             </div>
         </div>
     </div>

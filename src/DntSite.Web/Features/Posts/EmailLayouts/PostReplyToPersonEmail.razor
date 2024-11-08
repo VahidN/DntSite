@@ -11,7 +11,7 @@
     <div align="right" dir="rtl" style="font-family: Tahoma; ">
         <strong>نظر ارسالی شما:</strong>
         <br/>
-        @Model.ReplyToComment.HtmlRaw(wrapInSpanWithDir: true)
+        @Model.ReplyToComment.HtmlRaw()
         <br/>
         <br/>
         <strong>پاسخ دریافتی:</strong>
@@ -19,7 +19,7 @@
         <strong>نام فرستنده:</strong> @Model.Username
         <br/>
         <strong>نظر:</strong><br/>
-        @Model.Body.HtmlRaw(wrapInSpanWithDir: true)
+        @Model.Body.HtmlRaw()
         <br/>
     </div>
     <br/>
