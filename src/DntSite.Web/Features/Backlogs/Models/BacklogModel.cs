@@ -9,6 +9,7 @@ public class BacklogModel
 
     [Display(Name = "لیست منابع و مآخذ پیشنهادی، جهت تکمیل بحث")]
     [Required(ErrorMessage = "متن منابع خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     public string Description { set; get; } = default!;
 

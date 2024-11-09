@@ -4,6 +4,7 @@ public class ProjectPostFileModel
 {
     [Display(Name = "توضیحات")]
     [Required(ErrorMessage = "لطفا توضیحاتی را وارد کنید")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     public string Description { set; get; } = default!;
 
     public string? FileName { set; get; }

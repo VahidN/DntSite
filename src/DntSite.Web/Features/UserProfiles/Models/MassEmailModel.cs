@@ -9,6 +9,7 @@ public class MassEmailModel
 
     [Display(Name = "متن پیام")]
     [Required(ErrorMessage = "متن خبر خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     public string NewsBody { set; get; } = default!;
 

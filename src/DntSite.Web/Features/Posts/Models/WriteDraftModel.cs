@@ -9,6 +9,7 @@ public class WriteDraftModel
 
     [Display(Name = "مطلب")]
     [Required(ErrorMessage = "متن اصلی خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     [MinLength(100, ErrorMessage = "متن یک مطلب جدید حداقل 100 کاراکتر باید باشد")]
     [DataType(DataType.MultilineText)]

@@ -9,6 +9,7 @@ public class WriteAdvertisementModel
 
     [Display(Name = "متن آگهی")]
     [Required(ErrorMessage = "(*)")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     [MinLength(100, ErrorMessage = "متن یک مطلب جدید حداقل 100 کاراکتر باید باشد")]
     [DataType(DataType.MultilineText)]

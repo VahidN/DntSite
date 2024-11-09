@@ -18,6 +18,7 @@ public class ProjectModel
 
     [Display(Name = "توضیحات")]
     [Required(ErrorMessage = "توضیحات خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     [DataType(DataType.MultilineText)]
     public string DescriptionText { set; get; } = default!;
@@ -28,6 +29,7 @@ public class ProjectModel
 
     [Display(Name = "نوع مجوز استفاده از پروژه")]
     [Required(ErrorMessage = "مجوز خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     [DataType(DataType.MultilineText)]
     public string LicenseText { set; get; } = default!;

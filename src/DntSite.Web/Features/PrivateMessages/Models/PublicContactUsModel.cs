@@ -10,19 +10,21 @@ public class PublicContactUsModel : BaseCaptchaModel
 
     [Display(Name = "آدرس ایمیل")]
     [Required(ErrorMessage = "ایمیل خالی است")]
-    [RegularExpression(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
+    [RegularExpression(pattern: @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
         ErrorMessage = "لطفا آدرس ایمیل معتبری را وارد نمائید")]
-    [StringLength(450, ErrorMessage = "حداکثر طول ایمیل 450 حرف است.")]
+    [StringLength(maximumLength: 450, ErrorMessage = "حداکثر طول ایمیل 450 حرف است.")]
     [DataType(DataType.EmailAddress)]
     public string FromUserNameEmail { set; get; } = default!;
 
     [Display(Name = "عنوان")]
     [Required(ErrorMessage = "متن عنوان خالی است")]
-    [StringLength(450, MinimumLength = 1, ErrorMessage = "حداکثر طول عنوان پیام 450 حرف و حداقل آن 1 حرف می‌باشد")]
+    [StringLength(maximumLength: 450, MinimumLength = 1,
+        ErrorMessage = "حداکثر طول عنوان پیام 450 حرف و حداقل آن 1 حرف می‌باشد")]
     public string Title { set; get; } = default!;
 
     [Display(Name = "پیام")]
     [Required(ErrorMessage = "متن پیام خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     [DataType(DataType.MultilineText)]
     public string DescriptionText { set; get; } = default!;

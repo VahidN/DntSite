@@ -10,6 +10,7 @@ public class IssueModel
 
     [Display(Name = "توضیحات")]
     [Required(ErrorMessage = "توضیحات خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     [DataType(DataType.MultilineText)]
     public string Description { set; get; } = default!;

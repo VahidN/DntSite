@@ -18,6 +18,7 @@ public class DailyNewsItemModel
     [MaxLength]
     [DataType(DataType.MultilineText)]
     [Required(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MinLength(15, ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     public string DescriptionText { set; get; } = default!;
 

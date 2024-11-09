@@ -7,6 +7,7 @@ public class CourseTopicItemModel
     public string Title { set; get; } = default!;
 
     [Required(ErrorMessage = "لطفا متن را تکمیل کنید")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [Display(Name = "مقاله")]
     public string Body { set; get; } = default!;
 

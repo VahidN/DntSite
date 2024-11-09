@@ -6,11 +6,13 @@ public class CourseModel
 {
     [Display(Name = "عنوان دوره")]
     [Required(ErrorMessage = "متن عنوان خالی است")]
-    [StringLength(450, MinimumLength = 1, ErrorMessage = "حداکثر طول عنوان پیام 450 حرف و حداقل آن 1 حرف می‌باشد")]
+    [StringLength(maximumLength: 450, MinimumLength = 1,
+        ErrorMessage = "حداکثر طول عنوان پیام 450 حرف و حداقل آن 1 حرف می‌باشد")]
     public string Title { set; get; } = default!;
 
     [Display(Name = "چکیده مباحثی که مطرح خواهد شد")]
     [Required(ErrorMessage = "توضیحات خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     public string Description { set; get; } = default!;
 
@@ -21,6 +23,7 @@ public class CourseModel
 
     [Display(Name = "پیشنیازها")]
     [Required(ErrorMessage = "پیشنیازها خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     public string Requirements { set; get; } = default!;
 
@@ -42,6 +45,6 @@ public class CourseModel
 
     [Display(Name = "گروه(ها)")]
     [Required(ErrorMessage = "لطفا حداقل یک گروه را وارد نمائید.")]
-    [MinLength(1, ErrorMessage = "لطفا حداقل یک گروه را وارد کنید")]
+    [MinLength(length: 1, ErrorMessage = "لطفا حداقل یک گروه را وارد کنید")]
     public IList<string> Tags { set; get; } = new List<string>();
 }

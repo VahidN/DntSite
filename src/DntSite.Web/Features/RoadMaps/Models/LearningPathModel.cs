@@ -10,6 +10,7 @@ public class LearningPathModel
 
     [Display(Name = "مسیر راه (مجموعه‌ای از لینک‌های هم خانواده از سایت جاری)")]
     [Required(ErrorMessage = "متن مسیر راه خالی است")]
+    [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
     [MaxLength]
     public string Description { set; get; } = default!;
 
