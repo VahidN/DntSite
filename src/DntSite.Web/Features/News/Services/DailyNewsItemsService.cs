@@ -483,22 +483,30 @@ public class DailyNewsItemsService(
 
         foreach (var item in itemsNeedUpdate)
         {
-            try
+            for (var @try = 0; @try < 2; @try++)
             {
-                var url = item.Url;
-                item.LastHttpStatusCodeCheckDateTime = DateTime.UtcNow;
+                try
+                {
+                    var url = item.Url;
+                    item.LastHttpStatusCodeCheckDateTime = DateTime.UtcNow;
 
-                item.LastHttpStatusCode =
-                    await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, throwOnException: true);
+                    item.LastHttpStatusCode =
+                        await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, throwOnException: true);
 
-                item.IsDeleted = item.LastHttpStatusCode == HttpStatusCode.NotFound;
-            }
-            catch (Exception ex)
-            {
-                item.IsDeleted = ex.IsOutdatedUrl();
+                    item.IsDeleted = item.LastHttpStatusCode == HttpStatusCode.NotFound;
+                }
+                catch (Exception ex)
+                {
+                    item.IsDeleted = ex.IsOutdatedUrl();
 
-                logger.LogError(ex.Demystify(), message: "UpdateAllNewsLastHttpStatusCodeAsync({Id}, {Url}): ", item.Id,
-                    item.Url);
+                    logger.LogError(ex.Demystify(), message: "UpdateAllNewsLastHttpStatusCodeAsync({Id}, {Url}): ",
+                        item.Id, item.Url);
+                }
+
+                if (!TryChangeUrlScheme(item))
+                {
+                    break;
+                }
             }
 
             await uow.SaveChangesAsync();
@@ -509,6 +517,18 @@ public class DailyNewsItemsService(
 
             await Task.Delay(TimeSpan.FromSeconds(value: 1));
         }
+    }
+
+    private static bool TryChangeUrlScheme(DailyNewsItem item)
+    {
+        if (!item.IsDeleted || !item.Url.StartsWith(value: "http://", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        item.Url = item.Url.Replace(oldValue: "http://", newValue: "https://", StringComparison.OrdinalIgnoreCase);
+
+        return true;
     }
 
     private void LogUpdateNewsHttpStatusCode(UpdateNewsStatusAction updateNewsStatusAction, DailyNewsItem item)
