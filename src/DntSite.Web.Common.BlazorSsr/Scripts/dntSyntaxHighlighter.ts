@@ -21,51 +21,49 @@ namespace DntBlazorSsr {
                         case "csharp":
                             language = "language-csharp";
                             break;
+
                         case "vb":
                         case "vbnet":
                             language = "language-vbnet";
                             break;
+
                         case "jscript":
                         case "javascript":
                             language = "language-javascript";
                             break;
-                        case "sql":
-                            language = "language-sql";
-                            break;
-                        case "xml":
-                            language = "language-xml";
-                            break;
-                        case "css":
-                            language = "language-css";
-                            break;
-                        case "java":
-                            language = "language-java";
-                            break;
+
                         case "delphi":
                         case "pas":
                             language = "language-pas";
                             break;
+
+                        case "css":
+                        case "xml":
+                        case "sql":
+                        case "java":
                         case "fsharp":
-                            language = "language-fsharp";
-                            break;
                         case "typescript":
-                            language = "language-typescript";
-                            break;
                         case "rust":
-                            language = "language-rust";
-                            break;
                         case "powershell":
-                            language = "language-powershell";
-                            break;
                         case "bash":
-                            language = "language-bash";
-                            break;
+                        case "cmd":
+                        case "dockerfile":
+                        case "kotlin":
                         case "php":
-                            language = "language-php";
-                            break;
+                        case "perl":
+                        case "shell":
                         case "git":
-                            language = "language-git";
+                        case "pgsql":
+                        case 'go':
+                        case 'swift':
+                        case 'objectivec':
+                        case 'yaml':
+                        case 'json':
+                        case 'accesslog':
+                        case 'nginx':
+                            language = `language-${language}`;
                             break;
+
                         default:
                             language = "language-csharp";
                             break;

@@ -252,6 +252,56 @@ namespace DntBlazorSsr {
             }
         }
 
+        static addMoreLanguages() {
+            // @ts-ignore
+            const Syntax = Quill.imports["modules/syntax"];
+            Syntax.DEFAULTS.languages = [
+                {key: 'plain', label: 'Plain'},
+                {key: 'bash', label: 'Bash'},
+                {key: 'cpp', label: 'C++'},
+                {key: 'cs', label: 'C#'},
+                {key: 'css', label: 'CSS'},
+                {key: 'diff', label: 'Diff'},
+                {key: 'xml', label: 'HTML/XML'},
+                {key: 'java', label: 'Java'},
+                {key: 'javascript', label: 'JavaScript'},
+                {key: 'markdown', label: 'Markdown'},
+                {key: 'php', label: 'PHP'},
+                {key: 'python', label: 'Python'},
+                {key: 'ruby', label: 'Ruby'},
+                {key: 'sql', label: 'SQL'},
+                {key: "pgsql", label: "PostgreSQL"},
+                {key: "typescript", label: "TypeScript"},
+                {key: "pas", label: "Delphi"},
+                {key: "vbnet", label: "VB.NET"},
+                {key: "rust", label: "Rust"},
+                {key: 'go', label: "Go"},
+                {key: 'swift', label: 'Swift'},
+                {key: 'objectivec', label: 'Objective C'},
+                {key: 'yaml', label: "Yaml"},
+                {key: 'powershell', label: "PowerShell"},
+                {key: 'json', label: 'JSON'},
+                {key: 'accesslog', label: 'Access logs'},
+                {key: 'nginx', label: 'Nginx'},
+                {key: 'cmd', label: 'DOS'},
+                {key: 'dockerfile', label: 'Dockerfile'},
+                {key: 'kotlin', label: 'Kotlin'},
+                {key: 'perl', label: 'Perl'},
+                {key: 'shell', label: 'Shell'}
+            ];
+            Syntax.DEFAULTS.languages.sort((a: { label: string; }, b: { label: string; }) => {
+                const nameA = a.label.toUpperCase();
+                const nameB = b.label.toUpperCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+            });
+        }
+
         static enable() {
             // @ts-ignore
             if (typeof Quill === 'undefined') {
@@ -304,6 +354,7 @@ namespace DntBlazorSsr {
                 } = dntHtmlEditor.getEditorOptions(editorElement);
 
                 dntHtmlEditor.setEditorElementHeight(editorElement, toolbar);
+                DntHtmlEditor.addMoreLanguages();
                 // @ts-ignore
                 const quill = new Quill(editorElement, {
                     debug: 'warn',

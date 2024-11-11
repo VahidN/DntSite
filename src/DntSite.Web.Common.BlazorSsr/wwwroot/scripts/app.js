@@ -645,6 +645,54 @@ var DntBlazorSsr;
                 quill.format('align', isRtl ? 'right' : 'left');
             }
         }
+        static addMoreLanguages() {
+            const Syntax = Quill.imports["modules/syntax"];
+            Syntax.DEFAULTS.languages = [
+                { key: 'plain', label: 'Plain' },
+                { key: 'bash', label: 'Bash' },
+                { key: 'cpp', label: 'C++' },
+                { key: 'cs', label: 'C#' },
+                { key: 'css', label: 'CSS' },
+                { key: 'diff', label: 'Diff' },
+                { key: 'xml', label: 'HTML/XML' },
+                { key: 'java', label: 'Java' },
+                { key: 'javascript', label: 'JavaScript' },
+                { key: 'markdown', label: 'Markdown' },
+                { key: 'php', label: 'PHP' },
+                { key: 'python', label: 'Python' },
+                { key: 'ruby', label: 'Ruby' },
+                { key: 'sql', label: 'SQL' },
+                { key: "pgsql", label: "PostgreSQL" },
+                { key: "typescript", label: "TypeScript" },
+                { key: "pas", label: "Delphi" },
+                { key: "vbnet", label: "VB.NET" },
+                { key: "rust", label: "Rust" },
+                { key: 'go', label: "Go" },
+                { key: 'swift', label: 'Swift' },
+                { key: 'objectivec', label: 'Objective C' },
+                { key: 'yaml', label: "Yaml" },
+                { key: 'powershell', label: "PowerShell" },
+                { key: 'json', label: 'JSON' },
+                { key: 'accesslog', label: 'Access logs' },
+                { key: 'nginx', label: 'Nginx' },
+                { key: 'cmd', label: 'DOS' },
+                { key: 'dockerfile', label: 'Dockerfile' },
+                { key: 'kotlin', label: 'Kotlin' },
+                { key: 'perl', label: 'Perl' },
+                { key: 'shell', label: 'Shell' }
+            ];
+            Syntax.DEFAULTS.languages.sort((a, b) => {
+                const nameA = a.label.toUpperCase();
+                const nameB = b.label.toUpperCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+            });
+        }
         static enable() {
             if (typeof Quill === 'undefined') {
                 console.error('Please include the `quill/dist/quill.js` file first!');
@@ -674,6 +722,7 @@ var DntBlazorSsr;
                 dntHtmlEditor.hideTextArea(textAreaElement);
                 const { isReadOnly, placeholder, theme, insertImageUrlLabel, uploadFileApiPath, uploadImageFileApiPath, uploadOnlyImageFileErrorMessage, additionalJsonDataDuringImageFileUpload, additionalJsonDataDuringFileUpload, acceptedUploadImageFormats, acceptedUploadFileFormats, maximumUploadImageSizeInBytes, maximumUploadFileSizeInBytes, maximumUploadImageSizeErrorMessage, maximumUploadFileSizeErrorMessage } = dntHtmlEditor.getEditorOptions(editorElement);
                 dntHtmlEditor.setEditorElementHeight(editorElement, toolbar);
+                DntHtmlEditor.addMoreLanguages();
                 const quill = new Quill(editorElement, {
                     debug: 'warn',
                     readOnly: isReadOnly,
@@ -1555,42 +1604,35 @@ var DntBlazorSsr;
                         case "javascript":
                             language = "language-javascript";
                             break;
-                        case "sql":
-                            language = "language-sql";
-                            break;
-                        case "xml":
-                            language = "language-xml";
-                            break;
-                        case "css":
-                            language = "language-css";
-                            break;
-                        case "java":
-                            language = "language-java";
-                            break;
                         case "delphi":
                         case "pas":
                             language = "language-pas";
                             break;
+                        case "css":
+                        case "xml":
+                        case "sql":
+                        case "java":
                         case "fsharp":
-                            language = "language-fsharp";
-                            break;
                         case "typescript":
-                            language = "language-typescript";
-                            break;
                         case "rust":
-                            language = "language-rust";
-                            break;
                         case "powershell":
-                            language = "language-powershell";
-                            break;
                         case "bash":
-                            language = "language-bash";
-                            break;
+                        case "cmd":
+                        case "dockerfile":
+                        case "kotlin":
                         case "php":
-                            language = "language-php";
-                            break;
+                        case "perl":
+                        case "shell":
                         case "git":
-                            language = "language-git";
+                        case "pgsql":
+                        case 'go':
+                        case 'swift':
+                        case 'objectivec':
+                        case 'yaml':
+                        case 'json':
+                        case 'accesslog':
+                        case 'nginx':
+                            language = `language-${language}`;
                             break;
                         default:
                             language = "language-csharp";
