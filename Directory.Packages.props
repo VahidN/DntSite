@@ -36,7 +36,7 @@
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Lucene.Net" Version="4.8.0-beta00016"/>
+    <PackageVersion Include="Lucene.Net" Version="4.8.0-beta00017"/>
     <PackageVersion Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00016"/>
     <PackageVersion Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016"/>
   </ItemGroup>
