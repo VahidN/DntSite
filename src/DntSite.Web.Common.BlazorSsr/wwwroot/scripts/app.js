@@ -1443,7 +1443,11 @@ var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntReportErrors {
         static postError(errorMessage) {
-            if (!errorMessage || errorMessage.toLowerCase().includes("s2/favicons")) {
+            if (!errorMessage) {
+                return;
+            }
+            const message = errorMessage.toLowerCase();
+            if (DntReportErrors.ignoreMessage(message)) {
                 return;
             }
             fetch("/api/JavaScriptErrorsReport/Log", {
@@ -1460,6 +1464,9 @@ var DntBlazorSsr;
             window.onerror = (message, url, lineNo, columnNo, error) => {
                 DntReportErrors.postError(`JavaScript error: ${message} on line ${lineNo} and column ${columnNo} for ${url} \n ${error?.stack}`);
             };
+        }
+        static ignoreMessage(message) {
+            return message.includes("s2/favicons") || message.includes("chrome-extension");
         }
     }
     DntBlazorSsr.DntReportErrors = DntReportErrors;
@@ -1487,8 +1494,15 @@ var DntBlazorSsr;
     class DntStyleSiteImages {
         static enable() {
             document.querySelectorAll('img').forEach(el => {
-                if (el.src && el.src.toLowerCase().includes("/file/")) {
+                if (!el.src) {
+                    return;
+                }
+                const src = el.src.toLowerCase();
+                if (src.includes("/file/")) {
                     el.classList.add("rounded", "border", "shadow-sm", "border-secondary-subtle");
+                    if (!src.includes("avatar")) {
+                        el.classList.add("mt-2", "mb-2");
+                    }
                 }
             });
         }
