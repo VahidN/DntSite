@@ -54,13 +54,16 @@ namespace DntBlazorSsr {
                         case "shell":
                         case "git":
                         case "pgsql":
-                        case 'go':
-                        case 'swift':
-                        case 'objectivec':
-                        case 'yaml':
-                        case 'json':
-                        case 'accesslog':
-                        case 'nginx':
+                        case "go":
+                        case "swift":
+                        case "objectivec":
+                        case "yaml":
+                        case "json":
+                        case "accesslog":
+                        case "nginx":
+                        case "ini":
+                        case "less":
+                        case "scss":
                             language = `language-${language}`;
                             break;
 

@@ -662,23 +662,19 @@ var DntBlazorSsr;
                 { key: 'python', label: 'Python' },
                 { key: 'ruby', label: 'Ruby' },
                 { key: 'sql', label: 'SQL' },
-                { key: "pgsql", label: "PostgreSQL" },
                 { key: "typescript", label: "TypeScript" },
-                { key: "pas", label: "Delphi" },
                 { key: "vbnet", label: "VB.NET" },
                 { key: "rust", label: "Rust" },
                 { key: 'go', label: "Go" },
                 { key: 'swift', label: 'Swift' },
                 { key: 'objectivec', label: 'Objective C' },
                 { key: 'yaml', label: "Yaml" },
-                { key: 'powershell', label: "PowerShell" },
                 { key: 'json', label: 'JSON' },
-                { key: 'accesslog', label: 'Access logs' },
-                { key: 'nginx', label: 'Nginx' },
-                { key: 'cmd', label: 'DOS' },
-                { key: 'dockerfile', label: 'Dockerfile' },
                 { key: 'kotlin', label: 'Kotlin' },
                 { key: 'perl', label: 'Perl' },
+                { key: 'ini', label: 'Ini' },
+                { key: 'less', label: 'Less' },
+                { key: 'scss', label: 'Scss' },
                 { key: 'shell', label: 'Shell' }
             ];
             Syntax.DEFAULTS.languages.sort((a, b) => {
@@ -1625,13 +1621,16 @@ var DntBlazorSsr;
                         case "shell":
                         case "git":
                         case "pgsql":
-                        case 'go':
-                        case 'swift':
-                        case 'objectivec':
-                        case 'yaml':
-                        case 'json':
-                        case 'accesslog':
-                        case 'nginx':
+                        case "go":
+                        case "swift":
+                        case "objectivec":
+                        case "yaml":
+                        case "json":
+                        case "accesslog":
+                        case "nginx":
+                        case "ini":
+                        case "less":
+                        case "scss":
                             language = `language-${language}`;
                             break;
                         default:
