@@ -8,14 +8,15 @@
 
     <base href="/"/>
 
-    <link rel="stylesheet" href="@Assets["/lib/bootstrap/dist/css/bootstrap.rtl.min.css"]" type="text/css" />
-    <link rel="stylesheet" href="@Assets["/lib/bootstrap-icons/font/bootstrap-icons.min.css"]" type="text/css" />
-    <link rel="stylesheet" href="@Assets["/lib/highlightjs/cdn-assets/styles/atom-one-dark.min.css"]" type="text/css" />
-    <link rel="stylesheet" href="@Assets["/lib/quill/dist/quill.snow.css"]" type="text/css" />
-    <link rel="stylesheet" href="@Assets["/_content/DntSite.Web.Common.BlazorSsr/css/common.css"]" type="text/css" />
-    <link rel="stylesheet" href="@Assets["/app.css"]" type="text/css" />
+    <link rel="stylesheet" href="@Assets[key: "/lib/bootstrap/dist/css/bootstrap.rtl.min.css"]" type="text/css"/>
+    <link rel="stylesheet" href="@Assets[key: "/lib/bootstrap-icons/font/bootstrap-icons.min.css"]" type="text/css"/>
+    <link rel="stylesheet" href="@Assets[key: "/lib/highlightjs/cdn-assets/styles/atom-one-dark.min.css"]" type="text/css"/>
+    <link rel="stylesheet" href="@Assets[key: "/lib/quill/dist/quill.snow.css"]" type="text/css"/>
+    <link rel="stylesheet" href="@Assets[key: "/_content/DntSite.Web.Common.BlazorSsr/css/common.css"]" type="text/css"/>
+    <link rel="stylesheet" href="@Assets[key: "/app.css"]" type="text/css"/>
 
-    <DntSiteVerification GoogleSiteVerificationToken="@SiteSettings.Value.SiteVerification.GoogleSiteVerificationToken"/>
+    <DntSiteVerification
+        GoogleSiteVerificationToken="@SiteSettings.Value.SiteVerification.GoogleSiteVerificationToken"/>
     <DntFavicons/>
     <DntPrintNoScript/>
 
@@ -25,10 +26,10 @@
 <body class="bg-body-secondary">
 <Routes/>
 
-<script src="/_framework/blazor.web.js" type="text/javascript"></script>
-<script src="@Assets["/lib/highlightjs/cdn-assets/highlight.min.js"]" type="text/javascript"></script>
-<script src="@Assets["/lib/quill/dist/quill.js"]" type="text/javascript"></script>
-<script src="@Assets["/_content/DntSite.Web.Common.BlazorSsr/scripts/app.js"]" type="text/javascript"></script>
+<script src="@Assets[key: "/_framework/blazor.web.js"]" type="text/javascript"></script>
+<script src="@Assets[key: "/lib/highlightjs/cdn-assets/highlight.min.js"]" type="text/javascript"></script>
+<script src="@Assets[key: "/lib/quill/dist/quill.js"]" type="text/javascript"></script>
+<script src="@Assets[key: "/_content/DntSite.Web.Common.BlazorSsr/scripts/app.js"]" type="text/javascript"></script>
 
 <SectionOutlet SectionName="scripts"/>
 </body>
