@@ -10,13 +10,13 @@ namespace DntSite.Web.Features.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
+          // Up
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+          // Down
         }
     }
 }
