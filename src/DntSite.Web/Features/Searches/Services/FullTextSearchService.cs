@@ -495,7 +495,7 @@ public class FullTextSearchService : IFullTextSearchService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Demystify(), message: "TryDispose `{Type}` Error", iDisposable?.GetType());
+            _logger.LogError(ex.Demystify(), message: "TryDispose Error");
         }
     }
 
