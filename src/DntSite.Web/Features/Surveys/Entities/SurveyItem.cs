@@ -13,7 +13,7 @@ public class SurveyItem : BaseAuditedEntity
 
     public int Order { set; get; }
 
-    public virtual ICollection<User> Users { set; get; } = new List<User>();
+    public virtual ICollection<User> Users { set; get; } = [];
 
     public virtual Survey Survey { set; get; } = null!;
 

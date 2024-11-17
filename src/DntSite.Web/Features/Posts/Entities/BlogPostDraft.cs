@@ -10,7 +10,7 @@ public class BlogPostDraft : BaseAuditedEntity
 
     public int ReadingTimeMinutes { set; get; }
 
-    [Required] public required IList<string> Tags { set; get; } = new List<string>();
+    [Required] public required IList<string> Tags { set; get; } = [];
 
     public bool IsReady { set; get; }
 

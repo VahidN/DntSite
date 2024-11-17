@@ -3,7 +3,7 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 public partial class DntSimpleTable<TRecord>
     where TRecord : class
 {
-    private List<DntSimpleTableColumn<TRecord>> DefinedColumns { get; } = new();
+    private List<DntSimpleTableColumn<TRecord>> DefinedColumns { get; } = [];
 
     private bool IsFooterDefined => DefinedColumns.Any(c => c.FooterCellValueTemplate is not null);
 

@@ -46,5 +46,5 @@ public class CourseModel
     [Display(Name = "گروه(ها)")]
     [Required(ErrorMessage = "لطفا حداقل یک گروه را وارد نمائید.")]
     [MinLength(length: 1, ErrorMessage = "لطفا حداقل یک گروه را وارد کنید")]
-    public IList<string> Tags { set; get; } = new List<string>();
+    public IList<string> Tags { set; get; } = [];
 }

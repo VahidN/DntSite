@@ -78,15 +78,10 @@ public class EmailsFactoryService(
             return;
         }
 
-        var appSetting = await GetAppSettingsAsync();
-
-        if (appSetting is null)
-        {
-            throw new InvalidOperationException(message: "appSetting is null");
-        }
+        var appSetting = await GetAppSettingsAsync() ??
+                         throw new InvalidOperationException(message: "appSetting is null");
 
         var smtpServerSetting = appSetting.SmtpServerSetting;
-
         var pickupFolder = GetPickupFolderPath(smtpServerSetting);
 
         await webMailService.SendEmailAsync(new SmtpConfig
@@ -249,12 +244,8 @@ public class EmailsFactoryService(
     private async Task InitEmailModelAsync<TLayoutModel>(TLayoutModel model)
         where TLayoutModel : BaseEmailModel
     {
-        var appSetting = await GetAppSettingsAsync();
-
-        if (appSetting is null)
-        {
-            throw new InvalidOperationException(message: "appSetting is null");
-        }
+        var appSetting = await GetAppSettingsAsync() ??
+                         throw new InvalidOperationException(message: "appSetting is null");
 
         model.EmailSig = appSetting.SiteEmailsSig ?? "";
         model.MsgDateTime = DateTime.UtcNow.ToLongPersianDateTimeString().ToPersianNumbers();

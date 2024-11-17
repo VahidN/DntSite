@@ -9,5 +9,5 @@ public abstract class BaseTagEntity<TAssociatedEntity> : BaseAuditedEntity
 
     [IgnoreAudit] public int InUseCount { set; get; }
 
-    public virtual ICollection<TAssociatedEntity> AssociatedEntities { set; get; } = new List<TAssociatedEntity>();
+    public virtual ICollection<TAssociatedEntity> AssociatedEntities { set; get; } = [];
 }

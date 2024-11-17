@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.Backlogs.Models;
 
 public class BacklogsListModel
 {
-    public IList<Backlog> Backlogs { set; get; } = new List<Backlog>();
+    public IList<Backlog> Backlogs { set; get; } = [];
 
     public int AllItemsCount { set; get; }
 

@@ -99,6 +99,6 @@ public partial class DntInputTag
             EnteredTags.Add(NewTag);
         }
 
-        _ = InputTagsChanged.InvokeAsync(EnteredTags.ToList());
+        _ = InputTagsChanged.InvokeAsync([.. EnteredTags]);
     }
 }

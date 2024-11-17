@@ -58,7 +58,7 @@ public class CourseQuestionsService(IUnitOfWork uow, IUserRatingsService userRat
                 .Include(x => x.Course)
                 .Include(x => x.User)
                 .FirstOrDefaultAsync(),
-            CommentsList = new List<CourseQuestionComment>()
+            CommentsList = []
         };
 
     public async Task UpdateNumberOfViewsAsync(int id, bool fromFeed)

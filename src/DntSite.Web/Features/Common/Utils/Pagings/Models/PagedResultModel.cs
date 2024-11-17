@@ -3,7 +3,7 @@
 public class PagedResultModel<T>
     where T : class
 {
-    public IList<T> Data { get; set; } = new List<T>();
+    public IList<T> Data { get; set; } = [];
 
     public int TotalItems { get; set; }
 }

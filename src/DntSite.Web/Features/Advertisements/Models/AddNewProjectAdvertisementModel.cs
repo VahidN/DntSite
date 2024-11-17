@@ -41,5 +41,5 @@ public class AddNewProjectAdvertisementModel
     [Display(Name = "گروه(ها)")]
     [Required(ErrorMessage = "لطفا تگ یا گروهی را وارد کنید")]
     [MinLength(length: 1, ErrorMessage = "لطفا حداقل یک گروه را وارد کنید")]
-    public IList<string> Tags { set; get; } = new List<string>();
+    public IList<string> Tags { set; get; } = [];
 }

@@ -17,5 +17,5 @@ public class Survey : BaseInteractiveEntity<Survey, SurveyVisitor, SurveyBookmar
 
     [MaxLength] public string? Description { set; get; }
 
-    public virtual ICollection<SurveyItem> SurveyItems { set; get; } = new List<SurveyItem>();
+    public virtual ICollection<SurveyItem> SurveyItems { set; get; } = [];
 }

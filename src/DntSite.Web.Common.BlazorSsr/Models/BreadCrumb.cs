@@ -62,12 +62,12 @@ public class BreadCrumb : IEqualityComparer<BreadCrumb>
             return true;
         }
 
-        if (ReferenceEquals(x, objB: null))
+        if (x is null)
         {
             return false;
         }
 
-        if (ReferenceEquals(y, objB: null))
+        if (y is null)
         {
             return false;
         }

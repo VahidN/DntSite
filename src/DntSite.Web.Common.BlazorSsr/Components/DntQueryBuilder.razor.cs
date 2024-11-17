@@ -35,7 +35,7 @@ public partial class DntQueryBuilder<TRecord>
         }
     };
 
-    private List<DntQueryBuilderProperty<TRecord>> DefinedProperties { get; } = new();
+    private List<DntQueryBuilderProperty<TRecord>> DefinedProperties { get; } = [];
 
     [Parameter] [EditorRequired] public required RenderFragment ChildContent { get; set; }
 

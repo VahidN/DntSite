@@ -27,10 +27,9 @@ public class DataSeedersRunner(IServiceProvider serviceProvider, IUnitOfWork uow
     private void MigrateDb()
     {
         var retry = Policy.Handle<Exception>()
-            .WaitAndRetry(new[]
-            {
+            .WaitAndRetry([
                 TimeSpan.FromSeconds(value: 5), TimeSpan.FromSeconds(value: 10), TimeSpan.FromSeconds(value: 15)
-            });
+            ]);
 
         retry.Execute(() =>
         {

@@ -97,7 +97,7 @@ public partial class DntPageSeo
     ///     The publish date of the article
     /// </summary>
     [Parameter]
-    public IReadOnlyList<string> Tags { set; get; } = new List<string>();
+    public IReadOnlyList<string> Tags { set; get; } = [];
 
     private string Keywords => Tags.Any()
         ? Tags.Aggregate((s1, s2) => string.Format(CultureInfo.InvariantCulture, format: "{0}, {1}", s1, s2))

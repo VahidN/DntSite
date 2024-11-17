@@ -7,7 +7,7 @@ public class CourseAllowedUsersModel
 {
     public Course? ThisCourse { set; get; }
 
-    public IList<User> AllowedUsers { set; get; } = new List<User>();
+    public IList<User> AllowedUsers { set; get; } = [];
 
     [Display(Name = "نام مستعار کاربر:")]
     [Required(ErrorMessage = "نام کاربر خالی است")]

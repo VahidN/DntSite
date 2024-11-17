@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.StackExchangeQuestions.Models;
 
 public class StackExchangeQuestionsListModel
 {
-    public IList<StackExchangeQuestion> StackExchangeQuestions { set; get; } = new List<StackExchangeQuestion>();
+    public IList<StackExchangeQuestion> StackExchangeQuestions { set; get; } = [];
 
     public int AllItemsCount { set; get; }
 

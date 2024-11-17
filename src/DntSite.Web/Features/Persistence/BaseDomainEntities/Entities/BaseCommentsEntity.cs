@@ -15,9 +15,9 @@ public abstract class BaseCommentsEntity<TSelfEntity, TForeignKeyEntity, TVisito
 
     public int ParentId { set; get; }
 
-    public virtual ICollection<TReactionEntity> Reactions { set; get; } = new List<TReactionEntity>();
+    public virtual ICollection<TReactionEntity> Reactions { set; get; } = [];
 
-    public virtual ICollection<TBookmarkEntity> Bookmarks { set; get; } = new List<TBookmarkEntity>();
+    public virtual ICollection<TBookmarkEntity> Bookmarks { set; get; } = [];
 
-    public virtual ICollection<TVisitorEntity> Visitors { set; get; } = new List<TVisitorEntity>();
+    public virtual ICollection<TVisitorEntity> Visitors { set; get; } = [];
 }

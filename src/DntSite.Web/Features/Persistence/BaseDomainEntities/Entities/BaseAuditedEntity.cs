@@ -9,5 +9,5 @@ public abstract class BaseAuditedEntity : BaseEntity
     // NOTE: This must be exactly a List<>!
     // If we use an ICollection<> here, we won't be able to use `indexing` on post.AuditActions[0].UserId
     // If we use an IList<> here, we should use AsNoTracking() with queries.
-    [MaxLength] [IgnoreAudit] public List<AuditAction> AuditActions { get; set; } = new();
+    [MaxLength] [IgnoreAudit] public List<AuditAction> AuditActions { get; set; } = [];
 }

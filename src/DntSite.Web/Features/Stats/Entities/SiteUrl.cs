@@ -21,5 +21,5 @@ public class SiteUrl : BaseEntity
 
     [NotMapped] public bool IsHidden => IsStaticFileUrl || IsDeleted || IsProtectedPage || Title.IsEmpty();
 
-    public virtual ICollection<SiteReferrer> SiteReferrers { set; get; } = new List<SiteReferrer>();
+    public virtual ICollection<SiteReferrer> SiteReferrers { set; get; } = [];
 }

@@ -22,17 +22,17 @@ public class AppSetting : BaseAuditedEntity
     public bool CanUsersRegister { set; get; }
 
     [Display(Name = "آدرس کامل سایت‌های بسته شده (دومین و زیر دومین‌ها) در قسمت ارسال لینک (هر سطر یک آدرس)")]
-    public IList<string> BannedUrls { set; get; } = new List<string>();
+    public IList<string> BannedUrls { set; get; } = [];
 
     [Display(Name = "آدرس کامل سایت‌های بسته شده (فقط اصل هاست) در قسمت ارسال لینک (هر سطر یک آدرس)")]
-    public IList<string> BannedSites { set; get; } = new List<string>();
+    public IList<string> BannedSites { set; get; } = [];
 
     [Display(Name = "الگوهای ارجاع دهنده‌های ممنوع (هر سطر یک الگو)")]
-    public IList<string> BannedReferrers { set; get; } = new List<string>();
+    public IList<string> BannedReferrers { set; get; } = [];
 
-    [Display(Name = "ایمیل‌های ممنوع")] public IList<string> BannedEmails { set; get; } = new List<string>();
+    [Display(Name = "ایمیل‌های ممنوع")] public IList<string> BannedEmails { set; get; } = [];
 
-    [Display(Name = "کلمات عبور ممنوع")] public IList<string> BannedPasswords { set; get; } = new List<string>();
+    [Display(Name = "کلمات عبور ممنوع")] public IList<string> BannedPasswords { set; get; } = [];
 
     public UsedPasswordsSetting UsedPasswords { get; set; } = new();
 

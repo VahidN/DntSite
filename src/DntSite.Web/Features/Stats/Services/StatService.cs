@@ -731,7 +731,7 @@ public class StatService(IUnitOfWork uow) : IStatService
 
     private Task<int> GetNumberOfVotesAsync() => uow.DbSet<Survey>().AsNoTracking().CountAsync(x => !x.IsDeleted);
 
-    private static List<Browser> BrowsersList() => new();
+    private static List<Browser> BrowsersList() => [];
 
     private async Task UpdateUserStatAsync(bool showDeletedItems, User user)
     {

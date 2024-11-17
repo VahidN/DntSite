@@ -23,5 +23,5 @@ public class BlogPost : BaseInteractiveEntity<BlogPost, BlogPostVisitor, BlogPos
 
     public bool PingbackSent { set; get; }
 
-    public virtual ICollection<Backlog> Backlogs { set; get; } = new List<Backlog>();
+    public virtual ICollection<Backlog> Backlogs { set; get; } = [];
 }

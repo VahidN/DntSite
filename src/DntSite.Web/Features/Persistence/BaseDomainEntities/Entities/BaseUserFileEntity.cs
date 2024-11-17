@@ -9,5 +9,5 @@ public abstract class BaseUserFileEntity<TSelfEntity, TForeignKeyEntity, TVisito
 
     public int ParentId { set; get; }
 
-    public virtual ICollection<TVisitorEntity> Visitors { set; get; } = new List<TVisitorEntity>();
+    public virtual ICollection<TVisitorEntity> Visitors { set; get; } = [];
 }

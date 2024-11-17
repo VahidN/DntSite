@@ -85,14 +85,13 @@ public class TagsService(IUnitOfWork uow) : ITagsService
             .Distinct()
             .ToArrayAsync();
 
-        return array1.Union(array2)
+        return [.. array1.Union(array2)
             .Union(array3)
             .Union(array5)
             .Union(array6)
             .Union(array7)
             .Distinct(StringComparer.InvariantCultureIgnoreCase)
-            .OrderBy(x => x)
-            .ToList();
+            .OrderBy(x => x)];
     }
 
     public async Task<string> AvailableTagsToJsonAsync(int count = 2000)

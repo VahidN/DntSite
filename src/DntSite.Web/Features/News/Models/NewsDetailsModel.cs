@@ -10,5 +10,5 @@ public class NewsDetailsModel
 
     public DailyNewsItem? PreviousNews { set; get; }
 
-    public IList<DailyNewsItemComment> CommentsList { set; get; } = new List<DailyNewsItemComment>();
+    public IList<DailyNewsItemComment> CommentsList { set; get; } = [];
 }

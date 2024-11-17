@@ -298,16 +298,19 @@ public class UserRatingsService(IUnitOfWork uow) : IUserRatingsService
             .Where(blogPost => favItemsIds.Contains(blogPost.Id) && !blogPost.IsDeleted)
             .ToListAsync();
 
-        return relatedPosts.Select(blogPost => new SectionFavUserRating
-            {
-                FkId = blogPost.Id,
-                Title = blogPost.Title,
-                TotalRatingValue = favItems.First(favUserRating => favUserRating.FkId == blogPost.Id).TotalRatingValue,
-                DateTime = date,
-                ForUser = blogPost.User
-            })
-            .OrderByDescending(favUserRating => favUserRating.TotalRatingValue)
-            .ToList();
+        return
+        [
+            .. relatedPosts.Select(blogPost => new SectionFavUserRating
+                {
+                    FkId = blogPost.Id,
+                    Title = blogPost.Title,
+                    TotalRatingValue = favItems.First(favUserRating => favUserRating.FkId == blogPost.Id)
+                        .TotalRatingValue,
+                    DateTime = date,
+                    ForUser = blogPost.User
+                })
+                .OrderByDescending(favUserRating => favUserRating.TotalRatingValue)
+        ];
     }
 
     private async Task<List<SectionFavUserRating>> GetNewsFavItemsRatingsAsync(DateTime? date,
@@ -321,15 +324,18 @@ public class UserRatingsService(IUnitOfWork uow) : IUserRatingsService
             .Where(newsItem => favItemsIds.Contains(newsItem.Id) && !newsItem.IsDeleted)
             .ToListAsync();
 
-        return relatedPosts.Select(newsItem => new SectionFavUserRating
-            {
-                FkId = newsItem.Id,
-                Title = newsItem.Title,
-                TotalRatingValue = favItems.First(favUserRating => favUserRating.FkId == newsItem.Id).TotalRatingValue,
-                DateTime = date,
-                ForUser = newsItem.User
-            })
-            .OrderByDescending(favUserRating => favUserRating.TotalRatingValue)
-            .ToList();
+        return
+        [
+            ..relatedPosts.Select(newsItem => new SectionFavUserRating
+                {
+                    FkId = newsItem.Id,
+                    Title = newsItem.Title,
+                    TotalRatingValue = favItems.First(favUserRating => favUserRating.FkId == newsItem.Id)
+                        .TotalRatingValue,
+                    DateTime = date,
+                    ForUser = newsItem.User
+                })
+                .OrderByDescending(favUserRating => favUserRating.TotalRatingValue)
+        ];
     }
 }

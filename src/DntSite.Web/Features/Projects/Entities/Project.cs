@@ -23,11 +23,11 @@ public class Project : BaseInteractiveEntity<Project, ProjectVisitor, ProjectBoo
 
     [StringLength(maximumLength: 1000)] public string? Logo { set; get; }
 
-    public virtual ICollection<ProjectIssue> ProjectIssues { set; get; } = new List<ProjectIssue>();
+    public virtual ICollection<ProjectIssue> ProjectIssues { set; get; } = [];
 
-    public virtual ICollection<ProjectRelease> ProjectReleases { set; get; } = new List<ProjectRelease>();
+    public virtual ICollection<ProjectRelease> ProjectReleases { set; get; } = [];
 
-    public virtual ICollection<ProjectFaq> ProjectFaqs { set; get; } = new List<ProjectFaq>();
+    public virtual ICollection<ProjectFaq> ProjectFaqs { set; get; } = [];
 
     [IgnoreAudit] public int NumberOfFaqs { set; get; }
 

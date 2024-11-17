@@ -291,13 +291,13 @@ public class BlogPostsService(
 
         if (lastRecord is null)
         {
-            return new List<BlogPost>();
+            return [];
         }
 
         var year = int.Parse(lastRecord.Audit.CreatedAtPersian.AsSpan(start: 0, length: 4),
             CultureInfo.InvariantCulture);
 
-        year = year - pageNumber;
+        year -= pageNumber;
         var fromDate = string.Create(CultureInfo.InvariantCulture, $"{year}/01/01");
         var toDate = string.Create(CultureInfo.InvariantCulture, $"{year}/12/30");
 
@@ -408,7 +408,7 @@ public class BlogPostsService(
             blogPost.Tags.Clear();
         }
 
-        blogPost.Tags = new List<BlogPostTag>();
+        blogPost.Tags = [];
 
         foreach (var item in listOfActualTags)
         {

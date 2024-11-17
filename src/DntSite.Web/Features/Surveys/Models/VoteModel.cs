@@ -15,7 +15,7 @@ public class VoteModel
     [Display(Name = "گروه(ها)")]
     [Required(ErrorMessage = "لطفا حداقل یک گروه را وارد نمائید.")]
     [MinLength(1, ErrorMessage = "لطفا حداقل یک گروه را وارد کنید")]
-    public IList<string> Tags { set; get; } = new List<string>();
+    public IList<string> Tags { set; get; } = [];
 
     [Range(0, 23, ErrorMessage = "ساعت وارد شده باید در بازه 0 تا 23 تعیین شود")]
     public int? Hour { set; get; }

@@ -15,10 +15,9 @@ public static class MigrationHelpers
         logger.LogInformation("Migrating the DB associated with the context {Name}", typeof(TContext).Name);
 
         var retry = Policy.Handle<Exception>()
-            .WaitAndRetry(new[]
-            {
+            .WaitAndRetry([
                 TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(15)
-            });
+            ]);
 
         retry.Execute(() =>
         {

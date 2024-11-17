@@ -11,7 +11,7 @@ public static class EfCorerExtensions
         var errors = new StringBuilder();
 
         var entities = context.ChangeTracker.Entries()
-            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified)
+            .Where(e => e.State is EntityState.Added or EntityState.Modified)
             .Select(e => e.Entity);
 
         foreach (var entity in entities)

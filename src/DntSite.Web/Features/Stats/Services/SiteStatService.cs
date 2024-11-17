@@ -32,7 +32,7 @@ public class SiteStatService(IUnitOfWork uow) : ISiteStatService
 
         var now = DateTime.UtcNow;
 
-        foreach (SiteStatsDate siteStatsDate in Enum.GetValues(typeof(SiteStatsDate)))
+        foreach (var siteStatsDate in Enum.GetValues<SiteStatsDate>())
         {
             var persianDateRange = "";
             var subStringLength = 0;

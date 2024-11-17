@@ -4,7 +4,6 @@ using DntSite.Web.Features.DbSeeder.Services;
 using DntSite.Web.Features.ServicesConfigs;
 using DntSite.Web.Features.UserProfiles.Endpoints;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigureLogging(builder.Logging, builder.Environment, builder.Configuration);
@@ -39,7 +38,7 @@ void ConfigureLogging(ILoggingBuilder logging, IHostEnvironment env, IConfigurat
     logging.AddDbLogger(); // You can change its Log Level using the `appsettings.json` file -> Logging -> LogLevel -> Default
 }
 
-void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
+void ConfigureMiddlewares(WebApplication app, IHostEnvironment env)
 {
     if (OperatingSystem.IsLinux())
     {
@@ -62,12 +61,7 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
 
     app.UseStatusCodePagesWithReExecute(pathFormat: "/Error/{0}");
 
-    var provider = new FileExtensionContentTypeProvider();
-
-    app.UseStaticFiles(new StaticFileOptions
-    {
-        ContentTypeProvider = provider
-    });
+    app.MapStaticAssets();
 
     app.UseAuthentication();
     app.UseAuthorization();
@@ -78,7 +72,7 @@ void ConfigureMiddlewares(IApplicationBuilder app, IHostEnvironment env)
 
 void ConfigureEndpoints(WebApplication app)
 {
-    app.MapControllers();
+    app.MapControllers().WithStaticAssets();
     app.AddChangePasswordEndpoint();
     app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
     app.UseRequestTimeouts();

@@ -6,5 +6,5 @@ public class CourseTopicsModel
 {
     public int Cid { set; get; }
 
-    public IList<CourseTopic> CourseTopics { set; get; } = new List<CourseTopic>();
+    public IList<CourseTopic> CourseTopics { set; get; } = [];
 }

@@ -6,5 +6,5 @@ public class AuditAction : AuditBase
 
     public AuditActionType Action { set; get; }
 
-    public List<AffectedColumn> AffectedColumns { get; set; } = new();
+    public List<AffectedColumn> AffectedColumns { get; set; } = [];
 }

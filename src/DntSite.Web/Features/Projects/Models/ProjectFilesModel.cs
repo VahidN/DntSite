@@ -6,7 +6,7 @@ public class ProjectFilesModel
 {
     public Project? Project { set; get; }
 
-    public IList<ProjectRelease> ProjectReleases { set; get; } = new List<ProjectRelease>();
+    public IList<ProjectRelease> ProjectReleases { set; get; } = [];
 
     public ProjectPostFileModel? ProjectPostFile { set; get; }
 }

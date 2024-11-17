@@ -150,7 +150,7 @@ public class AdvertisementsService(
             advertisement.Tags.Clear();
         }
 
-        advertisement.Tags = new List<AdvertisementTag>();
+        advertisement.Tags = [];
 
         foreach (var item in listOfActualTags)
         {

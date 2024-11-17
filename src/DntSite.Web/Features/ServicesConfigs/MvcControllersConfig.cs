@@ -36,7 +36,7 @@ public static class MvcControllersConfig
             })
             .AddLargeFilesUploadSupport()
             .AddOutputCache(options => { options.AddPolicy(AlwaysCachePolicy.Name, AlwaysCachePolicy.Instance); })
-            .AddControllers(options => { options.Filters.Add(typeof(ApplyCorrectYeKeFilterAttribute)); })
+            .AddControllers(options => { options.Filters.Add<ApplyCorrectYeKeFilterAttribute>(); })
             .AddJsonOptions(AddCustomJsonOptions);
 
     private static void AddCustomJsonOptions(JsonOptions options)

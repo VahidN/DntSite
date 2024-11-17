@@ -8,12 +8,12 @@
 
     <base href="/"/>
 
-    <DntFileVersionedCssLink CssFilePath="/lib/bootstrap/dist/css/bootstrap.rtl.min.css"/>
-    <DntFileVersionedCssLink CssFilePath="/lib/bootstrap-icons/font/bootstrap-icons.min.css"/>
-    <DntFileVersionedCssLink CssFilePath="/lib/highlightjs/cdn-assets/styles/atom-one-dark.min.css"/>
-    <DntFileVersionedCssLink CssFilePath="/lib/quill/dist/quill.snow.css"/>
-    <DntFileVersionedCssLink CssFilePath="/_content/DntSite.Web.Common.BlazorSsr/css/common.css"/>
-    <DntFileVersionedCssLink CssFilePath="/app.css"/>
+    <link rel="stylesheet" href="@Assets["/lib/bootstrap/dist/css/bootstrap.rtl.min.css"]" type="text/css" />
+    <link rel="stylesheet" href="@Assets["/lib/bootstrap-icons/font/bootstrap-icons.min.css"]" type="text/css" />
+    <link rel="stylesheet" href="@Assets["/lib/highlightjs/cdn-assets/styles/atom-one-dark.min.css"]" type="text/css" />
+    <link rel="stylesheet" href="@Assets["/lib/quill/dist/quill.snow.css"]" type="text/css" />
+    <link rel="stylesheet" href="@Assets["/_content/DntSite.Web.Common.BlazorSsr/css/common.css"]" type="text/css" />
+    <link rel="stylesheet" href="@Assets["/app.css"]" type="text/css" />
 
     <DntSiteVerification GoogleSiteVerificationToken="@SiteSettings.Value.SiteVerification.GoogleSiteVerificationToken"/>
     <DntFavicons/>
@@ -25,10 +25,10 @@
 <body class="bg-body-secondary">
 <Routes/>
 
-<DntFileVersionedJavaScriptSource JsFilePath="/_framework/blazor.web.js"/>
-<DntFileVersionedJavaScriptSource JsFilePath="/lib/highlightjs/cdn-assets/highlight.min.js"/>
-<DntFileVersionedJavaScriptSource JsFilePath="/lib/quill/dist/quill.js"/>
-<DntFileVersionedJavaScriptSource JsFilePath="/_content/DntSite.Web.Common.BlazorSsr/scripts/app.js"/>
+<script src="/_framework/blazor.web.js" type="text/javascript"></script>
+<script src="@Assets["/lib/highlightjs/cdn-assets/highlight.min.js"]" type="text/javascript"></script>
+<script src="@Assets["/lib/quill/dist/quill.js"]" type="text/javascript"></script>
+<script src="@Assets["/_content/DntSite.Web.Common.BlazorSsr/scripts/app.js"]" type="text/javascript"></script>
 
 <SectionOutlet SectionName="scripts"/>
 </body>

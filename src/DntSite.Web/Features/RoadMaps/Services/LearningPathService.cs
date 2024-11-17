@@ -53,14 +53,14 @@ public class LearningPathService(
     {
         if (string.IsNullOrWhiteSpace(learningPathItem?.Description))
         {
-            return new List<int>();
+            return [];
         }
 
         var links = htmlHelperService.ExtractLinks(learningPathItem.Description).ToList();
 
         if (links.Count == 0)
         {
-            return new List<int>();
+            return [];
         }
 
         var postIds = new List<int>();
@@ -95,7 +95,7 @@ public class LearningPathService(
             postIds.Add(postId);
         }
 
-        return postIds.OrderBy(pId => pId).ToList();
+        return [..postIds.OrderBy(pId => pId)];
     }
 
     public Task<PagedResultModel<LearningPath>> GetLearningPathsAsync(int pageNumber,

@@ -89,7 +89,7 @@ public class ProjectIssuesService(
                 .Include(x => x.IssueType)
                 .Include(x => x.Reactions)
                 .FirstOrDefaultAsync(),
-            CommentsList = new List<ProjectIssueComment>()
+            CommentsList = []
         };
 
     public async Task UpdateNumberOfViewsAsync(int issueId, bool fromFeed)

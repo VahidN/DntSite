@@ -10,7 +10,7 @@ public class ProjectIssueDetailsModel
 
     public ProjectIssue? PreviousItem { set; get; }
 
-    public IList<ProjectIssueComment> CommentsList { set; get; } = new List<ProjectIssueComment>();
+    public IList<ProjectIssueComment> CommentsList { set; get; } = [];
 
-    public IList<ProjectIssueStatus> IssueStatus { set; get; } = new List<ProjectIssueStatus>();
+    public IList<ProjectIssueStatus> IssueStatus { set; get; } = [];
 }

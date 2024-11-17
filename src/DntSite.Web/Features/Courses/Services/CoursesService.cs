@@ -112,7 +112,7 @@ public class CoursesService(
 
         if (data.CourseAllowedUsers is null || data.CourseAllowedUsers.Count == 0)
         {
-            data.CourseAllowedUsers = new List<User>();
+            data.CourseAllowedUsers = [];
         }
 
         if (data.CourseAllowedUsers.Any(x => x.Id == user.Id))

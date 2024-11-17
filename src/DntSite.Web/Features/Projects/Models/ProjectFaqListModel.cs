@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.Projects.Models;
 
 public class ProjectFaqListModel
 {
-    public IList<ProjectFaq> ProjectFaqs { set; get; } = new List<ProjectFaq>();
+    public IList<ProjectFaq> ProjectFaqs { set; get; } = [];
 
     public Project? Project { set; get; }
 

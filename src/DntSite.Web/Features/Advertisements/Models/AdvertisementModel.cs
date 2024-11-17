@@ -10,5 +10,5 @@ public class AdvertisementModel
 
     public Advertisement? PreviousItem { set; get; }
 
-    public IList<AdvertisementComment> CommentsList { set; get; } = new List<AdvertisementComment>();
+    public IList<AdvertisementComment> CommentsList { set; get; } = [];
 }

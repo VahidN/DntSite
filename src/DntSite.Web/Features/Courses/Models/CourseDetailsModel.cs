@@ -6,35 +6,24 @@ public class CourseDetailsModel
 {
     public Course? ThisCourse { set; get; }
 
-    public IList<CourseTopic> CourseTopics { set; get; } = new List<CourseTopic>();
+    public IList<CourseTopic> CourseTopics { set; get; } = [];
 
-    public IList<CourseTopic> CourseAdditionalTopics { set; get; } = new List<CourseTopic>();
+    public IList<CourseTopic> CourseAdditionalTopics { set; get; } = [];
 
-    public string Type
+    public string Type => ThisCourse?.Perm switch
     {
-        get
-        {
-            switch (ThisCourse?.Perm)
-            {
-                case CourseType.FreeForAll:
-                    return "عمومی";
-                case CourseType.FreeForWriters:
-                    return
-                        $"نویسندگان سایت با حداقل {ThisCourse.NumberOfPostsRequired.ToPersianNumbers()} مطلب ارسالی {(ThisCourse.NumberOfMonthsRequired == 0
-                            ? ""
-                            : $"در {ThisCourse.NumberOfMonthsRequired.ToPersianNumbers()} ماه قبل")}";
-                case CourseType.FreeForActiveUsers:
-                    return
-                        $"کاربران فعال با حداقل {ThisCourse.NumberOfTotalRatingsRequired.ToPersianNumbers()} امتیاز دریافتی {(ThisCourse.NumberOfMonthsTotalRatingsRequired == 0
-                            ? ""
-                            : $"در {ThisCourse.NumberOfMonthsTotalRatingsRequired.ToPersianNumbers()} ماه قبل")}";
-                case CourseType.IsNotFree:
-                    return "محدود";
-            }
-
-            return "";
-        }
-    }
+        CourseType.FreeForAll => "عمومی",
+        CourseType.FreeForWriters =>
+            $"نویسندگان سایت با حداقل {ThisCourse.NumberOfPostsRequired.ToPersianNumbers()} مطلب ارسالی {(ThisCourse.NumberOfMonthsRequired == 0
+                ? ""
+                : $"در {ThisCourse.NumberOfMonthsRequired.ToPersianNumbers()} ماه قبل")}",
+        CourseType.FreeForActiveUsers =>
+            $"کاربران فعال با حداقل {ThisCourse.NumberOfTotalRatingsRequired.ToPersianNumbers()} امتیاز دریافتی {(ThisCourse.NumberOfMonthsTotalRatingsRequired == 0
+                ? ""
+                : $"در {ThisCourse.NumberOfMonthsTotalRatingsRequired.ToPersianNumbers()} ماه قبل")}",
+        CourseType.IsNotFree => "محدود",
+        _ => ""
+    };
 
     public string Comments => (ThisCourse?.NumberOfComments + ThisCourse?.NumberOfQuestionsComments).ToPersianNumbers();
 }

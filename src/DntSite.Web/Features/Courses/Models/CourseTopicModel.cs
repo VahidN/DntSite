@@ -10,5 +10,5 @@ public class CourseTopicModel
 
     public CourseTopic? PreviousTopic { set; get; }
 
-    public IList<CourseTopicComment> CommentsList { set; get; } = new List<CourseTopicComment>();
+    public IList<CourseTopicComment> CommentsList { set; get; } = [];
 }

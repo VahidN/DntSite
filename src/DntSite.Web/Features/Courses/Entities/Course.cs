@@ -42,9 +42,9 @@ public class Course : BaseInteractiveEntity<Course, CourseVisitor, CourseBookmar
 
     public CourseType Perm { set; get; }
 
-    public virtual ICollection<User> CourseAllowedUsers { set; get; } = new List<User>();
+    public virtual ICollection<User> CourseAllowedUsers { set; get; } = [];
 
-    public virtual ICollection<CourseTopic> CourseTopics { set; get; } = new List<CourseTopic>();
+    public virtual ICollection<CourseTopic> CourseTopics { set; get; } = [];
 
-    public virtual ICollection<CourseQuestion> CourseQuestions { set; get; } = new List<CourseQuestion>();
+    public virtual ICollection<CourseQuestion> CourseQuestions { set; get; } = [];
 }

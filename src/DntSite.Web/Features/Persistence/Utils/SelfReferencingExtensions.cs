@@ -32,7 +32,7 @@ public static class SelfReferencingExtensions
     {
         foreach (var kid in originalList.Where(x => x.ReplyId.HasValue && x.ReplyId.Value == parentItem.Id))
         {
-            parentItem.Children ??= new List<TEntity>();
+            parentItem.Children ??= [];
             parentItem.Children.Add(kid);
             AppendChildren(originalList, kid);
         }

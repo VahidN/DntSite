@@ -41,6 +41,6 @@ public partial class SurveyForm
             throw new InvalidOperationException($"{nameof(HandleVoteAction)} is null.");
         }
 
-        await HandleVoteAction.Invoke((FormId, SelectedValues ?? new List<int>()));
+        await HandleVoteAction.Invoke((FormId, SelectedValues ?? []));
     }
 }

@@ -6,11 +6,11 @@ public class DatabaseInfoModel
 
     public long DatabaseFreeSpaceSizeInBytes { set; get; }
 
-    public IList<string> CompileOptions { set; get; } = new List<string>();
+    public IList<string> CompileOptions { set; get; } = [];
 
     public required string DatabaseVersion { set; get; }
 
-    public IList<SQLitePragma> Pragmas { set; get; } = new List<SQLitePragma>();
+    public IList<SQLitePragma> Pragmas { set; get; } = [];
 
-    public IList<SQLiteTable> Tables { set; get; } = new List<SQLiteTable>();
+    public IList<SQLiteTable> Tables { set; get; } = [];
 }

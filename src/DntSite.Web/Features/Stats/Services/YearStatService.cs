@@ -60,15 +60,12 @@ public class YearStatService(IUnitOfWork uow) : IEfYearStatService
     }
 
     public async Task<IList<AnnualStatisticsInfo>> GetAnnualStatisticsAsync(string persianYear)
-        => new List<AnnualStatisticsInfo>
-        {
-            await GetYearArticlesAsync(persianYear),
-            await GetYearCoursesAsync(persianYear),
-            await GetProjectsAsync(persianYear),
-            await GetLinksAsync(persianYear),
-            await GetSurveysAsync(persianYear),
-            await GetRegisteredUsersAsync(persianYear)
-        };
+        =>
+        [
+            await GetYearArticlesAsync(persianYear), await GetYearCoursesAsync(persianYear),
+            await GetProjectsAsync(persianYear), await GetLinksAsync(persianYear),
+            await GetSurveysAsync(persianYear), await GetRegisteredUsersAsync(persianYear)
+        ];
 
     public async Task<AnnualStatisticsInfo> GetSurveysAsync(string persianYear)
     {

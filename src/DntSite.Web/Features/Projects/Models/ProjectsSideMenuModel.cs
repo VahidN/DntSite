@@ -8,9 +8,9 @@ public class ProjectsSideMenuModel
 
     public int NewProjectIssueStatusCount { set; get; }
 
-    public IList<SimpleItemModel> IssueTypes { set; get; } = new List<SimpleItemModel>();
+    public IList<SimpleItemModel> IssueTypes { set; get; } = [];
 
-    public IList<SimpleItemModel> IssueStatus { set; get; } = new List<SimpleItemModel>();
+    public IList<SimpleItemModel> IssueStatus { set; get; } = [];
 
     public ProjectsStatModel? ProjectStat { set; get; }
 }
