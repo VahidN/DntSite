@@ -454,6 +454,8 @@ public class FullTextSearchService : IFullTextSearchService
 
     protected virtual void Dispose(bool disposing)
     {
+        using var @lock = _lockerService.Lock<FullTextSearchService>();
+
         if (_isDisposed)
         {
             return;
@@ -476,23 +478,25 @@ public class FullTextSearchService : IFullTextSearchService
 
     private void CloseSearchService()
     {
-        _lowerCaseHtmlStripAnalyzer?.Dispose();
-        _lowerCaseHtmlStripAnalyzer = null;
+        TryDispose(_lowerCaseHtmlStripAnalyzer);
+        TryDispose(_keywordAnalyzer);
+        TryDispose(_analyzer);
+        TryDispose(_fsDirectory);
+        TryDispose(_indexWriter);
+        TryDispose(_searcherManager);
+    }
 
-        _keywordAnalyzer?.Dispose();
-        _keywordAnalyzer = null;
-
-        _analyzer?.Dispose();
-        _analyzer = null;
-
-        _fsDirectory?.Dispose();
-        _fsDirectory = null;
-
-        _indexWriter?.Dispose();
-        _indexWriter = null;
-
-        _searcherManager?.Dispose();
-        _searcherManager = null;
+    private void TryDispose(IDisposable? iDisposable)
+    {
+        try
+        {
+            iDisposable?.Dispose();
+            iDisposable = null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Demystify(), message: "TryDispose `{Type}` Error", iDisposable?.GetType());
+        }
     }
 
     private PagedResultModel<LuceneSearchResult> DoQuery(Query query,
