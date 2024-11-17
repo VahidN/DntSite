@@ -39,7 +39,7 @@ public class FullTextSearchService : IFullTextSearchService
     private readonly ILogger<FullTextSearchService> _logger;
 
     private Analyzer? _analyzer;
-    private FSDirectory? _fsDirectory;
+    private SimpleFSDirectory? _fsDirectory;
 
     //  IndexWriter instances are completely thread safe, meaning multiple threads can call any of its methods, concurrently.
     private IndexWriter? _indexWriter;
@@ -398,7 +398,7 @@ public class FullTextSearchService : IFullTextSearchService
                 }
             });
 
-            _fsDirectory = FSDirectory.Open(_appFoldersService.LuceneIndexFolderPath);
+            _fsDirectory = new SimpleFSDirectory(_appFoldersService.LuceneIndexFolderPath);
             TryUnlockDirectory();
             _indexWriter = new IndexWriter(_fsDirectory, new IndexWriterConfig(LuceneVersion, _analyzer));
             _searcherManager = new SearcherManager(_indexWriter, applyAllDeletes: true, searcherFactory: null);
