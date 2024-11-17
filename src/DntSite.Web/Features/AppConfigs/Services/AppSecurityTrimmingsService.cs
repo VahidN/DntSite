@@ -247,12 +247,12 @@ public static class AppSecurityTrimmingsService
             return false;
         }
 
-        if (IsTheSameAuthor(userModel, post.UserId))
+        if (userModel.IsAdmin)
         {
             return true;
         }
 
-        if (userModel.IsAdmin)
+        if (IsTheSameAuthor(userModel, post.UserId))
         {
             return true;
         }

@@ -4,9 +4,11 @@ namespace DntSite.Web.Features.Posts.Services.Contracts;
 
 public interface IBlogPostsEmailsService : IScopedService
 {
-    Task DraftConvertedEmailAsync(BlogPost blogPost);
+    public Task DraftConvertedEmailAsync(BlogPost? blogPost);
 
-    Task WriteArticleSendEmailAsync(BlogPost blogPost);
+    public Task WriteArticleSendEmailAsync(BlogPost? blogPost);
 
-    Task WriteDraftSendEmailAsync(BlogPostDraft blogPost);
+    public Task WriteDraftSendEmailAsync(BlogPostDraft? blogPost);
+
+    public Task DeleteDraftSendEmailAsync(BlogPostDraft? blogPost);
 }

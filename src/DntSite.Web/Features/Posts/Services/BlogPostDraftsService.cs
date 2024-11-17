@@ -78,7 +78,7 @@ public class BlogPostDraftsService(
         => _blogPostDrafts.AsNoTracking()
             .Include(x => x.User)
             .Where(x => !x.IsConverted &&
-                        x.User!.UserStat.NumberOfPosts > 0) // جلوگیری از ارسال مطالب بی‌ربط توسط تاره واردها
+                        x.User!.UserStat.NumberOfPosts > 0) // جلوگیری از ارسال مطالب بی‌ربط توسط تازه واردها
             .OrderByDescending(x => x.IsReady)
             .ThenBy(x => x.DateTimeToShow)
             .ToListAsync();

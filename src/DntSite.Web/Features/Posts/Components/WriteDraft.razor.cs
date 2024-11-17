@@ -77,6 +77,8 @@ public partial class WriteDraft
         var draft = await GetUserDraftAsync(DeleteId.ToInt());
         await BlogPostDraftsService.MarkAsDeletedAsync(draft);
 
+        await EmailsService.DeleteDraftSendEmailAsync(draft);
+
         ApplicationState.NavigateTo(PostsRoutingConstants.MyDrafts);
     }
 
