@@ -63,7 +63,7 @@ public class FullTextSearchService : IFullTextSearchService
         InitializeSearchService();
     }
 
-    private IndexWriter FtsIndexWrite
+    private IndexWriter? FtsIndexWriter
     {
         get
         {
@@ -78,7 +78,7 @@ public class FullTextSearchService : IFullTextSearchService
         }
     }
 
-    private SearcherManager FtsSearcherManager
+    private SearcherManager? FtsSearcherManager
     {
         get
         {
@@ -123,19 +123,19 @@ public class FullTextSearchService : IFullTextSearchService
 
     public void AddOrUpdateLuceneDocument(WhatsNewItemModel? item)
     {
-        if (item is null)
+        using var @lock = _lockerService.Lock<FullTextSearchService>();
+
+        if (item is null || FtsIndexWriter is null)
         {
             return;
         }
-
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
 
         try
         {
             AddOrUpdatePost(item);
 
-            FtsIndexWrite.Flush(triggerMerge: true, applyAllDeletes: true);
-            FtsIndexWrite.Commit();
+            FtsIndexWriter.Flush(triggerMerge: true, applyAllDeletes: true);
+            FtsIndexWriter.Commit();
         }
         catch (Exception ex)
         {
@@ -145,7 +145,7 @@ public class FullTextSearchService : IFullTextSearchService
 
     public async Task IndexTableAsync(IEnumerable<WhatsNewItemModel>? items, bool commitChanges = true)
     {
-        if (items is null)
+        if (items is null || FtsIndexWriter is null)
         {
             return;
         }
@@ -169,8 +169,8 @@ public class FullTextSearchService : IFullTextSearchService
             if (commitChanges)
             {
                 using var @lock = await _lockerService.LockAsync<FullTextSearchService>();
-                FtsIndexWrite.Flush(triggerMerge: true, applyAllDeletes: true);
-                FtsIndexWrite.Commit();
+                FtsIndexWriter.Flush(triggerMerge: true, applyAllDeletes: true);
+                FtsIndexWriter.Commit();
             }
         }
         catch (Exception ex)
@@ -183,10 +183,15 @@ public class FullTextSearchService : IFullTextSearchService
     {
         using var @lock = _lockerService.Lock<FullTextSearchService>();
 
+        if (FtsIndexWriter is null)
+        {
+            return;
+        }
+
         try
         {
-            FtsIndexWrite.Flush(triggerMerge: true, applyAllDeletes: true);
-            FtsIndexWrite.Commit();
+            FtsIndexWriter.Flush(triggerMerge: true, applyAllDeletes: true);
+            FtsIndexWriter.Commit();
         }
         catch (Exception ex)
         {
@@ -352,50 +357,56 @@ public class FullTextSearchService : IFullTextSearchService
 
     public void DeleteLuceneDocument(string? documentTypeIdHash)
     {
-        if (string.IsNullOrEmpty(documentTypeIdHash))
+        using var @lock = _lockerService.Lock<FullTextSearchService>();
+
+        if (string.IsNullOrEmpty(documentTypeIdHash) || FtsIndexWriter is null)
         {
             return;
         }
 
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        FtsIndexWriter.DeleteDocuments(new Term(nameof(WhatsNewItemModel.DocumentTypeIdHash), documentTypeIdHash));
 
-        FtsIndexWrite.DeleteDocuments(new Term(nameof(WhatsNewItemModel.DocumentTypeIdHash), documentTypeIdHash));
-
-        FtsIndexWrite.Flush(triggerMerge: true, applyAllDeletes: true);
-        FtsIndexWrite.Commit();
+        FtsIndexWriter.Flush(triggerMerge: true, applyAllDeletes: true);
+        FtsIndexWriter.Commit();
     }
 
-    [MemberNotNull(nameof(_indexWriter), nameof(_searcherManager))]
     private void InitializeSearchService()
     {
         using var @lock = _lockerService.Lock<FullTextSearchService>();
 
-        CloseSearchService();
-
-        _keywordAnalyzer = new KeywordAnalyzer();
-
-        _lowerCaseHtmlStripAnalyzer = new LowerCaseHtmlStripAnalyzer(LuceneVersion);
-
-        _analyzer = new PerFieldAnalyzerWrapper(_lowerCaseHtmlStripAnalyzer, new Dictionary<string, Analyzer>
+        try
         {
-            // Document StringField instances are sort of keywords, they are not analyzed, they indexed as is (in its original case).
-            // But StandardAnalyzer applies lower case filter to a query.
-            // We can fix this by using KeywordAnalyzer with our query parser.
-            {
-                nameof(WhatsNewItemModel.Id), _keywordAnalyzer
-            },
-            {
-                nameof(WhatsNewItemModel.DocumentTypeIdHash), _keywordAnalyzer
-            },
-            {
-                nameof(WhatsNewItemModel.DocumentContentHash), _keywordAnalyzer
-            }
-        });
+            CloseSearchService();
 
-        _fsDirectory = FSDirectory.Open(_appFoldersService.LuceneIndexFolderPath);
-        TryUnlockDirectory();
-        _indexWriter = new IndexWriter(_fsDirectory, new IndexWriterConfig(LuceneVersion, _analyzer));
-        _searcherManager = new SearcherManager(_indexWriter, applyAllDeletes: true, searcherFactory: null);
+            _keywordAnalyzer = new KeywordAnalyzer();
+
+            _lowerCaseHtmlStripAnalyzer = new LowerCaseHtmlStripAnalyzer(LuceneVersion);
+
+            _analyzer = new PerFieldAnalyzerWrapper(_lowerCaseHtmlStripAnalyzer, new Dictionary<string, Analyzer>
+            {
+                // Document StringField instances are sort of keywords, they are not analyzed, they indexed as is (in its original case).
+                // But StandardAnalyzer applies lower case filter to a query.
+                // We can fix this by using KeywordAnalyzer with our query parser.
+                {
+                    nameof(WhatsNewItemModel.Id), _keywordAnalyzer
+                },
+                {
+                    nameof(WhatsNewItemModel.DocumentTypeIdHash), _keywordAnalyzer
+                },
+                {
+                    nameof(WhatsNewItemModel.DocumentContentHash), _keywordAnalyzer
+                }
+            });
+
+            _fsDirectory = FSDirectory.Open(_appFoldersService.LuceneIndexFolderPath);
+            TryUnlockDirectory();
+            _indexWriter = new IndexWriter(_fsDirectory, new IndexWriterConfig(LuceneVersion, _analyzer));
+            _searcherManager = new SearcherManager(_indexWriter, applyAllDeletes: true, searcherFactory: null);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Demystify(), message: "InitializeSearchService Error");
+        }
     }
 
     private void TryUnlockDirectory()
@@ -413,6 +424,11 @@ public class FullTextSearchService : IFullTextSearchService
 
     private TResult DoSearch<TResult>(Func<IndexSearcher, TResult> action, TResult defaultValue)
     {
+        if (FtsSearcherManager is null)
+        {
+            return defaultValue;
+        }
+
         FtsSearcherManager.MaybeRefreshBlocking();
         var indexSearcher = FtsSearcherManager.Acquire();
 
@@ -433,11 +449,16 @@ public class FullTextSearchService : IFullTextSearchService
 
     private void AddOrUpdatePost(WhatsNewItemModel post)
     {
+        if (FtsIndexWriter is null)
+        {
+            return;
+        }
+
         var doc = FindLuceneDocument(post.DocumentTypeIdHash);
 
         if (doc is null)
         {
-            FtsIndexWrite.AddDocument(post.MapToLuceneDocument());
+            FtsIndexWriter.AddDocument(post.MapToLuceneDocument());
         }
         else
         {
@@ -446,7 +467,7 @@ public class FullTextSearchService : IFullTextSearchService
                 return;
             }
 
-            FtsIndexWrite.UpdateDocument(
+            FtsIndexWriter.UpdateDocument(
                 new Term(nameof(WhatsNewItemModel.DocumentTypeIdHash), post.DocumentTypeIdHash),
                 post.MapToLuceneDocument());
         }
@@ -469,6 +490,10 @@ public class FullTextSearchService : IFullTextSearchService
             }
 
             CloseSearchService();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Demystify(), message: "Dispose Error");
         }
         finally
         {
