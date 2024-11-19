@@ -507,25 +507,12 @@ public class FullTextSearchService : IFullTextSearchService
 
     private void CloseSearchService()
     {
-        TryDispose(_lowerCaseHtmlStripAnalyzer);
-        TryDispose(_keywordAnalyzer);
-        TryDispose(_analyzer);
-        TryDispose(_fsDirectory);
-        TryDispose(_indexWriter);
-        TryDispose(_searcherManager);
-    }
-
-    private void TryDispose(IDisposable? iDisposable)
-    {
-        try
-        {
-            iDisposable?.Dispose();
-            iDisposable = null;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Demystify(), message: "TryDispose Error");
-        }
+        _lowerCaseHtmlStripAnalyzer.TryDisposeSafe(_logger);
+        _keywordAnalyzer.TryDisposeSafe(_logger);
+        _analyzer.TryDisposeSafe(_logger);
+        _fsDirectory.TryDisposeSafe(_logger);
+        _indexWriter.TryDisposeSafe(_logger);
+        _searcherManager.TryDisposeSafe(_logger);
     }
 
     private PagedResultModel<LuceneSearchResult> DoQuery(Query query,
