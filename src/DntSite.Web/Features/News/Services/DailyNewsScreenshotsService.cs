@@ -56,7 +56,7 @@ public class DailyNewsScreenshotsService(
                     continue;
                 }
 
-                if (path.IsBlankImage())
+                if (path.IsPartiallyBlankImage(whitePixelsPercentage: 80))
                 {
                     File.Delete(path);
 
