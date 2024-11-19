@@ -60,6 +60,8 @@ public partial class WriteNews
             return;
         }
 
+        ApplicationState.DoNotLogPageReferrer = true;
+
         var newsId = DeleteScreenshotId.ToInt();
         var item = await GetUserDailyNewsItemAsync(newsId);
         await DailyNewsScreenshotsService.DeleteImageAsync(item);
