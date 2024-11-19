@@ -282,7 +282,7 @@ public class FullTextSearchService : IFullTextSearchService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Demystify(), message: "FindPagedPosts({Terms})",
+            _logger.LogError(ex.Demystify(), message: "FindPagedPosts({Terms}) Error",
                 _antiXssService.GetSanitizedHtml(searchText));
         }
 
@@ -402,6 +402,10 @@ public class FullTextSearchService : IFullTextSearchService
             TryUnlockDirectory();
             _indexWriter = new IndexWriter(_fsDirectory, new IndexWriterConfig(LuceneVersion, _analyzer));
             _searcherManager = new SearcherManager(_indexWriter, applyAllDeletes: true, searcherFactory: null);
+        }
+        catch (FileNotFoundException)
+        {
+            // It's not indexed yet.
         }
         catch (Exception ex)
         {
