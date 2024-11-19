@@ -109,8 +109,16 @@ public class ReferrersValidatorService(
             return true;
         }
 
+        if (IsFromLocalHost(referrerUrl))
+        {
+            return true;
+        }
+
         return false;
     }
+
+    private static bool IsFromLocalHost(string referrerUrl)
+        => referrerUrl.Contains(value: "localhost", StringComparison.OrdinalIgnoreCase);
 
     private static bool HasIgnorePattern(string url, string rootUrl)
         => url.IsReferrerToThisSite(rootUrl) &&
