@@ -7,6 +7,7 @@ using DntSite.Web.Features.UserProfiles.Models;
 
 namespace DntSite.Web.Features.Posts.Components;
 
+[Authorize]
 public partial class ShowDraft
 {
     private IList<BlogPostDraft>? _blogPostDrafts;
