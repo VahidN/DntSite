@@ -38,6 +38,8 @@ public partial class WriteNews
 
     protected override async Task OnInitializedAsync()
     {
+        ApplicationState.DoNotLogPageReferrer = true;
+
         AutoCompleteDataList = await TagsService.GetTagNamesArrayAsync(count: 2000);
         AddBreadCrumbs();
 
@@ -59,8 +61,6 @@ public partial class WriteNews
         {
             return;
         }
-
-        ApplicationState.DoNotLogPageReferrer = true;
 
         var newsId = DeleteScreenshotId.ToInt();
         var item = await GetUserDailyNewsItemAsync(newsId);
