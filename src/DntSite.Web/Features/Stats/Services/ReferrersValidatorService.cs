@@ -9,7 +9,8 @@ public class ReferrersValidatorService(
 {
     private static readonly string[] IgnoresList =
     [
-        "/api/", "/file/", "/feed/", "/feeds/", "/error/", "/search-results/", "/whats-new/", "/more-like-this/"
+        "/api/", "/file/", "/feed/", "/feeds/", "/error/", "/search-results/", "/whats-new/", "/more-like-this/",
+        "/delete"
     ];
 
     private readonly HashSet<string> _protectedUrls = new(StringComparer.OrdinalIgnoreCase);
