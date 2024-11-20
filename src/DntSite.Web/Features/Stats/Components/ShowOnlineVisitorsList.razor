@@ -3,6 +3,7 @@
 @attribute [Route(StatsRoutingConstants.OnlineVisitorsPageCurrentPage)]
 @attribute [Route(StatsRoutingConstants.OnlineSpiderVisitors)]
 @attribute [Route(StatsRoutingConstants.OnlineSpiderVisitorsPageCurrentPage)]
+@attribute [Route(StatsRoutingConstants.OnlineVisitorsDeleteDeleteId)]
 
 <DntSitePageTitle Group="آمار برنامه" PageTitle="@PageTitle" CurrentPage="@CurrentPage"/>
 
@@ -25,6 +26,15 @@
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
+                    @if (ApplicationState.IsCurrentUserAdmin)
+                    {
+                        <a href="@StatsRoutingConstants.OnlineVisitorsDeleteBase/@Uri.EscapeDataString(ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
+                           data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"
+                           class="btn btn-danger me-2 btn-sm">
+                            حذف
+                        </a>
+                    }
+
                     @if (record.LastSiteUrlVisitorStat.IsSpider)
                     {
                         <span class="@DntBootstrapIcons.BiBug ms-2 me-1"></span>
@@ -60,7 +70,8 @@
                     }
                     else
                     {
-                        <span title="@record.LastSiteUrlVisitorStat.UserAgent" dir="ltr" class="badge bg-primary me-1 text-wrap text-break">
+                        <span title="@record.LastSiteUrlVisitorStat.UserAgent" dir="ltr"
+                              class="badge bg-primary me-1 text-wrap text-break">
                             @record.LastSiteUrlVisitorStat.UserAgent
                         </span>
                     }

@@ -12,7 +12,8 @@ public class SiteUrlsService(
     IUnitOfWork uow,
     IUAParserService uaParserService,
     IReferrersValidatorService referrersValidatorService,
-    ICachedAppSettingsProvider appSettingsProvider) : ISiteUrlsService
+    ICachedAppSettingsProvider appSettingsProvider,
+    ILogger<SiteUrlsService> logger) : ISiteUrlsService
 {
     private readonly DbSet<SiteUrl> _siteUrls = uow.DbSet<SiteUrl>();
 
@@ -37,6 +38,21 @@ public class SiteUrlsService(
             updateVisitsCount: false, lastSiteUrlVisitorStat);
 
         return referrerSiteUrl?.IsHidden == true ? (null, null) : (referrerSiteUrl?.Title, referrerSiteUrl?.Id);
+    }
+
+    public async Task RemoveSiteUrlAsync(int id)
+    {
+        var item = await _siteUrls.FindAsync(id);
+
+        if (item is null)
+        {
+            return;
+        }
+
+        item.IsDeleted = true;
+        await uow.SaveChangesAsync();
+
+        logger.LogWarning(message: "Deleted a SiteUrl record with Id={Id} and Url={Text}", item.Id, item.Url);
     }
 
     public async Task<SiteUrl?> GetOrAddOrUpdateSiteUrlAsync(string? url,

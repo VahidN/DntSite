@@ -5,17 +5,20 @@ namespace DntSite.Web.Features.Stats.Services.Contracts;
 
 public interface ISiteUrlsService : IScopedService
 {
-    Task DeleteAllAsync();
+    public Task DeleteAllAsync();
 
-    Task<LastSiteUrlVisitorStat> GetLastSiteUrlVisitorStatAsync(HttpContext context);
+    public Task<LastSiteUrlVisitorStat> GetLastSiteUrlVisitorStatAsync(HttpContext context);
 
-    Task<PagedResultModel<SiteUrl>> GetPagedSiteUrlsAsync(int pageNumber, int recordsPerPage, bool isSpider);
+    public Task<PagedResultModel<SiteUrl>> GetPagedSiteUrlsAsync(int pageNumber, int recordsPerPage, bool isSpider);
 
-    Task<SiteUrl?> GetOrAddOrUpdateSiteUrlAsync(string? url,
+    public Task<SiteUrl?> GetOrAddOrUpdateSiteUrlAsync(string? url,
         string? title,
         bool? isProtectedPage,
         bool updateVisitsCount,
         LastSiteUrlVisitorStat lastSiteUrlVisitorStat);
 
-    Task<(string? Title, int? SiteUrlId)> GetUrlTitleAsync(string? url, LastSiteUrlVisitorStat lastSiteUrlVisitorStat);
+    public Task<(string? Title, int? SiteUrlId)> GetUrlTitleAsync(string? url,
+        LastSiteUrlVisitorStat lastSiteUrlVisitorStat);
+
+    public Task RemoveSiteUrlAsync(int id);
 }

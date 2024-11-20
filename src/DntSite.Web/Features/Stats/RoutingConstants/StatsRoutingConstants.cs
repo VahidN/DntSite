@@ -18,6 +18,11 @@ public static class StatsRoutingConstants
     public const string OnlineVisitors = "/online-visitors";
     public const string OnlineVisitorsPageCurrentPage = $"{OnlineVisitors}/page/{{CurrentPage:int?}}";
 
+    public const string OnlineVisitorsDeleteBase = $"{OnlineVisitors}/delete";
+
+    public const string OnlineVisitorsDeleteDeleteId =
+        $"{OnlineVisitorsDeleteBase}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
+
     public const string OnlineSpiderVisitors = $"{OnlineVisitors}/{{CategoryName}}";
     public const string OnlineSpiderVisitorsUrl = $"{OnlineVisitors}/spider";
     public const string OnlineSpiderVisitorsPageCurrentPage = $"{OnlineSpiderVisitors}/page/{{CurrentPage:int?}}";
