@@ -18,6 +18,9 @@ using Directory = System.IO.Directory;
 
 namespace DntSite.Web.Features.Searches.Services;
 
+// TryDisposeSafe does dispose IDisposable fields
+#pragma warning disable CA2213
+
 public class FullTextSearchService : IFullTextSearchService
 {
     private const LuceneVersion LuceneVersion = Lucene.Net.Util.LuceneVersion.LUCENE_48;
@@ -37,18 +40,12 @@ public class FullTextSearchService : IFullTextSearchService
     private readonly IAppFoldersService _appFoldersService;
     private readonly ILockerService _lockerService;
     private readonly ILogger<FullTextSearchService> _logger;
-
     private Analyzer? _analyzer;
     private FSDirectory? _fsDirectory;
-
-    //  IndexWriter instances are completely thread safe, meaning multiple threads can call any of its methods, concurrently.
     private IndexWriter? _indexWriter;
-
     private bool _isDisposed;
     private KeywordAnalyzer? _keywordAnalyzer;
     private LowerCaseHtmlStripAnalyzer? _lowerCaseHtmlStripAnalyzer;
-
-    // Safely shares IndexSearcher instances across multiple threads, while periodically reopening.
     private SearcherManager? _searcherManager;
 
     public FullTextSearchService(IAppFoldersService appFoldersService,
@@ -566,4 +563,8 @@ public class FullTextSearchService : IFullTextSearchService
                 TotalItems = docs.TotalHits > maxItems ? maxItems : docs.TotalHits
             };
         }, new PagedResultModel<LuceneSearchResult>());
+
+    //  IndexWriter instances are completely thread safe, meaning multiple threads can call any of its methods, concurrently.
+
+    // Safely shares IndexSearcher instances across multiple threads, while periodically reopening.
 }
