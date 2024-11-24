@@ -451,6 +451,13 @@ var DntBlazorSsr;
             }
             editorElement.style.height = "auto";
         }
+        static scrollToCursor(editorElement) {
+            editorElement.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "nearest"
+            });
+        }
         static displayFullyLoadedEditor(outerDivElement) {
             outerDivElement.classList.remove('d-none');
         }
@@ -739,6 +746,7 @@ var DntBlazorSsr;
                 dntHtmlEditor.setDirection(quill, direction);
                 dntHtmlEditor.displayFullyLoadedEditor(outerDivElement);
                 dntHtmlEditor.synchronizeQuillAndTextArea(quill, textAreaElement);
+                dntHtmlEditor.scrollToCursor(editorElement);
             });
         }
     }

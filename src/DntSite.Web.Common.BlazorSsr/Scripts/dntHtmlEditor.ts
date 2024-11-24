@@ -19,6 +19,14 @@ namespace DntBlazorSsr {
             editorElement.style.height = "auto";
         }
 
+        static scrollToCursor(editorElement: HTMLElement) {
+            editorElement.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "nearest"
+            });
+        }
+
         static displayFullyLoadedEditor(outerDivElement: HTMLElement) {
             outerDivElement.classList.remove('d-none');
         }
@@ -388,6 +396,7 @@ namespace DntBlazorSsr {
                 dntHtmlEditor.setDirection(quill, direction);
                 dntHtmlEditor.displayFullyLoadedEditor(outerDivElement);
                 dntHtmlEditor.synchronizeQuillAndTextArea(quill, textAreaElement);
+                dntHtmlEditor.scrollToCursor(editorElement);
             });
         }
     }
