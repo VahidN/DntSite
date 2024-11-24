@@ -1,4 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
+using DntSite.Web.Features.RssFeeds.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
@@ -33,12 +34,27 @@ public partial class ForgottenPasswordReset
         var operationResult = await UsersService.ResetPasswordAsync(Id);
         _alertMessage = operationResult.Message;
 
-        if (operationResult.Stat == OperationStat.Succeeded)
+        switch (operationResult.Stat)
         {
-            _alertType = AlertType.Success;
+            case OperationStat.Failed:
+                RedirectToMainPageAfterLogin();
 
-            await UsersManagerEmailsService.SendResetPasswordEmailAsync(operationResult.Result.User!,
-                operationResult.Result.Password);
+                break;
+            case OperationStat.Succeeded:
+                _alertType = AlertType.Success;
+
+                await UsersManagerEmailsService.SendResetPasswordEmailAsync(operationResult.Result.User!,
+                    operationResult.Result.Password);
+
+                break;
+        }
+    }
+
+    private void RedirectToMainPageAfterLogin()
+    {
+        if (ApplicationState.CurrentUser?.IsAuthenticated == true)
+        {
+            ApplicationState.NavigateTo(RssFeedsRoutingConstants.Root);
         }
     }
 
