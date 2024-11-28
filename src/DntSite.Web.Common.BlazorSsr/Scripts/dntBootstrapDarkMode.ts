@@ -12,7 +12,7 @@ namespace DntBlazorSsr {
                 if (!lightSwitch.checked) {
                     lightSwitch.checked = isDark;
                 }
-                localStorage.setItem("lightSwitch", mode);
+                DntStorageProvider.setItem("lightSwitch", mode);
                 document.documentElement.setAttribute("data-bs-theme", mode);
                 lightSwitchIcon.setAttribute("class", isDark ? "bi-moon me-1" : "bi-sun me-1");
             };
@@ -23,7 +23,7 @@ namespace DntBlazorSsr {
                 window.matchMedia("(prefers-color-scheme: dark)").matches;
 
             const setup = () => {
-                let settings = localStorage.getItem("lightSwitch");
+                let settings = DntStorageProvider.getItem("lightSwitch");
                 if (!settings) {
                     settings = isSystemDefaultThemeDark() ? "dark" : "light";
                 }

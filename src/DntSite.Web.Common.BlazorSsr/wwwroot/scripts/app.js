@@ -99,14 +99,14 @@ var DntBlazorSsr;
                 if (!lightSwitch.checked) {
                     lightSwitch.checked = isDark;
                 }
-                localStorage.setItem("lightSwitch", mode);
+                DntBlazorSsr.DntStorageProvider.setItem("lightSwitch", mode);
                 document.documentElement.setAttribute("data-bs-theme", mode);
                 lightSwitchIcon.setAttribute("class", isDark ? "bi-moon me-1" : "bi-sun me-1");
             };
             const onToggleMode = () => setTheme(lightSwitch.checked);
             const isSystemDefaultThemeDark = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
             const setup = () => {
-                let settings = localStorage.getItem("lightSwitch");
+                let settings = DntBlazorSsr.DntStorageProvider.getItem("lightSwitch");
                 if (!settings) {
                     settings = isSystemDefaultThemeDark() ? "dark" : "light";
                 }
@@ -325,7 +325,7 @@ var DntBlazorSsr;
             const fontSizes = ['fs-6', 'fs-5', 'fs-4', 'fs-3', 'fs-2', 'fs-1'];
             let fontSizeIndex = 0;
             let cacheKey = "body-font-size";
-            let fontSize = localStorage.getItem(cacheKey);
+            let fontSize = DntBlazorSsr.DntStorageProvider.getItem(cacheKey);
             if (!fontSize) {
                 fontSize = fontSizes[fontSizeIndex];
             }
@@ -336,7 +336,7 @@ var DntBlazorSsr;
                 mainBodies.forEach(mainBody => {
                     fontSizes.forEach(item => mainBody.classList.remove(item));
                     mainBody.classList.add(size);
-                    localStorage.setItem(cacheKey, size);
+                    DntBlazorSsr.DntStorageProvider.setItem(cacheKey, size);
                 });
             };
             setMainFontSize(fontSize);
@@ -1541,6 +1541,73 @@ var DntBlazorSsr;
         }
     }
     DntBlazorSsr.DntStickySidebar = DntStickySidebar;
+})(DntBlazorSsr || (DntBlazorSsr = {}));
+var DntBlazorSsr;
+(function (DntBlazorSsr) {
+    class DntStorageProvider {
+        static isSupported() {
+            try {
+                const testKey = "__DntStorageProvider__";
+                localStorage.setItem(testKey, testKey);
+                localStorage.removeItem(testKey);
+                return true;
+            }
+            catch (e) {
+                return false;
+            }
+        }
+        static clear() {
+            if (DntStorageProvider.isSupported()) {
+                localStorage.clear();
+            }
+            else {
+                DntStorageProvider.inMemoryStorage = {};
+            }
+        }
+        static getItem(name) {
+            if (DntStorageProvider.isSupported()) {
+                return localStorage.getItem(name);
+            }
+            if (DntStorageProvider.inMemoryStorage.hasOwnProperty(name)) {
+                return DntStorageProvider.inMemoryStorage[name];
+            }
+            return null;
+        }
+        static key(index) {
+            if (DntStorageProvider.isSupported()) {
+                return localStorage.key(index);
+            }
+            else {
+                return Object.keys(DntStorageProvider.inMemoryStorage)[index] || null;
+            }
+        }
+        static removeItem(name) {
+            if (DntStorageProvider.isSupported()) {
+                localStorage.removeItem(name);
+            }
+            else {
+                delete DntStorageProvider.inMemoryStorage[name];
+            }
+        }
+        static setItem(name, value) {
+            if (DntStorageProvider.isSupported()) {
+                localStorage.setItem(name, value);
+            }
+            else {
+                DntStorageProvider.inMemoryStorage[name] = String(value);
+            }
+        }
+        static count() {
+            if (DntStorageProvider.isSupported()) {
+                return localStorage.length;
+            }
+            else {
+                return Object.keys(DntStorageProvider.inMemoryStorage).length;
+            }
+        }
+    }
+    DntStorageProvider.inMemoryStorage = {};
+    DntBlazorSsr.DntStorageProvider = DntStorageProvider;
 })(DntBlazorSsr || (DntBlazorSsr = {}));
 var DntBlazorSsr;
 (function (DntBlazorSsr) {

@@ -24,7 +24,7 @@ namespace DntBlazorSsr {
             const fontSizes = ['fs-6', 'fs-5', 'fs-4', 'fs-3', 'fs-2', 'fs-1'];
             let fontSizeIndex = 0;
             let cacheKey = "body-font-size";
-            let fontSize = localStorage.getItem(cacheKey);
+            let fontSize = DntStorageProvider.getItem(cacheKey);
             if (!fontSize) {
                 fontSize = fontSizes[fontSizeIndex];
             } else {
@@ -35,7 +35,7 @@ namespace DntBlazorSsr {
                 mainBodies.forEach(mainBody => {
                     fontSizes.forEach(item => mainBody.classList.remove(item));
                     mainBody.classList.add(size);
-                    localStorage.setItem(cacheKey, size);
+                    DntStorageProvider.setItem(cacheKey, size);
                 });
             };
 
