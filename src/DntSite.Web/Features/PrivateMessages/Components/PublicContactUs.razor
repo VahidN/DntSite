@@ -29,6 +29,7 @@
 
             <DntHtmlEditor @bind-Value="Model.DescriptionText"
                            IsReadOnly="false"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            AllowUploadFile="false"
                            UploadFileApiPath=""
                            AcceptedUploadFileFormats=".zip,.rar,.7z"

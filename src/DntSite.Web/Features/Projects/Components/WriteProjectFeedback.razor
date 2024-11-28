@@ -31,6 +31,7 @@
 
             <DntHtmlEditor @bind-Value="IssueModel.Description"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            AllowUploadFile="true"
                            UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"

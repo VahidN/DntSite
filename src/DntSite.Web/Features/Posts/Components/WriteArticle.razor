@@ -20,6 +20,7 @@
 
             <DntHtmlEditor @bind-Value="WriteArticleModel.ArticleBody"
                            LabelName=""
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            ShowLabel="false"
                            IsReadOnly="false"
                            AllowUploadFile="true"

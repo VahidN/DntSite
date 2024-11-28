@@ -1,10 +1,13 @@
 using System.Text;
 using DntSite.Web.Features.Advertisements.Models;
+using DntSite.Web.Features.AppConfigs.Components;
 
 namespace DntSite.Web.Features.Advertisements.Components;
 
 public partial class AddJobOfferAdvertisementForm
 {
+    [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
+
     [Parameter] [EditorRequired] public IList<string>? AutoCompleteDataList { get; set; }
 
     [Parameter] [EditorRequired] public EventCallback<WriteAdvertisementModel> OnValidSubmit { get; set; }

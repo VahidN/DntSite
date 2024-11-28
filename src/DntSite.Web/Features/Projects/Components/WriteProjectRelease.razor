@@ -33,6 +33,7 @@
 
             <DntHtmlEditor @bind-Value="ProjectPostFileModel.Description"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            AllowUploadFile="true"
                            UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"

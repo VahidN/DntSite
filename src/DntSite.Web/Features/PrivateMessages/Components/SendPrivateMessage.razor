@@ -10,7 +10,8 @@
         ارسال پیام خصوصی
     </FrameHeader>
     <FrameBody>
-        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync" FormName="@nameof(SendPrivateMessage)" Enhance>
+        <EditForm Model="Model" method="post" OnValidSubmit="PerformAsync" FormName="@nameof(SendPrivateMessage)"
+                  Enhance>
             <DataAnnotationsValidator/>
 
             <DntDisplayTextField LabelName="ارسال به" Value="@_friendlyName"/>
@@ -21,6 +22,7 @@
 
             <DntHtmlEditor @bind-Value="Model.DescriptionText"
                            IsReadOnly="false"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            AllowUploadFile="false"
                            UploadFileApiPath=""
                            AcceptedUploadFileFormats=".zip,.rar,.7z"

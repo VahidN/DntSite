@@ -24,7 +24,8 @@
                 <div class="row">
                     <div class="col-lg-3">تصویر فعلی</div>
                     <div class="col-lg-9">
-                        <img alt="@WriteProjectModel.Title" src="@(ApiUrlsRoutingConstants.File.HttpAny.Avatar)?name=@(Uri.EscapeDataString(WriteProjectModel.Logo))"/>
+                        <img alt="@WriteProjectModel.Title"
+                             src="@(ApiUrlsRoutingConstants.File.HttpAny.Avatar)?name=@(Uri.EscapeDataString(WriteProjectModel.Logo))"/>
                     </div>
                 </div>
             }
@@ -35,6 +36,7 @@
 
             <DntHtmlEditor @bind-Value="WriteProjectModel.DescriptionText"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            AllowUploadFile="true"
                            UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
@@ -59,6 +61,7 @@
 
             <DntHtmlEditor @bind-Value="WriteProjectModel.LicenseText"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            AllowUploadFile="true"
                            UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
@@ -78,6 +81,7 @@
 
             <DntHtmlEditor @bind-Value="WriteProjectModel.RequiredDependenciesText"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            OptionalLabel="(اختیاری)"
                            IsReadOnly="false"
                            AllowUploadFile="true"
@@ -98,6 +102,7 @@
 
             <DntHtmlEditor @bind-Value="WriteProjectModel.RelatedArticlesText"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            OptionalLabel="(اختیاری)"
                            IsReadOnly="false"
                            AllowUploadFile="true"
@@ -119,6 +124,7 @@
 
             <DntHtmlEditor @bind-Value="WriteProjectModel.DevelopersDescriptionText"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            OptionalLabel="(اختیاری)"
                            AllowUploadFile="true"

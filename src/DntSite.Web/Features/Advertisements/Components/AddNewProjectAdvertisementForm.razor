@@ -18,6 +18,7 @@
 
             <DntHtmlEditor @bind-Value="Model.GeneralConditions"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            AllowUploadFile="true"
                            UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
@@ -37,6 +38,7 @@
 
             <DntHtmlEditor @bind-Value="Model.SpecialConditions"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            AllowUploadFile="true"
                            UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"

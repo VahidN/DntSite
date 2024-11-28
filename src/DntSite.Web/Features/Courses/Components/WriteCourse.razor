@@ -20,6 +20,7 @@
 
             <DntHtmlEditor @bind-Value="WriteCourseModel.Description"
                            LabelName="توضیحات"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            ShowLabel="true"
                            IsReadOnly="false"
                            AllowUploadFile="true"
@@ -44,6 +45,7 @@
 
             <DntHtmlEditor @bind-Value="WriteCourseModel.Requirements"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            AllowUploadFile="true"
                            UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.CourseFileUpload"

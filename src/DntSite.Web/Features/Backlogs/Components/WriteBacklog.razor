@@ -19,6 +19,7 @@
 
             <DntHtmlEditor @bind-Value="WriteBacklogModel.Description"
                            LabelName="توضیحات"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            ShowLabel="true"
                            IsReadOnly="false"
                            AllowUploadFile="true"

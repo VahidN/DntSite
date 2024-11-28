@@ -1,6 +1,7 @@
 ﻿@using DntSite.Web.Features.Posts.Models
 <DntSecurityTrim AllowAnonymous="false">
-    <EditForm Model="this" class="w-100 mt-2" method="post" OnValidSubmit="OnValidSubmitAsync" FormName="@FormName" Enhance>
+    <EditForm Model="this" class="w-100 mt-2" method="post" OnValidSubmit="OnValidSubmitAsync" FormName="@FormName"
+              Enhance>
         @if (CommentId.HasValue)
         {
             <input type="hidden" name="@nameof(FormCommentId)" value="@CommentId"/>
@@ -10,19 +11,22 @@
         <div>
             @if (IsReplyToPost)
             {
-                <button class="btn btn-primary me-2 mt-3" type="submit" name="@nameof(CommentActionValue)" value="@CommentAction.ReplyToPost">
+                <button class="btn btn-primary me-2 mt-3" type="submit" name="@nameof(CommentActionValue)"
+                        value="@CommentAction.ReplyToPost">
                     ارسال نظر
                 </button>
             }
             else
             {
-                <button class="btn btn-primary btn-sm me-2" type="submit" name="@nameof(CommentActionValue)" value="@CommentAction.ReplyToComment">
+                <button class="btn btn-primary btn-sm me-2" type="submit" name="@nameof(CommentActionValue)"
+                        value="@CommentAction.ReplyToComment">
                     پاسخ به نظر
                 </button>
 
                 @if (CanUserEditThisReply)
                 {
-                    <button class="btn btn-success btn-sm me-2" type="submit" name="@nameof(CommentActionValue)" value="@CommentAction.Edit">
+                    <button class="btn btn-success btn-sm me-2" type="submit" name="@nameof(CommentActionValue)"
+                            value="@CommentAction.Edit">
                         ویرایش
                     </button>
                 }
@@ -44,7 +48,9 @@
                 {
                     <DntMessageBox Type="AlertType.Info" IsVisible="true">
                         <span class="@DntBootstrapIcons.BiStar me-2 ms-2" aria-hidden="true"></span>
-                        لطفا جهت ابراز احساسات و تشکر از گزینه رای دادن (<i class="@DntBootstrapIcons.BiHandThumbsUp"></i>) که ذیل هر مطلب قرار دارد و برای ارسال سؤال‌های عمومی و خارج از محتوای بحث جاری، از قسمت
+                        لطفا جهت ابراز احساسات و تشکر از گزینه رای دادن (<i
+                            class="@DntBootstrapIcons.BiHandThumbsUp"></i>) که ذیل هر مطلب قرار دارد و برای ارسال
+                        سؤال‌های عمومی و خارج از محتوای بحث جاری، از قسمت
                         <a href="@QuestionsRoutingConstants.Questions">
                             پرسش‌ها
                         </a>
@@ -53,6 +59,7 @@
                 }
                 <DntHtmlEditor @bind-Value="Comment"
                                LabelName=""
+                               AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                                ShowLabel="false"
                                IsReadOnly="false"
                                AllowUploadFile="true"

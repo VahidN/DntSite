@@ -18,6 +18,7 @@
 
             <DntHtmlEditor @bind-Value="WriteQuestionModel.Description"
                            LabelName="توضیحات"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            ShowLabel="true"
                            IsReadOnly="false"
                            AllowUploadFile="true"

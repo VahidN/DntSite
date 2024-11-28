@@ -13,6 +13,7 @@
 
             <DntHtmlEditor @bind-Value="Model.Body"
                            LabelName=""
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            ShowLabel="false"
                            IsReadOnly="false"
                            AllowUploadFile="true"

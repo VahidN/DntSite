@@ -19,6 +19,7 @@
 
             <DntHtmlEditor @bind-Value="WriteProjectFaqFormModel.DescriptionText"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            AllowUploadFile="true"
                            UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"

@@ -52,10 +52,13 @@
                     <span class="ql-formats">
                         <button class="ql-code-block" title="@CodeBlockTooltip"></button>
                     </span>
-                    <span class="ql-formats">
-                        <select class="ql-color" title="@ColorTooltip"></select>
-                        <select class="ql-background" title="@BackgroundTooltip"></select>
-                    </span>
+                    @if (AllowChangeTextColor)
+                    {
+                        <span class="ql-formats">
+                            <select class="ql-color" title="@ColorTooltip"></select>
+                            <select class="ql-background" title="@BackgroundTooltip"></select>
+                        </span>
+                    }
                     <span class="ql-formats">
                         <button class="ql-blockquote" title="@BlockquoteTooltip"></button>
                     </span>

@@ -125,6 +125,8 @@ public partial class DntHtmlEditor
     public string? CodeBlockTooltip { set; get; } =
         "برای تبدیل یک متن انتخاب شده، به یک قطعه کد،‌ ابتدا با استفاده از دکمه‌ی تعیین جهت، قطعه‌ی انتخاب شده را چپ به راست کنید و سپس بر روی دکمه‌ی جاری کلیک کنید تا گزینه انتخاب زبان کد مدنظر، ظاهر شود";
 
+    [Parameter] public bool AllowChangeTextColor { set; get; }
+
     [Parameter] public string? ColorTooltip { set; get; } = "رنگ قلم متن انتخابی";
 
     [Parameter] public string? BackgroundTooltip { set; get; } = "رنگ پس‌زمینه متن انتخابی";

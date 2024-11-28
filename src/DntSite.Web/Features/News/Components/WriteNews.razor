@@ -27,6 +27,7 @@
             <DntHtmlEditor @bind-Value="WriteNewsModel.DescriptionText"
                            LabelName="توضیحات"
                            ShowLabel="true"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            IsReadOnly="false"
                            AllowUploadFile="true"
                            UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"

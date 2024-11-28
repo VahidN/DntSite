@@ -19,6 +19,7 @@
 
             <DntHtmlEditor @bind-Value="WriteLearningPathModel.Description"
                            LabelName="توضیحات"
+                           AllowChangeTextColor="ApplicationState.IsCurrentUserAdmin"
                            ShowLabel="true"
                            IsReadOnly="false"
                            AllowUploadFile="true"
