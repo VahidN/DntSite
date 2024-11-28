@@ -1679,6 +1679,7 @@ var DntBlazorSsr;
                         case "pas":
                             language = "language-pas";
                             break;
+                        case "plain":
                         case "css":
                         case "xml":
                         case "sql":

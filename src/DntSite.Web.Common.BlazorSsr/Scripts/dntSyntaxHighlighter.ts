@@ -37,6 +37,7 @@ namespace DntBlazorSsr {
                             language = "language-pas";
                             break;
 
+                        case "plain":
                         case "css":
                         case "xml":
                         case "sql":
