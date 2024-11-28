@@ -5,13 +5,14 @@ namespace DntSite.Web.Features.AppConfigs.Services.Contracts;
 
 public interface IAppLogItemsService : IScopedService
 {
-    Task DeleteAllAsync(LogLevel? logLevel);
+    public Task DeleteAllAsync(LogLevel? logLevel);
 
-    Task DeleteAsync(int logItemId);
+    public Task DeleteAsync(int logItemId);
 
-    Task DeleteOlderThanAsync(DateTime cutoffDateUtc, LogLevel? logLevel);
+    public Task DeleteOlderThanAsync(DateTime cutoffDateUtc, LogLevel? logLevel);
 
-    Task<int> GetCountAsync(LogLevel? logLevel);
+    public Task<int> GetCountAsync(LogLevel? logLevel);
 
-    Task<PagedResultModel<AppLogItemModel>> GetPagedAppLogItemsAsync(DntQueryBuilderModel state, LogLevel? logLevel);
+    public Task<PagedResultModel<AppLogItemModel>> GetPagedAppLogItemsAsync(DntQueryBuilderModel state,
+        LogLevel? logLevel);
 }

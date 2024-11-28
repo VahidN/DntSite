@@ -4,16 +4,16 @@ namespace DntSite.Web.Features.Common.Services.Contracts;
 
 public interface IEmailsFactoryService : IScopedService
 {
-    Task SendTextToAllAdminsAsync(string text);
+    public Task SendTextToAllAdminsAsync(string text);
 
-    Task SendNormalEmailAsync(string messageId,
+    public Task SendNormalEmailAsync(string messageId,
         string inReplyTo,
         string references,
         string htmlTemplateContent,
         string? toEmail,
         string subject);
 
-    Task SendEmailAsync<TLayout, TLayoutModel>(string messageId,
+    public Task SendEmailAsync<TLayout, TLayoutModel>(string messageId,
         string inReplyTo,
         string references,
         TLayoutModel model,
@@ -23,7 +23,7 @@ public interface IEmailsFactoryService : IScopedService
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel;
 
-    Task SendEmailToIdAsync<TLayout, TLayoutModel>(string messageId,
+    public Task SendEmailToIdAsync<TLayout, TLayoutModel>(string messageId,
         string inReplyTo,
         string references,
         TLayoutModel model,
@@ -32,7 +32,7 @@ public interface IEmailsFactoryService : IScopedService
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel;
 
-    Task SendEmailToAllAdminsAsync<TLayout, TLayoutModel>(string messageId,
+    public Task SendEmailToAllAdminsAsync<TLayout, TLayoutModel>(string messageId,
         string inReplyTo,
         string references,
         TLayoutModel model,
@@ -40,13 +40,13 @@ public interface IEmailsFactoryService : IScopedService
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel;
 
-    Task SendEmailToAllAdminsNormalAsync(string messageId,
+    public Task SendEmailToAllAdminsNormalAsync(string messageId,
         string inReplyTo,
         string references,
         string html,
         string emailSubject);
 
-    Task SendEmailToAllUsersAsync<TLayout, TLayoutModel>(IList<string> emails,
+    public Task SendEmailToAllUsersAsync<TLayout, TLayoutModel>(IList<string> emails,
         string messageId,
         string inReplyTo,
         string references,
@@ -56,7 +56,7 @@ public interface IEmailsFactoryService : IScopedService
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel;
 
-    Task SendEmailToAllUsersNormalAsync(IList<string> emails,
+    public Task SendEmailToAllUsersNormalAsync(IList<string> emails,
         string messageId,
         string inReplyTo,
         string references,

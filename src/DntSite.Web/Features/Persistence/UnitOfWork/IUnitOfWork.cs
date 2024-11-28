@@ -8,56 +8,56 @@ public interface IUnitOfWork : IDisposable
     ///     Return the current limited DbSet with all of the applied `QueryFilters` to it.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    DbSet<TEntity> DbSet<TEntity>()
+    public DbSet<TEntity> DbSet<TEntity>()
         where TEntity : class;
 
     /// <summary>
     ///     Return the current limited AsNoTracking DbSet with all of the applied `QueryFilters` to it.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    IQueryable<TEntity> DbSetAsNoTracking<TEntity>()
+    public IQueryable<TEntity> DbSetAsNoTracking<TEntity>()
         where TEntity : class;
 
     /// <summary>
     ///     Applies `IgnoreQueryFilters()` to the current DbSet to return all of the records without any limitations.
     /// </summary>
-    IQueryable<TEntity> DbSetAll<TEntity>()
+    public IQueryable<TEntity> DbSetAll<TEntity>()
         where TEntity : class;
 
-    void AddRange<TEntity>(IEnumerable<TEntity> entities)
+    public void AddRange<TEntity>(IEnumerable<TEntity> entities)
         where TEntity : class;
 
-    void RemoveRange<TEntity>(IEnumerable<TEntity> entities)
+    public void RemoveRange<TEntity>(IEnumerable<TEntity> entities)
         where TEntity : class;
 
-    EntityEntry<TEntity> Entry<TEntity>(TEntity entity)
+    public EntityEntry<TEntity> Entry<TEntity>(TEntity entity)
         where TEntity : class;
 
-    void MarkAsChanged<TEntity>(TEntity entity)
+    public void MarkAsChanged<TEntity>(TEntity entity)
         where TEntity : class;
 
-    T? GetShadowPropertyValue<T>(object entity, string propertyName)
+    public T? GetShadowPropertyValue<T>(object entity, string propertyName)
         where T : IConvertible;
 
-    object? GetShadowPropertyValue(object entity, string propertyName);
+    public object? GetShadowPropertyValue(object entity, string propertyName);
 
-    void Migrate(TimeSpan timeout);
+    public void Migrate(TimeSpan timeout);
 
-    void ExecuteSqlInterpolatedCommand(FormattableString query);
+    public void ExecuteSqlInterpolatedCommand(FormattableString query);
 
-    void ExecuteSqlRawCommand(string query, params object[] parameters);
+    public void ExecuteSqlRawCommand(string query, params object[] parameters);
 
-    IQueryable<TResult> SqlQuery<TResult>([NotParameterized] FormattableString query);
+    public IQueryable<TResult> SqlQuery<TResult>([NotParameterized] FormattableString query);
 
-    IQueryable<TResult> SqlQueryRaw<TResult>([NotParameterized] string sql, params object[] parameters);
+    public IQueryable<TResult> SqlQueryRaw<TResult>([NotParameterized] string sql, params object[] parameters);
 
-    int SaveChanges(bool acceptAllChangesOnSuccess);
+    public int SaveChanges(bool acceptAllChangesOnSuccess);
 
-    int SaveChanges();
+    public int SaveChanges();
 
-    Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new());
+    public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new());
 
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = new());
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = new());
 
-    Task ExecuteTransactionAsync(Func<Task> action);
+    public Task ExecuteTransactionAsync(Func<Task> action);
 }

@@ -4,9 +4,9 @@ namespace DntSite.Web.Features.PrivateMessages.Services.Contracts;
 
 public interface IJobsEmailsService : IScopedService
 {
-    Task SendDailyNewsletterEmailAsync(IList<User> users, string content, DateTime yesterday);
+    public Task SendDailyNewsletterEmailAsync(IList<User> users, string content, DateTime yesterday);
 
-    Task SendDailyBirthDatesEmailAsync();
+    public Task SendDailyBirthDatesEmailAsync();
 
-    Task SendNewPersianYearEmailsAsync();
+    public Task SendNewPersianYearEmailsAsync();
 }

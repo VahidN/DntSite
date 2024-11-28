@@ -4,5 +4,5 @@ namespace DntSite.Web.Features.PrivateMessages.Services.Contracts;
 
 public interface IMassEmailsService : IScopedService
 {
-    Task<string> AddMassEmailAsync(MassEmailModel data, int userId);
+    public Task<string> AddMassEmailAsync(MassEmailModel data, int userId);
 }

@@ -6,38 +6,39 @@ namespace DntSite.Web.Features.Projects.Services.Contracts;
 
 public interface IProjectIssueCommentsService : IScopedService
 {
-    Task<ProjectIssueComment?> FindIssueCommentIncludeParentAsync(int commentId);
+    public Task<ProjectIssueComment?> FindIssueCommentIncludeParentAsync(int commentId);
 
-    Task<List<ProjectIssueComment>> GetRootCommentsOfIssuesAsync(int postId,
+    public Task<List<ProjectIssueComment>> GetRootCommentsOfIssuesAsync(int postId,
         int count = 1000,
         bool showDeletedItems = false);
 
-    ValueTask<ProjectIssueComment?> FindIssueCommentAsync(int commentId);
+    public ValueTask<ProjectIssueComment?> FindIssueCommentAsync(int commentId);
 
-    ProjectIssueComment AddIssueComment(ProjectIssueComment comment);
+    public ProjectIssueComment AddIssueComment(ProjectIssueComment comment);
 
-    Task<PagedResultModel<ProjectIssueComment>> GetLastPagedIssueCommentsAsNoTrackingAsync(int pageNumber,
+    public Task<PagedResultModel<ProjectIssueComment>> GetLastPagedIssueCommentsAsNoTrackingAsync(int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    Task<List<ProjectIssueComment>> GetLastIssueCommentsIncludeBlogPostAndUserAsync(int count,
+    public Task<List<ProjectIssueComment>> GetLastIssueCommentsIncludeBlogPostAndUserAsync(int count,
         bool showDeletedItems = false);
 
-    Task<List<ProjectIssueComment>> GetLastProjectIssueCommentsIncludeBlogPostAndUserAsync(int projectId,
+    public Task<List<ProjectIssueComment>> GetLastProjectIssueCommentsIncludeBlogPostAndUserAsync(int projectId,
         int count,
         bool showDeletedItems = false);
 
-    Task<PagedResultModel<ProjectIssueComment>> GetPagedLastIssueCommentsIncludeBlogPostAndUserAsync(int pageNumber,
+    public Task<PagedResultModel<ProjectIssueComment>> GetPagedLastIssueCommentsIncludeBlogPostAndUserAsync(
+        int pageNumber,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<ProjectIssueComment>> GetPagedLastProjectIssueCommentsIncludeBlogPostAndUserAsync(
+    public Task<PagedResultModel<ProjectIssueComment>> GetPagedLastProjectIssueCommentsIncludeBlogPostAndUserAsync(
         int projectId,
         int pageNumber,
         int recordsPerPage = 15,
@@ -45,18 +46,18 @@ public interface IProjectIssueCommentsService : IScopedService
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<ProjectIssueComment>> GetLastPagedProjectIssuesCommentsAsNoTrackingAsync(string name,
+    public Task<PagedResultModel<ProjectIssueComment>> GetLastPagedProjectIssuesCommentsAsNoTrackingAsync(string name,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task DeleteCommentAsync(int? modelFormCommentId);
+    public Task DeleteCommentAsync(int? modelFormCommentId);
 
-    Task EditReplyAsync(int? modelFormCommentId, string modelComment);
+    public Task EditReplyAsync(int? modelFormCommentId, string modelComment);
 
-    Task AddReplyAsync(int? modelFormCommentId, int modelFormPostId, string modelComment, int currentUserUserId);
+    public Task AddReplyAsync(int? modelFormCommentId, int modelFormPostId, string modelComment, int currentUserUserId);
 
-    Task IndexProjectIssueCommentsAsync();
+    public Task IndexProjectIssueCommentsAsync();
 }

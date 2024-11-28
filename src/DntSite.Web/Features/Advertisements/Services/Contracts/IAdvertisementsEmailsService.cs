@@ -4,11 +4,11 @@ namespace DntSite.Web.Features.Advertisements.Services.Contracts;
 
 public interface IAdvertisementsEmailsService : IScopedService
 {
-    Task AddAdvertisementSendEmailAsync(Advertisement advertisement);
+    public Task AddAdvertisementSendEmailAsync(Advertisement advertisement);
 
-    Task AdvertisementCommentSendEmailToWritersAsync(AdvertisementComment comment);
+    public Task AdvertisementCommentSendEmailToWritersAsync(AdvertisementComment comment);
 
-    Task AdvertisementCommentSendEmailToPersonAsync(AdvertisementComment comment);
+    public Task AdvertisementCommentSendEmailToPersonAsync(AdvertisementComment comment);
 
-    Task AdvertisementCommentSendEmailToAdminsAsync(AdvertisementComment comment);
+    public Task AdvertisementCommentSendEmailToAdminsAsync(AdvertisementComment comment);
 }

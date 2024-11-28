@@ -6,27 +6,27 @@ namespace DntSite.Web.Features.Posts.Services.Contracts;
 
 public interface IBlogPostDraftsService : IScopedService
 {
-    Task MarkAsDeletedAsync(BlogPostDraft? draft);
+    public Task MarkAsDeletedAsync(BlogPostDraft? draft);
 
-    Task<BlogPostDraft> AddBlogPostDraftAsync(WriteDraftModel model);
+    public Task<BlogPostDraft> AddBlogPostDraftAsync(WriteDraftModel model);
 
-    Task UpdateBlogPostDraftAsync(WriteDraftModel model, BlogPostDraft draft);
+    public Task UpdateBlogPostDraftAsync(WriteDraftModel model, BlogPostDraft draft);
 
-    ValueTask<BlogPostDraft?> FindBlogPostDraftAsync(int id);
+    public ValueTask<BlogPostDraft?> FindBlogPostDraftAsync(int id);
 
-    Task<List<BlogPostDraft>> FindUsersNotConvertedBlogPostDraftsAsync(int userId);
+    public Task<List<BlogPostDraft>> FindUsersNotConvertedBlogPostDraftsAsync(int userId);
 
-    Task<List<BlogPostDraft>> FindAllNotConvertedBlogPostDraftsAsync();
+    public Task<List<BlogPostDraft>> FindAllNotConvertedBlogPostDraftsAsync();
 
-    Task RunConvertDraftsToPostsJobAsync();
+    public Task RunConvertDraftsToPostsJobAsync();
 
-    Task DeleteConvertedBlogPostDraftsAsync();
+    public Task DeleteConvertedBlogPostDraftsAsync();
 
-    Task DeleteDraftAsync(BlogPostDraft draft);
+    public Task DeleteDraftAsync(BlogPostDraft draft);
 
-    Task<List<BlogPostDraft>> ComingSoonItemsAsync();
+    public Task<List<BlogPostDraft>> ComingSoonItemsAsync();
 
-    Task<BlogPostDraft?> FindBlogPostDraftIncludeUserAsync(int id);
+    public Task<BlogPostDraft?> FindBlogPostDraftIncludeUserAsync(int id);
 
-    Task<bool> ConvertDraftToLinkAsync(DailyNewsItemModel data, int draftId);
+    public Task<bool> ConvertDraftToLinkAsync(DailyNewsItemModel data, int draftId);
 }

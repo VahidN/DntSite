@@ -4,15 +4,15 @@ namespace DntSite.Web.Features.Advertisements.Services.Contracts;
 
 public interface IAdvertisementTagsService : IScopedService
 {
-    Task<string> AvailableTagsToJsonAsync(int count = 1000);
+    public Task<string> AvailableTagsToJsonAsync(int count = 1000);
 
-    Task SaveNewAdvertisementTagsAsync(string[] tagsList, string userName);
+    public Task SaveNewAdvertisementTagsAsync(string[] tagsList, string userName);
 
-    Task<List<AdvertisementTag>> FindListOfActualAdvertisementTagsAsync(string[] tagsList);
+    public Task<List<AdvertisementTag>> FindListOfActualAdvertisementTagsAsync(string[] tagsList);
 
-    Task<List<AdvertisementTag>> GetThisAdvertisementTagsListAsync(int id);
+    public Task<List<AdvertisementTag>> GetThisAdvertisementTagsListAsync(int id);
 
-    Task<List<AdvertisementTag>> GetAllAdvertisementTagsListAsNoTrackingAsync(int count);
+    public Task<List<AdvertisementTag>> GetAllAdvertisementTagsListAsNoTrackingAsync(int count);
 
-    ValueTask<AdvertisementTag?> FindAdvertisementTagAsync(int tagId);
+    public ValueTask<AdvertisementTag?> FindAdvertisementTagAsync(int tagId);
 }

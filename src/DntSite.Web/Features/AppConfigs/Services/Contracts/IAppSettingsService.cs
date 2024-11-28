@@ -5,15 +5,15 @@ namespace DntSite.Web.Features.AppConfigs.Services.Contracts;
 
 public interface IAppSettingsService : IScopedService
 {
-    Task<AppSettingModel> GetAppSettingModelAsync();
+    public Task<AppSettingModel> GetAppSettingModelAsync();
 
-    AppSetting AddAppSetting(AppSetting data);
+    public AppSetting AddAppSetting(AppSetting data);
 
-    Task AddOrUpdateAppSettingsAsync(AppSettingModel model);
+    public Task AddOrUpdateAppSettingsAsync(AppSettingModel model);
 
-    Task<bool> IsBannedDomainAndSubDomainAsync(string url);
+    public Task<bool> IsBannedDomainAndSubDomainAsync(string url);
 
-    Task<bool> IsBannedReferrerAsync(string? url);
+    public Task<bool> IsBannedReferrerAsync(string? url);
 
-    Task<bool> IsBannedSiteAsync(string url);
+    public Task<bool> IsBannedSiteAsync(string url);
 }

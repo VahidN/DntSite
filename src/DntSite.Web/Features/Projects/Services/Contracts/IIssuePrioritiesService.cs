@@ -4,9 +4,10 @@ namespace DntSite.Web.Features.Projects.Services.Contracts;
 
 public interface IIssuePrioritiesService : IScopedService
 {
-    ProjectIssuePriority AddIssuePriority(ProjectIssuePriority data);
+    public ProjectIssuePriority AddIssuePriority(ProjectIssuePriority data);
 
-    ValueTask<ProjectIssuePriority?> FindIssuePriorityAsync(int id);
+    public ValueTask<ProjectIssuePriority?> FindIssuePriorityAsync(int id);
 
-    Task<List<ProjectIssuePriority>> GetAllProjectIssuePrioritiesListAsNoTrackingAsync(int count, bool isActive = true);
+    public Task<List<ProjectIssuePriority>> GetAllProjectIssuePrioritiesListAsNoTrackingAsync(int count,
+        bool isActive = true);
 }

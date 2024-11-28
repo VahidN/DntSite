@@ -9,38 +9,39 @@ namespace DntSite.Web.Features.Courses.Services.Contracts;
 
 public interface ICoursesService : IScopedService
 {
-    ValueTask<Course?> FindCourseAsync(int id);
+    public ValueTask<Course?> FindCourseAsync(int id);
 
-    Task<List<Course>> GetAllCoursesAsync(bool onlyActive = true);
+    public Task<List<Course>> GetAllCoursesAsync(bool onlyActive = true);
 
-    Task<PagedResultModel<Course>> GetLastPagedCoursesAsync(DntQueryBuilderModel state,
+    public Task<PagedResultModel<Course>> GetLastPagedCoursesAsync(DntQueryBuilderModel state,
         bool onlyActive = true,
         bool showOnlyFinished = true);
 
-    Task<CourseItemModel>
-        GetCurrentCourseLastAndNextAsync(int id, bool onlyActive = true, bool showOnlyFinished = true);
+    public Task<CourseItemModel> GetCurrentCourseLastAndNextAsync(int id,
+        bool onlyActive = true,
+        bool showOnlyFinished = true);
 
-    Task<User?> FindCourseAuthorAsync(int courseId);
+    public Task<User?> FindCourseAuthorAsync(int courseId);
 
-    Course AddCourse(Course item);
+    public Course AddCourse(Course item);
 
-    Task<List<CourseTag>> GetAllCourseTagsListAsNoTrackingAsync(int courseId, int count, bool isActive = true);
+    public Task<List<CourseTag>> GetAllCourseTagsListAsNoTrackingAsync(int courseId, int count, bool isActive = true);
 
-    Task<PagedResultModel<Course>> GetPagedCourseItemsIncludeUserAndTagsAsync(int pageNumber,
+    public Task<PagedResultModel<Course>> GetPagedCourseItemsIncludeUserAndTagsAsync(int pageNumber,
         int recordsPerPage = 15,
         bool onlyActive = true,
         bool showOnlyFinished = true,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Course>> GetUserPagedCourseItemsIncludeUserAndTagsAsync(int userId,
+    public Task<PagedResultModel<Course>> GetUserPagedCourseItemsIncludeUserAndTagsAsync(int userId,
         int pageNumber,
         int recordsPerPage = 15,
         bool onlyActive = true,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Course>> GetAuthorPagedCourseItemsIncludeUserAndTagsAsync(string name,
+    public Task<PagedResultModel<Course>> GetAuthorPagedCourseItemsIncludeUserAndTagsAsync(string name,
         int pageNumber,
         int recordsPerPage = 15,
         bool onlyActive = true,
@@ -48,7 +49,7 @@ public interface ICoursesService : IScopedService
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Course>> GetLastCoursesByTagIncludeAuthorAsync(string tag,
+    public Task<PagedResultModel<Course>> GetLastCoursesByTagIncludeAuthorAsync(string tag,
         int pageNumber,
         int recordsPerPage = 8,
         bool onlyActive = true,
@@ -56,35 +57,35 @@ public interface ICoursesService : IScopedService
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<Course?> FindCourseIncludeTagsAndUserAsync(int id);
+    public Task<Course?> FindCourseIncludeTagsAndUserAsync(int id);
 
-    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    Task<List<Course>> GetAllUserCoursesAsync(int userId, bool onlyActive = true);
+    public Task<List<Course>> GetAllUserCoursesAsync(int userId, bool onlyActive = true);
 
-    Task AddUserToCourseAsync(Course data, string username);
+    public Task AddUserToCourseAsync(Course data, string username);
 
-    Task RemoveUserFromCourseAsync(Course data, string username);
+    public Task RemoveUserFromCourseAsync(Course data, string username);
 
-    Task<List<User>> GetCourseAllowedUsersAsync(int courseId, bool onlyActive = true);
+    public Task<List<User>> GetCourseAllowedUsersAsync(int courseId, bool onlyActive = true);
 
-    Task<OperationResult> HasUserAccessToThisCourseForReadingAsync(int courseId, CurrentUserModel? currentUser);
+    public Task<OperationResult> HasUserAccessToThisCourseForReadingAsync(int courseId, CurrentUserModel? currentUser);
 
-    Task<PagedResultModel<Course>> GetAllPagedCourseItemsAsync(int pageNumber,
+    public Task<PagedResultModel<Course>> GetAllPagedCourseItemsAsync(int pageNumber,
         int recordsPerPage = 8,
         bool onlyActive = true,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task MarkAsDeletedAsync(Course? course);
+    public Task MarkAsDeletedAsync(Course? course);
 
-    Task NotifyDeleteChangesAsync(Course? course);
+    public Task NotifyDeleteChangesAsync(Course? course);
 
-    Task UpdateCourseItemAsync(Course? course, CourseModel writeCourseModel);
+    public Task UpdateCourseItemAsync(Course? course, CourseModel writeCourseModel);
 
-    Task<Course?> AddCourseItemAsync(CourseModel writeCourseModel, User? user);
+    public Task<Course?> AddCourseItemAsync(CourseModel writeCourseModel, User? user);
 
-    Task NotifyAddOrUpdateChangesAsync(Course? course, CourseModel writeCourseModel, User? user);
+    public Task NotifyAddOrUpdateChangesAsync(Course? course, CourseModel writeCourseModel, User? user);
 
-    Task IndexCoursesAsync();
+    public Task IndexCoursesAsync();
 }

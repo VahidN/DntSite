@@ -5,15 +5,15 @@ namespace DntSite.Web.Features.Projects.Services.Contracts;
 
 public interface IProjectsEmailsService : IScopedService
 {
-    Task NewProjectEmailToUserAsync(int id, ProjectModel data, int userId);
+    public Task NewProjectEmailToUserAsync(int id, ProjectModel data, int userId);
 
-    Task NewProjectEmailToAdminsAsync(int id, ProjectModel data);
+    public Task NewProjectEmailToAdminsAsync(int id, ProjectModel data);
 
-    Task NewIssueSendEmailToAdminsAsync(ProjectIssue data);
+    public Task NewIssueSendEmailToAdminsAsync(ProjectIssue data);
 
-    Task NewIssueSendEmailToProjectWritersAsync(ProjectIssue data);
+    public Task NewIssueSendEmailToProjectWritersAsync(ProjectIssue data);
 
-    Task SendApplyIssueStatusEmailToAdminsAndPersonAsync(int? toUserId,
+    public Task SendApplyIssueStatusEmailToAdminsAndPersonAsync(int? toUserId,
         string toUserIdEmail,
         int projectId,
         int issueId,
@@ -21,11 +21,11 @@ public interface IProjectsEmailsService : IScopedService
         string projectName,
         string statusName);
 
-    Task ProjectIssueCommentSendEmailToAdminsAsync(ProjectIssueComment data);
+    public Task ProjectIssueCommentSendEmailToAdminsAsync(ProjectIssueComment data);
 
-    Task ProjectIssueCommentSendEmailToWritersAsync(ProjectIssueComment issueComment);
+    public Task ProjectIssueCommentSendEmailToWritersAsync(ProjectIssueComment issueComment);
 
-    Task ProjectIssueCommentSendEmailToPersonAsync(ProjectIssueComment issueComment);
+    public Task ProjectIssueCommentSendEmailToPersonAsync(ProjectIssueComment issueComment);
 
-    Task SendNewFaqEmailAsync(int projectId, int faqId, string title, string body);
+    public Task SendNewFaqEmailAsync(int projectId, int faqId, string title, string body);
 }

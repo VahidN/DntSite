@@ -4,5 +4,5 @@ namespace DntSite.Web.Features.RoadMaps.Services.Contracts;
 
 public interface ILearningPathEmailsService : IScopedService
 {
-    Task NewLearningPathSendEmailToAdminsAsync(LearningPath data);
+    public Task NewLearningPathSendEmailToAdminsAsync(LearningPath data);
 }

@@ -6,7 +6,7 @@ namespace DntSite.Web.Features.Stats.Services.Contracts;
 
 public interface ISiteStatService : IScopedService
 {
-    Task<PagedResultModel<User>> GetPagedTodayVisitedUsersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedTodayVisitedUsersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<List<SiteStatsModel>> GetSiteStatAsync();
+    public Task<List<SiteStatsModel>> GetSiteStatAsync();
 }

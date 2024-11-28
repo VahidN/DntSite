@@ -6,35 +6,35 @@ namespace DntSite.Web.Features.Searches.Services.Contracts;
 
 public interface IFullTextSearchService : IDisposable, ISingletonService
 {
-    bool IsDatabaseIndexed { get; }
+    public bool IsDatabaseIndexed { get; }
 
-    void DeleteOldIndexFiles();
+    public void DeleteOldIndexFiles();
 
-    LuceneSearchResult? FindLuceneDocument(string? documentTypeIdHash);
+    public LuceneSearchResult? FindLuceneDocument(string? documentTypeIdHash);
 
-    void DeleteLuceneDocument(string? documentTypeIdHash);
+    public void DeleteLuceneDocument(string? documentTypeIdHash);
 
-    void AddOrUpdateLuceneDocument(WhatsNewItemModel? item);
+    public void AddOrUpdateLuceneDocument(WhatsNewItemModel? item);
 
-    Task IndexTableAsync(IEnumerable<WhatsNewItemModel>? items, bool commitChanges = true);
+    public Task IndexTableAsync(IEnumerable<WhatsNewItemModel>? items, bool commitChanges = true);
 
-    void CommitChanges();
+    public void CommitChanges();
 
-    PagedResultModel<LuceneSearchResult> FindPagedPosts(string? searchText,
+    public PagedResultModel<LuceneSearchResult> FindPagedPosts(string? searchText,
         int maxItems,
         int pageNumber,
         int pageSize,
         params string[]? searchInTheseFieldNames);
 
-    PagedResultModel<LuceneSearchResult> FindPagedSimilarPosts(string documentTypeIdHash,
+    public PagedResultModel<LuceneSearchResult> FindPagedSimilarPosts(string documentTypeIdHash,
         int maxItems,
         int pageNumber,
         int pageSize,
         params string[]? moreLikeTheseFieldNames);
 
-    int GetNumberOfDocuments();
+    public int GetNumberOfDocuments();
 
-    PagedResultModel<LuceneSearchResult> GetAllPagedPosts(int pageNumber,
+    public PagedResultModel<LuceneSearchResult> GetAllPagedPosts(int pageNumber,
         int pageSize,
         string sortField,
         bool isDescending);

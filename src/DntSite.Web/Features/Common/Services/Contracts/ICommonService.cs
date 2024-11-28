@@ -12,58 +12,58 @@ namespace DntSite.Web.Features.Common.Services.Contracts;
 
 public interface ICommonService : IScopedService // to avoid bidirectional/circular dependencies
 {
-    Task<List<Role>> FindListOfActualRolesAsync(IList<string> roles);
+    public Task<List<Role>> FindListOfActualRolesAsync(IList<string> roles);
 
-    Task<List<User>> NotValidatedEmailsUsersAsync(DateTime? from);
+    public Task<List<User>> NotValidatedEmailsUsersAsync(DateTime? from);
 
-    Task<AppSetting?> GetBlogConfigAsync();
+    public Task<AppSetting?> GetBlogConfigAsync();
 
-    Task<List<User>> GetAllActiveAdminsAsNoTrackingAsync();
+    public Task<List<User>> GetAllActiveAdminsAsNoTrackingAsync();
 
-    Task<List<User>> AllValidatedEmailsUsersAsync();
+    public Task<List<User>> AllValidatedEmailsUsersAsync();
 
-    Task<User?> FindUserAsync(string friendlyName);
+    public Task<User?> FindUserAsync(string friendlyName);
 
-    ValueTask<User?> FindUserAsync(int? userId);
+    public ValueTask<User?> FindUserAsync(int? userId);
 
-    Task<List<BlogPostTag>> FindListOfActualArticleTagsAsync(IList<string> tagsList);
+    public Task<List<BlogPostTag>> FindListOfActualArticleTagsAsync(IList<string> tagsList);
 
-    ValueTask<BlogPost?> FindCommentPostAsync(int blogPostId);
+    public ValueTask<BlogPost?> FindCommentPostAsync(int blogPostId);
 
-    ValueTask<BlogPostComment?> FindCommentAsync(int replyId);
+    public ValueTask<BlogPostComment?> FindCommentAsync(int replyId);
 
-    Task<List<DailyNewsItemTag>> FindListOfActualLinkItemTagsAsync(IList<string> tagsList);
+    public Task<List<DailyNewsItemTag>> FindListOfActualLinkItemTagsAsync(IList<string> tagsList);
 
-    Task<List<User>> GetAllActiveGroupUsersAsNoTrackingAsync(string groupName);
+    public Task<List<User>> GetAllActiveGroupUsersAsNoTrackingAsync(string groupName);
 
-    Task<List<User>> GetAllActiveReaderUsersAsNoTrackingAsync();
+    public Task<List<User>> GetAllActiveReaderUsersAsNoTrackingAsync();
 
-    Task<List<ProjectTag>> FindListOfActualProjectTagsAsync(IList<string> tagsList);
+    public Task<List<ProjectTag>> FindListOfActualProjectTagsAsync(IList<string> tagsList);
 
-    ValueTask<DailyNewsItem?> FindNewsCommentPostAsync(int postId);
+    public ValueTask<DailyNewsItem?> FindNewsCommentPostAsync(int postId);
 
-    ValueTask<StackExchangeQuestion?> FindStackExchangeQuestionCommentPostAsync(int postId);
+    public ValueTask<StackExchangeQuestion?> FindStackExchangeQuestionCommentPostAsync(int postId);
 
-    ValueTask<DailyNewsItemComment?> FindNewsCommentAsync(int replyId);
+    public ValueTask<DailyNewsItemComment?> FindNewsCommentAsync(int replyId);
 
-    ValueTask<StackExchangeQuestionComment?> FindStackExchangeQuestionCommentAsync(int replyId);
+    public ValueTask<StackExchangeQuestionComment?> FindStackExchangeQuestionCommentAsync(int replyId);
 
-    ValueTask<Project?> FindProjectAsync(int projectId);
+    public ValueTask<Project?> FindProjectAsync(int projectId);
 
-    ValueTask<ProjectIssueComment?> FindIssueCommentAsync(int replyId);
+    public ValueTask<ProjectIssueComment?> FindIssueCommentAsync(int replyId);
 
     //Task<List<FavoritePageTag>> FindListOfActualFavoritePageTagsAsync(IList<string> tagsList);
-    Task<List<SurveyTag>> FindListOfActualVoteTagsAsync(IList<string> tagsList);
+    public Task<List<SurveyTag>> FindListOfActualVoteTagsAsync(IList<string> tagsList);
 
-    ValueTask<SurveyComment?> FindVoteCommentAsync(int id);
+    public ValueTask<SurveyComment?> FindVoteCommentAsync(int id);
 
-    ValueTask<AdvertisementComment?> FindAdvertisementCommentAsync(int id);
+    public ValueTask<AdvertisementComment?> FindAdvertisementCommentAsync(int id);
 
-    Task<List<CourseTag>> FindListOfActualCourseTagsAsync(IList<string> tagsList);
+    public Task<List<CourseTag>> FindListOfActualCourseTagsAsync(IList<string> tagsList);
 
-    ValueTask<CourseTopicComment?> FindTopicCommentAsync(int id);
+    public ValueTask<CourseTopicComment?> FindTopicCommentAsync(int id);
 
-    ValueTask<Course?> FindCourseAsync(int id);
+    public ValueTask<Course?> FindCourseAsync(int id);
 
-    ValueTask<CourseQuestionComment?> FindCourseQuestionCommentAsync(int id);
+    public ValueTask<CourseQuestionComment?> FindCourseQuestionCommentAsync(int id);
 }

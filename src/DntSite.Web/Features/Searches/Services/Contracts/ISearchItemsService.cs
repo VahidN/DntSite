@@ -5,13 +5,13 @@ namespace DntSite.Web.Features.Searches.Services.Contracts;
 
 public interface ISearchItemsService : IScopedService
 {
-    Task SaveSearchItemAsync(string? text);
+    public Task SaveSearchItemAsync(string? text);
 
-    Task RemoveSearchItemAsync(int id);
+    public Task RemoveSearchItemAsync(int id);
 
-    Task<PagedResultModel<SearchItemModel>> GetPagedSearchItemsAsync(int pageNumber,
+    public Task<PagedResultModel<SearchItemModel>> GetPagedSearchItemsAsync(int pageNumber,
         int recordsPerPage,
         bool showDeletedItems = false);
 
-    Task DeleteOldSearchItemsAsync(int daysToKeep = 3);
+    public Task DeleteOldSearchItemsAsync(int daysToKeep = 3);
 }

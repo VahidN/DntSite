@@ -8,53 +8,52 @@ namespace DntSite.Web.Features.Projects.Services.Contracts;
 
 public interface IProjectsService : IScopedService
 {
-    ValueTask<Project?> FindProjectAsync(int id);
+    public ValueTask<Project?> FindProjectAsync(int id);
 
-    Task<ProjectsModel> GetProjectsLastAndNextAsync(int id, bool showDeletedItems = false);
+    public Task<ProjectsModel> GetProjectsLastAndNextAsync(int id, bool showDeletedItems = false);
 
-    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    Project AddProject(Project data);
+    public Project AddProject(Project data);
 
-    Task<PagedResultModel<Project>> GetPagedProjectItemsIncludeUserAndTagsAsync(int pageNumber,
+    public Task<PagedResultModel<Project>> GetPagedProjectItemsIncludeUserAndTagsAsync(int pageNumber,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<Project?> FindProjectIncludeTagsAndUserAsync(int id, bool showDeletedItems = false);
+    public Task<Project?> FindProjectIncludeTagsAndUserAsync(int id, bool showDeletedItems = false);
 
-    Task<PagedResultModel<Project>> GetLastProjectsByTagIncludeAuthorAsync(string tag,
+    public Task<PagedResultModel<Project>> GetLastProjectsByTagIncludeAuthorAsync(string tag,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Project>> GetLastProjectsByAuthorIncludeAuthorTagsAsync(string authorName,
+    public Task<PagedResultModel<Project>> GetLastProjectsByAuthorIncludeAuthorTagsAsync(string authorName,
         int pageNumber,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<int> GetAllProjectsCountAsync(bool showDeletedItems = false);
+    public Task<int> GetAllProjectsCountAsync(bool showDeletedItems = false);
 
-    Task<List<Project>> GetAllPublicProjectsOfDateAsync(DateTime date);
+    public Task<List<Project>> GetAllPublicProjectsOfDateAsync(DateTime date);
 
-    Task<PagedResultModel<Project>> GetLastPagedProjectsAsync(
-        DntQueryBuilderModel state,
+    public Task<PagedResultModel<Project>> GetLastPagedProjectsAsync(DntQueryBuilderModel state,
         bool showDeletedItems = false);
 
-    Task MarkAsDeletedAsync(Project? project);
+    public Task MarkAsDeletedAsync(Project? project);
 
-    Task NotifyDeleteChangesAsync(Project? project, User? currentUserUser);
+    public Task NotifyDeleteChangesAsync(Project? project, User? currentUserUser);
 
-    Task UpdateProjectAsync(Project? project, ProjectModel writeProjectModel);
+    public Task UpdateProjectAsync(Project? project, ProjectModel writeProjectModel);
 
-    Task<Project?> AddProjectAsync(ProjectModel writeProjectModel, User? user);
+    public Task<Project?> AddProjectAsync(ProjectModel writeProjectModel, User? user);
 
-    Task NotifyAddOrUpdateChangesAsync(Project? project, ProjectModel writeProjectModel, User? user);
+    public Task NotifyAddOrUpdateChangesAsync(Project? project, ProjectModel writeProjectModel, User? user);
 
-    Task IndexProjectsAsync();
+    public Task IndexProjectsAsync();
 }

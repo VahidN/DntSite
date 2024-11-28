@@ -2,7 +2,7 @@
 
 public interface IDataSeeder : IScopedService
 {
-    int Order { set; get; }
+    public int Order { set; get; }
 
-    void SeedData();
+    public void SeedData();
 }

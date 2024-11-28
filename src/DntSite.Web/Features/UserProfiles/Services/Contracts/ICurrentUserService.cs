@@ -5,25 +5,25 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface ICurrentUserService : IScopedService
 {
-    Task<bool> IsCurrentUserSpiderAsync();
+    public Task<bool> IsCurrentUserSpiderAsync();
 
-    bool IsCurrentUserAuthenticated();
+    public bool IsCurrentUserAuthenticated();
 
-    int? GetCurrentUserId();
+    public int? GetCurrentUserId();
 
-    Task<User?> GetCurrentImpersonatedUserAsync(int? impersonatedUserId);
+    public Task<User?> GetCurrentImpersonatedUserAsync(int? impersonatedUserId);
 
-    bool IsCurrentUserInRole(string roleName);
+    public bool IsCurrentUserInRole(string roleName);
 
-    Task<bool> IsCurrentUserInRoleAsync(string roleName);
+    public Task<bool> IsCurrentUserInRoleAsync(string roleName);
 
-    Task<bool> IsCurrentUserAdminAsync();
+    public Task<bool> IsCurrentUserAdminAsync();
 
-    bool IsCurrentUserAdmin();
+    public bool IsCurrentUserAdmin();
 
-    Task<CurrentUserModel> GetCurrentUserAsync();
+    public Task<CurrentUserModel> GetCurrentUserAsync();
 
-    Task ClearExistingAuthenticationCookiesAsync(bool clearAdminCookies);
+    public Task ClearExistingAuthenticationCookiesAsync(bool clearAdminCookies);
 
-    Task<bool> CanCurrentUserRegisterAsync();
+    public Task<bool> CanCurrentUserRegisterAsync();
 }

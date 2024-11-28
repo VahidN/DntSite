@@ -7,62 +7,63 @@ namespace DntSite.Web.Features.Surveys.Services.Contracts;
 
 public interface IVotesService : IScopedService
 {
-    Task<Survey?> GetLastActiveVoteAsync();
+    public Task<Survey?> GetLastActiveVoteAsync();
 
-    ValueTask<Survey?> FindVoteAsync(int id);
+    public ValueTask<Survey?> FindVoteAsync(int id);
 
-    Task<Survey?> FindVoteIncludeResultsAsync(int id);
+    public Task<Survey?> FindVoteIncludeResultsAsync(int id);
 
-    Task<Survey?> GetSurveyAsync(int id, bool showDeletedItems = false);
+    public Task<Survey?> GetSurveyAsync(int id, bool showDeletedItems = false);
 
-    Survey AddVote(Survey data);
+    public Survey AddVote(Survey data);
 
-    Task<PagedResultModel<Survey>> GetVotesListAsync(int pageNumber,
+    public Task<PagedResultModel<Survey>> GetVotesListAsync(int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Survey>> GetLastPagedSurveysAsync(DntQueryBuilderModel state, bool showDeletedItems = false);
+    public Task<PagedResultModel<Survey>> GetLastPagedSurveysAsync(DntQueryBuilderModel state,
+        bool showDeletedItems = false);
 
-    Task<PagedResultModel<Survey>> GetUserVotesListAsync(int pageNumber,
+    public Task<PagedResultModel<Survey>> GetUserVotesListAsync(int pageNumber,
         int userId,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Survey>> GetLastVotesByTagAsync(string tag,
+    public Task<PagedResultModel<Survey>> GetLastVotesByTagAsync(string tag,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<BlogVoteModel> GetBlogVoteLastAndNextPostAsync(int id, bool showDeletedItems = false);
+    public Task<BlogVoteModel> GetBlogVoteLastAndNextPostAsync(int id, bool showDeletedItems = false);
 
-    Task<PagedResultModel<Survey>> GetLastVotesByUserAsync(string userName,
+    public Task<PagedResultModel<Survey>> GetLastVotesByUserAsync(string userName,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    void UpdateOrders(Survey vote, string[] items);
+    public void UpdateOrders(Survey vote, string[] items);
 
-    Task<bool> CanUserVoteAsync(Survey? vote, User? user);
+    public Task<bool> CanUserVoteAsync(Survey? vote, User? user);
 
-    Task MarkAsDeletedAsync(Survey? surveyItem);
+    public Task MarkAsDeletedAsync(Survey? surveyItem);
 
-    Task NotifyDeleteChangesAsync(Survey? surveyItem, User? currentUserUser);
+    public Task NotifyDeleteChangesAsync(Survey? surveyItem, User? currentUserUser);
 
-    Task ApplyVoteAsync(int surveyId, IList<int>? surveyItemIds, User? user);
+    public Task ApplyVoteAsync(int surveyId, IList<int>? surveyItemIds, User? user);
 
-    Task UpdateSurveyAsync(Survey? surveyItem, VoteModel writeSurveyModel, User? user);
+    public Task UpdateSurveyAsync(Survey? surveyItem, VoteModel writeSurveyModel, User? user);
 
-    Task<Survey?> AddNewsSurveyAsync(VoteModel writeSurveyModel, User? user);
+    public Task<Survey?> AddNewsSurveyAsync(VoteModel writeSurveyModel, User? user);
 
-    Task NotifyAddOrUpdateChangesAsync(Survey? surveyItem, VoteModel writeSurveyModel, User? user);
+    public Task NotifyAddOrUpdateChangesAsync(Survey? surveyItem, VoteModel writeSurveyModel, User? user);
 
-    Task IndexSurveysAsync();
+    public Task IndexSurveysAsync();
 }

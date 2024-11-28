@@ -5,28 +5,28 @@ namespace DntSite.Web.Features.Stats.Services.Contracts;
 
 public interface ISiteReferrersService : IScopedService
 {
-    Task DeleteAllAsync();
+    public Task DeleteAllAsync();
 
-    Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl,
+    public Task<bool> TryAddOrUpdateReferrerAsync(string referrerUrl,
         string destinationUrl,
         string baseUrl,
         LastSiteUrlVisitorStat lastSiteUrlVisitorStat,
         bool isProtectedPage);
 
-    Task<SiteReferrer?> FindSiteReferrerAsync(string referrerHash);
+    public Task<SiteReferrer?> FindSiteReferrerAsync(string referrerHash);
 
-    ValueTask<SiteReferrer?> FindSiteReferrerAsync(int id);
+    public ValueTask<SiteReferrer?> FindSiteReferrerAsync(int id);
 
-    Task<SiteReferrer?> FindLocalReferrerAsync(string? destinationUrl);
+    public Task<SiteReferrer?> FindLocalReferrerAsync(string? destinationUrl);
 
-    Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(int pageNumber,
+    public Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(int pageNumber,
         int recordsPerPage,
         bool isLocalReferrer);
 
-    Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string? destinationUrl,
+    public Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string? destinationUrl,
         int pageNumber,
         int recordsPerPage,
         bool isLocalReferrer);
 
-    Task RemoveSiteReferrerAsync(int id);
+    public Task RemoveSiteReferrerAsync(int id);
 }

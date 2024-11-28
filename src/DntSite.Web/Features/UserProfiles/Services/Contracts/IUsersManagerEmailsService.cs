@@ -5,23 +5,23 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IUsersManagerEmailsService : IScopedService
 {
-    Task ResetNotActivatedUsersAndSendEmailAsync(DateTime? from);
+    public Task ResetNotActivatedUsersAndSendEmailAsync(DateTime? from);
 
-    Task SendUserActivatedEmailAsync(string userName, string email);
+    public Task SendUserActivatedEmailAsync(string userName, string email);
 
-    Task SendActivateYourAccountEmailAsync(User userInfo);
+    public Task SendActivateYourAccountEmailAsync(User userInfo);
 
-    Task SendForgottenPasswordConfirmEmailAsync(User userInfo);
+    public Task SendForgottenPasswordConfirmEmailAsync(User userInfo);
 
-    Task SendResetPasswordEmailAsync(User userInfo, string originalPassword);
+    public Task SendResetPasswordEmailAsync(User userInfo, string originalPassword);
 
-    Task UserProfileSendEmailAsync(UserProfileEmailModel userProfile, User user);
+    public Task UserProfileSendEmailAsync(UserProfileEmailModel userProfile, User user);
 
-    Task UserProfileEditedEmailToAdminAsync(User user);
+    public Task UserProfileEditedEmailToAdminAsync(User user);
 
-    Task UsersManagerSendEmailAsync(string userName, string friendlyName, string message);
+    public Task UsersManagerSendEmailAsync(string userName, string friendlyName, string message);
 
-    Task SendUserIsDisabledAsync(User user, string url, string siteName);
+    public Task SendUserIsDisabledAsync(User user, string url, string siteName);
 
-    Task SendNotifyInActiveUserAsync(User user, string url, string siteName);
+    public Task SendNotifyInActiveUserAsync(User user, string url, string siteName);
 }

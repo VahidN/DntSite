@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.Surveys.Services.Contracts;
 
 public interface IVoteTagsService : IScopedService
 {
-    Task<List<SurveyTag>> GetAllVoteTagsListAsNoTrackingAsync(int count);
+    public Task<List<SurveyTag>> GetAllVoteTagsListAsNoTrackingAsync(int count);
 
-    ValueTask<SurveyTag?> FindVoteTagAsync(int tagId);
+    public ValueTask<SurveyTag?> FindVoteTagAsync(int tagId);
 }

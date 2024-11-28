@@ -5,13 +5,13 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IUserRolesService : IScopedService
 {
-    Task<ClaimsPrincipal> CreateCookieClaimsAsync(User user);
+    public Task<ClaimsPrincipal> CreateCookieClaimsAsync(User user);
 
-    Task<List<Role>> FindUserRolesAsync(int? userId);
+    public Task<List<Role>> FindUserRolesAsync(int? userId);
 
-    Task<bool> IsUserInRoleAsync(int? userId, string roleName);
+    public Task<bool> IsUserInRoleAsync(int? userId, string roleName);
 
-    Task<string[]> GetRolesForUserAsync(int? userId);
+    public Task<string[]> GetRolesForUserAsync(int? userId);
 
-    Task AddOrUpdateUserRolesAsync(int userId, IList<string> inputRoleValues);
+    public Task AddOrUpdateUserRolesAsync(int userId, IList<string> inputRoleValues);
 }

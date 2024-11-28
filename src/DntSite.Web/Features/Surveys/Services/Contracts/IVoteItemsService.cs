@@ -6,23 +6,23 @@ namespace DntSite.Web.Features.Surveys.Services.Contracts;
 
 public interface IVoteItemsService : IScopedService
 {
-    SurveyItem AddVoteItem(SurveyItem data);
+    public SurveyItem AddVoteItem(SurveyItem data);
 
-    Task AddOrUpdateVoteItemsAsync(Survey surveyItem, VoteModel writeSurveyModel);
+    public Task AddOrUpdateVoteItemsAsync(Survey surveyItem, VoteModel writeSurveyModel);
 
-    Task AddNewSurveyItemsAsync(VoteModel writeSurveyModel, Survey result);
+    public Task AddNewSurveyItemsAsync(VoteModel writeSurveyModel, Survey result);
 
-    void RemoveRange(IList<SurveyItem> items);
+    public void RemoveRange(IList<SurveyItem> items);
 
-    void Remove(SurveyItem item);
+    public void Remove(SurveyItem item);
 
-    ValueTask<SurveyItem?> FindVoteItemAsync(int id);
+    public ValueTask<SurveyItem?> FindVoteItemAsync(int id);
 
-    Task<List<SurveyItem>> FindVoteItemsAsync(int surveyId);
+    public Task<List<SurveyItem>> FindVoteItemsAsync(int surveyId);
 
-    Task<List<SurveyItem>> FindVoteItemsAsync(IList<int>? surveyItemIds);
+    public Task<List<SurveyItem>> FindVoteItemsAsync(IList<int>? surveyItemIds);
 
-    Task<SurveyItem?> FindVoteItemAndUsersAsync(int id);
+    public Task<SurveyItem?> FindVoteItemAndUsersAsync(int id);
 
-    Task<List<User>> GetUserRatingsAsync(int itemId, int count = 100);
+    public Task<List<User>> GetUserRatingsAsync(int itemId, int count = 100);
 }

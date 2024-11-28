@@ -6,94 +6,94 @@ namespace DntSite.Web.Features.Stats.Services.Contracts;
 
 public interface IStatService : IScopedService
 {
-    Task RecalculateTagsInUseCountsAsync<TTagEntity, TAssociatedEntity>(bool showActives = true,
+    public Task RecalculateTagsInUseCountsAsync<TTagEntity, TAssociatedEntity>(bool showActives = true,
         bool showDeletedItems = false)
         where TTagEntity : BaseTagEntity<TAssociatedEntity>
         where TAssociatedEntity : BaseAuditedEntity;
 
-    Task UpdateAllUsersRatingsAsync();
+    public Task UpdateAllUsersRatingsAsync();
 
-    Task<AgeStatModel?> GetAverageAgeAsync();
+    public Task<AgeStatModel?> GetAverageAgeAsync();
 
-    Task<List<User>> GetTodayBirthdayListAsync();
+    public Task<List<User>> GetTodayBirthdayListAsync();
 
-    Task<int> GetTodayBirthdayCountAsync();
+    public Task<int> GetTodayBirthdayCountAsync();
 
-    Task<CoursesStatModel> GetCoursesStatAsync(bool onlyActives = true);
+    public Task<CoursesStatModel> GetCoursesStatAsync(bool onlyActives = true);
 
-    Task<int> NumberOfLinksAsync(bool showDeletedItems = false);
+    public Task<int> NumberOfLinksAsync(bool showDeletedItems = false);
 
-    Task<int> NumberOfPostsAsync(bool showDeletedItems = false);
+    public Task<int> NumberOfPostsAsync(bool showDeletedItems = false);
 
-    Task<int> NumberOfCommentsAsync(bool showDeletedItems = false);
+    public Task<int> NumberOfCommentsAsync(bool showDeletedItems = false);
 
-    Task<int> NumberOfTagsAsync(bool showActives = true);
+    public Task<int> NumberOfTagsAsync(bool showActives = true);
 
-    Task<int> NumberOfAdminsAsync(bool showActives = true);
+    public Task<int> NumberOfAdminsAsync(bool showActives = true);
 
-    Task<int> NumberOfUsersAsync(bool showActives = true);
+    public Task<int> NumberOfUsersAsync(bool showActives = true);
 
-    Task UpdateNumberOfLearningPathsAsync(int userId);
+    public Task UpdateNumberOfLearningPathsAsync(int userId);
 
-    Task UpdateUserRatingsAsync(User user);
+    public Task UpdateUserRatingsAsync(User user);
 
-    Task<int> NumberOfWritersAsync(bool showActives = true);
+    public Task<int> NumberOfWritersAsync(bool showActives = true);
 
-    Task<RecalculatePostsModel> GetStatAsync();
+    public Task<RecalculatePostsModel> GetStatAsync();
 
-    Task<ProjectsStatModel> GetProjectStatAsync(int projectId, bool showDeletedItems = false);
+    public Task<ProjectsStatModel> GetProjectStatAsync(int projectId, bool showDeletedItems = false);
 
-    Task<ProjectsStatModel> GetProjectsStatAsync(bool showDeletedItems = false);
+    public Task<ProjectsStatModel> GetProjectsStatAsync(bool showDeletedItems = false);
 
-    Task RecalculateAllUsersNumberOfPostsAndCommentsAsync(bool showDeletedItems = false);
+    public Task RecalculateAllUsersNumberOfPostsAndCommentsAsync(bool showDeletedItems = false);
 
-    Task RecalculateThisStackExchangeQuestionCommentsCountsAsync(int postId, bool showDeletedItems = false);
+    public Task RecalculateThisStackExchangeQuestionCommentsCountsAsync(int postId, bool showDeletedItems = false);
 
-    Task RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(int userId, bool showDeletedItems = false);
+    public Task RecalculateThisUserNumberOfPostsAndCommentsAndLinksAsync(int userId, bool showDeletedItems = false);
 
-    Task RecalculateThisBlogPostCommentsCountsAsync(int postId, bool showDeletedItems = false);
+    public Task RecalculateThisBlogPostCommentsCountsAsync(int postId, bool showDeletedItems = false);
 
-    Task RecalculateAllBlogPostsCommentsCountsAsync(bool showDeletedItems = false);
+    public Task RecalculateAllBlogPostsCommentsCountsAsync(bool showDeletedItems = false);
 
-    Task RecalculateThisNewsPostCommentsCountsAsync(int postId, bool showDeletedItems = false);
+    public Task RecalculateThisNewsPostCommentsCountsAsync(int postId, bool showDeletedItems = false);
 
-    Task RecalculateThisProjectIssueCommentsCountsAsync(int issueId, bool showDeletedItems = false);
+    public Task RecalculateThisProjectIssueCommentsCountsAsync(int issueId, bool showDeletedItems = false);
 
-    Task RecalculateThisProjectIssuesCountsAsync(int projectId, bool showDeletedItems = false);
+    public Task RecalculateThisProjectIssuesCountsAsync(int projectId, bool showDeletedItems = false);
 
-    Task UpdateProjectNumberOfReleasesStatAsync(int projectId, bool showDeletedItems = false);
+    public Task UpdateProjectNumberOfReleasesStatAsync(int projectId, bool showDeletedItems = false);
 
-    Task UpdateProjectNumberOfIssuesCommentsAsync(int projectId, bool showDeletedItems = false);
+    public Task UpdateProjectNumberOfIssuesCommentsAsync(int projectId, bool showDeletedItems = false);
 
-    Task UpdateProjectNumberOfFaqsAsync(int projectId, bool showDeletedItems = false);
+    public Task UpdateProjectNumberOfFaqsAsync(int projectId, bool showDeletedItems = false);
 
-    Task UpdateProjectNumberOfViewsOfFaqAsync(int faqId, bool fromFeed);
+    public Task UpdateProjectNumberOfViewsOfFaqAsync(int faqId, bool fromFeed);
 
-    Task UpdateProjectFileNumberOfDownloadsAsync(int fileId);
+    public Task UpdateProjectFileNumberOfDownloadsAsync(int fileId);
 
-    Task UpdateNumberOfDraftsStatAsync(int userId);
+    public Task UpdateNumberOfDraftsStatAsync(int userId);
 
-    Task UpdateTotalVotesCountAsync(int voteId);
+    public Task UpdateTotalVotesCountAsync(int voteId);
 
-    Task RecalculateThisVoteCommentsCountsAsync(int voteId, bool showDeletedItems = false);
+    public Task RecalculateThisVoteCommentsCountsAsync(int voteId, bool showDeletedItems = false);
 
-    Task RecalculateAllAdvertisementTagsInUseCountsAsync(bool onlyInUseItems,
+    public Task RecalculateAllAdvertisementTagsInUseCountsAsync(bool onlyInUseItems,
         bool showActives = true,
         bool showDeletedItems = false);
 
-    Task RecalculateThisAdvertisementCommentsCountsAsync(int id, bool showDeletedItems = false);
+    public Task RecalculateThisAdvertisementCommentsCountsAsync(int id, bool showDeletedItems = false);
 
-    Task UpdateNumberOfAdvertisementsOfActiveUsersAsync(bool showDeletedItems = false);
+    public Task UpdateNumberOfAdvertisementsOfActiveUsersAsync(bool showDeletedItems = false);
 
-    Task UpdateNumberOfCourseTopicsStatAsync(int courseId);
+    public Task UpdateNumberOfCourseTopicsStatAsync(int courseId);
 
-    Task RecalculateThisCourseTopicCommentsCountsAsync(int postId);
+    public Task RecalculateThisCourseTopicCommentsCountsAsync(int postId);
 
-    Task UpdateCourseNumberOfTopicsCommentsAsync(int courseId);
+    public Task UpdateCourseNumberOfTopicsCommentsAsync(int courseId);
 
-    Task RecalculateThisCourseQuestionsCountsAsync(int courseId);
+    public Task RecalculateThisCourseQuestionsCountsAsync(int courseId);
 
-    Task RecalculateThisCourseQuestionCommentsCountsAsync(int questionId);
+    public Task RecalculateThisCourseQuestionCommentsCountsAsync(int questionId);
 
-    Task UpdateNumberOfCourseQuestionsCommentsAsync(int courseId);
+    public Task UpdateNumberOfCourseQuestionsCommentsAsync(int courseId);
 }

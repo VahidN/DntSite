@@ -4,19 +4,19 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IDeviceDetectionService : IScopedService
 {
-    string GetDeviceDetails(HttpContext? context);
+    public string GetDeviceDetails(HttpContext? context);
 
-    string GetCurrentRequestDeviceDetails();
+    public string GetCurrentRequestDeviceDetails();
 
-    string GetDeviceDetailsHash(HttpContext? context);
+    public string GetDeviceDetailsHash(HttpContext? context);
 
-    string GetCurrentRequestDeviceDetailsHash();
+    public string GetCurrentRequestDeviceDetailsHash();
 
-    string? GetUserTokenDeviceDetailsHash(ClaimsIdentity? claimsIdentity);
+    public string? GetUserTokenDeviceDetailsHash(ClaimsIdentity? claimsIdentity);
 
-    string? GetCurrentUserTokenDeviceDetailsHash();
+    public string? GetCurrentUserTokenDeviceDetailsHash();
 
-    bool HasUserTokenValidDeviceDetails(ClaimsIdentity? claimsIdentity);
+    public bool HasUserTokenValidDeviceDetails(ClaimsIdentity? claimsIdentity);
 
-    bool HasCurrentUserTokenValidDeviceDetails();
+    public bool HasCurrentUserTokenValidDeviceDetails();
 }

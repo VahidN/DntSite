@@ -4,13 +4,13 @@ namespace DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
 
 public interface IQuestionsEmailsService : IScopedService
 {
-    Task StackExchangeQuestionSendEmailAsync(StackExchangeQuestion result, string friendlyName);
+    public Task StackExchangeQuestionSendEmailAsync(StackExchangeQuestion result, string friendlyName);
 
-    Task PostQuestionCommentReplySendEmailToAdminsAsync(StackExchangeQuestionComment data);
+    public Task PostQuestionCommentReplySendEmailToAdminsAsync(StackExchangeQuestionComment data);
 
-    Task PostQuestionCommentsReplySendEmailToWritersAsync(StackExchangeQuestionComment comment);
+    public Task PostQuestionCommentsReplySendEmailToWritersAsync(StackExchangeQuestionComment comment);
 
-    Task PostQuestionCommentsReplySendEmailToPersonAsync(StackExchangeQuestionComment comment);
+    public Task PostQuestionCommentsReplySendEmailToPersonAsync(StackExchangeQuestionComment comment);
 
-    Task QuestionCommentIsApprovedSendEmailToWritersAsync(StackExchangeQuestionComment? comment);
+    public Task QuestionCommentIsApprovedSendEmailToWritersAsync(StackExchangeQuestionComment? comment);
 }

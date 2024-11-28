@@ -5,14 +5,14 @@ namespace DntSite.Web.Features.Searches.Services.Contracts;
 
 public interface IIndexedDataExplorerService : IScopedService
 {
-    Task<PagedResultModel<LuceneSearchResult>> GetAllPagedIndexedDataAsync(int pageNumber, int pageSize);
+    public Task<PagedResultModel<LuceneSearchResult>> GetAllPagedIndexedDataAsync(int pageNumber, int pageSize);
 
-    Task<PagedResultModel<LuceneSearchResult>> FindAllPagedIndexedDataAsync(string term,
+    public Task<PagedResultModel<LuceneSearchResult>> FindAllPagedIndexedDataAsync(string term,
         int maxItems,
         int pageNumber,
         int pageSize);
 
-    Task<PagedResultModel<LuceneSearchResult>> FindAllMoreLikeThisItemsAsync(string documentHashId,
+    public Task<PagedResultModel<LuceneSearchResult>> FindAllMoreLikeThisItemsAsync(string documentHashId,
         int maxItems,
         int pageNumber,
         int pageSize);

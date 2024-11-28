@@ -5,101 +5,101 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IUsersInfoService : IScopedService
 {
-    Task<List<User>> GetNotLoggedInUsersToDisableAsync(int month);
+    public Task<List<User>> GetNotLoggedInUsersToDisableAsync(int month);
 
-    Task<bool> IsWriterAsync(int userId);
+    public Task<bool> IsWriterAsync(int userId);
 
-    Task<bool> CheckEMailAsync(string eMail, int? userId);
+    public Task<bool> CheckEMailAsync(string eMail, int? userId);
 
-    Task<OperationResult> CheckFriendlyNameAsync(string friendlyName, int? userId);
+    public Task<OperationResult> CheckFriendlyNameAsync(string friendlyName, int? userId);
 
-    Task<bool> CheckUsernameAsync(string username, int? userId);
+    public Task<bool> CheckUsernameAsync(string username, int? userId);
 
-    Task<int> NumberOfNotActivatedUsersAsync(DateTime? from);
+    public Task<int> NumberOfNotActivatedUsersAsync(DateTime? from);
 
-    Task<byte[]> GetEmailImageAsync(int? userId);
+    public Task<byte[]> GetEmailImageAsync(int? userId);
 
-    Task<User?> FindUserByEMailAsync(string eMail);
+    public Task<User?> FindUserByEMailAsync(string eMail);
 
-    Task<List<User>> FindUsersAsync(IList<int?>? userIds);
+    public Task<List<User>> FindUsersAsync(IList<int?>? userIds);
 
-    Task<List<User>> FindUsersStartWithFriendlyNameAsNoTrackingAsync(string name, int count = 20);
+    public Task<List<User>> FindUsersStartWithFriendlyNameAsNoTrackingAsync(string name, int count = 20);
 
-    Task<List<User>> FindActiveUsersContainFriendlyNameAsNoTrackingAsync(string name, int count = 20);
+    public Task<List<User>> FindActiveUsersContainFriendlyNameAsNoTrackingAsync(string name, int count = 20);
 
-    Task<List<User>> FindUsersContainFriendlyNameAsNoTrackingAsync(string name, int count = 20);
+    public Task<List<User>> FindUsersContainFriendlyNameAsNoTrackingAsync(string name, int count = 20);
 
-    Task<List<User>> FindUsersContainUserNameAsNoTrackingAsync(string name, int count = 20);
+    public Task<List<User>> FindUsersContainUserNameAsNoTrackingAsync(string name, int count = 20);
 
-    Task<List<User>> FindUsersContainEMailAsNoTrackingAsync(string name, int count = 20);
+    public Task<List<User>> FindUsersContainEMailAsNoTrackingAsync(string name, int count = 20);
 
-    Task<User?> FindUserByFriendlyNameAsync(string name);
+    public Task<User?> FindUserByFriendlyNameAsync(string name);
 
-    Task<User?> FindUserByFriendlyNameIncludeUserSocialNetworkAsync(string name);
+    public Task<User?> FindUserByFriendlyNameIncludeUserSocialNetworkAsync(string name);
 
-    Task<User?> FindUserIncludeUserSocialNetworkAsync(int? id);
+    public Task<User?> FindUserIncludeUserSocialNetworkAsync(int? id);
 
-    Task<UserSocialNetwork?> FindUserSocialNetworkAsync(int? userid);
+    public Task<UserSocialNetwork?> FindUserSocialNetworkAsync(int? userid);
 
-    ValueTask<User?> FindUserAsync(int? userId);
+    public ValueTask<User?> FindUserAsync(int? userId);
 
-    Task<User?> FindUserAsync(string username, string password);
+    public Task<User?> FindUserAsync(string username, string password);
 
-    Task<List<User>> GetUsersListByRoleAsync(int count, string role);
+    public Task<List<User>> GetUsersListByRoleAsync(int count, string role);
 
-    Task<List<User>> GetAllWritersWithAtleastOnePostListAsync(int count);
+    public Task<List<User>> GetAllWritersWithAtleastOnePostListAsync(int count);
 
-    Task<PagedResultModel<User>> GetPagedPostsWritersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedPostsWritersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<PagedResultModel<User>> GetPagedLinksWritersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedLinksWritersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<PagedResultModel<User>> GetPagedCoursesWritersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedCoursesWritersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<PagedResultModel<User>> GetPagedProjectsWritersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedProjectsWritersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<PagedResultModel<User>> GetPagedQuestionsWritersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedQuestionsWritersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<PagedResultModel<User>> GetPagedAdvertisementsWritersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedAdvertisementsWritersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<PagedResultModel<User>> GetPagedBacklogsWritersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedBacklogsWritersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<PagedResultModel<User>> GetPagedSurveyWritersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedSurveyWritersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<PagedResultModel<User>> GetPagedLearningPathWritersListAsync(int pageNumber, int recordsPerPage);
+    public Task<PagedResultModel<User>> GetPagedLearningPathWritersListAsync(int pageNumber, int recordsPerPage);
 
-    Task<List<User>> GetAllActiveWritersListIncludePostsAsync();
+    public Task<List<User>> GetAllActiveWritersListIncludePostsAsync();
 
-    Task<List<User>> GetAllActiveUsersListWithMinPostsCountAsync(int minPostCount);
+    public Task<List<User>> GetAllActiveUsersListWithMinPostsCountAsync(int minPostCount);
 
-    Task<List<User>> GetAllActiveUsersListWithZeroPostCountAsync();
+    public Task<List<User>> GetAllActiveUsersListWithZeroPostCountAsync();
 
-    Task<PagedResultModel<User>> GetUsersListAsNoTrackingAsync(int pageNumber,
+    public Task<PagedResultModel<User>> GetUsersListAsNoTrackingAsync(int pageNumber,
         int recordsPerPage = 8,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false,
         bool showAll = true);
 
-    Task<PagedResultModel<User>> GetUsersListAsNoTrackingAsync(DntQueryBuilderModel state, bool showAll = true);
+    public Task<PagedResultModel<User>> GetUsersListAsNoTrackingAsync(DntQueryBuilderModel state, bool showAll = true);
 
-    User AddUser(User data);
+    public User AddUser(User data);
 
-    Task<List<User>> GetActiveLinksWritersListAsync(int count = 1000);
+    public Task<List<User>> GetActiveLinksWritersListAsync(int count = 1000);
 
-    Task<List<User>> GetAllDailyEmailReceiversListAsync(int count = 300);
+    public Task<List<User>> GetAllDailyEmailReceiversListAsync(int count = 300);
 
-    Task<List<User>> GetActiveProjectAuthorsListAsync(int count);
+    public Task<List<User>> GetActiveProjectAuthorsListAsync(int count);
 
-    Task<List<User?>> GetActiveArticleWritersListAsync(int count);
+    public Task<List<User?>> GetActiveArticleWritersListAsync(int count);
 
-    Task<List<User?>> GetActiveArticleWritersListAsync(int count, DateTime fromDate, DateTime toDate);
+    public Task<List<User?>> GetActiveArticleWritersListAsync(int count, DateTime fromDate, DateTime toDate);
 
-    Task<List<User>> GetJobSeekersListAsNoTrackingAsync();
+    public Task<List<User>> GetJobSeekersListAsNoTrackingAsync();
 
-    Task<int> WriterNumberOfPostsAsync(int userId,
+    public Task<int> WriterNumberOfPostsAsync(int userId,
         DateTime fromDate,
         DateTime toDate,
         bool userIsActive = true,
         bool showDeletedItems = false);
 
-    Task<List<User>> GetAllActiveAdminsAsNoTrackingAsync();
+    public Task<List<User>> GetAllActiveAdminsAsNoTrackingAsync();
 }

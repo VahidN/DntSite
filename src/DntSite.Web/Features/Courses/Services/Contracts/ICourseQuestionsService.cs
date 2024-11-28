@@ -7,22 +7,22 @@ namespace DntSite.Web.Features.Courses.Services.Contracts;
 
 public interface ICourseQuestionsService : IScopedService
 {
-    CourseQuestion AddCourseQuestion(CourseQuestion courseQuestion);
+    public CourseQuestion AddCourseQuestion(CourseQuestion courseQuestion);
 
-    ValueTask<CourseQuestion?> FindCourseQuestionAsync(int courseQuestionId);
+    public ValueTask<CourseQuestion?> FindCourseQuestionAsync(int courseQuestionId);
 
-    Task<PagedResultModel<CourseQuestion>> GetLastPagedCourseQuestionsAsNoTrackingAsync(int courseId,
+    public Task<PagedResultModel<CourseQuestion>> GetLastPagedCourseQuestionsAsNoTrackingAsync(int courseId,
         int pageNumber,
         int recordsPerPage = 8,
         bool onlyActive = true,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    Task<CourseQuestionDetailsModel> GetCourseQuestionLastAndNextPostIncludeAuthorTagsAsync(int courseId,
+    public Task<CourseQuestionDetailsModel> GetCourseQuestionLastAndNextPostIncludeAuthorTagsAsync(int courseId,
         int questionId,
         bool onlyShowActives = true);
 
-    Task UpdateNumberOfViewsAsync(int id, bool fromFeed);
+    public Task UpdateNumberOfViewsAsync(int id, bool fromFeed);
 }

@@ -9,30 +9,30 @@ namespace DntSite.Web.Features.Backlogs.Services.Contracts;
 
 public interface IBacklogsService : IScopedService
 {
-    ValueTask<Backlog?> FindBacklogAsync(int id);
+    public ValueTask<Backlog?> FindBacklogAsync(int id);
 
-    Task<Backlog?> GetFullBacklogAsync(int id, bool showDeletedItems = false);
+    public Task<Backlog?> GetFullBacklogAsync(int id, bool showDeletedItems = false);
 
-    Backlog AddBacklog(Backlog data);
+    public Backlog AddBacklog(Backlog data);
 
-    Task<PagedResultModel<Backlog>> GetBacklogsByTagNameAsync(string tagName,
+    public Task<PagedResultModel<Backlog>> GetBacklogsByTagNameAsync(string tagName,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Backlog>>
-        GetLastPagedBacklogsAsync(DntQueryBuilderModel state, bool showDeletedItems = false);
+    public Task<PagedResultModel<Backlog>> GetLastPagedBacklogsAsync(DntQueryBuilderModel state,
+        bool showDeletedItems = false);
 
-    Task<PagedResultModel<Backlog>> GetLastPagedBacklogsAsync(string name,
+    public Task<PagedResultModel<Backlog>> GetLastPagedBacklogsAsync(string name,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Backlog>> GetBacklogsAsync(int pageNumber,
+    public Task<PagedResultModel<Backlog>> GetBacklogsAsync(int pageNumber,
         int? userId = null,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
@@ -42,37 +42,41 @@ public interface IBacklogsService : IScopedService
         bool isDone = false,
         bool isInProgress = false);
 
-    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    Task<BacklogDetailsModel> BacklogDetailsAsync(int id, bool showDeletedItems = false);
+    public Task<BacklogDetailsModel> BacklogDetailsAsync(int id, bool showDeletedItems = false);
 
-    Task<BacklogsListModel> GetCountsAsync();
+    public Task<BacklogsListModel> GetCountsAsync();
 
-    Task<bool> HasUserAnotherHalfFinishedAssignedBacklogAsync(int userId);
+    public Task<bool> HasUserAnotherHalfFinishedAssignedBacklogAsync(int userId);
 
-    Task CancelOldOnesAsync();
+    public Task CancelOldOnesAsync();
 
-    Task<List<Backlog>> GetAllPublicBacklogsOfDateAsync(DateTime date);
+    public Task<List<Backlog>> GetAllPublicBacklogsOfDateAsync(DateTime date);
 
-    Task<Backlog?> GetLastActiveBacklogAsync();
+    public Task<Backlog?> GetLastActiveBacklogAsync();
 
-    Task MarkAsDeletedAsync(Backlog? backlog);
+    public Task MarkAsDeletedAsync(Backlog? backlog);
 
-    Task NotifyDeleteChangesAsync(Backlog? backlog, BacklogModel? writeBacklogModel);
+    public Task NotifyDeleteChangesAsync(Backlog? backlog, BacklogModel? writeBacklogModel);
 
-    Task UpdateBacklogAsync(Backlog? backlog, BacklogModel writeBacklogModel);
+    public Task UpdateBacklogAsync(Backlog? backlog, BacklogModel writeBacklogModel);
 
-    Task<Backlog?> AddBacklogAsync(BacklogModel writeBacklogModel, User? user);
+    public Task<Backlog?> AddBacklogAsync(BacklogModel writeBacklogModel, User? user);
 
-    Task NotifyAddOrUpdateChangesAsync(Backlog? backlog, BacklogModel? writeBacklogModel);
+    public Task NotifyAddOrUpdateChangesAsync(Backlog? backlog, BacklogModel? writeBacklogModel);
 
-    Task UpdateStatAsync(int backlogId, bool isFromFeed);
+    public Task UpdateStatAsync(int backlogId, bool isFromFeed);
 
-    Task<OperationResult> TakeBacklogAsync(ManageBacklogModel? data, CurrentUserModel? user, string? siteRootUri);
+    public Task<OperationResult>
+        TakeBacklogAsync(ManageBacklogModel? data, CurrentUserModel? user, string? siteRootUri);
 
-    Task<OperationResult> CancelBacklogAsync(ManageBacklogModel? data, CurrentUserModel? user, string? siteRootUri);
+    public Task<OperationResult> CancelBacklogAsync(ManageBacklogModel? data,
+        CurrentUserModel? user,
+        string? siteRootUri);
 
-    Task<OperationResult> DoneBacklogAsync(ManageBacklogModel? data, CurrentUserModel? user, string? siteRootUri);
+    public Task<OperationResult>
+        DoneBacklogAsync(ManageBacklogModel? data, CurrentUserModel? user, string? siteRootUri);
 
-    Task IndexBackLogsAsync();
+    public Task IndexBackLogsAsync();
 }

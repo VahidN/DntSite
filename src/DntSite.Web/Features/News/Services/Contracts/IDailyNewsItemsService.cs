@@ -8,77 +8,78 @@ namespace DntSite.Web.Features.News.Services.Contracts;
 
 public interface IDailyNewsItemsService : IScopedService
 {
-    DailyNewsItem AddDailyNewsItem(DailyNewsItem data);
+    public DailyNewsItem AddDailyNewsItem(DailyNewsItem data);
 
-    Task<bool> IsTheSameAuthorAsync(int postId, int userId);
+    public Task<bool> IsTheSameAuthorAsync(int postId, int userId);
 
-    Task<DailyNewsItem?> FindDailyNewsItemAsync(string urlHash);
+    public Task<DailyNewsItem?> FindDailyNewsItemAsync(string urlHash);
 
-    ValueTask<DailyNewsItem?> FindDailyNewsItemAsync(int id);
+    public ValueTask<DailyNewsItem?> FindDailyNewsItemAsync(int id);
 
-    Task<string?> GetRedirectUrlAsync(string siteUrl, int maxRedirects = 20);
+    public Task<string?> GetRedirectUrlAsync(string siteUrl, int maxRedirects = 20);
 
-    Task<List<DailyNewsItem>> GetLastDailyNewsItemsIncludeUserAsync(int count, bool showDeletedItems = false);
+    public Task<List<DailyNewsItem>> GetLastDailyNewsItemsIncludeUserAsync(int count, bool showDeletedItems = false);
 
-    Task<PagedResultModel<DailyNewsItem>> GetLastPagedDailyNewsItemsIncludeUserAndTagsAsync(int pageNumber,
+    public Task<PagedResultModel<DailyNewsItem>> GetLastPagedDailyNewsItemsIncludeUserAndTagsAsync(int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<DailyNewsItem>> GetLastPagedDailyNewsItemsIncludeUserAndTagsAsync(DntQueryBuilderModel state,
+    public Task<PagedResultModel<DailyNewsItem>> GetLastPagedDailyNewsItemsIncludeUserAndTagsAsync(
+        DntQueryBuilderModel state,
         bool showDeletedItems = false);
 
-    Task UpdateStatAsync(int id, bool fromFeed);
+    public Task UpdateStatAsync(int id, bool fromFeed);
 
-    Task<PagedResultModel<DailyNewsItem>> GetLastPagedDailyNewsItemsIncludeUserAndTagAsync(string name,
+    public Task<PagedResultModel<DailyNewsItem>> GetLastPagedDailyNewsItemsIncludeUserAndTagAsync(string name,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    Task<PagedResultModel<DailyNewsItem>> GetDailyNewsItemsIncludeUserAndTagByTagNameAsync(string tagName,
+    public Task<PagedResultModel<DailyNewsItem>> GetDailyNewsItemsIncludeUserAndTagByTagNameAsync(string tagName,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<NewsDetailsModel> GetNewsLastAndNextIncludeAuthorTagsAsync(int id, bool showDeletedItems = false);
+    public Task<NewsDetailsModel> GetNewsLastAndNextIncludeAuthorTagsAsync(int id, bool showDeletedItems = false);
 
-    Task<List<DailyNewsItem>> GetTopDailyNewsItemsOfThisMonthAsync(int pageNumber = 0,
+    public Task<List<DailyNewsItem>> GetTopDailyNewsItemsOfThisMonthAsync(int pageNumber = 0,
         int recordsPerPage = 15,
         bool showDeletedItems = false);
 
-    Task<List<DailyNewsItem>> GetLastDailyNewsItemsByPopularItemAsNoTrackingAsync(PopularItem item,
+    public Task<List<DailyNewsItem>> GetLastDailyNewsItemsByPopularItemAsNoTrackingAsync(PopularItem item,
         int pageNumber,
         int recordsPerPage = 15,
         bool showDeletedItems = false);
 
-    Task<List<DailyNewsItem>> GetLastDailyNewsItemsByMonthAsync(int pageNumber, bool showDeletedItems = false);
+    public Task<List<DailyNewsItem>> GetLastDailyNewsItemsByMonthAsync(int pageNumber, bool showDeletedItems = false);
 
-    Task<int> GetAllDailyNewsItemsCountAsync(bool showDeletedItems = false);
+    public Task<int> GetAllDailyNewsItemsCountAsync(bool showDeletedItems = false);
 
-    Task<List<DailyNewsItem>> GetAllPublicNewsOfDateAsync(DateTime date);
+    public Task<List<DailyNewsItem>> GetAllPublicNewsOfDateAsync(DateTime date);
 
-    Task UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction updateNewsStatusAction);
+    public Task UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction updateNewsStatusAction);
 
-    Task<DailyNewsItem?> GetDailyNewsItemAsync(int id, bool showDeletedItems = false);
+    public Task<DailyNewsItem?> GetDailyNewsItemAsync(int id, bool showDeletedItems = false);
 
-    Task MarkAsDeletedAsync(DailyNewsItem? item);
+    public Task MarkAsDeletedAsync(DailyNewsItem? item);
 
-    Task UpdateNewsItemAsync(DailyNewsItem? newsItem, DailyNewsItemModel writeNewsModel);
+    public Task UpdateNewsItemAsync(DailyNewsItem? newsItem, DailyNewsItemModel writeNewsModel);
 
-    Task<DailyNewsItem> AddNewsItemAsync(DailyNewsItemModel writeNewsModel, User? user);
+    public Task<DailyNewsItem> AddNewsItemAsync(DailyNewsItemModel writeNewsModel, User? user);
 
-    Task NotifyAddOrUpdateChangesAsync(DailyNewsItem? newsItem, DailyNewsItemModel writeNewsModel, User? user);
+    public Task NotifyAddOrUpdateChangesAsync(DailyNewsItem? newsItem, DailyNewsItemModel writeNewsModel, User? user);
 
-    Task NotifyDeleteChangesAsync(DailyNewsItem? newsItem, User? user);
+    public Task NotifyDeleteChangesAsync(DailyNewsItem? newsItem, User? user);
 
-    Task<OperationResult> CheckUrlHashAsync(string url, int? id, bool isAdmin);
+    public Task<OperationResult> CheckUrlHashAsync(string url, int? id, bool isAdmin);
 
-    Task IndexDailyNewsItemsAsync();
+    public Task IndexDailyNewsItemsAsync();
 }

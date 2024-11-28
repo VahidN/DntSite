@@ -8,64 +8,64 @@ namespace DntSite.Web.Features.Advertisements.Services.Contracts;
 
 public interface IAdvertisementsService : IScopedService
 {
-    ValueTask<Advertisement?> FindAdvertisementAsync(int id);
+    public ValueTask<Advertisement?> FindAdvertisementAsync(int id);
 
-    Task<List<Advertisement>> GetDeletedAnnouncementsListAsync(int pageNumber, int recordsPerPage = 8);
+    public Task<List<Advertisement>> GetDeletedAnnouncementsListAsync(int pageNumber, int recordsPerPage = 8);
 
-    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    Task UpdateNumberOfAdvertisementViewsAsync(Advertisement? advertisement, bool fromFeed);
+    public Task UpdateNumberOfAdvertisementViewsAsync(Advertisement? advertisement, bool fromFeed);
 
-    Task UpdateNumberOfAdvertisementViewsAsync(int id, bool fromFeed);
+    public Task UpdateNumberOfAdvertisementViewsAsync(int id, bool fromFeed);
 
-    Task<PagedResultModel<Advertisement>> GetAllUserAdvertisementsAsync(int pageNumber,
+    public Task<PagedResultModel<Advertisement>> GetAllUserAdvertisementsAsync(int pageNumber,
         int userId,
         int recordsPerPage = 8,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<Advertisement?> AddAdvertisementAsync(WriteAdvertisementModel writeAdvertisementModel, User? user);
+    public Task<Advertisement?> AddAdvertisementAsync(WriteAdvertisementModel writeAdvertisementModel, User? user);
 
-    Task MarkAsDeletedAsync(Advertisement? advertisement);
+    public Task MarkAsDeletedAsync(Advertisement? advertisement);
 
     /// <summary>
     ///     Note: You need to call _tagsService.SaveNewTags first to add the missing tags to the db.
     /// </summary>
-    Task<Advertisement> SaveAdvertisementAsync(Advertisement advertisement,
+    public Task<Advertisement> SaveAdvertisementAsync(Advertisement advertisement,
         IList<AdvertisementTag> listOfActualTags,
         bool isEditForm = false);
 
-    Task<Advertisement?> GetAdvertisementAsync(int id, bool showDeletedItems = false);
+    public Task<Advertisement?> GetAdvertisementAsync(int id, bool showDeletedItems = false);
 
-    Task<AdvertisementModel> GetAdvertisementLastAndNextPostAsync(int id, bool showDeletedItems = false);
+    public Task<AdvertisementModel> GetAdvertisementLastAndNextPostAsync(int id, bool showDeletedItems = false);
 
-    Task<PagedResultModel<Advertisement>> GetLastAdvertisementsByTagAsync(string tag,
+    public Task<PagedResultModel<Advertisement>> GetLastAdvertisementsByTagAsync(string tag,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Advertisement>> GetLastAdvertisementsByUserAsync(string userName,
+    public Task<PagedResultModel<Advertisement>> GetLastAdvertisementsByUserAsync(string userName,
         int pageNumber,
         int recordsPerPage = 8,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Advertisement>> GetAnnouncementsListAsync(int pageNumber,
+    public Task<PagedResultModel<Advertisement>> GetAnnouncementsListAsync(int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    Task<PagedResultModel<Advertisement>> GetLastPagedAdvertisementsAsync(DntQueryBuilderModel state,
+    public Task<PagedResultModel<Advertisement>> GetLastPagedAdvertisementsAsync(DntQueryBuilderModel state,
         bool showDeletedItems = false);
 
-    Task UpdateAdvertisementAsync(Advertisement? advertisement, WriteAdvertisementModel writeAdvertisementModel);
+    public Task UpdateAdvertisementAsync(Advertisement? advertisement, WriteAdvertisementModel writeAdvertisementModel);
 
-    Task NotifyAddOrUpdateChangesAsync(Advertisement? advertisement);
+    public Task NotifyAddOrUpdateChangesAsync(Advertisement? advertisement);
 
-    Task NotifyDeleteChangesAsync(Advertisement? advertisement);
+    public Task NotifyDeleteChangesAsync(Advertisement? advertisement);
 
-    Task IndexAdvertisementsAsync();
+    public Task IndexAdvertisementsAsync();
 }

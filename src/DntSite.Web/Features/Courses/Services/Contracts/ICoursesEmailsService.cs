@@ -5,29 +5,29 @@ namespace DntSite.Web.Features.Courses.Services.Contracts;
 
 public interface ICoursesEmailsService : IScopedService
 {
-    Task NewCourseEmailToAdminsAsync(int id, CourseModel data);
+    public Task NewCourseEmailToAdminsAsync(int id, CourseModel data);
 
-    Task NewCourseEmailToUserAsync(int id, CourseModel data, int userId);
+    public Task NewCourseEmailToUserAsync(int id, CourseModel data, int userId);
 
-    Task AccessAddedEmailToUserAsync(Course data, string userName);
+    public Task AccessAddedEmailToUserAsync(Course data, string userName);
 
-    Task AccessAddedEmailToAdminAsync(Course data, string userName, string operation);
+    public Task AccessAddedEmailToAdminAsync(Course data, string userName, string operation);
 
-    Task WriteCourseTopicSendEmailAsync(CourseTopic data);
+    public Task WriteCourseTopicSendEmailAsync(CourseTopic data);
 
-    Task CourseTopicCommentSendEmailToAdminsAsync(CourseTopicComment comment);
+    public Task CourseTopicCommentSendEmailToAdminsAsync(CourseTopicComment comment);
 
-    Task CourseTopicCommentSendEmailToWritersAsync(CourseTopicComment comment);
+    public Task CourseTopicCommentSendEmailToWritersAsync(CourseTopicComment comment);
 
-    Task CourseTopicCommentSendEmailToPersonAsync(CourseTopicComment comment);
+    public Task CourseTopicCommentSendEmailToPersonAsync(CourseTopicComment comment);
 
-    Task NewQuestionSendEmailToAdminsAsync(CourseQuestion courseQuestion);
+    public Task NewQuestionSendEmailToAdminsAsync(CourseQuestion courseQuestion);
 
-    Task NewQuestionSendEmailToCourseWritersAsync(CourseQuestion data);
+    public Task NewQuestionSendEmailToCourseWritersAsync(CourseQuestion data);
 
-    Task CourseQuestionCommentSendEmailToAdminsAsync(CourseQuestionComment comment);
+    public Task CourseQuestionCommentSendEmailToAdminsAsync(CourseQuestionComment comment);
 
-    Task CourseQuestionCommentSendEmailToWritersAsync(CourseQuestionComment comment);
+    public Task CourseQuestionCommentSendEmailToWritersAsync(CourseQuestionComment comment);
 
-    Task CourseQuestionCommentSendEmailToPersonAsync(CourseQuestionComment comment);
+    public Task CourseQuestionCommentSendEmailToPersonAsync(CourseQuestionComment comment);
 }

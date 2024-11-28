@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.AppConfigs.Services.Contracts;
 
 public interface ICachedAppSettingsProvider : ISingletonService
 {
-    Task<AppSetting> GetAppSettingsAsync();
+    public Task<AppSetting> GetAppSettingsAsync();
 
-    void InvalidateAppSettings();
+    public void InvalidateAppSettings();
 }
