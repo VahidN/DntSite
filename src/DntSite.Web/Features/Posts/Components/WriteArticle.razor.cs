@@ -9,6 +9,7 @@ using DntSite.Web.Features.Posts.Services.Contracts;
 
 namespace DntSite.Web.Features.Posts.Components;
 
+[Authorize]
 public partial class WriteArticle
 {
     [Parameter] public string? EditId { set; get; }
