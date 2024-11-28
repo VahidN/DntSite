@@ -38,6 +38,9 @@ namespace DntBlazorSsr {
                             break;
 
                         case "plain":
+                            language = "language-plaintext";
+                            break;
+
                         case "css":
                         case "xml":
                         case "sql":
