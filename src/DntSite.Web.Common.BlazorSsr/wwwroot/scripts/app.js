@@ -508,6 +508,7 @@ var DntBlazorSsr;
         }
         static synchronizeQuillAndTextArea(quill, textAreaElement) {
             quill.on('editor-change', (eventName, ...args) => {
+                DntHtmlEditor.addDirectionToParagraphs();
                 textAreaElement.value = quill.getSemanticHTML();
             });
         }
@@ -564,6 +565,32 @@ var DntBlazorSsr;
         static humanFileSize(size) {
             const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
             return (size / Math.pow(1024, i)).toFixed(2) + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+        }
+        static addMoreAlignAndDirections() {
+            Quill.imports['formats/align'].whitelist.push('left');
+            Quill.imports['formats/direction'].whitelist.push('ltr');
+        }
+        static addDirectionToParagraphs() {
+            document.querySelectorAll('.ql-editor > .ql-direction-ltr').forEach(element => {
+                element.style.textAlign = 'left';
+                element.dir = 'ltr';
+            });
+            document.querySelectorAll('.ql-editor > .ql-direction-rtl').forEach(element => {
+                element.style.textAlign = 'right';
+                element.dir = 'rtl';
+            });
+        }
+        static handleDirection(quill, value) {
+            const { align } = quill.getFormat();
+            if (align === 'right') {
+                quill.format('align', 'left', Quill.sources.USER);
+                quill.format('direction', 'ltr', Quill.sources.USER);
+            }
+            else if (value === 'rtl') {
+                quill.format('align', 'right', Quill.sources.USER);
+                quill.format('direction', 'rtl', Quill.sources.USER);
+            }
+            DntHtmlEditor.addDirectionToParagraphs();
         }
         static uploadFile(uniqueId, quill, accept, isImage, apiUrl, uploadOnlyImageFileErrorMessage, additionalJsonData, maximumFileSizeInBytes, maximumUploadFileSizeErrorMessage) {
             let dntHtmlEditor = DntHtmlEditor;
@@ -726,6 +753,7 @@ var DntBlazorSsr;
                 const { isReadOnly, placeholder, theme, insertImageUrlLabel, uploadFileApiPath, uploadImageFileApiPath, uploadOnlyImageFileErrorMessage, additionalJsonDataDuringImageFileUpload, additionalJsonDataDuringFileUpload, acceptedUploadImageFormats, acceptedUploadFileFormats, maximumUploadImageSizeInBytes, maximumUploadFileSizeInBytes, maximumUploadImageSizeErrorMessage, maximumUploadFileSizeErrorMessage } = dntHtmlEditor.getEditorOptions(editorElement);
                 dntHtmlEditor.setEditorElementHeight(editorElement, toolbar);
                 DntHtmlEditor.addMoreLanguages();
+                DntHtmlEditor.addMoreAlignAndDirections();
                 const quill = new Quill(editorElement, {
                     debug: 'warn',
                     readOnly: isReadOnly,
@@ -734,6 +762,7 @@ var DntBlazorSsr;
                         toolbar: {
                             container: `#${toolbarId}`,
                             handlers: {
+                                direction: (value) => dntHtmlEditor.handleDirection(quill, value),
                                 uploadImageFile: (value) => dntHtmlEditor.uploadFile(uniqueId, quill, acceptedUploadImageFormats, true, uploadImageFileApiPath, uploadOnlyImageFileErrorMessage, additionalJsonDataDuringImageFileUpload, maximumUploadImageSizeInBytes, maximumUploadImageSizeErrorMessage),
                                 insertImageUrl: (value) => dntHtmlEditor.handleInsertImageUrl(quill, insertImageUrlLabel),
                                 uploadFile: (value) => dntHtmlEditor.uploadFile(uniqueId, quill, acceptedUploadFileFormats, false, uploadFileApiPath, uploadOnlyImageFileErrorMessage, additionalJsonDataDuringFileUpload, maximumUploadFileSizeInBytes, maximumUploadFileSizeErrorMessage)
@@ -1680,6 +1709,8 @@ var DntBlazorSsr;
                             language = "language-pas";
                             break;
                         case "plain":
+                            language = "language-plaintext";
+                            break;
                         case "css":
                         case "xml":
                         case "sql":

@@ -84,6 +84,7 @@ namespace DntBlazorSsr {
         static synchronizeQuillAndTextArea(quill: any, textAreaElement: HTMLTextAreaElement) {
             // @ts-ignore
             quill.on('editor-change', (eventName, ...args) => {
+                DntHtmlEditor.addDirectionToParagraphs();
                 textAreaElement.value = quill.getSemanticHTML();
             });
         }
@@ -153,6 +154,45 @@ namespace DntBlazorSsr {
         static humanFileSize(size: number): string {
             const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
             return (size / Math.pow(1024, i)).toFixed(2) + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+        }
+
+        static addMoreAlignAndDirections() {
+            // @ts-ignore
+            Quill.imports['formats/align'].whitelist.push('left');
+            // @ts-ignore
+            Quill.imports['formats/direction'].whitelist.push('ltr');
+        }
+
+        static addDirectionToParagraphs() {
+            document.querySelectorAll<HTMLElement>('.ql-editor > .ql-direction-ltr').forEach(element => {
+                element.style.textAlign = 'left';
+                element.dir = 'ltr';
+            });
+            document.querySelectorAll<HTMLElement>('.ql-editor > .ql-direction-rtl').forEach(element => {
+                element.style.textAlign = 'right';
+                element.dir = 'rtl';
+            });
+        }
+
+        static handleDirection(quill: any, value: any) {
+            // @ts-ignore
+            const {align} = quill.getFormat();
+
+            if (align === 'right') {
+                // adds class="ql-direction-ltr ql-align-left"
+                // @ts-ignore
+                quill.format('align', 'left', Quill.sources.USER);
+                // @ts-ignore
+                quill.format('direction', 'ltr', Quill.sources.USER);
+            } else if (value === 'rtl') {
+                // adds class="ql-align-right ql-direction-rtl"
+                // @ts-ignore
+                quill.format('align', 'right', Quill.sources.USER);
+                // @ts-ignore
+                quill.format('direction', 'rtl', Quill.sources.USER);
+            }
+
+            DntHtmlEditor.addDirectionToParagraphs();
         }
 
         static uploadFile(uniqueId: string,
@@ -359,6 +399,7 @@ namespace DntBlazorSsr {
 
                 dntHtmlEditor.setEditorElementHeight(editorElement, toolbar);
                 DntHtmlEditor.addMoreLanguages();
+                DntHtmlEditor.addMoreAlignAndDirections();
                 // @ts-ignore
                 const quill = new Quill(editorElement, {
                     debug: 'warn',
@@ -368,6 +409,7 @@ namespace DntBlazorSsr {
                         toolbar: {
                             container: `#${toolbarId}`,
                             handlers: {
+                                direction: (value: any) => dntHtmlEditor.handleDirection(quill, value),
                                 uploadImageFile: (value: any) => dntHtmlEditor.uploadFile(uniqueId,
                                     quill,
                                     acceptedUploadImageFormats,
