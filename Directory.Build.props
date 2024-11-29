@@ -35,6 +35,12 @@
         </WarningsNotAsErrors>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' != 'Release'">
+        <StaticWebAssetFingerprintingEnabled>false</StaticWebAssetFingerprintingEnabled>
+        <StaticWebAssetsFingerprintContent>false</StaticWebAssetsFingerprintContent>
+        <EnableDefaultCompressedItems>false</EnableDefaultCompressedItems>
+    </PropertyGroup>
+
     <ItemGroup>
         <Using Include="System.Globalization"/>
         <Using Include="System.Text.Json"/>
