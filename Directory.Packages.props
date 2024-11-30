@@ -22,6 +22,7 @@
     <PackageVersion Include="System.Net.Http.Json" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
     <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.7.1" />
+    <PackageVersion Include="Microsoft.Net.Compilers.Razor.Toolset" Version="9.0.0-preview.24554.8" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
