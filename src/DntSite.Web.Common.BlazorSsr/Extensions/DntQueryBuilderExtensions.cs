@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -143,11 +141,6 @@ public static partial class DntQueryBuilderExtensions
         return gridifyFilter.ToString().TrimStart(',', '|').Trim();
     }
 
-    private static object? GetDefaultValue(Type? type)
-        => type?.IsValueType == true ? RuntimeHelpers.GetUninitializedObject(type) : null;
-
-    private static bool CanCovert(string value, Type type) => TypeDescriptor.GetConverter(type).IsValid(value);
-
     private static string GetRuleValue<TRecord>(DntQueryBuilderSearchRule<TRecord>? rule)
         where TRecord : class
     {
@@ -170,12 +163,12 @@ public static partial class DntQueryBuilderExtensions
             return "";
         }
 
-        if (!rule.Value.IsEmpty() && CanCovert(rule.Value, type))
+        if (!rule.Value.IsEmpty() && rule.Value.CanCovertTo(type))
         {
             return rule.Value;
         }
 
-        var defaultValue = GetDefaultValue(type);
+        var defaultValue = type.GetDefaultValue();
 
         return string.Create(CultureInfo.InvariantCulture, $"{defaultValue}");
     }
