@@ -380,7 +380,7 @@ public partial class DntQueryBuilder<TRecord>
 
         if (ShouldRemoveRow())
         {
-            if (DeleteRowIndex.Value > 0 && DeleteRowIndex.Value < SearchRuleRows.Count)
+            if (DeleteRowIndex.Value >= 0 && DeleteRowIndex.Value < SearchRuleRows.Count)
             {
                 SearchRuleRows.RemoveAt(DeleteRowIndex.Value);
             }

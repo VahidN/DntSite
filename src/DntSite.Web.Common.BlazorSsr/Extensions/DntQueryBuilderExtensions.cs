@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -89,7 +91,14 @@ public static partial class DntQueryBuilderExtensions
                 continue;
             }
 
-            var ruleValue = rule.Value.EscapeValue();
+            var rawValue = GetRuleValue(rule);
+
+            if (rawValue.IsEmpty())
+            {
+                continue;
+            }
+
+            var ruleValue = rawValue.EscapeValue();
 
             switch (rule.OperationKind)
             {
@@ -134,9 +143,46 @@ public static partial class DntQueryBuilderExtensions
         return gridifyFilter.ToString().TrimStart(',', '|').Trim();
     }
 
-    private static string EscapeValue(this string? value)
-        => string.IsNullOrWhiteSpace(value) ? "" : EscapeRegex().Replace(value, "\\$1");
+    private static object? GetDefaultValue(Type? type)
+        => type?.IsValueType == true ? RuntimeHelpers.GetUninitializedObject(type) : null;
 
-    [GeneratedRegex(@"([(),|\\]|\/i)", RegexOptions.Compiled, 3000)]
+    private static bool CanCovert(string value, Type type) => TypeDescriptor.GetConverter(type).IsValid(value);
+
+    private static string GetRuleValue<TRecord>(DntQueryBuilderSearchRule<TRecord>? rule)
+        where TRecord : class
+    {
+        if (rule is null)
+        {
+            return "";
+        }
+
+        var propertyType = rule.QueryBuilderProperty?.PropertyType;
+
+        if (propertyType.IsEmpty())
+        {
+            return "";
+        }
+
+        var type = Type.GetType(propertyType);
+
+        if (type is null)
+        {
+            return "";
+        }
+
+        if (!rule.Value.IsEmpty() && CanCovert(rule.Value, type))
+        {
+            return rule.Value;
+        }
+
+        var defaultValue = GetDefaultValue(type);
+
+        return string.Create(CultureInfo.InvariantCulture, $"{defaultValue}");
+    }
+
+    private static string EscapeValue(this string? value)
+        => string.IsNullOrWhiteSpace(value) ? "" : EscapeRegex().Replace(value, replacement: "\\$1");
+
+    [GeneratedRegex(pattern: @"([(),|\\]|\/i)", RegexOptions.Compiled, matchTimeoutMilliseconds: 3000)]
     private static partial Regex EscapeRegex();
 }
