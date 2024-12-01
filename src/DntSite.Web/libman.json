@@ -11,7 +11,7 @@
       "destination": "wwwroot/lib/bootstrap-icons"
     },
     {
-      "library": "quill@2.0.2",
+      "library": "quill@2.0.3",
       "destination": "wwwroot/lib/quill"
     },
     {

@@ -456,18 +456,20 @@ function matchText(node, delta, scroll) {
     if (text.trim().length === 0 && text.includes('\n') && !isBetweenInlineElements(node, scroll)) {
       return delta;
     }
-    const replacer = (collapse, match) => {
-      const replaced = match.replace(/[^\u00a0]/g, ''); // \u00a0 is nbsp;
-      return replaced.length < 1 && collapse ? ' ' : replaced;
-    };
-    text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
-    text = text.replace(/\s\s+/g, replacer.bind(replacer, true)); // collapse whitespace
+    // convert all non-nbsp whitespace into regular space
+    text = text.replace(/[^\S\u00a0]/g, ' ');
+    // collapse consecutive spaces into one
+    text = text.replace(/ {2,}/g, ' ');
     if (node.previousSibling == null && node.parentElement != null && isLine(node.parentElement, scroll) || node.previousSibling instanceof Element && isLine(node.previousSibling, scroll)) {
-      text = text.replace(/^\s+/, replacer.bind(replacer, false));
+      // block structure means we don't need leading space
+      text = text.replace(/^ /, '');
     }
     if (node.nextSibling == null && node.parentElement != null && isLine(node.parentElement, scroll) || node.nextSibling instanceof Element && isLine(node.nextSibling, scroll)) {
-      text = text.replace(/\s+$/, replacer.bind(replacer, false));
+      // block structure means we don't need trailing space
+      text = text.replace(/ $/, '');
     }
+    // done removing whitespace and can normalize all to regular space
+    text = text.replaceAll('\u00a0', ' ');
   }
   return delta.insert(text);
 }

@@ -40,7 +40,7 @@ class Quill {
   };
   static events = Emitter.events;
   static sources = Emitter.sources;
-  static version = typeof "2.0.2" === 'undefined' ? 'dev' : "2.0.2";
+  static version = typeof "2.0.3" === 'undefined' ? 'dev' : "2.0.3";
   static imports = {
     delta: Delta,
     parchment: Parchment,

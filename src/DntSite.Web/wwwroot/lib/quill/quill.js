@@ -1,4 +1,4 @@
-import Quill, { Parchment, Range } from './core.js';
+import Quill from './core.js';
 import { AlignClass, AlignStyle } from './formats/align.js';
 import { DirectionAttribute, DirectionClass, DirectionStyle } from './formats/direction.js';
 import Indent from './formats/indent.js';
@@ -77,7 +77,6 @@ Quill.register({
   'ui/color-picker': ColorPicker,
   'ui/tooltip': Tooltip
 }, true);
-export { Module } from './core.js';
-export { Parchment, Range };
+export { AttributeMap, Delta, Module, Op, OpIterator, Parchment, Range } from './core.js';
 export default Quill;
 //# sourceMappingURL=quill.js.map
