@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Humanizer;
 using Lucene.Net.Documents;
 using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
@@ -27,6 +28,7 @@ public static class LuceneNetUtils
             .Replace(oldValue: "-", newValue: " ", StringComparison.OrdinalIgnoreCase);
 
         var terms = bodyTerm.Trim()
+            .Humanize()
             .Split(separator: ' ', StringSplitOptions.RemoveEmptyEntries)
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Select(x => $"{x.Trim()}{matchingType}");
