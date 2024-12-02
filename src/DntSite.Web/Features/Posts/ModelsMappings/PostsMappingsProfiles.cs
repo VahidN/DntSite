@@ -28,7 +28,7 @@ public class PostsMappingsProfiles : Profile
         => CreateMap<BlogPost, WriteArticleModel>(MemberList.None)
             .ForMember(model => model.ArticleBody, opt => opt.MapFrom(post => post.Body))
             .ForMember(model => model.ArticleTags,
-                opt => opt.MapFrom(post => post.Tags.Select(tag => tag.Name).ToList()));
+                opt => opt.MapFrom(post => Enumerable.Select(post.Tags, tag => tag.Name).ToList()));
 
     private void MapModelToDraft()
         => CreateMap<WriteDraftModel, BlogPostDraft>(MemberList.None)
@@ -37,7 +37,7 @@ public class PostsMappingsProfiles : Profile
                 opt => opt.MapFrom(model => model.ArticleBody.MinReadTime(180)))
             .ForMember(draft => draft.DateTimeToShow,
                 opt => opt.MapFrom(model => new PersianDateTime(model.PersianDateYear, model.PersianDateMonth,
-                    model.PersianDateDay, model.Hour, model.Minute, 0).DateTime))
+                    model.PersianDateDay, model.Hour, model.Minute, 0).DateTimeUtc))
             .AfterMap<AfterMapWriteDraftModel>();
 
     private void MapDraftToModel()
@@ -45,9 +45,11 @@ public class PostsMappingsProfiles : Profile
             .ForMember(model => model.ArticleBody, opt => opt.MapFrom(draft => draft.Body))
             .ForMember(model => model.ReadingTimeMinutes, opt => opt.MapFrom(draft => draft.Body.MinReadTime(180)))
             .ForMember(model => model.Hour,
-                opt => opt.MapFrom(draft => draft.DateTimeToShow == null ? 23 : draft.DateTimeToShow.Value.Hour))
+                opt => opt.MapFrom(draft
+                    => draft.DateTimeToShow == null ? 23 : draft.DateTimeToShow.Value.ToIranTimeZoneDateTime().Hour))
             .ForMember(model => model.Minute,
-                opt => opt.MapFrom(draft => draft.DateTimeToShow == null ? 55 : draft.DateTimeToShow.Value.Minute))
+                opt => opt.MapFrom(draft
+                    => draft.DateTimeToShow == null ? 55 : draft.DateTimeToShow.Value.ToIranTimeZoneDateTime().Minute))
             .ForMember(model => model.PersianDateYear, opt => opt.MapFrom(draft => GetYear(draft.DateTimeToShow)))
             .ForMember(model => model.PersianDateMonth, opt => opt.MapFrom(draft => GetMonth(draft.DateTimeToShow)))
             .ForMember(model => model.PersianDateDay, opt => opt.MapFrom(draft => GetDay(draft.DateTimeToShow)));
