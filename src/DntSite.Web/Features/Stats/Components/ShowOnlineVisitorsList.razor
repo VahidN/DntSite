@@ -21,20 +21,25 @@
             <strong>@PageTitle</strong>
         </CaptionTemplate>
         <TableColumns>
+            <DntSimpleTableColumn HeaderTitle="مدیریت"
+                                  IsVisible="ApplicationState.IsCurrentUserAdmin"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    <a href="@StatsRoutingConstants.OnlineVisitorsDeleteBase/@Uri.EscapeDataString(ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
+                       data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"
+                       class="btn btn-danger me-2 btn-sm">
+                        حذف
+                    </a>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+
             <DntSimpleTableColumn HeaderTitle="آخرین بازدید کننده"
                                   HeaderCellClass="text-center"
                                   RowCellClass='record => "text-right align-middle"'
                                   FooterCellClass="text-center align-middle">
                 <CellValueTemplate Context="record">
-                    @if (ApplicationState.IsCurrentUserAdmin)
-                    {
-                        <a href="@StatsRoutingConstants.OnlineVisitorsDeleteBase/@Uri.EscapeDataString(ProtectionProvider.Encrypt(record.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
-                           data-cancel-confirm-message="آیا می‌خواهید این سطر را حذف کنید؟"
-                           class="btn btn-danger me-2 btn-sm">
-                            حذف
-                        </a>
-                    }
-
                     @if (record.LastSiteUrlVisitorStat.IsSpider)
                     {
                         <span class="@DntBootstrapIcons.BiBug ms-2 me-1"></span>
