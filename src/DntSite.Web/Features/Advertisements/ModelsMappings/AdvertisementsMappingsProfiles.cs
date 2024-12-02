@@ -21,11 +21,12 @@ public class AdvertisementsMappingsProfiles : Profile
 
     private void MapAdvertisementToModel()
         => CreateMap<Advertisement, WriteAdvertisementModel>(MemberList.None)
-            .ForMember(model => model.Tags, opt => opt.MapFrom(post => post.Tags.Select(tag => tag.Name).ToList()))
+            .ForMember(model => model.Tags,
+                opt => opt.MapFrom(post => Enumerable.Select(post.Tags, tag => tag.Name).ToList()))
             .ForMember(model => model.Hour, opt => opt.MapFrom(post => GetHour(post.DueDate)))
             .ForMember(model => model.Minute, opt => opt.MapFrom(post => GetMinute(post.DueDate)));
 
-    private static int GetMinute(DateTime? postDueDate) => postDueDate?.Minute ?? 0;
+    private static int GetMinute(DateTime? postDueDate) => postDueDate?.ToIranTimeZoneDateTime().Minute ?? 0;
 
-    private static int GetHour(DateTime? postDueDate) => postDueDate?.Hour ?? 0;
+    private static int GetHour(DateTime? postDueDate) => postDueDate?.ToIranTimeZoneDateTime().Hour ?? 0;
 }
