@@ -43,11 +43,12 @@ public class SurveysProfiles : Profile
             .ForMember(model => model.Minute, opt => opt.MapFrom(survey => GetMinute(survey)))
             .ForMember(model => model.ExpirationDate,
                 opt => opt.MapFrom(survey => survey.DueDate.ToShortPersianDateString(true)))
-            .ForMember(model => model.Tags, opt => opt.MapFrom(survey => survey.Tags.Select(tag => tag.Name).ToList()));
+            .ForMember(model => model.Tags,
+                opt => opt.MapFrom(survey => Enumerable.Select(survey.Tags, tag => tag.Name).ToList()));
 
-    private int? GetHour(Survey survey) => survey.DueDate?.Hour;
+    private int? GetHour(Survey survey) => survey.DueDate?.ToIranTimeZoneDateTime().Hour;
 
-    private int? GetMinute(Survey survey) => survey.DueDate?.Minute;
+    private int? GetMinute(Survey survey) => survey.DueDate?.ToIranTimeZoneDateTime().Minute;
 
     private string GetVoteItems(Survey survey)
         => survey.SurveyItems.Where(x => !x.IsDeleted)

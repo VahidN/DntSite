@@ -336,6 +336,8 @@ public class VotesService(
         var result = await AddNewSurveyAndTagsAsync(writeSurveyModel, user);
         await voteItemsService.AddNewSurveyItemsAsync(writeSurveyModel, result);
 
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
         return result;
     }
 
@@ -374,8 +376,6 @@ public class VotesService(
         survey.UserId = user?.Id;
         var result = AddVote(survey);
         await uow.SaveChangesAsync();
-
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
 
         return result;
     }

@@ -132,9 +132,9 @@ public class VotesEmailsService(ICommonService commonService, IEmailsFactoryServ
     {
         ArgumentNullException.ThrowIfNull(result);
 
-        var options = result.SurveyItems.Where(x => !x.IsDeleted)
-            .Select(x => x.Title)
-            .Aggregate((s1, s2) => s1 + "<br/>" + s2);
+        var options = result.SurveyItems.Any(x => !x.IsDeleted)
+            ? result.SurveyItems.Where(x => !x.IsDeleted).Select(x => x.Title).Aggregate((s1, s2) => s1 + "<br/>" + s2)
+            : "";
 
         return emailsFactoryService.SendEmailToAllAdminsAsync<VoteEmail, VoteEmailModel>(messageId: "Vote",
             inReplyTo: "", references: "Vote", new VoteEmailModel

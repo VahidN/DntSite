@@ -19,7 +19,11 @@ public static class SurveysMappersExtensions
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
             Content =
-                item.SurveyItems.Where(x => !x.IsDeleted).Select(x => x.Title).Aggregate((s1, s2) => s1 + "<br/>" + s2),
+                item.SurveyItems.Any(x => !x.IsDeleted)
+                    ? item.SurveyItems.Where(x => !x.IsDeleted)
+                        .Select(x => x.Title)
+                        .Aggregate((s1, s2) => s1 + "<br/>" + s2)
+                    : "",
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

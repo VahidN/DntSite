@@ -19,12 +19,16 @@ public static class EfCorerExtensions
             var validationContext = new ValidationContext(entity);
             var validationResults = new List<ValidationResult>();
 
-            if (!Validator.TryValidateObject(entity, validationContext, validationResults, true))
+            if (!Validator.TryValidateObject(entity, validationContext, validationResults, validateAllProperties: true))
             {
                 foreach (var validationResult in validationResults)
                 {
-                    var names = validationResult.MemberNames.Aggregate((s1, s2) => $"{s1}, {s2}");
-                    errors.AppendFormat(CultureInfo.InvariantCulture, "{0}: {1}", names, validationResult.ErrorMessage);
+                    var names = validationResult.MemberNames.Any()
+                        ? validationResult.MemberNames.Aggregate((s1, s2) => $"{s1}, {s2}")
+                        : "";
+
+                    errors.AppendFormat(CultureInfo.InvariantCulture, format: "{0}: {1}", names,
+                        validationResult.ErrorMessage);
                 }
             }
         }
