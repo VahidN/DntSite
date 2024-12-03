@@ -506,10 +506,13 @@ var DntBlazorSsr;
         static hideTextArea(textAreaElement) {
             textAreaElement.style.display = 'none';
         }
+        static cleanWhiteSpaces(text) {
+            return text?.replace(/&nbsp;/g, " ");
+        }
         static synchronizeQuillAndTextArea(quill, textAreaElement) {
             quill.on('editor-change', (eventName, ...args) => {
                 DntHtmlEditor.addDirectionToParagraphs();
-                textAreaElement.value = quill.getSemanticHTML();
+                textAreaElement.value = DntHtmlEditor.cleanWhiteSpaces(quill.getSemanticHTML()) ?? "";
             });
         }
         static handleInsertImageUrl(quill, insertImageUrlLabel) {
