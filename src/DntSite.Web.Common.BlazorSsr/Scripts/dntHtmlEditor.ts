@@ -81,11 +81,15 @@ namespace DntBlazorSsr {
             textAreaElement.style.display = 'none';
         }
 
+        static cleanWhiteSpaces(text: string | null): string | undefined {
+            return text?.replace(/&nbsp;/g, " ");
+        }
+
         static synchronizeQuillAndTextArea(quill: any, textAreaElement: HTMLTextAreaElement) {
             // @ts-ignore
             quill.on('editor-change', (eventName, ...args) => {
                 DntHtmlEditor.addDirectionToParagraphs();
-                textAreaElement.value = quill.getSemanticHTML();
+                textAreaElement.value = DntHtmlEditor.cleanWhiteSpaces(quill.getSemanticHTML()) ?? "";
             });
         }
 
