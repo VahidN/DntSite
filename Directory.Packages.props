@@ -32,7 +32,7 @@
     <PackageVersion Include="Scrutor" Version="5.0.2" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.4.0" />
-    <PackageVersion Include="Gridify.EntityFramework" Version="2.15.1" />
+    <PackageVersion Include="Gridify.EntityFramework" Version="2.16.0" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
   </ItemGroup>
   <ItemGroup>
