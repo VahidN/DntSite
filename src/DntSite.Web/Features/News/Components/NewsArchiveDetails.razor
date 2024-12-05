@@ -57,7 +57,10 @@
                       EditPostUrlTemplate="@NewsRoutingConstants.EditPostUrlTemplate"
                       DeletePostUrlTemplate="@NewsRoutingConstants.DeletePostUrlTemplate">
         <AdditionalHeaderContent>
-            <PrintNewsRedirect DailyNewsItem="CurrentPost"/>
+            <PrintNewsRedirect Id="@CurrentPost.Id"
+                               Url="@CurrentPost.Url"
+                               LastHttpStatusCode="@CurrentPost.LastHttpStatusCode"
+                               LastHttpStatusCodeCheckDateTime="@CurrentPost.LastHttpStatusCodeCheckDateTime"/>
         </AdditionalHeaderContent>
         <AdditionalBodyContent>
             <PrintNewsThumb Id="@CurrentPost.Id" Title="@CurrentPost.Title"/>

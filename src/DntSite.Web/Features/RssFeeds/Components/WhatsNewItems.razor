@@ -4,6 +4,8 @@
 <DntLoading IsLoading="@(Posts is null)">
     @foreach (var post in Posts!.Data)
     {
+        var isDailyNewsItem = post.EntityType == typeof(DailyNewsItem);
+
         <ShowBlogPostItem TReactionEntity="DailyNewsItemReaction"
                           TForeignKeyEntity="DailyNewsItem"
                           ShowBriefDescription="true"
@@ -41,8 +43,15 @@
                     @post.ItemType.Value
                 </span>
             </BeforeHeaderContent>
+            <AdditionalHeaderContent>
+                @if (isDailyNewsItem)
+                {
+                    <PrintNewsRedirect Id="@post.Id" Url="@null" LastHttpStatusCode="@null"
+                                       LastHttpStatusCodeCheckDateTime="@null"/>
+                }
+            </AdditionalHeaderContent>
             <AdditionalBodyContent>
-                @if (post.EntityType == typeof(DailyNewsItem))
+                @if (isDailyNewsItem)
                 {
                     <PrintNewsThumb Id="@post.Id" Title="@post.OriginalTitle"/>
                 }

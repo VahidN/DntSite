@@ -37,7 +37,10 @@
                           ShowNumberOfViews="true"
                           ShowNumberOfComments="true">
             <AdditionalHeaderContent>
-                <PrintNewsRedirect DailyNewsItem="post"/>
+                <PrintNewsRedirect Id="@post.Id"
+                                   Url="@post.Url"
+                                   LastHttpStatusCode="@post.LastHttpStatusCode"
+                                   LastHttpStatusCodeCheckDateTime="@post.LastHttpStatusCodeCheckDateTime"/>
             </AdditionalHeaderContent>
             <AdditionalBodyContent>
                 <PrintNewsThumb Id="@post.Id" Title="@post.Title"/>
