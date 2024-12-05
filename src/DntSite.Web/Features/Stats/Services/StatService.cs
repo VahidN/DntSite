@@ -711,9 +711,13 @@ public class StatService(IUnitOfWork uow) : IStatService
         => uow.DbSet<User>().AsNoTracking().CountAsync(x => x.IsActive && x.IsJobsSeeker);
 
     private Task<int> GetNumberOfComingSoonAsync()
-        => uow.DbSet<BlogPostDraft>()
+    {
+        var aMonth = DateTime.UtcNow.AddMonths(months: -1);
+
+        return uow.DbSet<BlogPostDraft>()
             .AsNoTracking()
-            .CountAsync(x => !x.IsConverted && x.User!.UserStat.NumberOfPosts > 0);
+            .CountAsync(x => !x.IsConverted && x.User!.UserStat.NumberOfPosts > 0 && x.Audit.CreatedAt >= aMonth);
+    }
 
     private Task<int> GetNumberOfAdsAsync()
     {

@@ -75,13 +75,17 @@ public class BlogPostDraftsService(
             .ToListAsync();
 
     public Task<List<BlogPostDraft>> ComingSoonItemsAsync()
-        => _blogPostDrafts.AsNoTracking()
+    {
+        var aMonth = DateTime.UtcNow.AddMonths(months: -1);
+
+        return _blogPostDrafts.AsNoTracking()
             .Include(x => x.User)
-            .Where(x => !x.IsConverted &&
-                        x.User!.UserStat.NumberOfPosts > 0) // جلوگیری از ارسال مطالب بی‌ربط توسط تازه واردها
+            .Where(x => !x.IsConverted && x.User!.UserStat.NumberOfPosts > 0 &&
+                        x.Audit.CreatedAt >= aMonth) // جلوگیری از ارسال مطالب بی‌ربط توسط تازه واردها
             .OrderByDescending(x => x.IsReady)
             .ThenBy(x => x.DateTimeToShow)
             .ToListAsync();
+    }
 
     public Task<List<BlogPostDraft>> FindAllNotConvertedBlogPostDraftsAsync()
         => _blogPostDrafts.Include(x => x.User)
