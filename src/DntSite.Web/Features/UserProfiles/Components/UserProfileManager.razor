@@ -5,7 +5,7 @@
         <hr/>
         <DntCardFrame>
             <FrameHeader>
-                مدیریت کاربر [@User.UserName]
+                وضعیت کاربر [@User.UserName]
             </FrameHeader>
             <FrameBody>
                 <EditForm Model="this" method="post" OnValidSubmit="PerformAsync" FormName="@FormName" Enhance>
@@ -83,7 +83,8 @@
                                     @if (User.IsActive)
                                     {
                                         <button class="btn btn-success btn-sm" type="submit"
-                                                name="@nameof(AdminActionValue)" value="@AdminAction.SendEmailValidationMessage"
+                                                name="@nameof(AdminActionValue)"
+                                                value="@AdminAction.SendEmailValidationMessage"
                                                 data-cancel-confirm-message="آیا می‌خواهید این ایمیل فعالسازی را ارسال کنید؟">
                                             <span class="@DntBootstrapIcons.BiMailbox"></span>
                                             ارسال درخواست تائید ایمیل کاربر
@@ -138,25 +139,9 @@
                         </tbody>
                     </table>
                 </EditForm>
-
-                <div class="d-flex flex-row flex-wrap justify-content-between align-items-center mt-2">
-
-                    <a href="@UserProfilesRoutingConstants.EditProfile/@EncryptedUserId" class="btn btn-primary btn-sm">
-                        <span class="@DntBootstrapIcons.BiPersonGear"></span>
-                        ویرایش مشخصات کاربر
-                    </a>
-
-                    <a href="@UserProfilesRoutingConstants.EditSocialNetworks/@EncryptedUserId" class="btn btn-primary btn-sm">
-                        <span class="@DntBootstrapIcons.BiWifi"></span>
-                        ویرایش شبکه‌های اجتماعی کاربر
-                    </a>
-
-                    <a href="@UserProfilesRoutingConstants.ChangeUserPasswordBase/@EncryptedUserId" class="btn btn-primary btn-sm">
-                        <span class="@DntBootstrapIcons.BiPersonLock"></span>
-                        ویرایش کلمه عبور کاربر
-                    </a>
-                </div>
             </FrameBody>
         </DntCardFrame>
     </DntSecurityTrim>
+
+    <EditProfileOptions EncryptedUserId="@EncryptedUserId" UserId="User.Id"/>
 }

@@ -41,7 +41,7 @@ public partial class EditUserSocialNetworks
 
             if (userSocialNetwork is null)
             {
-                ApplicationState.NavigateTo(UserProfilesRoutingConstants.Login);
+                ApplicationState.NavigateToNotFoundPage();
 
                 return;
             }

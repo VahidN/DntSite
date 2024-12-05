@@ -1,0 +1,37 @@
+@if (IsVisible)
+{
+    <DntCardFrame MarginTop="3">
+        <FrameHeader>
+            ویرایش مشخصات
+        </FrameHeader>
+        <FrameBody>
+            <div class="d-flex flex-row flex-wrap justify-content-between align-items-center">
+                <a href="@UserProfilesRoutingConstants.EditProfile/@EncryptedUserId" class="btn btn-primary btn-sm">
+                    <span class="@DntBootstrapIcons.BiPersonGear"></span>
+                    ویرایش مشخصات
+                </a>
+                <a href="@UserProfilesRoutingConstants.EditSocialNetworks/@EncryptedUserId"
+                   class="btn btn-primary btn-sm">
+                    <span class="@DntBootstrapIcons.BiWifi"></span>
+                    ویرایش شبکه‌های اجتماعی
+                </a>
+                @if (ApplicationState.IsCurrentUserAdmin)
+                {
+                    <a href="@UserProfilesRoutingConstants.ChangeUserPasswordBase/@EncryptedUserId"
+                       class="btn btn-primary btn-sm">
+                        <span class="@DntBootstrapIcons.BiPersonLock"></span>
+                        ویرایش کلمه عبور
+                    </a>
+                }
+                else
+                {
+                    <a href="@UserProfilesRoutingConstants.ChangePassword"
+                       class="btn btn-primary btn-sm">
+                        <span class="@DntBootstrapIcons.BiPersonLock"></span>
+                        ویرایش کلمه عبور
+                    </a>
+                }
+            </div>
+        </FrameBody>
+    </DntCardFrame>
+}
