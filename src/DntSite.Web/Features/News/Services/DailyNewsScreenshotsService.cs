@@ -60,8 +60,10 @@ public class DailyNewsScreenshotsService(
                 {
                     File.Delete(path);
 
-                    logger.LogWarning(message: "DownloadScreenshotsAsync({URL}) failed. The received image is blank!",
-                        currentUrl);
+                    logger.LogWarning(
+                        message:
+                        "DownloadScreenshotsAsync({URL}) failed. The received image is blank! Try {FetchRetries}.",
+                        currentUrl, item.FetchRetries);
                 }
                 else
                 {
