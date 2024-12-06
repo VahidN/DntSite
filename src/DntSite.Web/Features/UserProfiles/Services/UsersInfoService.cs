@@ -373,6 +373,12 @@ public class UsersInfoService(
                 From = nameof(User.LastVisitDateTime),
                 To = user => user.LastVisitDateTime,
                 Convertor = persianDateStr => persianDateStr.ToGregorianDateTime() ?? DateTime.UtcNow
+            },
+            new GridifyMap<User>
+            {
+                From = nameof(User.EMail),
+                To = user => user.EMail,
+                Convertor = email => email.FixGmailDots()
             }
         ]);
     }
