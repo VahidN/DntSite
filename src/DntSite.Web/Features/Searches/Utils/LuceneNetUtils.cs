@@ -14,51 +14,38 @@ public static class LuceneNetUtils
             : Regex.Replace(text, Regex.Escape(lookup), match => $"<span class='{cssClass}'>{match.Value}</span>",
                 RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromSeconds(value: 3));
 
-    public static string SearchByPartialWords(this string bodyTerm, string matchingType, bool convertToLowercase)
+    public static string? SearchByPartialWords(this string? bodyTerm, string matchingType, bool convertToLowercase)
     {
         if (string.IsNullOrWhiteSpace(bodyTerm))
         {
-            return string.Empty;
+            return null;
         }
 
-        bodyTerm = bodyTerm.Trim()
-            .Replace(oldValue: "*", newValue: " ", StringComparison.OrdinalIgnoreCase)
-            .Replace(oldValue: "?", newValue: " ", StringComparison.OrdinalIgnoreCase)
-            .Replace(oldValue: "~", newValue: " ", StringComparison.OrdinalIgnoreCase)
-            .Replace(oldValue: "-", newValue: " ", StringComparison.OrdinalIgnoreCase);
-
-        var terms = bodyTerm.Trim()
-            .Humanize()
-            .Split(separator: ' ', StringSplitOptions.RemoveEmptyEntries)
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Select(x => $"{x.Trim()}{matchingType}");
-
-        bodyTerm = string.Join(separator: " ", terms);
+        var searchTerms = string.Join(separator: ' ',
+                QueryParserBase.Escape(bodyTerm.Trim())
+                    .Trim()
+                    .Humanize()
+                    .Split(separator: ' ', StringSplitOptions.RemoveEmptyEntries)
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(x => $"{x.Trim()}{matchingType}"))
+            .Trim();
 
         return convertToLowercase
-            ? bodyTerm.ToLowerInvariant() // the StandardAnalyzer generates lower-case terms.
-            : bodyTerm;
+            ? searchTerms.ToLowerInvariant() // the StandardAnalyzer generates lower-case terms.
+            : searchTerms;
     }
 
-    public static Query ParseQuery(this QueryParser parser, string searchQuery, bool convertToLowercase)
+    public static Query? ParseQuery(this QueryParser? parser, string? searchQuery, bool convertToLowercase)
     {
-        ArgumentNullException.ThrowIfNull(parser);
-        ArgumentNullException.ThrowIfNull(searchQuery);
-
-        try
+        if (parser is null || string.IsNullOrWhiteSpace(searchQuery))
         {
-            var searchTerms = searchQuery.Trim();
-            searchTerms = convertToLowercase ? searchTerms.ToLowerInvariant() : searchTerms;
-
-            return parser.Parse(searchTerms);
+            return null;
         }
-        catch (ParseException)
-        {
-            var searchTerms = QueryParserBase.Escape(searchQuery.Trim());
-            searchTerms = convertToLowercase ? searchTerms.ToLowerInvariant() : searchTerms;
 
-            return parser.Parse(searchTerms);
-        }
+        var searchTerms = QueryParserBase.Escape(searchQuery.Trim());
+        searchTerms = convertToLowercase ? searchTerms.ToLowerInvariant() : searchTerms;
+
+        return parser.Parse(searchTerms);
     }
 
     public static Document NormalizeDocument(this Document document)

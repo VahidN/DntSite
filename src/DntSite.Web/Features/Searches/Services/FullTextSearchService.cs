@@ -269,7 +269,8 @@ public class FullTextSearchService : IFullTextSearchService
 
             var parser = new MultiFieldQueryParser(LuceneVersion, searchInTheseFieldNames, _analyzer);
 
-            var query = parser.ParseQuery(searchText, convertToLowercase: true);
+            var query = parser.ParseQuery(searchText.SearchByPartialWords(matchingType: "", convertToLowercase: true),
+                convertToLowercase: true);
 
             return DoQuery(query, parser, searchText, maxItems, pageNumber, pageSize, convertToLowercase: true);
         }
@@ -338,6 +339,12 @@ public class FullTextSearchService : IFullTextSearchService
         {
             var parser = new QueryParser(LuceneVersion, nameof(WhatsNewItemModel.DocumentTypeIdHash), _analyzer);
             var query = parser.ParseQuery(documentTypeIdHash, convertToLowercase: false);
+
+            if (query is null)
+            {
+                return null;
+            }
+
             var hits = indexSearcher.Search(query, n: 1);
 
             if (hits.TotalHits == 0)
@@ -512,7 +519,7 @@ public class FullTextSearchService : IFullTextSearchService
         _searcherManager.TryDisposeSafe(_logger);
     }
 
-    private PagedResultModel<LuceneSearchResult> DoQuery(Query query,
+    private PagedResultModel<LuceneSearchResult> DoQuery(Query? query,
         QueryParser? parser,
         string? searchText,
         int maxItems,
@@ -521,6 +528,11 @@ public class FullTextSearchService : IFullTextSearchService
         bool convertToLowercase)
         => DoSearch(indexSearcher =>
         {
+            if (query is null)
+            {
+                return new PagedResultModel<LuceneSearchResult>();
+            }
+
             var collector = TopScoreDocCollector.Create(maxItems, docsScoredInOrder: true);
             indexSearcher.Search(query, collector);
             var startIndex = (pageNumber - 1) * pageSize;
@@ -534,6 +546,11 @@ public class FullTextSearchService : IFullTextSearchService
                 {
                     query = parser.ParseQuery(searchText.SearchByPartialWords(matchingType, convertToLowercase),
                         convertToLowercase);
+
+                    if (query is null)
+                    {
+                        continue;
+                    }
 
                     collector = TopScoreDocCollector.Create(maxItems, docsScoredInOrder: true);
                     indexSearcher.Search(query, collector);
