@@ -12,9 +12,11 @@
             </a>
             @if (Model.ActionUrl.IsImageFileUrl())
             {
+                <br/>
+                <br/>
                 <img src="@Model.ActionUrl" alt="@Model.ActionUrl"/>
             }
-            <br/>
+            <br/><br/>
             <span dir="@Model.FriendlyName.GetDir()">توسط: @Model.FriendlyName</span>
             <br/>
         </div>
