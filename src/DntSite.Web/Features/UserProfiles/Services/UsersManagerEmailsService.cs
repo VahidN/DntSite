@@ -22,28 +22,27 @@ public class UsersManagerEmailsService(
         }
     }
 
-    public Task SendNotifyInActiveUserAsync(User user, string url, string siteName)
+    public Task SendNotifyInActiveUserAsync(string email)
     {
-        ArgumentNullException.ThrowIfNull(user);
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return Task.CompletedTask;
+        }
 
         return emailsFactoryService.SendEmailAsync<WillBeDisabled, WillBeDisabledModel>(messageId: "NotifyInActiveUser",
-            inReplyTo: "", references: "NotifyInActiveUser", new WillBeDisabledModel
-            {
-                BaseUrl = url,
-                SiteName = siteName
-            }, user.EMail, emailSubject: "جهت اطلاع", addIp: false);
+            inReplyTo: "", references: "NotifyInActiveUser", new WillBeDisabledModel(), email,
+            emailSubject: "جهت اطلاع", addIp: false);
     }
 
-    public Task SendUserIsDisabledAsync(User user, string url, string siteName)
+    public Task SendUserIsDisabledAsync(string email)
     {
-        ArgumentNullException.ThrowIfNull(user);
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return Task.CompletedTask;
+        }
 
         return emailsFactoryService.SendEmailAsync<Disabled, DisabledModel>(messageId: "UserIsDisabled", inReplyTo: "",
-            references: "UserIsDisabled", new DisabledModel
-            {
-                BaseUrl = url,
-                SiteName = siteName
-            }, user.EMail, emailSubject: "جهت اطلاع", addIp: false);
+            references: "UserIsDisabled", new DisabledModel(), email, emailSubject: "جهت اطلاع", addIp: false);
     }
 
     public Task SendActivateYourAccountEmailAsync(User userInfo)

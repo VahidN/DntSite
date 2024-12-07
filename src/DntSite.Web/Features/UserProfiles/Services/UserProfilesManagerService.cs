@@ -28,7 +28,8 @@ public class UserProfilesManagerService(
 
     public async Task DisableInactiveUsersAsync(int month)
     {
-        var users = await usersInfoService.GetNotLoggedInUsersToDisableAsync(month);
+        var limit = DateTime.UtcNow.AddMonths(-month);
+        var users = await usersInfoService.GetNotLoggedInUsersToDisableAsync(limit);
 
         foreach (var user in users)
         {
@@ -36,6 +37,27 @@ public class UserProfilesManagerService(
         }
 
         await uow.SaveChangesAsync();
+
+        await NotifyDisabledUsers();
+
+        async Task NotifyDisabledUsers()
+        {
+            foreach (var user in users)
+            {
+                await usersManagerEmailsService.SendUserIsDisabledAsync(user.EMail);
+            }
+        }
+    }
+
+    public async Task NotifyInactiveUsersAsync(int month)
+    {
+        var limit = DateTime.UtcNow.AddMonths(-month);
+        var users = await usersInfoService.GetNotLoggedInUsersToDisableAsync(limit);
+
+        foreach (var user in users)
+        {
+            await usersManagerEmailsService.SendNotifyInActiveUserAsync(user.EMail);
+        }
     }
 
     public async Task ResetRegistrationCodeAsync(User user)

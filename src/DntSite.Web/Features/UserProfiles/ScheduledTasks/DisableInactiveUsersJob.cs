@@ -25,6 +25,7 @@ public class DisableInactiveUsersJob(
         }
 
         await userProfilesManagerService.DisableInactiveUsersAsync(minMonthToStayActive.Value);
+        await userProfilesManagerService.NotifyInactiveUsersAsync(minMonthToStayActive.Value - 1);
     }
 
     public bool IsShuttingDown { get; set; }

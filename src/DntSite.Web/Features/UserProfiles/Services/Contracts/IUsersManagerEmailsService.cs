@@ -21,7 +21,7 @@ public interface IUsersManagerEmailsService : IScopedService
 
     public Task UsersManagerSendEmailAsync(string userName, string friendlyName, string message);
 
-    public Task SendUserIsDisabledAsync(User user, string url, string siteName);
+    public Task SendUserIsDisabledAsync(string email);
 
-    public Task SendNotifyInActiveUserAsync(User user, string url, string siteName);
+    public Task SendNotifyInActiveUserAsync(string email);
 }

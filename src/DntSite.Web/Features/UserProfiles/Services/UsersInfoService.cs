@@ -484,16 +484,11 @@ public class UsersInfoService(
             where r.Name == CustomRoles.Admin
             select u).ToListAsync();
 
-    public async Task<List<User>> GetNotLoggedInUsersToDisableAsync(int month)
-    {
-        var limit = DateTime.UtcNow.AddMonths(-month);
-
-        return await _users.Where(user => user.IsActive &&
-                                          user.EmailIsValidated && user.UserStat.NumberOfPosts == 0 &&
-                                          (user.LastVisitDateTime == null || user.LastVisitDateTime < limit))
+    public Task<List<User>> GetNotLoggedInUsersToDisableAsync(DateTime limit)
+        => _users.Where(user => user.IsActive && user.EmailIsValidated && user.UserStat.NumberOfPosts == 0 &&
+                                (user.LastVisitDateTime == null || user.LastVisitDateTime < limit))
             .OrderBy(user => user.Id)
             .ToListAsync();
-    }
 
     private Task<List<User?>> GetActiveLinksAuthorUsersFromToFromAsync(int count, DateTime fromDate, DateTime toDate)
         => _users.Where(x => x.IsActive)
