@@ -268,9 +268,7 @@ public class FullTextSearchService : IFullTextSearchService
             }
 
             var parser = new MultiFieldQueryParser(LuceneVersion, searchInTheseFieldNames, _analyzer);
-
-            var query = parser.ParseQuery(searchText.SearchByPartialWords(matchingType: "", convertToLowercase: true),
-                convertToLowercase: true);
+            var query = parser.ParseQuery(searchText, convertToLowercase: true);
 
             return DoQuery(query, parser, searchText, maxItems, pageNumber, pageSize, convertToLowercase: true);
         }
