@@ -38,9 +38,9 @@ public class UserProfilesManagerService(
 
         await uow.SaveChangesAsync();
 
-        await NotifyDisabledUsers();
+        await NotifyDisabledUsersAsync();
 
-        async Task NotifyDisabledUsers()
+        async Task NotifyDisabledUsersAsync()
         {
             foreach (var user in users)
             {

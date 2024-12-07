@@ -16,17 +16,27 @@ public class DisableInactiveUsersJob(
             return;
         }
 
-        var appSettings = await appSettingsService.GetAppSettingsAsync();
-        var minMonthToStayActive = appSettings?.MinimumRequiredPosts.MinMonthToStayActive;
+        var minMonthToStayActive = await GetMinMonthToStayActiveAsync();
+        await userProfilesManagerService.DisableInactiveUsersAsync(minMonthToStayActive);
 
-        if (minMonthToStayActive is null or 0)
-        {
-            minMonthToStayActive = DefaultMinMonthToStayActive;
-        }
-
-        await userProfilesManagerService.DisableInactiveUsersAsync(minMonthToStayActive.Value);
-        await userProfilesManagerService.NotifyInactiveUsersAsync(minMonthToStayActive.Value - 1);
+        await NotifyInactiveUsersOnFridaysAsync(minMonthToStayActive);
     }
 
     public bool IsShuttingDown { get; set; }
+
+    private async Task NotifyInactiveUsersOnFridaysAsync(int minMonthToStayActive)
+    {
+        if (DateTime.UtcNow.DayOfWeek == DayOfWeek.Friday)
+        {
+            await userProfilesManagerService.NotifyInactiveUsersAsync(minMonthToStayActive - 1);
+        }
+    }
+
+    private async Task<int> GetMinMonthToStayActiveAsync()
+    {
+        var appSettings = await appSettingsService.GetAppSettingsAsync();
+        var minMonthToStayActive = appSettings?.MinimumRequiredPosts.MinMonthToStayActive;
+
+        return minMonthToStayActive is null or 0 ? DefaultMinMonthToStayActive : (int)minMonthToStayActive;
+    }
 }
