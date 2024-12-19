@@ -248,4 +248,6 @@ ModelManifest.xml
 *.sqlite
 *.binlog
 /src/DntSite.Web/wwwroot/App_Data/
+*.pdf
+
 

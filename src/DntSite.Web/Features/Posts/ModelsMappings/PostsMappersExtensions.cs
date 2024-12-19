@@ -7,7 +7,7 @@ namespace DntSite.Web.Features.Posts.ModelsMappings;
 
 public static class PostsMappersExtensions
 {
-    private static readonly CompositeFormat ParsedPostUrlTemplate =
+    public static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(PostsRoutingConstants.PostUrlTemplate);
 
     public static WhatsNewItemModel MapToWhatsNewItemModel(this BlogPostComment item, string siteRootUri)

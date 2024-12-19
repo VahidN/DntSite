@@ -1,0 +1,10 @@
+﻿@if (_exportFileLocation?.OutputPdfFileUrl.IsEmpty() == false)
+{
+    <a href="@_exportFileLocation.OutputPdfFileUrl"
+       target="_blank"
+       class="btn btn-sm btn-outline-secondary me-3"
+       data-enhance-nav="false"
+       title="@Title.ApplyRle()">
+        <i class="@DntBootstrapIcons.BiFiletypePdf"></i>
+    </a>
+}

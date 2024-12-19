@@ -20,7 +20,6 @@ public class LearningPathService(
     IMapper mapper,
     ITagsService tagsService,
     IStatService statService,
-    IHtmlHelperService htmlHelperService,
     IEmailsFactoryService emailsFactoryService,
     ILearningPathEmailsService emailsService,
     IUserRatingsService userRatingsService,
@@ -48,55 +47,6 @@ public class LearningPathService(
             .FirstOrDefaultAsync();
 
     public LearningPath AddLearningPath(LearningPath data) => _learningPaths.Add(data).Entity;
-
-    public IList<int> GetItemPostIds(string contains, LearningPath learningPathItem, string domain)
-    {
-        if (string.IsNullOrWhiteSpace(learningPathItem?.Description))
-        {
-            return [];
-        }
-
-        var links = htmlHelperService.ExtractLinks(learningPathItem.Description).ToList();
-
-        if (links.Count == 0)
-        {
-            return [];
-        }
-
-        var postIds = new List<int>();
-
-        foreach (var link in links)
-        {
-            if (!link.IsValidUrl())
-            {
-                continue;
-            }
-
-            var uri = new Uri(link);
-
-            if (!uri.Host.Contains(domain, StringComparison.InvariantCultureIgnoreCase))
-            {
-                continue;
-            }
-
-            if (uri.Segments.Length < 3)
-            {
-                continue;
-            }
-
-            if (!uri.Segments[1].Contains(contains, StringComparison.InvariantCultureIgnoreCase))
-            {
-                continue;
-            }
-
-            var postId = int.Parse(uri.Segments[2].Replace(oldValue: "/", string.Empty, StringComparison.Ordinal),
-                CultureInfo.InvariantCulture);
-
-            postIds.Add(postId);
-        }
-
-        return [..postIds.OrderBy(pId => pId)];
-    }
 
     public Task<PagedResultModel<LearningPath>> GetLearningPathsAsync(int pageNumber,
         int? userId = null,

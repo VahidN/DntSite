@@ -1,12 +1,14 @@
 ﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.Services.Contracts;
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
@@ -19,6 +21,7 @@ public class BlogCommentsService(
     IBlogCommentsEmailsService blogCommentsEmailsService,
     IAppAntiXssService antiXssService,
     IFullTextSearchService fullTextSearchService,
+    IPdfExportService pdfExportService,
     ILogger<BlogCommentsService> logger) : IBlogCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<BlogPostComment, object?>>> CustomOrders = new()
@@ -112,6 +115,8 @@ public class BlogCommentsService(
             item.IsDeleted = true;
             fullTextSearchService.DeleteLuceneDocument(item.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
         }
+
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, postId);
     }
 
     public BlogPostComment AddBlogComment(BlogPostComment data) => _blogComments.Add(data).Entity;
@@ -187,6 +192,7 @@ public class BlogCommentsService(
         logger.LogWarning(message: "Deleted a BlogPostComment record with Id={Id} and Text={Text}", comment.Id,
             comment.Body);
 
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, comment.ParentId);
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 
         await statService.RecalculateThisBlogPostCommentsCountsAsync(comment.ParentId);
@@ -210,6 +216,7 @@ public class BlogCommentsService(
         await uow.SaveChangesAsync();
 
         fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, comment.ParentId);
 
         await blogCommentsEmailsService.PostReplySendEmailToAdminsAsync(comment);
     }
@@ -234,6 +241,7 @@ public class BlogCommentsService(
 
         await SetParentAsync(result, blogPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, comment.ParentId);
 
         await SendEmailsAsync(result);
         await UpdateStatAsync(blogPostId, userId);

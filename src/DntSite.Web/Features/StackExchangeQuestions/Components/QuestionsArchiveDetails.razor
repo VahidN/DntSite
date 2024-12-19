@@ -1,4 +1,5 @@
 @using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
 @using DntSite.Web.Features.StackExchangeQuestions.Entities
 @attribute [Route(QuestionsRoutingConstants.QuestionsDetailsQuestionId)]
 @attribute [Route(QuestionsRoutingConstants.QuestionsDetailsOldQuestionId)]
@@ -56,6 +57,10 @@
                       EncryptEditDeleteIDs="true"
                       EditPostUrlTemplate="@QuestionsRoutingConstants.EditPostUrlTemplate"
                       DeletePostUrlTemplate="@QuestionsRoutingConstants.DeletePostUrlTemplate">
+        <AdditionalInfoContent>
+            <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@CurrentPost.Id"
+                                                                      ItemType="@WhatsNewItemType.Questions"/>
+        </AdditionalInfoContent>
         <AdditionalHeaderContent>
             <QuestionAnswerStat IsQuestionAnswered="CurrentPost.IsAnswered"/>
         </AdditionalHeaderContent>

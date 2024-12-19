@@ -7,6 +7,7 @@ using DntSite.Web.Features.Common.RoutingConstants;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -14,6 +15,7 @@ using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
 using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.Services.Contracts;
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
@@ -30,6 +32,7 @@ public class BlogPostsService(
     IBlogCommentsService blogCommentsService,
     IHtmlHelperService htmlHelperService,
     IFullTextSearchService fullTextSearchService,
+    IPdfExportService pdfExportService,
     ILogger<BlogPostsService> logger) : IBlogPostsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<BlogPost, object?>>> CustomOrders = new()
@@ -433,6 +436,8 @@ public class BlogPostsService(
             fullTextSearchService.AddOrUpdateLuceneDocument(blogPost.MapToPostWhatsNewItemModel(siteRootUri: ""));
         }
 
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, blogPost.Id);
+
         return blogPost;
     }
 
@@ -489,6 +494,7 @@ public class BlogPostsService(
 
         logger.LogWarning(message: "Deleted a BlogPost record with Id={Id} and Title={Text}", post.Id, post.Title);
 
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, post.Id);
         fullTextSearchService.DeleteLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 
         await statService.RecalculateTagsInUseCountsAsync<BlogPostTag, BlogPost>();

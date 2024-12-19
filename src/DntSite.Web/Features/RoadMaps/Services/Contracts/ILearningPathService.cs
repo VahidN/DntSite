@@ -12,8 +12,6 @@ public interface ILearningPathService : IScopedService
 
     public Task<LearningPath?> GetLearningPathAsync(int id, bool showDeletedItems = false);
 
-    public IList<int> GetItemPostIds(string contains, LearningPath learningPathItem, string domain);
-
     public LearningPath AddLearningPath(LearningPath data);
 
     public Task<PagedResultModel<LearningPath>> GetLearningPathsAsync(int pageNumber,

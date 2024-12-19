@@ -5,8 +5,10 @@ using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.Models;
 using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.Services.Contracts;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
@@ -22,6 +24,7 @@ public class CourseTopicsService(
     IUserRatingsService userRatingsService,
     ICoursesService coursesService,
     IFullTextSearchService fullTextSearchService,
+    IPdfExportService pdfExportService,
     ILogger<CourseTopicsService> logger) : ICourseTopicsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<CourseTopic, object?>>> CustomOrders = new()
@@ -224,6 +227,8 @@ public class CourseTopicsService(
 
         fullTextSearchService.DeleteLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: "")
             .DocumentTypeIdHash);
+
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
     }
 
     public async Task UpdateCourseTopicItemAsync(CourseTopic? courseTopic, CourseTopicItemModel writeCourseItemModel)
@@ -240,6 +245,7 @@ public class CourseTopicsService(
         await uow.SaveChangesAsync();
 
         fullTextSearchService.AddOrUpdateLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
     }
 
     public async Task<CourseTopic?> AddCourseTopicItemAsync(CourseTopicItemModel writeCourseItemModel,
@@ -256,6 +262,7 @@ public class CourseTopicsService(
 
         await SetParentAsync(courseTopic, courseId);
         fullTextSearchService.AddOrUpdateLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
 
         return courseTopic;
     }

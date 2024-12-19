@@ -4,9 +4,11 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.Services.Contracts;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
@@ -19,6 +21,7 @@ public class CourseTopicCommentsService(
     IAppAntiXssService antiXssService,
     ICoursesEmailsService emailsService,
     IFullTextSearchService fullTextSearchService,
+    IPdfExportService pdfExportService,
     ILogger<CourseTopicCommentsService> logger) : ICourseTopicCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<CourseTopicComment, object?>>> CustomOrders = new()
@@ -155,6 +158,8 @@ public class CourseTopicCommentsService(
             comment.Body);
 
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, comment.ParentId);
+
         await UpdateStatAsync(comment.ParentId, comment.Parent.CourseId, comment.UserId);
         await emailsService.CourseTopicCommentSendEmailToAdminsAsync(comment);
     }
@@ -177,6 +182,7 @@ public class CourseTopicCommentsService(
         await uow.SaveChangesAsync();
 
         fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, comment.ParentId);
 
         await emailsService.CourseTopicCommentSendEmailToAdminsAsync(comment);
         await UpdateStatAsync(comment.ParentId, comment.Parent.CourseId, comment.UserId);
@@ -205,6 +211,7 @@ public class CourseTopicCommentsService(
 
         await SetParentAsync(result, modelFormPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, comment.ParentId);
 
         await NotifyNewCommentAsync(modelFormPostId, currentUserUserId, result);
     }

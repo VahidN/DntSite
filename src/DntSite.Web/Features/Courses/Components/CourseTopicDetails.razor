@@ -1,5 +1,6 @@
 @using DntSite.Web.Features.Courses.Entities
 @using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
 @attribute [Route(CoursesRoutingConstants.CoursesTopicCourseIdDisplayId)]
 
 <DntLoading IsLoading="@(_courseTopic is null || CurrentPost is null || _courseTopicComments is null)">
@@ -54,6 +55,10 @@
                       EncryptEditDeleteIDs="true"
                       EditPostUrlTemplate="@EditPostUrlTemplate"
                       DeletePostUrlTemplate="@DeletePostUrlTemplate">
+        <AdditionalInfoContent>
+            <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@CurrentPost.Id"
+                                                                      ItemType="@WhatsNewItemType.AllCoursesTopics"/>
+        </AdditionalInfoContent>
         <AdditionalHeaderContent>
         </AdditionalHeaderContent>
         <AdditionalBodyContent>

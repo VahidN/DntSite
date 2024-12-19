@@ -1,4 +1,5 @@
 @using DntSite.Web.Features.Posts.Entities
+@using DntSite.Web.Features.RssFeeds.Models
 @attribute [Route(PostsRoutingConstants.PostId)]
 @attribute [Route(PostsRoutingConstants.PostIdSlug)]
 @attribute [Route(PostsRoutingConstants.OldBloggerPostUrls)]
@@ -57,7 +58,12 @@
                           CanUserEditThisPost="CanUserEditThisPost"
                           EncryptEditDeleteIDs="true"
                           EditPostUrlTemplate="@PostsRoutingConstants.EditPostUrlTemplate"
-                          DeletePostUrlTemplate="@PostsRoutingConstants.DeletePostUrlTemplate"/>
+                          DeletePostUrlTemplate="@PostsRoutingConstants.DeletePostUrlTemplate">
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@CurrentPost.Id"
+                                                                          ItemType="@WhatsNewItemType.Posts"/>
+            </AdditionalInfoContent>
+        </ShowBlogPostItem>
     }
     else
     {

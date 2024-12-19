@@ -16,7 +16,9 @@ sudo apt-get install google-chrome-stable
 
 google-chrome --version
  */
-public class ThumbnailsServiceJob(IDailyNewsScreenshotsService dailyNewsScreenshots) : IScheduledTask
+public class ThumbnailsServiceJob(
+    IDailyNewsScreenshotsService dailyNewsScreenshots,
+    ILogger<ThumbnailsServiceJob> logger) : IScheduledTask
 {
     public async Task RunAsync()
     {
@@ -25,8 +27,10 @@ public class ThumbnailsServiceJob(IDailyNewsScreenshotsService dailyNewsScreensh
             return;
         }
 
-        if (!NetworkExtensions.IsConnectedToInternet())
+        if (!NetworkExtensions.IsConnectedToInternet(TimeSpan.FromSeconds(seconds: 2)))
         {
+            logger.LogWarning(message: "There is no internet connection to run DownloadScreenshotsAsync().");
+
             return;
         }
 

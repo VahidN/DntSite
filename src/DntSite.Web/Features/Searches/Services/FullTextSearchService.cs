@@ -103,7 +103,7 @@ public class FullTextSearchService : IFullTextSearchService
 
             foreach (var file in Directory.GetFiles(_appFoldersService.LuceneIndexFolderPath, searchPattern: "*.*"))
             {
-                File.Delete(file);
+                file.TryDeleteFile(_logger);
             }
         }
         catch (Exception ex)

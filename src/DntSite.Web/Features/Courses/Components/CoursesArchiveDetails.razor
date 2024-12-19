@@ -1,5 +1,6 @@
 ﻿@using DntSite.Web.Features.Courses.Entities
 @using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
 @attribute [Route(CoursesRoutingConstants.CoursesDetailsCourseId)]
 @attribute [Route(CoursesRoutingConstants.CoursesCourseId)]
 @attribute [Route(CoursesRoutingConstants.CoursesDetailsOldCourseId)]
@@ -57,6 +58,10 @@
                       EncryptEditDeleteIDs="true"
                       EditPostUrlTemplate="@CoursesRoutingConstants.EditPostUrlTemplate"
                       DeletePostUrlTemplate="@CoursesRoutingConstants.DeletePostUrlTemplate">
+        <AdditionalInfoContent>
+            <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@CurrentPost.Id"
+                                                                      ItemType="@WhatsNewItemType.AllCourses"/>
+        </AdditionalInfoContent>
         <AdditionalHeaderContent>
         </AdditionalHeaderContent>
         <AdditionalBodyContent>

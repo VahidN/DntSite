@@ -7,8 +7,10 @@ using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.UserFiles.Services;
 
-public class PagedFilesListService(IAppFoldersService appFoldersService, IAdminsEmailsService adminsEmailsService)
-    : IPagedFilesListService
+public class PagedFilesListService(
+    IAppFoldersService appFoldersService,
+    IAdminsEmailsService adminsEmailsService,
+    ILogger<PagedFilesListService> logger) : IPagedFilesListService
 {
     public PagedResultModel<FileModel> GetFilesList(FileType fileType,
         int pageNumber = 0,
@@ -70,9 +72,8 @@ public class PagedFilesListService(IAppFoldersService appFoldersService, IAdmins
         var dir = appFoldersService.GetFolderPath(currentFileType);
         var filePath = Path.Combine(dir, fileNameToDelete);
 
-        if (File.Exists(filePath))
+        if (filePath.TryDeleteFile(logger))
         {
-            File.Delete(filePath);
             await adminsEmailsService.CommonFileEditedSendEmailAsync(fileNameToDelete, description: "حذف فایل");
         }
     }

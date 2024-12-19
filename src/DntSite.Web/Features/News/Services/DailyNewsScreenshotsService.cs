@@ -58,7 +58,7 @@ public class DailyNewsScreenshotsService(
 
                 if (path.IsPartiallyBlankImage(whitePixelsPercentage: 80))
                 {
-                    File.Delete(path);
+                    path.TryDeleteFile(logger);
 
                     logger.LogWarning(
                         message:
@@ -147,12 +147,7 @@ public class DailyNewsScreenshotsService(
         }
 
         var (_, path) = GetImageInfo(post.Id);
-
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
-
+        path.TryDeleteFile(logger);
         post.PageThumbnail = null;
     }
 

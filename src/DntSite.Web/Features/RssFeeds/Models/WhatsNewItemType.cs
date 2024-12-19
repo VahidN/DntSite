@@ -60,8 +60,7 @@ public sealed class WhatsNewItemType
             new WhatsNewItemType(value: "راهنماهای پروژه", bgColor: "bg-secondary-subtle text-secondary-emphasis")
         },
         {
-            nameof(ProjectsFaqs),
-            new WhatsNewItemType(value: "راهنماهای پروژه‌ها", bgColor: "bg-light text-dark")
+            nameof(ProjectsFaqs), new WhatsNewItemType(value: "راهنماهای پروژه‌ها", bgColor: "bg-light text-dark")
         },
         {
             nameof(ProjectFiles),
@@ -114,6 +113,10 @@ public sealed class WhatsNewItemType
         Value = value;
         BgColor = bgColor;
     }
+
+    public string Name => WhatsNewItemTypes
+        .FirstOrDefault(x => string.Equals(x.Value.Value, Value, StringComparison.Ordinal))
+        .Key;
 
     public string Value { get; }
 

@@ -16,6 +16,10 @@ public class AppFoldersService : IAppFoldersService
 
     private string? _databaseFolderPath;
     private string? _defaultConnectionString;
+
+    private string? _exportsAssetsFolder;
+
+    private string? _exportsPath;
     private string? _luceneIndexFolderPath;
     private StartupSettingsModel _siteSettings;
     private string? _thumbnailsServicePath;
@@ -36,6 +40,10 @@ public class AppFoldersService : IAppFoldersService
     public string DatabaseFolderPath => _databaseFolderPath ??= GetWebRootAppDataFolderPath("Database");
 
     public string WwwRootPath => _wwwRootPath ??= GetWwwRootPath();
+
+    public string ExportsPath => _exportsPath ??= Path.Combine(WwwRootPath, path2: "exports");
+
+    public string ExportsAssetsFolder => _exportsAssetsFolder ??= Path.Combine(ExportsPath, path2: "assets");
 
     public string AvatarsFolderPath => _avatarsPath ??= GetWebRootAppDataFolderPath("Uploads", "Avatars");
 

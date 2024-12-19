@@ -7,7 +7,7 @@ namespace DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 
 public static class QuestionsMappersExtensions
 {
-    private static readonly CompositeFormat ParsedPostUrlTemplate =
+    public static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(QuestionsRoutingConstants.PostUrlTemplate);
 
     public static WhatsNewItemModel MapToWhatsNewItemModel(this StackExchangeQuestionComment item, string siteRootUri)

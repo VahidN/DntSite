@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>{0}</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport"/>
+
+    <link href="../../lib/highlightjs/cdn-assets/styles/vs.min.css" rel="stylesheet" type="text/css"/>
+    <script src="../../lib/highlightjs/cdn-assets/highlight.min.js" type="text/javascript"></script>
+
+    <link href="styles.css" rel="stylesheet" type="text/css"/>
+    <style>
+      @page {{ /* This is a C# string.Format() template and its non-index `brackets` should be escaped */
+        size: A4 portrait;
+
+        @top-center {{
+            font-family: 'Samim', Tahoma;
+            font-size: 14px;
+            font-weight: bold;
+            border-color: #e6e5e1;
+            border-bottom: solid #e6e5e1 0.1px;
+            width: 98%;
+            content: "{0}";
+            margin-top: 5pt;
+            margin-bottom: 5pt;
+        }}
+
+        @bottom-center {{
+            font-family: 'SamimFD', Tahoma;
+            font-size: 14px;
+            color: gray;
+            content: counter(page) "/" counter(pages);
+            border-color: #e6e5e1;
+            border-top: solid #e6e5e1 0.1px;
+            width: 98%;
+            margin-top: 5pt;
+            margin-bottom: 5pt;
+        }}
+     }}
+    </style>    
+</head>
+
+<body dir='rtl'>
+{1}
+
+<!-- to load custom fonts for printing -->
+<div class="useSamimFD">&nbsp;</div>
+
+<script src="SyntaxHighlighter.js" type="text/javascript"></script>
+</body>
+
+</html>

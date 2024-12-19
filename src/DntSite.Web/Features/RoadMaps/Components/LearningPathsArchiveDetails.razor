@@ -1,5 +1,6 @@
 ﻿@using DntSite.Web.Features.Posts.Components
 @using DntSite.Web.Features.RoadMaps.Entities
+@using DntSite.Web.Features.RssFeeds.Models
 @attribute [Route(RoadMapsRoutingConstants.LearningPathsDetailsLearningPathId1)]
 @attribute [Route(RoadMapsRoutingConstants.LearningPathsDetailsLearningPathId2)]
 
@@ -56,6 +57,10 @@
                       EncryptEditDeleteIDs="true"
                       EditPostUrlTemplate="@RoadMapsRoutingConstants.EditPostUrlTemplate"
                       DeletePostUrlTemplate="@RoadMapsRoutingConstants.DeletePostUrlTemplate">
+        <AdditionalInfoContent>
+            <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@CurrentPost.Id"
+                                                                      ItemType="@WhatsNewItemType.LearningPaths"/>
+        </AdditionalInfoContent>
         <AdditionalHeaderContent>
         </AdditionalHeaderContent>
         <AdditionalBodyContent>

@@ -10,6 +10,10 @@ public interface IAppFoldersService : ISingletonService
 
     public string WwwRootPath { get; }
 
+    public string ExportsPath { get; }
+
+    public string ExportsAssetsFolder { get; }
+
     public string AvatarsFolderPath { get; }
 
     public string ArticleImagesFolderPath { get; }

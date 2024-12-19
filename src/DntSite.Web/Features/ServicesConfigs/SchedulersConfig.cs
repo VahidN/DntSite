@@ -1,4 +1,5 @@
 ﻿using DntSite.Web.Features.Backlogs.ScheduledTasks;
+using DntSite.Web.Features.Exports.ScheduledTasks;
 using DntSite.Web.Features.News.ScheduledTasks;
 using DntSite.Web.Features.Posts.ScheduledTasks;
 using DntSite.Web.Features.PrivateMessages.ScheduledTasks;
@@ -68,6 +69,16 @@ public static class SchedulersConfig
 
                 return now.Minute % 10 == 0 && now.Second == 1;
             });
+
+            options.AddScheduledTask<ExportToSeparatePdfFilesJob>(utcNow =>
+            {
+                var now = GetNowIranTime(utcNow);
+
+                return now.Minute % 20 == 0 && now.Second == 1;
+            });
+
+            options.AddScheduledTask<ExportToMergedPdfFilesJob>(utcNow
+                => GetNowIranTime(utcNow) is { Hour: 5, Minute: 30, Second: 1 });
 
             options.AddScheduledTask<DeleteOrphans>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 7, Second: 1 });

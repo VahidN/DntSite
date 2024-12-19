@@ -4,7 +4,9 @@ using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.Models;
@@ -22,6 +24,7 @@ public class QuestionsService(
     IQuestionsEmailsService questionsEmailsService,
     IMapper mapper,
     IFullTextSearchService fullTextSearchService,
+    IPdfExportService pdfExportService,
     ILogger<QuestionsService> logger) : IQuestionsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<StackExchangeQuestion, object?>>> CustomOrders =
@@ -227,6 +230,7 @@ public class QuestionsService(
             question.Title);
 
         fullTextSearchService.DeleteLuceneDocument(question.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, question.Id);
     }
 
     public async Task NotifyDeleteChangesAsync(StackExchangeQuestion? question, User? currentUserUser)
@@ -266,6 +270,7 @@ public class QuestionsService(
         await uow.SaveChangesAsync();
 
         fullTextSearchService.AddOrUpdateLuceneDocument(question.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, question.Id);
     }
 
     public async Task<StackExchangeQuestion?> AddStackExchangeQuestionAsync(QuestionModel writeQuestionModel,
@@ -282,6 +287,7 @@ public class QuestionsService(
         await uow.SaveChangesAsync();
 
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, question.Id);
 
         return result;
     }

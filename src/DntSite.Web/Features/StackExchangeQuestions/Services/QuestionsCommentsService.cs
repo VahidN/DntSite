@@ -1,8 +1,10 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
@@ -17,6 +19,7 @@ public class QuestionsCommentsService(
     IAppAntiXssService antiXssService,
     IQuestionsEmailsService questionsEmailsService,
     IFullTextSearchService fullTextSearchService,
+    IPdfExportService pdfExportService,
     ILogger<QuestionsCommentsService> logger) : IQuestionsCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<StackExchangeQuestionComment, object?>>>
@@ -110,6 +113,7 @@ public class QuestionsCommentsService(
             comment.Body);
 
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, comment.ParentId);
 
         await statService.RecalculateThisStackExchangeQuestionCommentsCountsAsync(comment.ParentId);
     }
@@ -132,6 +136,7 @@ public class QuestionsCommentsService(
         await uow.SaveChangesAsync();
 
         fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, comment.ParentId);
 
         await questionsEmailsService.PostQuestionCommentReplySendEmailToAdminsAsync(comment);
     }
@@ -160,6 +165,7 @@ public class QuestionsCommentsService(
 
         await SetParentAsync(result, modelFormPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, comment.ParentId);
 
         await SendEmailsAsync(result);
         await UpdateStatAsync(modelFormPostId, currentUserUserId);
