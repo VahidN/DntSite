@@ -49,6 +49,7 @@ void ConfigureMiddlewares(WebApplication app, IHostEnvironment env)
     }
 
     app.UseExceptionHandler(errorHandlingPath: "/Error", createScopeForErrors: true);
+    app.UseStatusCodePagesWithReExecute(pathFormat: "/Error/{0}");
 
     app.UseAntiDos();
 
@@ -58,8 +59,6 @@ void ConfigureMiddlewares(WebApplication app, IHostEnvironment env)
     {
         app.UseHttpsRedirection();
     }
-
-    app.UseStatusCodePagesWithReExecute(pathFormat: "/Error/{0}");
 
     app.MapStaticAssets();
 
