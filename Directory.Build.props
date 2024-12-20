@@ -38,6 +38,7 @@
     <PropertyGroup Condition="'$(Configuration)' != 'Release'">
         <StaticWebAssetFingerprintingEnabled>false</StaticWebAssetFingerprintingEnabled>
         <StaticWebAssetsFingerprintContent>false</StaticWebAssetsFingerprintContent>
+        <CompressionEnabled>false</CompressionEnabled>
         <EnableDefaultCompressedItems>false</EnableDefaultCompressedItems>
     </PropertyGroup>
 
