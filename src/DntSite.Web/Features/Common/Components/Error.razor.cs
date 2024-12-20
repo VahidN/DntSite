@@ -31,13 +31,6 @@ public partial class Error
             return;
         }
 
-        if (HttpContext.IsNoneAspNetCoreRequest())
-        {
-            NavigationManager.NavigateTo(CommonRoutingConstants.CatchAllPhpRequestsPath);
-
-            return;
-        }
-
         if (!IsThisPageCalledDirectly && !await UaParserService.IsSpiderClientAsync(HttpContext))
         {
             Logger.LogError(message: "{Request}", httpRequest.LogRequest(ResponseCode));
