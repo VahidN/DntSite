@@ -43,9 +43,18 @@
 
                 <button type="submit"
                         data-cancel-confirm-message="بازسازی اسکرین‌شات‌های یوتیوب؟"
-                        name="@nameof(RecalculateAction)" value="@RecalculatePostsCountAction.InvalidateAllYoutubeScreenshots"
+                        name="@nameof(RecalculateAction)"
+                        value="@RecalculatePostsCountAction.InvalidateAllYoutubeScreenshots"
                         class="btn btn-sm btn-primary me-2">
                     بازسازی اسکرین‌شات‌های یوتیوب
+                </button>
+
+                <button type="submit"
+                        data-cancel-confirm-message="دریافت مجدد اسکرین‌شات‌های خالی؟"
+                        name="@nameof(RecalculateAction)"
+                        value="@RecalculatePostsCountAction.TryReDownloadFailedScreenshots"
+                        class="btn btn-sm btn-primary me-2">
+                    دریافت مجدد اسکرین‌شات‌های خالی
                 </button>
             </div>
         </EditForm>

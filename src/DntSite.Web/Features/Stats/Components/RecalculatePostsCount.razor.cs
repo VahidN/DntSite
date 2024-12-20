@@ -60,6 +60,11 @@ public partial class RecalculatePostsCount
                 await DailyNewsScreenshotsService.InvalidateAllYoutubeScreenshotsAsync();
 
                 break;
+
+            case RecalculatePostsCountAction.TryReDownloadFailedScreenshots:
+                await DailyNewsScreenshotsService.TryReDownloadFailedScreenshotsAsync();
+
+                break;
         }
 
         Alert.ShowAlert(AlertType.Success, title: "با تشکر!", message: "عملیات محاسبات مجدد، انجام شد.");

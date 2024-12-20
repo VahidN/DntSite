@@ -139,6 +139,21 @@ public class DailyNewsScreenshotsService(
         await uow.SaveChangesAsync();
     }
 
+    public async Task TryReDownloadFailedScreenshotsAsync()
+    {
+        var items = await _dailyNewsItem
+            .Where(x => !x.IsDeleted && x.FetchRetries.HasValue && x.FetchRetries.Value >= MaxFetchRetries)
+            .OrderByDescending(x => x.Id)
+            .ToListAsync();
+
+        foreach (var item in items)
+        {
+            InvalidateScreenshot(item);
+        }
+
+        await uow.SaveChangesAsync();
+    }
+
     private void InvalidateScreenshot(DailyNewsItem? post)
     {
         if (post is null)
@@ -149,6 +164,7 @@ public class DailyNewsScreenshotsService(
         var (_, path) = GetImageInfo(post.Id);
         path.TryDeleteFile(logger);
         post.PageThumbnail = null;
+        post.FetchRetries = 0;
     }
 
     private async Task TryDownloadScreenshotAsync(string currentUrl, string path)
