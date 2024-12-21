@@ -75,7 +75,7 @@ public class PdfExportService(
         return !safeFile.IsSafeToDownload ? null : safeFile.SafeFilePath;
     }
 
-    public void RebuildExports() => appFoldersService.ExportsPath.DeleteFiles(".pdf");
+    public void RebuildExports() => appFoldersService.ExportsPath.DeleteFiles(SearchOption.AllDirectories, ".pdf");
 
     public IList<int>? GetAvailableExportedFilesIds(WhatsNewItemType itemType)
     {
