@@ -7,5 +7,6 @@ public enum RecalculatePostsCountAction
     UpdateFullTextIndex,
     DeleteAllSiteReferrers,
     InvalidateAllYoutubeScreenshots,
-    TryReDownloadFailedScreenshots
+    TryReDownloadFailedScreenshots,
+    RebuildExports
 }

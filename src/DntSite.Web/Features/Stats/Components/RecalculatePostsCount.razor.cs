@@ -1,4 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Searches.Services.Contracts;
@@ -16,7 +17,7 @@ public partial class RecalculatePostsCount
 
     [InjectComponentScoped] internal ISiteReferrersService SiteReferrersService { set; get; } = null!;
 
-    [InjectComponentScoped] internal ISiteUrlsService SiteUrlsService { set; get; } = null!;
+    [InjectComponentScoped] internal IPdfExportService PdfExportService { set; get; } = null!;
 
     [InjectComponentScoped] internal IDailyNewsScreenshotsService DailyNewsScreenshotsService { set; get; } = null!;
 
@@ -63,6 +64,11 @@ public partial class RecalculatePostsCount
 
             case RecalculatePostsCountAction.TryReDownloadFailedScreenshots:
                 await DailyNewsScreenshotsService.TryReDownloadFailedScreenshotsAsync();
+
+                break;
+
+            case RecalculatePostsCountAction.RebuildExports:
+                PdfExportService.RebuildExports();
 
                 break;
         }
