@@ -13,6 +13,8 @@ public partial class ServerInfo
 
     [Inject] internal IKeyManager KeyManager { set; get; } = null!;
 
+    [Inject] internal IWebHostEnvironment WebHostEnvironment { set; get; } = null!;
+
     private List<IKey> GetKeysList() => [..KeyManager.GetAllKeys().OrderByDescending(key => key.CreationDate)];
 
     protected override async Task OnInitializedAsync()
