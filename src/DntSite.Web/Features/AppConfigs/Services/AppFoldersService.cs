@@ -41,7 +41,7 @@ public class AppFoldersService : IAppFoldersService
 
     public string WwwRootPath => _wwwRootPath ??= GetWwwRootPath();
 
-    public string ExportsPath => _exportsPath ??= Path.Combine(WwwRootPath, path2: "exports");
+    public string ExportsPath => _exportsPath ??= GetWebRootAppDataFolderPath("exports");
 
     public string ExportsAssetsFolder => _exportsAssetsFolder ??= Path.Combine(ExportsPath, path2: "assets");
 

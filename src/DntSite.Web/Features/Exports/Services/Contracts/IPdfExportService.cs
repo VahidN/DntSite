@@ -5,6 +5,8 @@ namespace DntSite.Web.Features.Exports.Services.Contracts;
 
 public interface IPdfExportService : IScopedService
 {
+    public string? GetPhysicalFilePath(string? itemType, string? name);
+
     public Task InvalidateExportedFilesAsync(WhatsNewItemType itemType, params IList<int>? docIds);
 
     public IList<int>? GetAvailableExportedFilesIds(WhatsNewItemType itemType);

@@ -12,6 +12,7 @@ public class PdfExportService(
     IAppFoldersService appFoldersService,
     IAppSettingsService appSettingsService,
     ILockerService lockerService,
+    IFileNameSanitizerService fileNameSanitizerService,
     ILogger<PdfExportService> logger) : IPdfExportService
 {
     private const string PdfPageTemplateFileName = "pdf-page-template.html";
@@ -41,7 +42,7 @@ public class PdfExportService(
             OutputPdfFileSize = fileExists ? new FileInfo(outputPdfFilePath).Length.ToFormattedFileSize() : "",
             OutputPdfFileUrl = fileExists
                 ? siteRootUri.CombineUrl(
-                    outputPdfFilePath.Replace(appFoldersService.WwwRootPath, newValue: "",
+                    outputPdfFilePath.Replace(appFoldersService.GetWebRootAppDataFolderPath(), newValue: "",
                         StringComparison.OrdinalIgnoreCase), escapeRelativeUrl: false)
                 : string.Empty
         };
@@ -59,6 +60,19 @@ public class PdfExportService(
         }
 
         return path;
+    }
+
+    public string? GetPhysicalFilePath(string? itemType, string? name)
+    {
+        if (itemType is null || name is null)
+        {
+            return null;
+        }
+
+        var outputFolder = Path.Combine(appFoldersService.ExportsPath, itemType.ToLowerInvariant());
+        var safeFile = fileNameSanitizerService.IsSafeToDownload(outputFolder, $"{name.ToLowerInvariant()}.pdf");
+
+        return !safeFile.IsSafeToDownload ? null : safeFile.SafeFilePath;
     }
 
     public IList<int>? GetAvailableExportedFilesIds(WhatsNewItemType itemType)
