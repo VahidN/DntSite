@@ -57,15 +57,16 @@ public partial class DntCacheComponent<TComponent>
     public void InvalidateCache() => CacheService.Remove(CacheEntryKey);
 
     private async Task ProcessAsync()
-        => _cachedContent = await CacheService.GetOrAddAsync(CacheEntryKey, async () =>
-        {
-            return await HtmlRenderer.Dispatcher.InvokeAsync(async () =>
+        => _cachedContent = await CacheService.GetOrAddAsync(CacheEntryKey, nameof(DntCacheComponent<TComponent>),
+            async () =>
             {
-                var output = await HtmlRenderer.RenderComponentAsync<TComponent>(Parameters is null
-                    ? ParameterView.Empty
-                    : ParameterView.FromDictionary(Parameters));
+                return await HtmlRenderer.Dispatcher.InvokeAsync(async () =>
+                {
+                    var output = await HtmlRenderer.RenderComponentAsync<TComponent>(Parameters is null
+                        ? ParameterView.Empty
+                        : ParameterView.FromDictionary(Parameters));
 
-                return output.ToHtmlString();
-            });
-        }, ExpiresOn.GetMemoryCacheEntryOptions(ExpiresAfter, ExpiresSliding, Priority));
+                    return output.ToHtmlString();
+                });
+            }, ExpiresOn.GetMemoryCacheEntryOptions(ExpiresAfter, ExpiresSliding, Priority));
 }

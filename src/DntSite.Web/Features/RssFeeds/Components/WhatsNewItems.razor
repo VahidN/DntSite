@@ -56,6 +56,10 @@
                     <PrintNewsThumb Id="@post.Id" Title="@post.OriginalTitle"/>
                 }
             </AdditionalBodyContent>
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@post.Id"
+                                                                          ItemType="@post.ItemType"/>
+            </AdditionalInfoContent>
         </ShowBlogPostItem>
     }
 

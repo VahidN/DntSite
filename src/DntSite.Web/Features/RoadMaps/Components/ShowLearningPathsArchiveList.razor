@@ -1,5 +1,6 @@
 ﻿@using DntSite.Web.Features.Posts.Components
 @using DntSite.Web.Features.RoadMaps.Entities
+@using DntSite.Web.Features.RssFeeds.Models
 <DntSitePageTitle Group="مسیرهای راه" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(Posts is null)">
@@ -36,6 +37,10 @@
                           ShowSocialLinks="true"
                           ShowNumberOfViews="true"
                           ShowNumberOfComments="false">
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@post.Id"
+                                                                          ItemType="@WhatsNewItemType.LearningPaths"/>
+            </AdditionalInfoContent>
             <AdditionalHeaderContent>
             </AdditionalHeaderContent>
             <AdditionalBodyContent>

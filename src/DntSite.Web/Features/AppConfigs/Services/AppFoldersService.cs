@@ -6,8 +6,10 @@ namespace DntSite.Web.Features.AppConfigs.Services;
 
 public class AppFoldersService : IAppFoldersService
 {
-    private const string AppDataFolder = "App_Data";
-    private const string WwwRoot = "wwwroot";
+    public const string AppDataFolder = "App_Data";
+    public const string WwwRoot = "wwwroot";
+    public const string UploadsFolder = "Uploads";
+
     private readonly IWebHostEnvironment _webHostEnvironment;
     private string? _articleImagesPath;
     private string? _avatarsPath;
@@ -45,13 +47,13 @@ public class AppFoldersService : IAppFoldersService
 
     public string ExportsAssetsFolder => _exportsAssetsFolder ??= Path.Combine(ExportsPath, path2: "assets");
 
-    public string AvatarsFolderPath => _avatarsPath ??= GetWebRootAppDataFolderPath("Uploads", "Avatars");
+    public string AvatarsFolderPath => _avatarsPath ??= GetWebRootAppDataFolderPath(UploadsFolder, "Avatars");
 
     public string ArticleImagesFolderPath
-        => _articleImagesPath ??= GetWebRootAppDataFolderPath("Uploads", "ArticleImages");
+        => _articleImagesPath ??= GetWebRootAppDataFolderPath(UploadsFolder, "ArticleImages");
 
     public string ThumbnailsServiceFolderPath
-        => _thumbnailsServicePath ??= GetWebRootAppDataFolderPath("Uploads", "ThumbnailsService");
+        => _thumbnailsServicePath ??= GetWebRootAppDataFolderPath(UploadsFolder, "ThumbnailsService");
 
     public string CustomFontWithPersianDigitsPath => _customFontWithPersianDigitsPath ??=
         Path.Combine(WwwRootPath, path2: "fonts", path3: "Samim-FD.ttf");
@@ -61,21 +63,21 @@ public class AppFoldersService : IAppFoldersService
     public string GetFolderPath(FileType fileType)
         => fileType switch
         {
-            FileType.Avatar => GetWebRootAppDataFolderPath("Uploads", "Avatars"),
-            FileType.Image => GetWebRootAppDataFolderPath("Uploads", "ArticleImages"),
-            FileType.UserFile => GetWebRootAppDataFolderPath("Uploads", "ArticleFiles"),
-            FileType.SiteUpdate => GetWebRootAppDataFolderPath("Uploads", "Updates"),
-            FileType.FilesRoot => GetWebRootAppDataFolderPath("Uploads"),
-            FileType.Messages => GetWebRootAppDataFolderPath("Uploads", "Messages"),
-            FileType.CommonFiles => GetWebRootAppDataFolderPath("Uploads", "CommonFiles"),
-            FileType.MessagesImages => GetWebRootAppDataFolderPath("Uploads", "MessagesImages"),
-            FileType.ForWriters => GetWebRootAppDataFolderPath("Uploads", "ForWriters"),
-            FileType.ProjectFiles => GetWebRootAppDataFolderPath("Uploads", "ProjectFiles"),
-            FileType.NewsThumb => GetWebRootAppDataFolderPath("Uploads", "ThumbnailsService"),
-            FileType.CourseFile => GetWebRootAppDataFolderPath("Uploads", "CourseFiles"),
-            FileType.CourseImage => GetWebRootAppDataFolderPath("Uploads", "CourseImages"),
-            FileType.Backup => GetWebRootAppDataFolderPath("Uploads", "Backup"),
-            _ => GetWebRootAppDataFolderPath("Uploads", "ArticleFiles")
+            FileType.Avatar => GetWebRootAppDataFolderPath(UploadsFolder, "Avatars"),
+            FileType.Image => GetWebRootAppDataFolderPath(UploadsFolder, "ArticleImages"),
+            FileType.UserFile => GetWebRootAppDataFolderPath(UploadsFolder, "ArticleFiles"),
+            FileType.SiteUpdate => GetWebRootAppDataFolderPath(UploadsFolder, "Updates"),
+            FileType.FilesRoot => GetWebRootAppDataFolderPath(UploadsFolder),
+            FileType.Messages => GetWebRootAppDataFolderPath(UploadsFolder, "Messages"),
+            FileType.CommonFiles => GetWebRootAppDataFolderPath(UploadsFolder, "CommonFiles"),
+            FileType.MessagesImages => GetWebRootAppDataFolderPath(UploadsFolder, "MessagesImages"),
+            FileType.ForWriters => GetWebRootAppDataFolderPath(UploadsFolder, "ForWriters"),
+            FileType.ProjectFiles => GetWebRootAppDataFolderPath(UploadsFolder, "ProjectFiles"),
+            FileType.NewsThumb => GetWebRootAppDataFolderPath(UploadsFolder, "ThumbnailsService"),
+            FileType.CourseFile => GetWebRootAppDataFolderPath(UploadsFolder, "CourseFiles"),
+            FileType.CourseImage => GetWebRootAppDataFolderPath(UploadsFolder, "CourseImages"),
+            FileType.Backup => GetWebRootAppDataFolderPath(UploadsFolder, "Backup"),
+            _ => GetWebRootAppDataFolderPath(UploadsFolder, "ArticleFiles")
         };
 
     public string GetWebRootAppDataFolderPath(params string[] folders)

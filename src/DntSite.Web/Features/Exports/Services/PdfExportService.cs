@@ -1,4 +1,5 @@
 using System.Text;
+using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Exports.Models;
 using DntSite.Web.Features.Exports.ModelsMappings;
@@ -13,39 +14,44 @@ public class PdfExportService(
     IAppSettingsService appSettingsService,
     ILockerService lockerService,
     IFileNameSanitizerService fileNameSanitizerService,
+    ICacheService cacheService,
     ILogger<PdfExportService> logger) : IPdfExportService
 {
     private const string PdfPageTemplateFileName = "pdf-page-template.html";
 
     private string? _siteRootUri;
 
-    public async Task<ExportFileLocation> GetExportFileLocationAsync(WhatsNewItemType itemType, int id)
+    public async Task<ExportFileLocation?> GetExportFileLocationAsync(WhatsNewItemType itemType, int id)
     {
         ArgumentNullException.ThrowIfNull(itemType);
 
-        var siteRootUri = _siteRootUri ??= (await appSettingsService.GetAppSettingModelAsync()).SiteRootUri;
-        var domain = new Uri(siteRootUri).Host;
+        var cacheKey = GetCacheKey(itemType, id);
 
-        var outputPdfFileName = string.Create(CultureInfo.InvariantCulture, $"{domain}-{itemType.Name}-{id}.pdf")
-            .ToLowerInvariant();
-
-        var outputFolder = GetExportsOutputFolder(itemType);
-        var outputPdfFilePath = Path.Combine(outputFolder, outputPdfFileName);
-
-        var fileExists = outputPdfFilePath.FileExists();
-
-        return new ExportFileLocation
+        return await cacheService.GetOrAddAsync(cacheKey, nameof(PdfExportService), async () =>
         {
-            OutputFolder = outputFolder,
-            OutputPdfFileName = outputPdfFileName,
-            OutputPdfFilePath = outputPdfFilePath,
-            OutputPdfFileSize = fileExists ? new FileInfo(outputPdfFilePath).Length.ToFormattedFileSize() : "",
-            OutputPdfFileUrl = fileExists
-                ? siteRootUri.CombineUrl(
-                    outputPdfFilePath.Replace(appFoldersService.GetWebRootAppDataFolderPath(), newValue: "",
-                        StringComparison.OrdinalIgnoreCase), escapeRelativeUrl: false)
-                : string.Empty
-        };
+            var siteRootUri = _siteRootUri ??= (await appSettingsService.GetAppSettingModelAsync()).SiteRootUri;
+            var domain = new Uri(siteRootUri).Host;
+
+            var outputPdfFileName = string.Create(CultureInfo.InvariantCulture, $"{domain}-{itemType.Name}-{id}.pdf")
+                .ToLowerInvariant();
+
+            var outputFolder = GetExportsOutputFolder(itemType);
+            var outputPdfFilePath = Path.Combine(outputFolder, outputPdfFileName);
+            var fileExists = outputPdfFilePath.FileExists();
+
+            return new ExportFileLocation
+            {
+                OutputFolder = outputFolder,
+                OutputPdfFileName = outputPdfFileName,
+                OutputPdfFilePath = outputPdfFilePath,
+                OutputPdfFileSize = fileExists ? new FileInfo(outputPdfFilePath).Length.ToFormattedFileSize() : "",
+                OutputPdfFileUrl = fileExists
+                    ? siteRootUri.CombineUrl(
+                        outputPdfFilePath.Replace(appFoldersService.GetWebRootAppDataFolderPath(), newValue: "",
+                            StringComparison.OrdinalIgnoreCase), escapeRelativeUrl: false)
+                    : string.Empty
+            };
+        }, DateTimeOffset.UtcNow.AddDays(days: 1));
     }
 
     public string GetExportsOutputFolder(WhatsNewItemType itemType)
@@ -75,7 +81,11 @@ public class PdfExportService(
         return !safeFile.IsSafeToDownload ? null : safeFile.SafeFilePath;
     }
 
-    public void RebuildExports() => appFoldersService.ExportsPath.DeleteFiles(SearchOption.AllDirectories, ".pdf");
+    public void RebuildExports()
+    {
+        appFoldersService.ExportsPath.DeleteFiles(SearchOption.AllDirectories, ".pdf");
+        cacheService.RemoveAllCachedEntries(nameof(PdfExportService));
+    }
 
     public IList<int>? GetAvailableExportedFilesIds(WhatsNewItemType itemType)
     {
@@ -102,7 +112,8 @@ public class PdfExportService(
         foreach (var id in docIds)
         {
             var location = await GetExportFileLocationAsync(itemType, id);
-            location.OutputPdfFilePath.TryDeleteFile(logger);
+            location?.OutputPdfFilePath.TryDeleteFile(logger);
+            cacheService.Remove(GetCacheKey(itemType, id));
         }
     }
 
@@ -128,7 +139,12 @@ public class PdfExportService(
                 return null;
             }
 
-            outputPdfFilePath = (await GetExportFileLocationAsync(itemType, id)).OutputPdfFilePath;
+            outputPdfFilePath = (await GetExportFileLocationAsync(itemType, id))?.OutputPdfFilePath;
+
+            if (outputPdfFilePath.IsEmpty())
+            {
+                return null;
+            }
 
             var metadata = await CreatePdfDocumentMetadataAsync(itemType, id, title, docs);
 
@@ -138,6 +154,8 @@ public class PdfExportService(
                 OutputPdfFile = outputPdfFilePath,
                 DocumentMetadata = metadata
             });
+
+            cacheService.Remove(GetCacheKey(itemType, id));
         }
         catch (Exception ex)
         {
@@ -152,6 +170,9 @@ public class PdfExportService(
 
         return outputPdfFilePath;
     }
+
+    private static string GetCacheKey(WhatsNewItemType itemType, int id)
+        => string.Create(CultureInfo.InvariantCulture, $"___{itemType.Name}_{id}___").ToLowerInvariant();
 
     private async Task<string?> CreateMergedHtmlDocFileAsync(string title, params IList<ExportDocument>? docs)
     {
@@ -169,6 +190,9 @@ public class PdfExportService(
 
         var htmlDoc = string.Format(CultureInfo.InvariantCulture, await GetPageTemplateContentAsync(), title.ApplyRle(),
             mergedBodySb.ToString());
+
+        htmlDoc = htmlDoc.ToHtmlWithLocalImageUrls(appFoldersService.GetFolderPath(FileType.Image),
+            appFoldersService.GetFolderPath(FileType.CourseImage));
 
         var tempHtmlDocFilePath = Path.Combine(appFoldersService.ExportsAssetsFolder, $"temp-{Guid.NewGuid():N}.html");
         await File.WriteAllTextAsync(tempHtmlDocFilePath, htmlDoc);

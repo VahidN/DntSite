@@ -100,7 +100,7 @@ public partial class DntTextCaptcha
     ///     Its default value is 2 minutes
     /// </summary>
     [Parameter]
-    public TimeSpan AbsoluteCaptchaExpirationRelativeToNow { set; get; } = TimeSpan.FromMinutes(2);
+    public TimeSpan AbsoluteCaptchaExpirationRelativeToNow { set; get; } = TimeSpan.FromMinutes(minutes: 2);
 
     [SupplyParameterFromForm(Name = CaptchaHiddenFieldKey)]
     public Guid? CaptchaHiddenCacheKey { get; set; }
@@ -109,7 +109,7 @@ public partial class DntTextCaptcha
     ///     How long a client should be banned in minutes? Its default value is `2`.
     /// </summary>
     [Parameter]
-    public TimeSpan BanDurationRelativeToNow { set; get; } = TimeSpan.FromMinutes(2);
+    public TimeSpan BanDurationRelativeToNow { set; get; } = TimeSpan.FromMinutes(minutes: 2);
 
     /// <summary>
     ///     Maximum number of allowed requests per `BanDurationRelativeToNow`. Its default value is `10`.
@@ -178,7 +178,9 @@ public partial class DntTextCaptcha
         });
 
         _cacheKey = PasswordHasherService.CreateCryptographicallySecureGuid().ToString(GuidFormat);
-        CacheService.Add($"{CaptchaCacheKeyPrefix}{_cacheKey}", captchaNumber, AbsoluteCaptchaExpirationRelativeToNow);
+
+        CacheService.Add($"{CaptchaCacheKeyPrefix}{_cacheKey}", nameof(DntTextCaptcha), captchaNumber,
+            AbsoluteCaptchaExpirationRelativeToNow);
     }
 
     private void ValidateCaptcha()
@@ -235,7 +237,7 @@ public partial class DntTextCaptcha
         {
             OperandDisplayType.Word => number.NumberToText(Language.Persian),
             OperandDisplayType.Number => number.ToString(CultureInfo.InvariantCulture),
-            _ => throw new ArgumentOutOfRangeException(nameof(operandDisplayType), operandDisplayType, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(operandDisplayType), operandDisplayType, message: null)
         };
 
     private bool IsDosAttack()
@@ -257,20 +259,20 @@ public partial class DntTextCaptcha
                 ExpiresAt = expiresAt
             };
 
-            CacheService.Add(antiDosCacheKey, clientThrottleInfo, expiresAt);
+            CacheService.Add(antiDosCacheKey, nameof(DntTextCaptcha), clientThrottleInfo, expiresAt);
 
             return false;
         }
 
         if (clientThrottleInfo.RequestsCount > AllowedTriesPermitLimit)
         {
-            CacheService.Add(antiDosCacheKey, clientThrottleInfo, expiresAt);
+            CacheService.Add(antiDosCacheKey, nameof(DntTextCaptcha), clientThrottleInfo, expiresAt);
 
             return true;
         }
 
         clientThrottleInfo.RequestsCount++;
-        CacheService.Add(antiDosCacheKey, clientThrottleInfo, expiresAt);
+        CacheService.Add(antiDosCacheKey, nameof(DntTextCaptcha), clientThrottleInfo, expiresAt);
 
         return false;
     }

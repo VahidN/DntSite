@@ -1,5 +1,6 @@
 ﻿@using DntSite.Web.Features.Courses.Entities
 @using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
 <DntSitePageTitle Group="دوره‌ها" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(Posts is null)">
@@ -36,6 +37,10 @@
                           ShowSocialLinks="true"
                           ShowNumberOfViews="false"
                           ShowNumberOfComments="true">
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@post.Id"
+                                                                          ItemType="@WhatsNewItemType.AllCourses"/>
+            </AdditionalInfoContent>
             <AdditionalHeaderContent>
             </AdditionalHeaderContent>
             <AdditionalBodyContent>

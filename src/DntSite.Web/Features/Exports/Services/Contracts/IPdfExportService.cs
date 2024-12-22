@@ -15,7 +15,7 @@ public interface IPdfExportService : IScopedService
 
     public string GetExportsOutputFolder(WhatsNewItemType itemType);
 
-    public Task<ExportFileLocation> GetExportFileLocationAsync(WhatsNewItemType itemType, int id);
+    public Task<ExportFileLocation?> GetExportFileLocationAsync(WhatsNewItemType itemType, int id);
 
     public Task<string?> CreateSinglePdfFileAsync(WhatsNewItemType itemType,
         int id,

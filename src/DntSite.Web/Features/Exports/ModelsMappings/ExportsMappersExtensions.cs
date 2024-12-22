@@ -1,4 +1,5 @@
 using System.Text;
+using System.Web;
 using DntSite.Web.Features.Exports.Models;
 using DntSite.Web.Features.Exports.Utils;
 
@@ -33,6 +34,71 @@ public static class ExportsMappersExtensions
 
         return string.Format(CultureInfo.InvariantCulture, ParsedHtmlDocumentBodyTemplate, doc.ToPostTitle(),
             doc.ToPostBody(), doc.ToCommentsTree());
+    }
+
+    public static string ToHtmlWithLocalImageUrls(this string? html,
+        string articleImagesFolderPath,
+        string courseImagesFolderPath)
+    {
+        if (html.IsEmpty())
+        {
+            return string.Empty;
+        }
+
+        return html.ReplaceImageUrlsWithNewImageUrls(imageUrl =>
+        {
+            if (!imageUrl.IsValidUrl())
+            {
+                return null;
+            }
+
+            var fileName = HttpUtility.ParseQueryString(new Uri(imageUrl).Query).Get(name: "name");
+
+            if (fileName.IsEmpty())
+            {
+                return null;
+            }
+
+            var relativePath =
+                GetImageRelativePath(pattern: "file/image?name=", imageUrl, articleImagesFolderPath, fileName);
+
+            if (!relativePath.IsEmpty())
+            {
+                return relativePath;
+            }
+
+            relativePath = GetImageRelativePath(pattern: "file/courseimages?name=", imageUrl, courseImagesFolderPath,
+                fileName);
+
+            if (!relativePath.IsEmpty())
+            {
+                return relativePath;
+            }
+
+            return null;
+        });
+    }
+
+    private static string? GetImageRelativePath(string pattern,
+        string imageUrl,
+        string imagesFolderPath,
+        string fileName)
+    {
+        if (!imageUrl.Contains(pattern, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var path = Path.Combine(imagesFolderPath, fileName);
+
+        if (!path.FileExists())
+        {
+            return null;
+        }
+
+        var pathParts = imagesFolderPath.Split(Path.DirectorySeparatorChar);
+
+        return $"../../{pathParts[^2]}/{pathParts[^1]}/{fileName}";
     }
 
     private static string ToPostBody(this ExportDocument doc)

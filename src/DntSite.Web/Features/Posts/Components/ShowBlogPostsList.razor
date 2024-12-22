@@ -1,5 +1,6 @@
 @using DntSite.Web.Features.AppConfigs.Services
 @using DntSite.Web.Features.Posts.Entities
+@using DntSite.Web.Features.RssFeeds.Models
 <DntSitePageTitle Group="مقالات" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(BlogPosts is null)">
@@ -37,7 +38,12 @@
                               ShowReactions="true"
                               ShowSocialLinks="true"
                               ShowNumberOfViews="true"
-                              ShowNumberOfComments="true"/>
+                              ShowNumberOfComments="true">
+                <AdditionalInfoContent>
+                    <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@blogPost.Id"
+                                                                              ItemType="@WhatsNewItemType.Posts"/>
+                </AdditionalInfoContent>
+            </ShowBlogPostItem>
         }
         else
         {

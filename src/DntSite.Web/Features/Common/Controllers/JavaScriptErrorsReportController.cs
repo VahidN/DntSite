@@ -23,7 +23,7 @@ public class JavaScriptErrorsReportController(
             return BadRequest();
         }
 
-        cacheService.GetOrAdd(errorMessage.Md5Hash(), () =>
+        cacheService.GetOrAdd(errorMessage.Md5Hash(), nameof(JavaScriptErrorsReportController), () =>
         {
             logger.LogError(message: "JavaScript Error -> {Body}, {Request}",
                 antiXssService.GetSanitizedHtml(errorMessage), HttpContext.Request.LogRequest(responseCode: 200));
