@@ -1,32 +1,47 @@
 @font-face {
     font-family: Samim;
-    src: url("../../fonts/Samim.eot");
-    src: url("../../fonts/Samim.eot?#iefix") format("embedded-opentype"),
-    url("../../fonts/Samim.woff2") format("woff2"),
-    url("../../fonts/Samim.woff") format("woff"),
-    url("../../fonts/Samim.ttf") format("truetype");
+    src: url("../../../fonts/Samim.eot");
+    src: url("../../../fonts/Samim.eot?#iefix") format("embedded-opentype"),
+    url("../../../fonts/Samim.woff2") format("woff2"),
+    url("../../../fonts/Samim.woff") format("woff"),
+    url("../../../fonts/Samim.ttf") format("truetype");
     font-weight: normal;
 }
 
 @font-face {
     font-family: Samim;
-    src: url('../../fonts/Samim-Bold.eot');
-    src: url('../../fonts/Samim-Bold.eot?#iefix') format('embedded-opentype'),
-    url('../../fonts/Samim-Bold.woff2') format('woff2'),
-    url('../../fonts/Samim-Bold.woff') format('woff'),
-    url('../../fonts/Samim-Bold.ttf') format('truetype');
+    src: url('../../../fonts/Samim-Bold.eot');
+    src: url('../../../fonts/Samim-Bold.eot?#iefix') format('embedded-opentype'),
+    url('../../../fonts/Samim-Bold.woff2') format('woff2'),
+    url('../../../fonts/Samim-Bold.woff') format('woff'),
+    url('../../../fonts/Samim-Bold.ttf') format('truetype');
     font-weight: bold;
 }
 
 @font-face {
 	font-family: SamimFD;
-	src: url('../../fonts/Samim-FD.eot');
-	src: url('../../fonts/Samim-FD.eot?#iefix') format('embedded-opentype'),
-	url('../../fonts/Samim-FD.woff2') format('woff2'),
-	url('../../fonts/Samim-FD.woff') format('woff'),
-	url('../../fonts/Samim-FD.ttf') format('truetype');
+	src: url('../../../fonts/Samim-FD.eot');
+	src: url('../../../fonts/Samim-FD.eot?#iefix') format('embedded-opentype'),
+	url('../../../fonts/Samim-FD.woff2') format('woff2'),
+	url('../../../fonts/Samim-FD.woff') format('woff'),
+	url('../../../fonts/Samim-FD.ttf') format('truetype');
 	font-weight: normal;
 }
+
+@font-face {
+    font-family: JetBrainsMono;
+    src: url("../../../fonts/JetBrainsMono-Regular.woff2") format("woff2"),
+    url("../../../fonts/JetBrainsMono-Regular.ttf") format("truetype");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: JetBrainsMono;
+    src: url('../../../fonts/JetBrainsMono-Bold.woff2') format('woff2'),
+    url('../../../fonts/JetBrainsMono-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
 
 .useSamimFD {
 	font-family: "SamimFD";
@@ -36,7 +51,7 @@
 
 body {
     font-size: 14px;
-    font-family: 'Samim', Tahoma;
+    font-family: 'Samim', 'JetBrainsMono', Tahoma;
 }
 
 html {
@@ -151,14 +166,21 @@ a:hover {
     color: #ff5a00;
 }
 
-code[class*="language-"], pre[class*="language-"] {
+pre, code {
+	font-family: 'JetBrainsMono', 'Samim'  !important;
+    font-size: inherit !important;
     white-space: pre-wrap;
     overflow: auto;
     word-break: break-word;
+    direction: ltr;
+    text-align: left;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
 }
 
+
 .ql-container {
-    font-family: 'Samim', Tahoma !important;
+    font-family: 'Samim', 'JetBrainsMono', Tahoma !important;
     font-size: inherit !important;
 }
 

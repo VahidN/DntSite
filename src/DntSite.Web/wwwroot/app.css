@@ -18,6 +18,19 @@
     font-weight: bold;
 }
 
+@font-face {
+    font-family: JetBrainsMono;
+    src: url("/fonts/JetBrainsMono-Regular.woff2") format("woff2"),
+    url("/fonts/JetBrainsMono-Regular.ttf") format("truetype");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: JetBrainsMono;
+    src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2'),
+    url('/fonts/JetBrainsMono-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
 
 html, body {
     font-family: 'Samim', Tahoma;
@@ -106,6 +119,7 @@ label {
 }
 
 pre, code {
+	font-family: 'JetBrainsMono', 'Samim'  !important;
     font-size: inherit !important;
     white-space: pre-wrap;
     overflow: auto;
