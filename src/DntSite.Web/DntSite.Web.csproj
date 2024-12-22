@@ -66,13 +66,6 @@
   <ItemGroup>
     <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
-  <ItemGroup>
-    <Watch Remove="wwwroot\**\*"/>
-    <Content Remove="wwwroot\App_Data\**"/>
-    <None Remove="wwwroot\App_Data\**"/>
-    <Compile Remove="wwwroot\App_Data\**"/>
-    <EmbeddedResource Remove="wwwroot\App_Data\**"/>
-  </ItemGroup>
   <Target Name="CopyFilesAfterPublish" AfterTargets="AfterPublish">
     <Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libSkiaSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/"/>
     <Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libHarfBuzzSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/"/>
