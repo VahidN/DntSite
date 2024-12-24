@@ -5,6 +5,8 @@ namespace DntSite.Web.Features.Posts.Services.Contracts;
 
 public interface IBlogPostsPdfExportService : IScopedService
 {
+    public Task CreateMergedPdfOfPostsTagsAsync();
+
     public Task ExportNotProcessedBlogPostsToSeparatePdfFilesAsync();
 
     public ExportDocument? MapBlogPostToExportDocument(BlogPost? post, string siteRootUri);

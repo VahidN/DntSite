@@ -40,6 +40,8 @@
         <StaticWebAssetsFingerprintContent>false</StaticWebAssetsFingerprintContent>
         <CompressionEnabled>false</CompressionEnabled>
         <EnableDefaultCompressedItems>false</EnableDefaultCompressedItems>
+        <ExcludedAssetPatterns>wwwroot\**</ExcludedAssetPatterns>
+        <DefaultItemExcludes>$(DefaultItemExcludes);$(ExcludedAssetPatterns)</DefaultItemExcludes>
     </PropertyGroup>
 
     <ItemGroup>

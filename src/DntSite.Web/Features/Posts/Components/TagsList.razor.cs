@@ -1,10 +1,15 @@
 using DntSite.Web.Common.BlazorSsr.Utils;
+using DntSite.Web.Features.RssFeeds.Models;
 
 namespace DntSite.Web.Features.Posts.Components;
 
 public partial class TagsList
 {
-    [Parameter] [EditorRequired] public IList<(string Name, int InUseCount)>? Tags { set; get; }
+    [Parameter] [EditorRequired] public bool ShowExportedFile { set; get; }
+
+    [Parameter] public WhatsNewItemType? ItemType { get; set; }
+
+    [Parameter] [EditorRequired] public IList<(string Name, int Id, int InUseCount)>? Tags { set; get; }
 
     [Parameter] [EditorRequired] public required string MainTitle { set; get; }
 

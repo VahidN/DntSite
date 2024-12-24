@@ -16,7 +16,7 @@ public partial class SurveysTag
     private const string MainPageUrl = SurveysRoutingConstants.SurveysTag;
 
     private PagedResultModel<Survey>? _posts;
-    private IList<(string Name, int InUseCount)>? _tags;
+    private IList<(string Name, int Id, int InUseCount)>? _tags;
     private int _totalTagItemsCount;
 
     [MemberNotNullWhen(returnValue: true, nameof(TagName))]
@@ -60,7 +60,7 @@ public partial class SurveysTag
         var results = await TagsService.GetPagedAllSurveyTagsListAsNoTrackingAsync(CurrentPage.Value - 1,
             TagItemsPerPage);
 
-        _tags = results.Data.Select(x => (x.Name, x.InUseCount)).ToList();
+        _tags = results.Data.Select(x => (x.Name, x.Id, x.InUseCount)).ToList();
         _totalTagItemsCount = results.TotalItems;
 
         AddTagsListBreadCrumbs();

@@ -12,10 +12,14 @@ public partial class ShowExportedFile
 
     [EditorRequired] [Parameter] public required int Id { set; get; }
 
-    [EditorRequired] [Parameter] public required WhatsNewItemType ItemType { set; get; }
+    [Parameter] public string? Caption { set; get; }
+
+    [Parameter] public string ButtonClass { get; set; } = "btn-outline-secondary";
+
+    [EditorRequired] [Parameter] public WhatsNewItemType? ItemType { set; get; }
 
     private string Title => string.Create(CultureInfo.InvariantCulture,
-        $"دریافت نگارش PDF مطلب با حجم {_exportFileLocation?.OutputPdfFileSize}");
+        $"دریافت نگارش PDF با حجم {_exportFileLocation?.OutputPdfFileSize}");
 
     protected override async Task OnInitializedAsync()
         => _exportFileLocation = await PdfExportService.GetExportFileLocationAsync(ItemType, Id);

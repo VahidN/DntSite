@@ -1,3 +1,4 @@
+@using DntSite.Web.Features.RssFeeds.Models
 @attribute [Route(PostsRoutingConstants.Tag)]
 @attribute [Route(PostsRoutingConstants.TagPageCurrentPage)]
 @attribute [Route(PostsRoutingConstants.TagTagName)]
@@ -7,6 +8,16 @@
 
 @if (HasTag)
 {
+    if (_tagId.HasValue)
+    {
+        <DntMessageBox Type="AlertType.Info" IsVisible="true" MarginBottom="4" MarginTop="2">
+            <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="_tagId.Value"
+                                                                      Caption="@TagCaption"
+                                                                      ButtonClass="btn-secondary"
+                                                                      ItemType="WhatsNewItemType.Tag"/>
+        </DntMessageBox>
+    }
+
     <ShowBlogPostsList BlogPosts="_blogPosts"
                        CurrentPage="CurrentPage"
                        ItemsPerPage="PostItemsPerPage"
@@ -20,5 +31,7 @@ else
               ItemsPerPage="TagItemsPerPage"
               TotalItemCount="@_totalTagItemsCount"
               BasePath="@BasePath"
+              ShowExportedFile="true"
+              ItemType="WhatsNewItemType.Tag"
               Tags="_tags"/>
 }

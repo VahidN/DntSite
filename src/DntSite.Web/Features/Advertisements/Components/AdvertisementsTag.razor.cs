@@ -16,7 +16,7 @@ public partial class AdvertisementsTag
     private const string MainPageUrl = AdvertisementsRoutingConstants.AdvertisementsTag;
 
     private PagedResultModel<Advertisement>? _posts;
-    private IList<(string Name, int InUseCount)>? _tags;
+    private IList<(string Name, int Id, int InUseCount)>? _tags;
     private int _totalTagItemsCount;
 
     [MemberNotNullWhen(returnValue: true, nameof(TagName))]
@@ -61,7 +61,7 @@ public partial class AdvertisementsTag
         var results = await TagsService.GetPagedAllAdvertisementTagsListAsNoTrackingAsync(CurrentPage.Value - 1,
             TagItemsPerPage);
 
-        _tags = results.Data.Select(x => (x.Name, x.InUseCount)).ToList();
+        _tags = results.Data.Select(x => (x.Name, x.Id, x.InUseCount)).ToList();
         _totalTagItemsCount = results.TotalItems;
 
         AddTagsListBreadCrumbs();

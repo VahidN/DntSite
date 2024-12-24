@@ -21,9 +21,12 @@ public class PdfExportService(
 
     private string? _siteRootUri;
 
-    public async Task<ExportFileLocation?> GetExportFileLocationAsync(WhatsNewItemType itemType, int id)
+    public async Task<ExportFileLocation?> GetExportFileLocationAsync(WhatsNewItemType? itemType, int id)
     {
-        ArgumentNullException.ThrowIfNull(itemType);
+        if (itemType is null)
+        {
+            return null;
+        }
 
         var cacheKey = GetCacheKey(itemType, id);
 

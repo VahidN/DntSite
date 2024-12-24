@@ -15,6 +15,8 @@ public class BlogPostsPdfExportService(
     IPdfExportService pdfExportService) : IBlogPostsPdfExportService
 {
     private readonly DbSet<BlogPost> _blogPosts = uow.DbSet<BlogPost>();
+    private readonly DbSet<BlogPostTag> _blogPostsTags = uow.DbSet<BlogPostTag>();
+
     private readonly WhatsNewItemType _itemType = WhatsNewItemType.Posts;
 
     public async Task ExportNotProcessedBlogPostsToSeparatePdfFilesAsync()
@@ -40,18 +42,8 @@ public class BlogPostsPdfExportService(
 
         var docs = await MapBlogPostsToExportDocumentsAsync(blogPostIds);
 
-        if (docs is null)
-        {
-            return;
-        }
-
         foreach (var doc in docs)
         {
-            if (doc is null)
-            {
-                continue;
-            }
-
             await pdfExportService.CreateSinglePdfFileAsync(_itemType, doc.Id, doc.Title, doc);
             await Task.Delay(TimeSpan.FromSeconds(value: 7));
         }
@@ -109,6 +101,26 @@ public class BlogPostsPdfExportService(
                 Tags = post.Tags.Select(y => y.Name).ToList(),
                 Comments = MapCommentsToExportComment(post)
             };
+
+    public async Task CreateMergedPdfOfPostsTagsAsync()
+    {
+        var tags = await _blogPostsTags.AsNoTracking().OrderBy(x => x.Id).ToListAsync();
+
+        foreach (var tag in tags)
+        {
+            var tagPostsIds = await (from blogPost in _blogPosts.AsNoTracking()
+                from blogPostTag in blogPost.Tags
+                where blogPostTag.Id == tag.Id
+                select blogPost.Id).ToListAsync();
+
+            var blogPostDocs = await MapBlogPostsToExportDocumentsAsync(tagPostsIds);
+
+            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.Tag, tag.Id, $"مطالب گروه: {tag.Name}",
+                blogPostDocs);
+
+            await Task.Delay(TimeSpan.FromSeconds(seconds: 7));
+        }
+    }
 
     private static List<ExportComment> MapCommentsToExportComment(BlogPost post)
     {

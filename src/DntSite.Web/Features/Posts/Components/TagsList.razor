@@ -4,17 +4,21 @@
     <ul class="list-group">
         @foreach (var tag in Tags!)
         {
-            <a class="list-group-item list-group-item-action d-flex align-items-center"
-               href="@GetUrl(tag.Name)">
+            <li class="list-group-item list-group-item-action d-flex align-items-center">
                 @if (!string.IsNullOrWhiteSpace(GlyphIcon))
                 {
                     <span class="@GlyphIcon me-2"></span>
                 }
-                <span dir="@tag.Name.GetDir()">@tag.Name</span>
+                @if (ShowExportedFile)
+                {
+                    <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="tag.Id"
+                                                                              ItemType="ItemType"/>
+                }
+                <a dir="@tag.Name.GetDir()" href="@GetUrl(tag.Name)">@tag.Name</a>
                 <span class="badge @BadgeValueBgColor.Value rounded-pill ms-auto">
                     <DntToPersianNumbers Value="tag.InUseCount"/>
                 </span>
-            </a>
+            </li>
         }
     </ul>
 

@@ -16,7 +16,9 @@ public partial class Tag
     private const string MainPageUrl = PostsRoutingConstants.Tag;
 
     private PagedResultModel<BlogPost>? _blogPosts;
-    private IList<(string Name, int InUseCount)>? _tags;
+
+    private int? _tagId;
+    private IList<(string Name, int Id, int InUseCount)>? _tags;
     private int _totalTagItemsCount;
 
     [MemberNotNullWhen(returnValue: true, nameof(TagName))]
@@ -24,8 +26,7 @@ public partial class Tag
 
     private string MainTitle => !HasTag ? MainPageTitle : MainTagPageTitle;
 
-    private string MainTagPageTitle => string.Create(CultureInfo.InvariantCulture,
-        $"آرشیو گروه‌های مطالب {TagName}");
+    private string MainTagPageTitle => string.Create(CultureInfo.InvariantCulture, $"آرشیو گروه‌های مطالب {TagName}");
 
     private string MainTagPageUrl => !HasTag ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(TagName)}";
 
@@ -40,6 +41,8 @@ public partial class Tag
     [Parameter] public int? CurrentPage { set; get; }
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
+
+    private string TagCaption => $"دریافت تمام مطالب گروه {TagName} با فرمت PDF";
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,7 +63,7 @@ public partial class Tag
         var results = await TagsService.GetPagedAllPostTagsListAsNoTrackingAsync(CurrentPage.Value - 1,
             TagItemsPerPage);
 
-        _tags = results.Data.Select(x => (x.Name, x.InUseCount)).ToList();
+        _tags = results.Data.Select(x => (x.Name, x.Id, x.InUseCount)).ToList();
         _totalTagItemsCount = results.TotalItems;
 
         AddTagsListBreadCrumbs();
@@ -83,6 +86,10 @@ public partial class Tag
         _blogPosts =
             await BlogPostsService.GetLastBlogPostsByTagIncludeAuthorAsync(TagName!, CurrentPage.Value - 1,
                 PostItemsPerPage);
+
+        _tagId = _blogPosts.Data?.FirstOrDefault()
+            ?.Tags.FirstOrDefault(x => x.Name.Equals(TagName, StringComparison.OrdinalIgnoreCase))
+            ?.Id;
 
         AddTagPostsBreadCrumbs();
     }
