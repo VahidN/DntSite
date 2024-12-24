@@ -105,6 +105,8 @@ public class PdfExportService(
 
     public async Task InvalidateExportedFilesAsync(WhatsNewItemType itemType, params IList<int>? docIds)
     {
+        ArgumentNullException.ThrowIfNull(itemType);
+
         if (docIds is null || docIds.Count == 0)
         {
             return;
