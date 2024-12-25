@@ -1,5 +1,6 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Courses.Services.Contracts;
+using DntSite.Web.Features.Exports.Models;
 using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Posts.Services.Contracts;
@@ -35,7 +36,7 @@ public class LearningPathPdfExportsService(
 
             var questionIds = await questionsPdfExportService.MapQuestionsToExportDocumentsAsync(item.QuestionIds);
 
-            if (!HasChangedItem(item.PostIds, courseTopicDocs.Select(x => x.Id).ToList(), item.QuestionIds))
+            if (await ShouldNotMergeItemsAsync(item, courseTopicDocs))
             {
                 continue;
             }
@@ -46,6 +47,11 @@ public class LearningPathPdfExportsService(
             await Task.Delay(TimeSpan.FromSeconds(seconds: 7));
         }
     }
+
+    private async Task<bool>
+        ShouldNotMergeItemsAsync(LearningPathLinksModel item, IList<ExportDocument> courseTopicDocs)
+        => (await pdfExportService.GetExportFileLocationAsync(WhatsNewItemType.LearningPaths, item.Id))?.IsReady ==
+            true && !HasChangedItem(item.PostIds, courseTopicDocs.Select(x => x.Id).ToList(), item.QuestionIds);
 
     private bool HasChangedItem(IList<int> postIds, IList<int> questionIds, IList<int> courseTopicIds)
         => pdfExportService.HasChangedItem(WhatsNewItemType.Posts, postIds) ||

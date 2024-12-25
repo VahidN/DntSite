@@ -113,7 +113,7 @@ public class BlogPostsPdfExportService(
                 where blogPostTag.Id == tag.Id
                 select blogPost.Id).ToListAsync();
 
-            if (!pdfExportService.HasChangedItem(WhatsNewItemType.Posts, tagPostsIds))
+            if (await ShouldNotMergeItemsAsync(tag, tagPostsIds))
             {
                 continue;
             }
@@ -126,6 +126,10 @@ public class BlogPostsPdfExportService(
             await Task.Delay(TimeSpan.FromSeconds(seconds: 7));
         }
     }
+
+    private async Task<bool> ShouldNotMergeItemsAsync(BlogPostTag tag, List<int> tagPostsIds)
+        => (await pdfExportService.GetExportFileLocationAsync(WhatsNewItemType.Tag, tag.Id))?.IsReady == true &&
+           !pdfExportService.HasChangedItem(WhatsNewItemType.Posts, tagPostsIds);
 
     private static List<ExportComment> MapCommentsToExportComment(BlogPost post)
     {

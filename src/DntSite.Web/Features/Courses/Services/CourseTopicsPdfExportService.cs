@@ -26,7 +26,7 @@ public class CourseTopicsPdfExportService(
         {
             var topicIds = course.CourseTopics.Where(x => !x.IsDeleted).Select(x => x.Id).ToList();
 
-            if (!pdfExportService.HasChangedItem(WhatsNewItemType.AllCoursesTopics, topicIds))
+            if (await ShouldNotMergeItemsAsync(course, topicIds))
             {
                 continue;
             }
@@ -144,6 +144,10 @@ public class CourseTopicsPdfExportService(
                 Tags = post.Course.Tags.Select(y => y.Name).ToList(),
                 Comments = MapCommentsToExportComment(post)
             };
+
+    private async Task<bool> ShouldNotMergeItemsAsync(Course course, List<int> topicIds)
+        => (await pdfExportService.GetExportFileLocationAsync(WhatsNewItemType.AllCourses, course.Id))?.IsReady ==
+            true && !pdfExportService.HasChangedItem(WhatsNewItemType.AllCoursesTopics, topicIds);
 
     private static List<ExportComment> MapCommentsToExportComment(CourseTopic post)
     {
