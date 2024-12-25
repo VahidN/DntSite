@@ -25,6 +25,12 @@ public class CourseTopicsPdfExportService(
         foreach (var course in courses)
         {
             var topicIds = course.CourseTopics.Where(x => !x.IsDeleted).Select(x => x.Id).ToList();
+
+            if (!pdfExportService.HasChangedItem(WhatsNewItemType.AllCoursesTopics, topicIds))
+            {
+                continue;
+            }
+
             var docs = await MapCourseTopicsToExportDocumentsAsync(topicIds);
 
             await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.AllCourses, course.Id, course.Title, docs);
@@ -35,11 +41,11 @@ public class CourseTopicsPdfExportService(
 
     public async Task ExportNotProcessedCourseTopicsToSeparatePdfFilesAsync()
     {
-        var availableIds = pdfExportService.GetAvailableExportedFilesIds(_itemType);
+        var availableIds = pdfExportService.GetAvailableExportedFiles(_itemType).Select(x => x.Id).ToList();
 
         var query = _courseTopics.AsNoTracking().Where(x => !x.IsDeleted);
 
-        var idsNeedUpdate = availableIds is null || availableIds.Count == 0
+        var idsNeedUpdate = availableIds.Count == 0
             ? await query.Select(x => x.Id).ToListAsync()
             : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync();
 
@@ -99,18 +105,8 @@ public class CourseTopicsPdfExportService(
 
         var docs = await MapCourseTopicsToExportDocumentsAsync(postIds);
 
-        if (docs is null)
-        {
-            return;
-        }
-
         foreach (var doc in docs)
         {
-            if (doc is null)
-            {
-                continue;
-            }
-
             await pdfExportService.CreateSinglePdfFileAsync(_itemType, doc.Id, doc.Title, doc);
             await Task.Delay(TimeSpan.FromSeconds(value: 7));
         }

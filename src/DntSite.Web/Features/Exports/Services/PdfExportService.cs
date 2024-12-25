@@ -44,6 +44,7 @@ public class PdfExportService(
 
             return new ExportFileLocation
             {
+                IsReady = fileExists,
                 OutputFolder = outputFolder,
                 OutputPdfFileName = outputPdfFileName,
                 OutputPdfFilePath = outputPdfFilePath,
@@ -90,17 +91,36 @@ public class PdfExportService(
         cacheService.RemoveAllCachedEntries(nameof(PdfExportService));
     }
 
-    public IList<int>? GetAvailableExportedFilesIds(WhatsNewItemType itemType)
+    public IList<(int Id, FileInfo FileInfo)> GetAvailableExportedFiles(WhatsNewItemType itemType)
     {
-        var files = Directory.GetFiles(GetExportsOutputFolder(itemType), searchPattern: "*.pdf");
+        var files = new DirectoryInfo(GetExportsOutputFolder(itemType)).GetFiles(searchPattern: "*.pdf");
 
         return files.Length == 0
-            ? null
-            : files.Select(item
-                    => Path.GetFileNameWithoutExtension(item)
+            ? []
+            : files.Select(item => (
+                    Path.GetFileNameWithoutExtension(item.FullName)
                         .Split(separator: '-', StringSplitOptions.RemoveEmptyEntries)[^1]
-                        .ToInt())
+                        .ToInt(), item))
                 .ToList();
+    }
+
+    public bool HasChangedItem(WhatsNewItemType itemType, IList<int> postIds)
+    {
+        var files = GetAvailableExportedFiles(itemType);
+
+        if (files.Count == 0)
+        {
+            return false;
+        }
+
+        var lastWriteTimeUtc = files.Select(x => x.FileInfo.LastWriteTimeUtc.ToDateOnly())
+            .OrderByDescending(x => x)
+            .FirstOrDefault();
+
+        var yesterday = DateTime.UtcNow.AddDays(value: -1).ToDateOnly();
+        var today = DateTime.UtcNow.ToDateOnly();
+
+        return today == lastWriteTimeUtc || yesterday == lastWriteTimeUtc;
     }
 
     public async Task InvalidateExportedFilesAsync(WhatsNewItemType itemType, params IList<int>? docIds)

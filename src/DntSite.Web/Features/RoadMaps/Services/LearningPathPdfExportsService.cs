@@ -35,12 +35,22 @@ public class LearningPathPdfExportsService(
 
             var questionIds = await questionsPdfExportService.MapQuestionsToExportDocumentsAsync(item.QuestionIds);
 
+            if (!HasChangedItem(item.PostIds, courseTopicDocs.Select(x => x.Id).ToList(), item.QuestionIds))
+            {
+                continue;
+            }
+
             await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.LearningPaths, item.Id, item.Title,
                 [..blogPostDocs, ..courseTopicDocs, ..questionIds]);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 7));
         }
     }
+
+    private bool HasChangedItem(IList<int> postIds, IList<int> questionIds, IList<int> courseTopicIds)
+        => pdfExportService.HasChangedItem(WhatsNewItemType.Posts, postIds) ||
+           pdfExportService.HasChangedItem(WhatsNewItemType.AllCoursesTopics, courseTopicIds) ||
+           pdfExportService.HasChangedItem(WhatsNewItemType.Questions, questionIds);
 
     private async Task<List<LearningPathLinksModel>> GetLinkIdsAsync()
     {
@@ -65,10 +75,13 @@ public class LearningPathPdfExportsService(
                 Title = item.Title,
                 Tags = item.Tags.Where(x => !x.IsDeleted).Select(x => x.Name).ToList(),
                 CourseTopicIds =
-                    ConvertToListOfGuids(GetItemPostIds(contains: "/courses/topic/", links, segmentNumber: 4)),
-                PostIds = ConvertToListOfInts(GetItemPostIds(contains: "/post/", links, segmentNumber: 2)),
-                QuestionIds = ConvertToListOfInts(GetItemPostIds(contains: "/questions/details/", links,
-                    segmentNumber: 3))
+                    GetItemPostIds(contains: "/courses/topic/", links, segmentNumber: 4)
+                        .TryConvertToListOfT<Guid>(ignoreParsingFailures: true),
+                PostIds =
+                    GetItemPostIds(contains: "/post/", links, segmentNumber: 2)
+                        .TryConvertToListOfT<int>(ignoreParsingFailures: true),
+                QuestionIds = GetItemPostIds(contains: "/questions/details/", links, segmentNumber: 3)
+                    .TryConvertToListOfT<int>(ignoreParsingFailures: true)
             });
         }
 
@@ -79,24 +92,6 @@ public class LearningPathPdfExportsService(
         => htmlHelperService.ExtractLinks(item.Description)
             .Where(link => link.IsValidUrl() && link.HaveTheSameDomain(siteRootUri))
             .ToList();
-
-    private static List<int> ConvertToListOfInts(List<string> items)
-        => items.Select(strId => strId.ToInt()).Where(id => id > 0).ToList();
-
-    private static List<Guid> ConvertToListOfGuids(List<string> items)
-    {
-        var results = new List<Guid>();
-
-        foreach (var item in items)
-        {
-            if (Guid.TryParse(item, out var guid))
-            {
-                results.Add(guid);
-            }
-        }
-
-        return results;
-    }
 
     private List<string> GetItemPostIds(string contains, List<string> links, int segmentNumber)
     {

@@ -11,7 +11,9 @@ public interface IPdfExportService : IScopedService
 
     public Task InvalidateExportedFilesAsync(WhatsNewItemType itemType, params IList<int>? docIds);
 
-    public IList<int>? GetAvailableExportedFilesIds(WhatsNewItemType itemType);
+    public bool HasChangedItem(WhatsNewItemType itemType, IList<int> postIds);
+
+    public IList<(int Id, FileInfo FileInfo)> GetAvailableExportedFiles(WhatsNewItemType itemType);
 
     public string GetExportsOutputFolder(WhatsNewItemType itemType);
 

@@ -21,12 +21,12 @@ public class BlogPostsPdfExportService(
 
     public async Task ExportNotProcessedBlogPostsToSeparatePdfFilesAsync()
     {
-        var availableIds = pdfExportService.GetAvailableExportedFilesIds(_itemType);
+        var availableIds = pdfExportService.GetAvailableExportedFiles(_itemType).Select(x => x.Id).ToList();
 
         var query = _blogPosts.AsNoTracking()
             .Where(x => !x.IsDeleted && (!x.NumberOfRequiredPoints.HasValue || x.NumberOfRequiredPoints.Value == 0));
 
-        var idsNeedUpdate = availableIds is null || availableIds.Count == 0
+        var idsNeedUpdate = availableIds.Count == 0
             ? await query.Select(x => x.Id).ToListAsync()
             : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync();
 
@@ -113,9 +113,14 @@ public class BlogPostsPdfExportService(
                 where blogPostTag.Id == tag.Id
                 select blogPost.Id).ToListAsync();
 
+            if (!pdfExportService.HasChangedItem(WhatsNewItemType.Posts, tagPostsIds))
+            {
+                continue;
+            }
+
             var blogPostDocs = await MapBlogPostsToExportDocumentsAsync(tagPostsIds);
 
-            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.Tag, tag.Id, $"مطالب گروه: {tag.Name}",
+            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.Tag, tag.Id, $"مطالب گروه {tag.Name}",
                 blogPostDocs);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 7));

@@ -2,9 +2,11 @@
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.RoutingConstants;
 using DntSite.Web.Features.Posts.Services.Contracts;
+using DntSite.Web.Features.RssFeeds.Models;
 
 namespace DntSite.Web.Features.Posts.Components;
 
@@ -17,6 +19,7 @@ public partial class Tag
 
     private PagedResultModel<BlogPost>? _blogPosts;
 
+    private bool _isExportedPdfFileReady;
     private int? _tagId;
     private IList<(string Name, int Id, int InUseCount)>? _tags;
     private int _totalTagItemsCount;
@@ -43,6 +46,8 @@ public partial class Tag
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     private string TagCaption => $"دریافت تمام مطالب گروه {TagName} با فرمت PDF";
+
+    [InjectComponentScoped] internal IPdfExportService PdfExportService { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,6 +95,10 @@ public partial class Tag
         _tagId = _blogPosts.Data?.FirstOrDefault()
             ?.Tags.FirstOrDefault(x => x.Name.Equals(TagName, StringComparison.OrdinalIgnoreCase))
             ?.Id;
+
+        _isExportedPdfFileReady = _tagId.HasValue &&
+                                  (await PdfExportService.GetExportFileLocationAsync(WhatsNewItemType.Tag,
+                                      _tagId.Value))?.IsReady == true;
 
         AddTagPostsBreadCrumbs();
     }

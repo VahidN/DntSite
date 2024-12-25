@@ -1,4 +1,4 @@
-﻿@if (_exportFileLocation?.OutputPdfFileUrl.IsEmpty() == false)
+﻿@if (_exportFileLocation?.IsReady == true)
 {
     <a href="@_exportFileLocation.OutputPdfFileUrl"
        target="_blank"

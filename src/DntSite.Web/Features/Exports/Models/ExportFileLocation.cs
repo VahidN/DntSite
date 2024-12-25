@@ -11,4 +11,6 @@ public class ExportFileLocation
     public required string OutputPdfFileSize { set; get; }
 
     public required string OutputPdfFileUrl { set; get; }
+
+    public required bool IsReady { set; get; }
 }
