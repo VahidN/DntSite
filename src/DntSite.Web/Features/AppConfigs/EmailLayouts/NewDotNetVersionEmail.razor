@@ -1,0 +1,26 @@
+﻿@using DntSite.Web.Features.AppConfigs.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    نگارش جدیدی از دات‌نت برای نصب بر روی سرور منتشر شده‌است:
+    <br/>
+    <br/>
+    <div align="left" dir="ltr" style="font-family: Tahoma; ">
+        @Model.Body
+    </div>
+    <br/>
+    <br/>
+    با احترام<br/>
+    <a style="direction:ltr" href="@Model.SiteRootUri">@Model.EmailSig</a>
+    <br/>
+    <span lang="fa" dir="ltr">
+        @Model.MsgDateTime
+    </span>
+    <br/>
+</LayoutView>
+
+@code {
+
+    [Parameter] public NewDotNetVersionEmailModel Model { set; get; } = null!;
+
+}

@@ -2,7 +2,7 @@
 
 namespace DntSite.Web.Features.Posts.ScheduledTasks;
 
-public class DeleteOrphans(IBlogPostDraftsService blogPostDraftsService) : IScheduledTask
+public class DeleteOrphansJob(IBlogPostDraftsService blogPostDraftsService) : IScheduledTask
 {
     public Task RunAsync()
         => IsShuttingDown ? Task.CompletedTask : blogPostDraftsService.DeleteConvertedBlogPostDraftsAsync();

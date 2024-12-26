@@ -1,30 +1,25 @@
+using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.AppConfigs.RoutingConstants;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Models;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace DntSite.Web.Features.AppConfigs.Components;
 
 [Authorize(Roles = CustomRoles.Admin)]
 public partial class ServerInfo
 {
-    private WebServerInfo? _webServerInfo;
+    private WebServerInfoModel? _info;
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
-    [Inject] internal IKeyManager KeyManager { set; get; } = null!;
-
-    [Inject] internal IWebHostEnvironment WebHostEnvironment { set; get; } = null!;
-
-    private List<IKey> GetKeysList() => [..KeyManager.GetAllKeys().OrderByDescending(key => key.CreationDate)];
+    [InjectComponentScoped] internal IWebServerInfoService ServerInfoService { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
         AddBreadCrumbs();
-        _webServerInfo = await WebServerInfoProvider.GetServerInfoAsync();
+        _info = await ServerInfoService.GetWebServerInfoAsync();
     }
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([AppConfigsBreadCrumbs.ServerInfoBreadCrumb]);
-
-    private static string? GetVersionInfo() => Assembly.GetExecutingAssembly().GetBuildDateTime();
 }

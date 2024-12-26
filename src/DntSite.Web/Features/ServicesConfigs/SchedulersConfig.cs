@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Backlogs.ScheduledTasks;
+﻿using DntSite.Web.Features.AppConfigs.ScheduledTasks;
+using DntSite.Web.Features.Backlogs.ScheduledTasks;
 using DntSite.Web.Features.Exports.ScheduledTasks;
 using DntSite.Web.Features.News.ScheduledTasks;
 using DntSite.Web.Features.Posts.ScheduledTasks;
@@ -22,6 +23,9 @@ public static class SchedulersConfig
     public static void AddSchedulers(this IServiceCollection services)
         => services.AddDNTScheduler(options =>
         {
+            options.AddScheduledTask<DotNetVersionCheckJob>(utcNow
+                => GetNowIranTime(utcNow) is { Hour: 5, Minute: 30, Second: 1 });
+
             options.AddScheduledTask<WebReadersListJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 30, Second: 1 });
 
@@ -80,7 +84,7 @@ public static class SchedulersConfig
             options.AddScheduledTask<ExportToMergedPdfFilesJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 5, Minute: 30, Second: 1 });
 
-            options.AddScheduledTask<DeleteOrphans>(utcNow
+            options.AddScheduledTask<DeleteOrphansJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 7, Second: 1 });
 
             options.AddScheduledTask<DailyNewsletterJob>(utcNow

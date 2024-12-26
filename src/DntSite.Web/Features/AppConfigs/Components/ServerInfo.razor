@@ -3,37 +3,37 @@
 
 <DntSitePageTitle Group="مدیریت برنامه" PageTitle="مشخصات سرور" CurrentPage="@null"/>
 
-<DntLoading IsLoading="@(_webServerInfo is null)">
+<DntLoading IsLoading="@(_info is null)">
     <DntCardFrame MarginTop="1">
         <FrameHeader>
             مشخصات پروسه‌ی برنامه
-            <span dir="ltr">[@@ @string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:yyyy-MM-dd, HH:mm:ss}"), V @GetVersionInfo()]</span>
+            <span dir="ltr">[@@ @string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:yyyy-MM-dd, HH:mm:ss}"), V @_info!.VersionInfo]</span>
         </FrameHeader>
         <FrameBody>
             <div>
                 <label>نام: </label>
-                <span dir="ltr">@_webServerInfo!.Process.ProcessName</span>
+                <span dir="ltr">@_info!.ServerInfo.Process.ProcessName</span>
             </div>
             <div>
                 <label>شماره: </label>
-                <span dir="ltr">@_webServerInfo!.Process.ProcessId.ToPersianNumbers()</span>
+                <span dir="ltr">@_info.ServerInfo.Process.ProcessId.ToPersianNumbers()</span>
             </div>
             <div>
                 <label>معماری: </label>
-                <span dir="ltr">@_webServerInfo!.Process.ProcessArchitecture</span>
+                <span dir="ltr">@_info.ServerInfo.Process.ProcessArchitecture</span>
             </div>
             <div>
                 <label>زمان آغاز: </label>
                 <span
-                    dir="ltr">@_webServerInfo!.Process.ProcessStartTime.ToFriendlyPersianDateTextify().ToPersianNumbers()</span>
+                    dir="ltr">@_info.ServerInfo.Process.ProcessStartTime.ToFriendlyPersianDateTextify().ToPersianNumbers()</span>
             </div>
             <div>
                 <label>مسیر: </label>
-                <span dir="ltr">@_webServerInfo!.Process.ProcessPath</span>
+                <span dir="ltr">@_info.ServerInfo.Process.ProcessPath</span>
             </div>
             <div>
                 <label>آرگومان‌‌ها: </label>
-                <span dir="ltr">@_webServerInfo!.Process.ProcessArguments</span>
+                <span dir="ltr">@_info.ServerInfo.Process.ProcessArguments</span>
             </div>
         </FrameBody>
     </DntCardFrame>
@@ -45,21 +45,21 @@
         <FrameBody>
             <div>
                 <label>زبان: </label>
-                <span dir="ltr">@_webServerInfo!.TimeZone.Language</span>
+                <span dir="ltr">@_info!.ServerInfo.TimeZone.Language</span>
             </div>
             <div>
                 <label>نام: </label>
-                <span dir="ltr">@_webServerInfo!.TimeZone.DisplayName</span>
+                <span dir="ltr">@_info.ServerInfo.TimeZone.DisplayName</span>
             </div>
             <div>
                 <label>فعال بودن صرفه جویی زمانی: </label>
                 <span dir="ltr">
-                <DntBooleanLabel Value="@_webServerInfo!.TimeZone.IsDaylightSavingTime"/>
+                <DntBooleanLabel Value="@_info.ServerInfo.TimeZone.IsDaylightSavingTime"/>
             </span>
             </div>
             <div>
                 <label>BaseUtcOffset: </label>
-                <span dir="ltr">@_webServerInfo!.TimeZone.BaseUtcOffset</span>
+                <span dir="ltr">@_info.ServerInfo.TimeZone.BaseUtcOffset</span>
             </div>
         </FrameBody>
     </DntCardFrame>
@@ -71,19 +71,19 @@
         <FrameBody>
             <div>
                 <label>تعداد هسته‌های سی‌پی‌یو: </label>
-                <span dir="ltr">@_webServerInfo!.Hardware.ProcessorCount</span>
+                <span dir="ltr">@_info!.ServerInfo.Hardware.ProcessorCount</span>
             </div>
             <div>
                 <label>میزان رم سرور: </label>
-                <span dir="ltr">@_webServerInfo!.Hardware.TotalPhysicalMemory</span>
+                <span dir="ltr">@_info.ServerInfo.Hardware.TotalPhysicalMemory</span>
             </div>
             <div>
                 <label>میزان مصرف حافظه برنامه: </label>
-                <span dir="ltr">@_webServerInfo!.Hardware.MemoryUsage</span>
+                <span dir="ltr">@_info.ServerInfo.Hardware.MemoryUsage</span>
             </div>
             <div>
                 <label>میزان مصرف سی‌پی‌یو برنامه: </label>
-                <span dir="ltr">@_webServerInfo!.Hardware.CpuUsage.ToString(format: "F")</span>
+                <span dir="ltr">@_info.ServerInfo.Hardware.CpuUsage.ToString(format: "F")</span>
             </div>
         </FrameBody>
     </DntCardFrame>
@@ -95,35 +95,35 @@
         <FrameBody>
             <div>
                 <label>معماری: </label>
-                <span dir="ltr">@_webServerInfo!.OS.Architecture</span>
+                <span dir="ltr">@_info!.ServerInfo.OS.Architecture</span>
             </div>
             <div>
                 <label>توضیحات: </label>
-                <span dir="ltr">@_webServerInfo!.OS.Description</span>
+                <span dir="ltr">@_info.ServerInfo.OS.Description</span>
             </div>
             <div>
                 <label>نام کامپیوتر: </label>
-                <span dir="ltr">@_webServerInfo!.OS.ComputerName</span>
+                <span dir="ltr">@_info.ServerInfo.OS.ComputerName</span>
             </div>
             <div>
                 <label>زمان جاری سرور: </label>
-                <span dir="rtl">@_webServerInfo!.OS.ServerTime.ToLongPersianDateTimeString()</span>
+                <span dir="rtl">@_info.ServerInfo.OS.ServerTime.ToLongPersianDateTimeString()</span>
             </div>
             <div>
                 <label>نام کاربر پروسه برنامه: </label>
-                <span dir="ltr">@_webServerInfo!.OS.UserName</span>
+                <span dir="ltr">@_info.ServerInfo.OS.UserName</span>
             </div>
             <div>
                 <label>نام هاست: </label>
-                <span dir="ltr">@_webServerInfo!.OS.HostName</span>
+                <span dir="ltr">@_info.ServerInfo.OS.HostName</span>
             </div>
             <div>
                 <label>آدرس‌های هاست‌ها: </label>
-                <span dir="ltr">@_webServerInfo!.OS.HostAddresses</span>
+                <span dir="ltr">@_info.ServerInfo.OS.HostAddresses</span>
             </div>
             <div>
                 <label>متغیرهای محیطی: </label>
-                @foreach (var item in _webServerInfo!.OS.EnvironmentVariables)
+                @foreach (var item in _info.ServerInfo.OS.EnvironmentVariables)
                 {
                     <div dir="ltr">
                         <label>@item.Key: </label>
@@ -150,19 +150,46 @@
         <FrameBody>
             <div>
                 <label>نام محیط اجرایی برنامه: </label>
-                <span dir="ltr">@WebHostEnvironment.EnvironmentName</span>
+                <span dir="ltr">@_info!.WebHostEnvironment.EnvironmentName</span>
             </div>
             <div>
                 <label>فریم‌ورک نصب شده: </label>
-                <span dir="ltr">@_webServerInfo!.Runtime.FrameworkDescription</span>
+                <span dir="ltr">@_info.ServerInfo.Runtime.FrameworkDescription</span>
             </div>
             <div>
                 <label>سکوی کاری: </label>
-                <span dir="ltr">@_webServerInfo!.Runtime.RuntimeIdentifier</span>
+                <span dir="ltr">@_info.ServerInfo.Runtime.RuntimeIdentifier</span>
             </div>
             <div>
                 <label>نگارش برنامه: </label>
-                <span dir="ltr">@_webServerInfo!.Runtime.InformationalVersion, @GetVersionInfo()</span>
+                <span
+                    dir="ltr">@_info.ServerInfo.Runtime.InformationalVersion, @_info.VersionInfo</span>
+            </div>
+        </FrameBody>
+    </DntCardFrame>
+
+    <DntCardFrame MarginTop="3">
+        <FrameHeader>
+            <span dir="ltr">dotnet --info</span>
+        </FrameHeader>
+        <FrameBody>
+            <div>
+                <pre dir="ltr">
+                    @_info!.DotNerInfo
+                </pre>
+            </div>
+        </FrameBody>
+    </DntCardFrame>
+
+    <DntCardFrame MarginTop="3">
+        <FrameHeader>
+            <span dir="ltr">dotnet sdk check</span>
+        </FrameHeader>
+        <FrameBody>
+            <div>
+                <pre dir="ltr">
+                    @_info!.SdkCheckInfo
+                </pre>
             </div>
         </FrameBody>
     </DntCardFrame>
@@ -174,11 +201,11 @@
         <FrameBody>
             <div>
                 <label>مسیر ریشه ارائه‌ی فایل‌های ثابت برنامه (WebRootPath): </label>
-                <span dir="ltr">@WebHostEnvironment.WebRootPath</span>
+                <span dir="ltr">@_info!.WebHostEnvironment.WebRootPath</span>
             </div>
             <div>
                 <label>مسیر قرارگیری فایل‌های اجرایی برنامه (ContentRootPath): </label>
-                <span dir="ltr">@WebHostEnvironment.ContentRootPath</span>
+                <span dir="ltr">@_info.WebHostEnvironment.ContentRootPath</span>
             </div>
             <div>
                 <label>مسیر اجرایی برنامه (CurrentDirectory/WorkingDirectory): </label>
@@ -194,27 +221,27 @@
         <FrameBody>
             <div>
                 <label>نام: </label>
-                <span dir="ltr">@_webServerInfo!.DriveInfo.Drive</span>
+                <span dir="ltr">@_info!.ServerInfo.DriveInfo.Drive</span>
             </div>
             <div>
                 <label>برچسب: </label>
-                <span dir="ltr">@_webServerInfo!.DriveInfo.VolumeLabel</span>
+                <span dir="ltr">@_info.ServerInfo.DriveInfo.VolumeLabel</span>
             </div>
             <div>
                 <label>نوع فایل‌سیستم: </label>
-                <span dir="ltr">@_webServerInfo!.DriveInfo.FileSystem</span>
+                <span dir="ltr">@_info.ServerInfo.DriveInfo.FileSystem</span>
             </div>
             <div>
                 <label>فضای مهیای در اختیار کاربر جاری سیستمی: </label>
-                <span dir="ltr">@_webServerInfo!.DriveInfo.AvailableSpaceToCurrentUser</span>
+                <span dir="ltr">@_info.ServerInfo.DriveInfo.AvailableSpaceToCurrentUser</span>
             </div>
             <div>
                 <label>فضای باقیمانده: </label>
-                <span dir="ltr">@_webServerInfo!.DriveInfo.TotalAvailableSpace</span>
+                <span dir="ltr">@_info.ServerInfo.DriveInfo.TotalAvailableSpace</span>
             </div>
             <div>
                 <label>کل فضای درایو: </label>
-                <span dir="ltr">@_webServerInfo!.DriveInfo.TotalSizeOfDive</span>
+                <span dir="ltr">@_info.ServerInfo.DriveInfo.TotalSizeOfDive</span>
             </div>
         </FrameBody>
     </DntCardFrame>
@@ -225,7 +252,7 @@
         </FrameHeader>
         <FrameBody>
             <DntSimpleTable TRecord="IKey"
-                            Records="GetKeysList()"
+                            Records="_info!.KeysList"
                             TableClass="table table-striped table-hover caption-top"
                             HeaderClass="table-secondary"
                             FooterRowClass="table-warning"
