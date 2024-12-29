@@ -187,7 +187,7 @@ public class DailyNewsScreenshotsService(
         {
             SourceHtmlFileOrUri = currentUrl,
             OutputPngFile = path
-        });
+        }, TimeSpan.FromMinutes(value: 10));
     }
 
     private Task<List<DailyNewsItem>> GetItemsNeedUpdateAsync()

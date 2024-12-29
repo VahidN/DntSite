@@ -18,6 +18,7 @@ public class PdfExportService(
     ILogger<PdfExportService> logger) : IPdfExportService
 {
     private const string PdfPageTemplateFileName = "pdf-page-template.html";
+    private readonly TimeSpan _lockTimeout = TimeSpan.FromMinutes(value: 20);
 
     private string? _siteRootUri;
 
@@ -132,7 +133,7 @@ public class PdfExportService(
             return;
         }
 
-        using var @lock = await lockerService.LockAsync<PdfExportService>();
+        using var @lock = await lockerService.LockAsync<PdfExportService>(_lockTimeout);
 
         foreach (var id in docIds)
         {
@@ -150,7 +151,7 @@ public class PdfExportService(
         ArgumentNullException.ThrowIfNull(docs);
         ArgumentNullException.ThrowIfNull(itemType);
 
-        using var @lock = await lockerService.LockAsync<PdfExportService>();
+        using var @lock = await lockerService.LockAsync<PdfExportService>(_lockTimeout);
 
         string? tempHtmlDocFilePath = null;
         string? outputPdfFilePath = null;
@@ -178,7 +179,7 @@ public class PdfExportService(
                 SourceHtmlFileOrUri = tempHtmlDocFilePath,
                 OutputPdfFile = outputPdfFilePath,
                 DocumentMetadata = metadata
-            });
+            }, _lockTimeout);
 
             cacheService.Remove(GetCacheKey(itemType, id));
         }

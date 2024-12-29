@@ -9,7 +9,8 @@ public class StartupIndexingService(
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var lockAsync = await lockerService.LockAsync<StartupIndexingService>(stoppingToken);
+        using var lockAsync =
+            await lockerService.LockAsync<StartupIndexingService>(TimeSpan.FromMinutes(value: 30), stoppingToken);
 
         try
         {

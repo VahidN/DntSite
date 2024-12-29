@@ -39,6 +39,7 @@ public class FullTextSearchService : IFullTextSearchService
     private readonly IAppAntiXssService _antiXssService;
     private readonly IAppFoldersService _appFoldersService;
     private readonly ILockerService _lockerService;
+    private readonly TimeSpan _lockTimeout = TimeSpan.FromSeconds(value: 5);
     private readonly ILogger<FullTextSearchService> _logger;
     private Analyzer? _analyzer;
     private FSDirectory? _fsDirectory;
@@ -94,7 +95,7 @@ public class FullTextSearchService : IFullTextSearchService
 
     public void DeleteOldIndexFiles()
     {
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
 
         try
         {
@@ -120,7 +121,7 @@ public class FullTextSearchService : IFullTextSearchService
 
     public void AddOrUpdateLuceneDocument(WhatsNewItemModel? item)
     {
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
 
         if (item is null || FtsIndexWriter is null)
         {
@@ -165,7 +166,7 @@ public class FullTextSearchService : IFullTextSearchService
 
             if (commitChanges)
             {
-                using var @lock = await _lockerService.LockAsync<FullTextSearchService>();
+                using var @lock = await _lockerService.LockAsync<FullTextSearchService>(_lockTimeout);
                 FtsIndexWriter.Flush(triggerMerge: true, applyAllDeletes: true);
                 FtsIndexWriter.Commit();
             }
@@ -178,7 +179,7 @@ public class FullTextSearchService : IFullTextSearchService
 
     public void CommitChanges()
     {
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
 
         if (FtsIndexWriter is null)
         {
@@ -202,7 +203,7 @@ public class FullTextSearchService : IFullTextSearchService
         int pageSize,
         params string[]? moreLikeTheseFieldNames)
     {
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
 
         try
         {
@@ -258,7 +259,7 @@ public class FullTextSearchService : IFullTextSearchService
             return new PagedResultModel<LuceneSearchResult>();
         }
 
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
 
         try
         {
@@ -292,7 +293,7 @@ public class FullTextSearchService : IFullTextSearchService
         string sortField,
         bool isDescending)
     {
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
 
         var query = new MatchAllDocsQuery();
         var maxItems = GetNumberOfDocuments();
@@ -359,7 +360,7 @@ public class FullTextSearchService : IFullTextSearchService
 
     public void DeleteLuceneDocument(string? documentTypeIdHash)
     {
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
 
         if (string.IsNullOrEmpty(documentTypeIdHash) || FtsIndexWriter is null)
         {
@@ -374,7 +375,7 @@ public class FullTextSearchService : IFullTextSearchService
 
     private void InitializeSearchService()
     {
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
 
         try
         {
@@ -481,7 +482,7 @@ public class FullTextSearchService : IFullTextSearchService
 
     protected virtual void Dispose(bool disposing)
     {
-        using var @lock = _lockerService.Lock<FullTextSearchService>();
+        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
 
         if (_isDisposed)
         {

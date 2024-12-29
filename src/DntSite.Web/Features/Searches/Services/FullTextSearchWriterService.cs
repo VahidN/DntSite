@@ -38,7 +38,8 @@ public class FullTextSearchWriterService(
 {
     public async Task IndexDatabaseAsync(bool forceStart, CancellationToken stoppingToken)
     {
-        using var @lock = await lockerService.LockAsync<FullTextSearchWriterService>(stoppingToken);
+        using var @lock =
+            await lockerService.LockAsync<FullTextSearchWriterService>(TimeSpan.FromMinutes(value: 30), stoppingToken);
 
         try
         {

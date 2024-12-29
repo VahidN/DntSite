@@ -34,7 +34,7 @@ public class SearchItemsService(
             return;
         }
 
-        using var @lock = await lockerService.LockAsync<SearchItemsService>();
+        using var @lock = await lockerService.LockAsync<SearchItemsService>(TimeSpan.FromSeconds(value: 5));
 
         var sanitizedHtml = antiXssService.GetSanitizedHtml(text);
 

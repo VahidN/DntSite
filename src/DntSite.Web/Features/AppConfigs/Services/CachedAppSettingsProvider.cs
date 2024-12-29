@@ -16,7 +16,7 @@ public class CachedAppSettingsProvider(IServiceProvider serviceProvider, ILocker
             return _appSetting;
         }
 
-        using var @lock = await lockerService.LockAsync<CachedAppSettingsProvider>();
+        using var @lock = await lockerService.LockAsync<CachedAppSettingsProvider>(TimeSpan.FromSeconds(value: 5));
 
         _appSetting = await serviceProvider.RunScopedServiceAsync<IUnitOfWork, AppSetting>(async uow =>
         {
