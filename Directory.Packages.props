@@ -25,15 +25,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="8.2.4" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="8.2.5" />
     <PackageVersion Include="DNTPersianUtils.Core" Version="6.3.2" />
     <PackageVersion Include="EFCoreSecondLevelCacheInterceptor" Version="4.9.0" />
-    <PackageVersion Include="AutoMapper" Version="13.0.1" />
     <PackageVersion Include="Scrutor" Version="5.1.0" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.4.0" />
     <PackageVersion Include="Gridify.EntityFramework" Version="2.16.0" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
+    <PackageVersion Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Lucene.Net" Version="4.8.0-beta00017"/>

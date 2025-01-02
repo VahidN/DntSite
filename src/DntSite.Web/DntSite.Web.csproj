@@ -43,7 +43,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
     <PackageReference Include="DNTPersianUtils.Core"/>
-    <PackageReference Include="AutoMapper"/>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
     <PackageReference Include="DNTCommon.Web.Core"/>
     <PackageReference Include="Gridify.EntityFramework"/>
@@ -53,6 +52,7 @@
     <PackageReference Include="Lucene.Net"/>
     <PackageReference Include="Lucene.Net.Analysis.Common"/>
     <PackageReference Include="Lucene.Net.QueryParser"/>
+    <PackageReference Include="AutoMapper"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DntSite.Web.Common.BlazorSsr\DntSite.Web.Common.BlazorSsr.csproj" />
