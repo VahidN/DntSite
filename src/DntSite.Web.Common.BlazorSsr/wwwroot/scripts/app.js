@@ -401,7 +401,7 @@ var DntBlazorSsr;
                     if (!wrapper) {
                         return;
                     }
-                    const title = "كپى كدها در حافظه";
+                    const title = "کپى کدها در حافظه";
                     if (wrapper.innerHTML.includes(title)) {
                         return;
                     }
@@ -1558,6 +1558,40 @@ var DntBlazorSsr;
 })(DntBlazorSsr || (DntBlazorSsr = {}));
 var DntBlazorSsr;
 (function (DntBlazorSsr) {
+    class DntShowPassword {
+        static enable() {
+            document.querySelectorAll("input[type=password]").forEach(passwordElement => {
+                const wrapper = passwordElement.parentElement;
+                if (!wrapper) {
+                    return;
+                }
+                const showPasswordButton = document.createElement("button");
+                showPasswordButton.type = "button";
+                showPasswordButton.classList.add("btn", "btn-outline-secondary", "btn-sm", "bi", "bi-eye");
+                showPasswordButton.setAttribute("title", "نمایش کلمه عبور");
+                wrapper.append(showPasswordButton);
+                showPasswordButton.onclick = () => {
+                    const type = passwordElement.getAttribute('type');
+                    if (type === 'password') {
+                        passwordElement.setAttribute('type', 'text');
+                        showPasswordButton.classList.remove("bi-eye");
+                        showPasswordButton.classList.add("bi-eye-slash");
+                        showPasswordButton.setAttribute("title", "پوشاندن کلمه عبور");
+                    }
+                    else {
+                        passwordElement.setAttribute('type', 'password');
+                        showPasswordButton.classList.remove("bi-eye-slash");
+                        showPasswordButton.classList.add("bi-eye");
+                        showPasswordButton.setAttribute("title", "نمایش کلمه عبور");
+                    }
+                };
+            });
+        }
+    }
+    DntBlazorSsr.DntShowPassword = DntShowPassword;
+})(DntBlazorSsr || (DntBlazorSsr = {}));
+var DntBlazorSsr;
+(function (DntBlazorSsr) {
     class DntStickySidebar {
         static enable() {
             const sideBarMenu = document.querySelector("div#sidebar-menu > ul");
@@ -1762,6 +1796,7 @@ var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntUtilities {
         static enable() {
+            DntBlazorSsr.DntShowPassword.enable();
             DntBlazorSsr.DntReportErrors.enable();
             DntBlazorSsr.DntStyleSiteImages.enable();
             DntBlazorSsr.DntCardAccordion.enable();

@@ -1,6 +1,7 @@
 namespace DntBlazorSsr {
     export class DntUtilities {
         static enable(): void {
+            DntShowPassword.enable();
             DntReportErrors.enable();
             DntStyleSiteImages.enable();
             DntCardAccordion.enable();

@@ -1,4 +1,4 @@
-namespace DntBlazorSsr {
+﻿namespace DntBlazorSsr {
     export class DntHljsCopyToClipboardPlugin {
         static enable(): void {
             // @ts-ignore
@@ -16,7 +16,7 @@ namespace DntBlazorSsr {
                         return;
                     }
 
-                    const title = "كپى كدها در حافظه";
+                    const title = "کپى کدها در حافظه";
                     if (wrapper.innerHTML.includes(title)) {
                         return;
                     }
