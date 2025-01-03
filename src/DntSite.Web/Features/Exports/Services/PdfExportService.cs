@@ -18,7 +18,7 @@ public class PdfExportService(
     ILogger<PdfExportService> logger) : IPdfExportService
 {
     private const string PdfPageTemplateFileName = "pdf-page-template.html";
-    private readonly TimeSpan _lockTimeout = TimeSpan.FromMinutes(value: 20);
+    private readonly TimeSpan _lockTimeout = TimeSpan.FromMinutes(value: 30);
 
     private string? _siteRootUri;
 
@@ -105,11 +105,21 @@ public class PdfExportService(
                 .ToList();
     }
 
-    public bool HasChangedItem(WhatsNewItemType itemType, IList<int> postIds)
+    public bool HasChangedItem(WhatsNewItemType itemType, IList<int>? postIds)
     {
+        if (postIds is null || postIds.Count == 0)
+        {
+            return false;
+        }
+
         var files = GetAvailableExportedFiles(itemType);
 
         if (files.Count == 0)
+        {
+            return false;
+        }
+
+        if (!files.Select(x => x.Id).Any(postIds.Contains))
         {
             return false;
         }

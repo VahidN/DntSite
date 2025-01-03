@@ -40,7 +40,8 @@ csharp_style_var_for_built_in_types = true:warning
 csharp_style_var_when_type_is_apparent = true:warning
 csharp_using_directive_placement = outside_namespace:warning
 
-dotnet_code_quality_unused_parameters = all
+dotnet_code_quality_unused_parameters = all:error
+csharp_style_unused_value_assignment_preference = discard_variable:warning
 dotnet_code_quality.CA1822.api_surface = private, internal
 
 dotnet_diagnostic.AsyncFixer01.severity = suggestion
