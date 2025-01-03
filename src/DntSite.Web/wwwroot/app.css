@@ -119,8 +119,8 @@ label {
 }
 
 pre, code {
-	font-family: 'JetBrainsMono', 'Samim'  !important;
-    font-size: inherit !important;
+    font-family: 'JetBrainsMono', 'Samim'  !important;
+    font-size: 0.9rem !important;
     white-space: pre-wrap;
     overflow: auto;
     word-break: break-word;
