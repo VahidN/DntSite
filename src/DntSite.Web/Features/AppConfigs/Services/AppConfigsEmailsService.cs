@@ -20,15 +20,18 @@ public class AppConfigsEmailsService(
             KillProcessOnStart = false
         });
 
-        if (!info.Contains(value: "is available", StringComparison.OrdinalIgnoreCase))
+        if (IsNewVersionAvailable(info))
         {
-            return;
+            await emailsFactoryService.SendEmailToAllAdminsAsync<NewDotNetVersionEmail, NewDotNetVersionEmailModel>(
+                messageId: "NewDotNetVersion", inReplyTo: "", references: "NewDotNetVersion",
+                new NewDotNetVersionEmailModel
+                {
+                    Body = info
+                }, emailSubject: "نگارش جدیدی از دات‌نت برای نصب");
         }
-
-        await emailsFactoryService.SendEmailToAllAdminsAsync<NewDotNetVersionEmail, NewDotNetVersionEmailModel>(
-            messageId: "NewDotNetVersion", inReplyTo: "", references: "NewDotNetVersion", new NewDotNetVersionEmailModel
-            {
-                Body = info
-            }, emailSubject: "نگارش جدیدی از دات‌نت برای نصب");
     }
+
+    private static bool IsNewVersionAvailable(string info)
+        => info.Contains(value: "is available", StringComparison.OrdinalIgnoreCase) ||
+           info.Contains(value: "newest", StringComparison.OrdinalIgnoreCase);
 }
