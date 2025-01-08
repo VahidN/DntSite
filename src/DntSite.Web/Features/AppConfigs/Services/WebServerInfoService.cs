@@ -6,6 +6,7 @@ namespace DntSite.Web.Features.AppConfigs.Services;
 
 public class WebServerInfoService(
     IKeyManager keyManager,
+    ICacheService cacheService,
     IWebHostEnvironment webHostEnvironment,
     IExecuteApplicationProcess executeApplicationProcess) : IWebServerInfoService
 {
@@ -16,21 +17,29 @@ public class WebServerInfoService(
             VersionInfo = Assembly.GetExecutingAssembly().GetBuildDateTime() ?? "",
             KeysList = [..keyManager.GetAllKeys().OrderByDescending(key => key.CreationDate)],
             WebHostEnvironment = webHostEnvironment,
-            DotNerInfo = await executeApplicationProcess.ExecuteProcessAsync(new ApplicationStartInfo
-            {
-                ProcessName = "dotnet",
-                Arguments = "--info",
-                AppPath = "dotnet",
-                WaitForExit = TimeSpan.FromSeconds(value: 3),
-                KillProcessOnStart = false
-            }),
-            SdkCheckInfo = await executeApplicationProcess.ExecuteProcessAsync(new ApplicationStartInfo
+            DotNetInfo = await GetDotNetInfoAsync() ?? "",
+            SdkCheckInfo = await GetSdkCheckInfoAsync() ?? ""
+        };
+
+    private Task<string?> GetSdkCheckInfoAsync()
+        => cacheService.GetOrAddAsync(nameof(GetSdkCheckInfoAsync), nameof(WebServerInfoService), ()
+            => executeApplicationProcess.ExecuteProcessAsync(new ApplicationStartInfo
             {
                 ProcessName = "dotnet",
                 Arguments = "sdk check",
                 AppPath = "dotnet",
                 WaitForExit = TimeSpan.FromSeconds(value: 3),
                 KillProcessOnStart = false
-            })
-        };
+            }), DateTimeOffset.UtcNow.AddDays(days: 1));
+
+    private Task<string?> GetDotNetInfoAsync()
+        => cacheService.GetOrAddAsync(nameof(GetDotNetInfoAsync), nameof(WebServerInfoService), ()
+            => executeApplicationProcess.ExecuteProcessAsync(new ApplicationStartInfo
+            {
+                ProcessName = "dotnet",
+                Arguments = "--info",
+                AppPath = "dotnet",
+                WaitForExit = TimeSpan.FromSeconds(value: 3),
+                KillProcessOnStart = false
+            }), DateTimeOffset.UtcNow.AddMinutes(minutes: 15));
 }

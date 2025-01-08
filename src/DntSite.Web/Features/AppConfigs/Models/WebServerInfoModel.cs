@@ -12,7 +12,7 @@ public class WebServerInfoModel
 
     public required IWebHostEnvironment WebHostEnvironment { set; get; }
 
-    public required string DotNerInfo { set; get; }
+    public required string DotNetInfo { set; get; }
 
     public required string SdkCheckInfo { set; get; }
 }
