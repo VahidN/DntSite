@@ -195,7 +195,9 @@ public class PdfExportService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Demystify(), message: "CreatePdfFileAsync({Id}, {Type}): ", id, itemType.Value);
+            logger.LogError(ex.Demystify(), message: "CreatePdfFileAsync({Id}, `{Type}`:`{Name}`): ", id,
+                itemType.Value, itemType.Name);
+
             outputPdfFilePath.TryDeleteFile(logger);
             outputPdfFilePath = null;
         }
