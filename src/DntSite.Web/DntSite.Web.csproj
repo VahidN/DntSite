@@ -48,7 +48,7 @@
     <PackageReference Include="Gridify.EntityFramework"/>
     <PackageReference Include="Humanizer.Core"/>
     <PackageReference Include="Scrutor"/>
-    <PackageReference Include="EFCoreSecondLevelCacheInterceptor"/>    
+    <PackageReference Include="EFCoreSecondLevelCacheInterceptor.MemoryCache"/>    
     <PackageReference Include="Lucene.Net"/>
     <PackageReference Include="Lucene.Net.Analysis.Common"/>
     <PackageReference Include="Lucene.Net.QueryParser"/>
