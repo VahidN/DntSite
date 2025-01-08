@@ -61,7 +61,14 @@
                         <div class="badge bg-success" dir="ltr">@item.UserIp</div>
                         <div class="badge bg-secondary">@item.CreatedAt.ToFriendlyPersianDateTextify()</div>
                         <div class="mt-3">
-                            @item.Message.HtmlRaw()
+                            @if (item.Message.ContainsHtmlTags())
+                            {
+                                @item.Message.HtmlRaw()
+                            }
+                            else
+                            {
+                                <code>@item.Message</code>
+                            }
                         </div>
                     </div>
                     </Body>
