@@ -30,6 +30,7 @@ public static class UserProfilesRoutingConstants
     public const string Logout = "/logout";
 
     public const string Register = "/register";
+    public const string Signup = "/signup";
 
     public const string SendActivationEmails = "/send-activation-emails";
 
