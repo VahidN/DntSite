@@ -25,10 +25,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="8.2.5" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="8.2.7" />
     <PackageVersion Include="DNTPersianUtils.Core" Version="6.3.2" />
     <PackageVersion Include="EFCoreSecondLevelCacheInterceptor" Version="4.9.0" />
-    <PackageVersion Include="Scrutor" Version="5.1.0" />
+    <PackageVersion Include="Scrutor" Version="5.1.1" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.4.0" />
     <PackageVersion Include="Gridify.EntityFramework" Version="2.16.0" />
@@ -41,7 +41,7 @@
     <PackageVersion Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.184" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.185" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.4.0.108396" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="9.0.0" />
