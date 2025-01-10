@@ -18,9 +18,9 @@ public interface IBlogPostDraftsService : IScopedService
 
     public Task<List<BlogPostDraft>> FindAllNotConvertedBlogPostDraftsAsync();
 
-    public Task RunConvertDraftsToPostsJobAsync();
+    public Task RunConvertDraftsToPostsJobAsync(CancellationToken cancellationToken);
 
-    public Task DeleteConvertedBlogPostDraftsAsync();
+    public Task DeleteConvertedBlogPostDraftsAsync(CancellationToken cancellationToken);
 
     public Task DeleteDraftAsync(BlogPostDraft draft);
 

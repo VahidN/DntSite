@@ -19,7 +19,7 @@ public class BlogPostsPdfExportService(
 
     private readonly WhatsNewItemType _itemType = WhatsNewItemType.Posts;
 
-    public async Task ExportNotProcessedBlogPostsToSeparatePdfFilesAsync()
+    public async Task ExportNotProcessedBlogPostsToSeparatePdfFilesAsync(CancellationToken cancellationToken)
     {
         var availableIds = pdfExportService.GetAvailableExportedFiles(_itemType).Select(x => x.Id).ToList();
 
@@ -27,13 +27,14 @@ public class BlogPostsPdfExportService(
             .Where(x => !x.IsDeleted && (!x.NumberOfRequiredPoints.HasValue || x.NumberOfRequiredPoints.Value == 0));
 
         var idsNeedUpdate = availableIds.Count == 0
-            ? await query.Select(x => x.Id).ToListAsync()
-            : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync();
+            ? await query.Select(x => x.Id).ToListAsync(cancellationToken)
+            : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync(cancellationToken);
 
-        await ExportBlogPostsToSeparatePdfFilesAsync(idsNeedUpdate);
+        await ExportBlogPostsToSeparatePdfFilesAsync(cancellationToken, idsNeedUpdate);
     }
 
-    public async Task ExportBlogPostsToSeparatePdfFilesAsync(params IList<int>? blogPostIds)
+    public async Task ExportBlogPostsToSeparatePdfFilesAsync(CancellationToken cancellationToken,
+        params IList<int>? blogPostIds)
     {
         if (blogPostIds is null || blogPostIds.Count == 0)
         {
@@ -44,8 +45,13 @@ public class BlogPostsPdfExportService(
 
         foreach (var doc in docs)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             await pdfExportService.CreateSinglePdfFileAsync(_itemType, doc.Id, doc.Title, doc);
-            await Task.Delay(TimeSpan.FromSeconds(value: 7));
+            await Task.Delay(TimeSpan.FromSeconds(value: 7), cancellationToken);
         }
     }
 
@@ -102,16 +108,21 @@ public class BlogPostsPdfExportService(
                 Comments = MapCommentsToExportComment(post)
             };
 
-    public async Task CreateMergedPdfOfPostsTagsAsync()
+    public async Task CreateMergedPdfOfPostsTagsAsync(CancellationToken cancellationToken)
     {
-        var tags = await _blogPostsTags.AsNoTracking().OrderBy(x => x.Id).ToListAsync();
+        var tags = await _blogPostsTags.AsNoTracking().OrderBy(x => x.Id).ToListAsync(cancellationToken);
 
         foreach (var tag in tags)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             var tagPostsIds = await (from blogPost in _blogPosts.AsNoTracking()
                 from blogPostTag in blogPost.Tags
                 where blogPostTag.Id == tag.Id
-                select blogPost.Id).ToListAsync();
+                select blogPost.Id).ToListAsync(cancellationToken);
 
             if (await ShouldNotMergeItemsAsync(tag, tagPostsIds))
             {
@@ -123,7 +134,7 @@ public class BlogPostsPdfExportService(
             await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.Tag, tag.Id, $"مطالب گروه {tag.Name}",
                 blogPostDocs);
 
-            await Task.Delay(TimeSpan.FromSeconds(seconds: 7));
+            await Task.Delay(TimeSpan.FromSeconds(seconds: 7), cancellationToken);
         }
     }
 

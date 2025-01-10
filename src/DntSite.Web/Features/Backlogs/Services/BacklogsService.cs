@@ -145,16 +145,21 @@ public class BacklogsService(
     public Task<bool> HasUserAnotherHalfFinishedAssignedBacklogAsync(int userId)
         => _backlogs.AsNoTracking().AnyAsync(x => x.DoneByUserId == userId && !x.DoneDate.HasValue);
 
-    public async Task CancelOldOnesAsync()
+    public async Task CancelOldOnesAsync(CancellationToken cancellationToken)
     {
         var now = DateTime.UtcNow;
 
         var inprogressItems = await _backlogs.Include(x => x.DoneByUser)
             .Where(x => x.DoneByUserId.HasValue && !x.ConvertedBlogPostId.HasValue && !x.IsDeleted)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         foreach (var backlog in inprogressItems)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             if (backlog.StartDate is null || backlog.DaysEstimate is null)
             {
                 continue;
@@ -170,7 +175,7 @@ public class BacklogsService(
                 backlog.DaysEstimate = null;
                 backlog.ConvertedBlogPostId = null;
 
-                await uow.SaveChangesAsync();
+                await uow.SaveChangesAsync(cancellationToken);
             }
         }
     }

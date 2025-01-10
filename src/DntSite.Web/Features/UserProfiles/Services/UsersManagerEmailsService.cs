@@ -12,12 +12,18 @@ public class UsersManagerEmailsService(
     IPasswordHasherService passwordHasherService,
     IProtectionProviderService protectionProviderService) : IUsersManagerEmailsService
 {
-    public async Task ResetNotActivatedUsersAndSendEmailAsync(DateTime? from)
+    public async Task ResetNotActivatedUsersAndSendEmailAsync(DateTime? from,
+        CancellationToken cancellationToken = default)
     {
         var users = await commonService.NotValidatedEmailsUsersAsync(from);
 
         foreach (var user in users)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             await SendActivateYourAccountEmailAsync(user);
         }
     }

@@ -9,9 +9,9 @@ public class DisableInactiveUsersJob(
 {
     private const int DefaultMinMonthToStayActive = 12;
 
-    public async Task RunAsync()
+    public async Task RunAsync(CancellationToken cancellationToken)
     {
-        if (IsShuttingDown)
+        if (cancellationToken.IsCancellationRequested)
         {
             return;
         }
@@ -19,16 +19,14 @@ public class DisableInactiveUsersJob(
         var minMonthToStayActive = await GetMinMonthToStayActiveAsync();
         await userProfilesManagerService.DisableInactiveUsersAsync(minMonthToStayActive);
 
-        await NotifyInactiveUsersOnFridaysAsync(minMonthToStayActive);
+        await NotifyInactiveUsersOnFridaysAsync(minMonthToStayActive, cancellationToken);
     }
 
-    public bool IsShuttingDown { get; set; }
-
-    private async Task NotifyInactiveUsersOnFridaysAsync(int minMonthToStayActive)
+    private async Task NotifyInactiveUsersOnFridaysAsync(int minMonthToStayActive, CancellationToken cancellationToken)
     {
         if (DateTime.UtcNow.DayOfWeek == DayOfWeek.Friday)
         {
-            await userProfilesManagerService.NotifyInactiveUsersAsync(minMonthToStayActive - 1);
+            await userProfilesManagerService.NotifyInactiveUsersAsync(minMonthToStayActive - 1, cancellationToken);
         }
     }
 

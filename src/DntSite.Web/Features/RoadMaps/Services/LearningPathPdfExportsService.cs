@@ -23,12 +23,17 @@ public class LearningPathPdfExportsService(
 {
     private readonly DbSet<LearningPath> _learningPaths = uow.DbSet<LearningPath>();
 
-    public async Task CreateMergedPdfOfLearningPathsAsync()
+    public async Task CreateMergedPdfOfLearningPathsAsync(CancellationToken cancellationToken)
     {
         var items = await GetLinkIdsAsync();
 
         foreach (var item in items)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             var blogPostDocs = await blogPostsPdfExportService.MapBlogPostsToExportDocumentsAsync(item.PostIds);
 
             var courseTopicDocs =
@@ -44,7 +49,7 @@ public class LearningPathPdfExportsService(
             await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.LearningPaths, item.Id, item.Title,
                 [..blogPostDocs, ..courseTopicDocs, ..questionIds]);
 
-            await Task.Delay(TimeSpan.FromSeconds(seconds: 7));
+            await Task.Delay(TimeSpan.FromSeconds(seconds: 7), cancellationToken);
         }
     }
 

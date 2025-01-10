@@ -50,7 +50,7 @@ public interface IPrivateMessagesService : IScopedService
         int count = 1000,
         bool showDeletedItems = false);
 
-    public Task DeleteAllAsync();
+    public Task DeleteAllAsync(CancellationToken cancellationToken);
 
     public Task<int> GetUserUnReadPrivateMessagesCountAsync(int? userId);
 

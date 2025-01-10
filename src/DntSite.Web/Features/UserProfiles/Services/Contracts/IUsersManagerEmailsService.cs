@@ -5,7 +5,7 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IUsersManagerEmailsService : IScopedService
 {
-    public Task ResetNotActivatedUsersAndSendEmailAsync(DateTime? from);
+    public Task ResetNotActivatedUsersAndSendEmailAsync(DateTime? from, CancellationToken cancellationToken = default);
 
     public Task SendUserActivatedEmailAsync(string userName, string email);
 

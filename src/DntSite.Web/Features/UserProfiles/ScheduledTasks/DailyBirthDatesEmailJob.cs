@@ -4,7 +4,8 @@ namespace DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 public class DailyBirthDatesEmailJob(IJobsEmailsService jobsEmailsService) : IScheduledTask
 {
-    public Task RunAsync() => IsShuttingDown ? Task.CompletedTask : jobsEmailsService.SendDailyBirthDatesEmailAsync();
-
-    public bool IsShuttingDown { get; set; }
+    public Task RunAsync(CancellationToken cancellationToken)
+        => cancellationToken.IsCancellationRequested
+            ? Task.CompletedTask
+            : jobsEmailsService.SendDailyBirthDatesEmailAsync(cancellationToken);
 }

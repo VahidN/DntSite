@@ -50,7 +50,7 @@ public interface IBacklogsService : IScopedService
 
     public Task<bool> HasUserAnotherHalfFinishedAssignedBacklogAsync(int userId);
 
-    public Task CancelOldOnesAsync();
+    public Task CancelOldOnesAsync(CancellationToken cancellationToken);
 
     public Task<List<Backlog>> GetAllPublicBacklogsOfDateAsync(DateTime date);
 

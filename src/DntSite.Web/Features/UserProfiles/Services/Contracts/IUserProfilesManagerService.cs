@@ -9,7 +9,7 @@ public interface IUserProfilesManagerService : IScopedService
 
     public Task DisableInactiveUsersAsync(int month);
 
-    public Task NotifyInactiveUsersAsync(int month);
+    public Task NotifyInactiveUsersAsync(int month, CancellationToken cancellationToken);
 
     public Task ResetRegistrationCodeAsync(User user);
 

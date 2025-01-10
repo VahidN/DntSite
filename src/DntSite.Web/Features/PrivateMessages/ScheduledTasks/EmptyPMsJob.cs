@@ -4,7 +4,8 @@ namespace DntSite.Web.Features.PrivateMessages.ScheduledTasks;
 
 public class EmptyPMsJob(IPrivateMessagesService privateMessagesService) : IScheduledTask
 {
-    public Task RunAsync() => IsShuttingDown ? Task.CompletedTask : privateMessagesService.DeleteAllAsync();
-
-    public bool IsShuttingDown { get; set; }
+    public Task RunAsync(CancellationToken cancellationToken)
+        => cancellationToken.IsCancellationRequested
+            ? Task.CompletedTask
+            : privateMessagesService.DeleteAllAsync(cancellationToken);
 }

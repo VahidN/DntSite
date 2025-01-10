@@ -20,9 +20,9 @@ public class ThumbnailsServiceJob(
     IDailyNewsScreenshotsService dailyNewsScreenshots,
     ILogger<ThumbnailsServiceJob> logger) : IScheduledTask
 {
-    public async Task RunAsync()
+    public async Task RunAsync(CancellationToken cancellationToken)
     {
-        if (IsShuttingDown)
+        if (cancellationToken.IsCancellationRequested)
         {
             return;
         }
@@ -34,13 +34,11 @@ public class ThumbnailsServiceJob(
             return;
         }
 
-        var numberOfDownloadedFiles = await dailyNewsScreenshots.DownloadScreenshotsAsync(count: 10);
+        var numberOfDownloadedFiles = await dailyNewsScreenshots.DownloadScreenshotsAsync(count: 10, cancellationToken);
 
         if (numberOfDownloadedFiles > 0)
         {
             await dailyNewsScreenshots.UpdateAllNewsPageThumbnailsAsync();
         }
     }
-
-    public bool IsShuttingDown { get; set; }
 }

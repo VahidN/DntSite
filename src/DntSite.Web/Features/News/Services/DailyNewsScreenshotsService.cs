@@ -31,7 +31,7 @@ public class DailyNewsScreenshotsService(
         await uow.SaveChangesAsync();
     }
 
-    public async Task<int> DownloadScreenshotsAsync(int count)
+    public async Task<int> DownloadScreenshotsAsync(int count, CancellationToken cancellationToken)
     {
         var numberOfDownloadedFiles = 0;
         var currentUrl = "";
@@ -42,6 +42,11 @@ public class DailyNewsScreenshotsService(
 
             foreach (var item in items)
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return numberOfDownloadedFiles;
+                }
+
                 var (name, path) = GetImageInfo(item.Id);
                 currentUrl = item.Url;
 
@@ -51,7 +56,7 @@ public class DailyNewsScreenshotsService(
 
                 if (!File.Exists(path))
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(value: 7));
+                    await Task.Delay(TimeSpan.FromSeconds(value: 7), cancellationToken);
 
                     continue;
                 }
@@ -71,7 +76,7 @@ public class DailyNewsScreenshotsService(
                     numberOfDownloadedFiles++;
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(value: 7));
+                await Task.Delay(TimeSpan.FromSeconds(value: 7), cancellationToken);
             }
         }
         catch (Exception ex)
@@ -79,7 +84,7 @@ public class DailyNewsScreenshotsService(
             logger.LogError(ex.Demystify(), message: "DownloadScreenshotsAsync({URL}) Error", currentUrl);
         }
 
-        await uow.SaveChangesAsync();
+        await uow.SaveChangesAsync(cancellationToken);
 
         return numberOfDownloadedFiles;
     }

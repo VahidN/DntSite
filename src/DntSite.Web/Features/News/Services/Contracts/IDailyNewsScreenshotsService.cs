@@ -10,7 +10,7 @@ public interface IDailyNewsScreenshotsService : IScopedService
 
     public Task DeleteImageAsync(DailyNewsItem? post);
 
-    public Task<int> DownloadScreenshotsAsync(int count);
+    public Task<int> DownloadScreenshotsAsync(int count, CancellationToken cancellationToken);
 
     public Task UpdateAllNewsPageThumbnailsAsync();
 

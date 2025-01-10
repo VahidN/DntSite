@@ -10,11 +10,11 @@ public class HumansTxtFileService(IUsersInfoService usersService, IAppFoldersSer
     /// <summary>
     ///     More info: http://humanstxt.org/Standard.html
     /// </summary>
-    public async Task CreateHumansTxtFileAsync()
+    public async Task CreateHumansTxtFileAsync(CancellationToken cancellationToken)
     {
         var content = await CreateHumansListAsync();
         var path = Path.Combine(appFoldersService.WwwRootPath, path2: "humans.txt");
-        await File.WriteAllTextAsync(path, content, Encoding.UTF8);
+        await File.WriteAllTextAsync(path, content, Encoding.UTF8, cancellationToken);
     }
 
     private async Task<string> CreateHumansListAsync()

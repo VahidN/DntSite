@@ -65,7 +65,8 @@ public interface IDailyNewsItemsService : IScopedService
 
     public Task<List<DailyNewsItem>> GetAllPublicNewsOfDateAsync(DateTime date);
 
-    public Task UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction updateNewsStatusAction);
+    public Task UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction updateNewsStatusAction,
+        CancellationToken cancellationToken);
 
     public Task<DailyNewsItem?> GetDailyNewsItemAsync(int id, bool showDeletedItems = false);
 

@@ -9,8 +9,13 @@ public class AppConfigsEmailsService(
     IEmailsFactoryService emailsFactoryService,
     IExecuteApplicationProcess executeApplicationProcess) : IAppConfigsEmailsService
 {
-    public async Task SendNewDotNetVersionEmailToAdminsAsync()
+    public async Task SendNewDotNetVersionEmailToAdminsAsync(CancellationToken cancellationToken)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
         var info = await executeApplicationProcess.ExecuteProcessAsync(new ApplicationStartInfo
         {
             ProcessName = "dotnet",
@@ -27,7 +32,7 @@ public class AppConfigsEmailsService(
                 new NewDotNetVersionEmailModel
                 {
                     Body = info
-                }, emailSubject: "نگارش جدیدی از دات‌نت برای نصب");
+                }, emailSubject: "نگارش جدیدی از دات‌نت برای نصب", cancellationToken);
         }
     }
 

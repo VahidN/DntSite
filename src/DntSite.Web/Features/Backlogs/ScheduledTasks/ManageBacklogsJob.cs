@@ -4,7 +4,8 @@ namespace DntSite.Web.Features.Backlogs.ScheduledTasks;
 
 public class ManageBacklogsJob(IBacklogsService backlogsService) : IScheduledTask
 {
-    public Task RunAsync() => IsShuttingDown ? Task.CompletedTask : backlogsService.CancelOldOnesAsync();
-
-    public bool IsShuttingDown { get; set; }
+    public Task RunAsync(CancellationToken cancellationToken)
+        => cancellationToken.IsCancellationRequested
+            ? Task.CompletedTask
+            : backlogsService.CancelOldOnesAsync(cancellationToken);
 }

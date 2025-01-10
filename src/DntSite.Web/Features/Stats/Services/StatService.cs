@@ -125,12 +125,17 @@ public class StatService(IUnitOfWork uow) : IStatService
         await uow.SaveChangesAsync();
     }
 
-    public async Task UpdateAllUsersRatingsAsync()
+    public async Task UpdateAllUsersRatingsAsync(CancellationToken cancellationToken = default)
     {
-        var users = await uow.DbSet<User>().Where(x => x.IsActive).ToListAsync();
+        var users = await uow.DbSet<User>().Where(x => x.IsActive).ToListAsync(cancellationToken);
 
         foreach (var user in users)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+
             await UpdateUserRatingsAsync(user);
         }
     }

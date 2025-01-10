@@ -17,17 +17,17 @@ public class QuestionsPdfExportService(
     private readonly WhatsNewItemType _itemType = WhatsNewItemType.Questions;
     private readonly DbSet<StackExchangeQuestion> _questions = uow.DbSet<StackExchangeQuestion>();
 
-    public async Task ExportNotProcessedQuestionsToSeparatePdfFilesAsync()
+    public async Task ExportNotProcessedQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken)
     {
         var availableIds = pdfExportService.GetAvailableExportedFiles(_itemType).Select(x => x.Id).ToList();
 
         var query = _questions.AsNoTracking().Where(x => !x.IsDeleted);
 
         var idsNeedUpdate = availableIds.Count == 0
-            ? await query.Select(x => x.Id).ToListAsync()
-            : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync();
+            ? await query.Select(x => x.Id).ToListAsync(cancellationToken)
+            : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync(cancellationToken);
 
-        await ExportQuestionsToSeparatePdfFilesAsync(idsNeedUpdate);
+        await ExportQuestionsToSeparatePdfFilesAsync(cancellationToken, idsNeedUpdate);
     }
 
     public async Task<IList<ExportDocument>> MapQuestionsToExportDocumentsAsync(params IList<int>? postIds)
@@ -51,7 +51,8 @@ public class QuestionsPdfExportService(
         return posts.Select(x => MapQuestionToExportDocument(x, siteRootUri)!).ToList();
     }
 
-    public async Task ExportQuestionsToSeparatePdfFilesAsync(params IList<int>? postIds)
+    public async Task ExportQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken,
+        params IList<int>? postIds)
     {
         if (postIds is null || postIds.Count == 0)
         {
@@ -62,8 +63,13 @@ public class QuestionsPdfExportService(
 
         foreach (var doc in docs)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             await pdfExportService.CreateSinglePdfFileAsync(_itemType, doc.Id, doc.Title, doc);
-            await Task.Delay(TimeSpan.FromSeconds(value: 7));
+            await Task.Delay(TimeSpan.FromSeconds(value: 7), cancellationToken);
         }
     }
 

@@ -49,13 +49,18 @@ public class UserProfilesManagerService(
         }
     }
 
-    public async Task NotifyInactiveUsersAsync(int month)
+    public async Task NotifyInactiveUsersAsync(int month, CancellationToken cancellationToken)
     {
         var limit = DateTime.UtcNow.AddMonths(-month);
         var users = await usersInfoService.GetNotLoggedInUsersToDisableAsync(limit);
 
         foreach (var user in users)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             await usersManagerEmailsService.SendNotifyInActiveUserAsync(user.EMail);
         }
     }

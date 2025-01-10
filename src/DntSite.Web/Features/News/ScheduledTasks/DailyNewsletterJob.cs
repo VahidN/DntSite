@@ -9,9 +9,9 @@ public class DailyNewsletterJob(
     IDailyNewsletter dailyNewsletter,
     IJobsEmailsService jobsEmailsService) : IScheduledTask
 {
-    public async Task RunAsync()
+    public async Task RunAsync(CancellationToken cancellationToken)
     {
-        if (IsShuttingDown)
+        if (cancellationToken.IsCancellationRequested)
         {
             return;
         }
@@ -26,8 +26,6 @@ public class DailyNewsletterJob(
             return;
         }
 
-        await jobsEmailsService.SendDailyNewsletterEmailAsync(users, content, dateTime);
+        await jobsEmailsService.SendDailyNewsletterEmailAsync(users, content, dateTime, cancellationToken);
     }
-
-    public bool IsShuttingDown { get; set; }
 }

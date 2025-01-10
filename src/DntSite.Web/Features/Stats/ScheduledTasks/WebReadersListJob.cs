@@ -4,7 +4,8 @@ namespace DntSite.Web.Features.Stats.ScheduledTasks;
 
 public class WebReadersListJob(IStatService statService) : IScheduledTask
 {
-    public Task RunAsync() => IsShuttingDown ? Task.CompletedTask : statService.UpdateAllUsersRatingsAsync();
-
-    public bool IsShuttingDown { get; set; }
+    public Task RunAsync(CancellationToken cancellationToken)
+        => cancellationToken.IsCancellationRequested
+            ? Task.CompletedTask
+            : statService.UpdateAllUsersRatingsAsync(cancellationToken);
 }

@@ -4,10 +4,8 @@ namespace DntSite.Web.Features.Searches.ScheduledTasks;
 
 public class FullTextSearchWriterJob(IFullTextSearchWriterService fullTextSearchWriterService) : IScheduledTask
 {
-    public Task RunAsync()
-        => IsShuttingDown
+    public Task RunAsync(CancellationToken cancellationToken)
+        => cancellationToken.IsCancellationRequested
             ? Task.CompletedTask
-            : fullTextSearchWriterService.IndexDatabaseAsync(forceStart: false, stoppingToken: default);
-
-    public bool IsShuttingDown { get; set; }
+            : fullTextSearchWriterService.IndexDatabaseAsync(forceStart: false, cancellationToken);
 }

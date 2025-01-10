@@ -115,14 +115,15 @@ public class EmailsFactoryService(
         string inReplyTo,
         string references,
         TLayoutModel model,
-        string emailSubject)
+        string emailSubject,
+        CancellationToken cancellationToken = default)
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel
     {
         var emails = (await commonService.GetAllActiveAdminsAsNoTrackingAsync()).Select(x => x.EMail).ToList();
 
         await SendEmailToAllUsersAsync<TLayout, TLayoutModel>(emails, messageId, inReplyTo, references, model,
-            emailSubject, addIp: true);
+            emailSubject, addIp: true, cancellationToken);
     }
 
     public async Task SendEmailToIdAsync<TLayout, TLayoutModel>(string messageId,
@@ -165,7 +166,8 @@ public class EmailsFactoryService(
         string references,
         TLayoutModel model,
         string emailSubject,
-        bool addIp)
+        bool addIp,
+        CancellationToken cancellationToken = default)
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel
     {
@@ -174,6 +176,11 @@ public class EmailsFactoryService(
 
         foreach (var email in emails)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             await SendEmailAsync<TLayout, TLayoutModel>(messageId, inReplyTo, references, model, email, emailSubject,
                 addIp);
 
@@ -181,7 +188,7 @@ public class EmailsFactoryService(
 
             if (count % _numberOfProcessedMessages == 0)
             {
-                await Task.Delay(_delayDelivery);
+                await Task.Delay(_delayDelivery, cancellationToken);
             }
         }
     }

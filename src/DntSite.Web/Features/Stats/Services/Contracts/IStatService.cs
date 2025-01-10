@@ -11,7 +11,7 @@ public interface IStatService : IScopedService
         where TTagEntity : BaseTagEntity<TAssociatedEntity>
         where TAssociatedEntity : BaseAuditedEntity;
 
-    public Task UpdateAllUsersRatingsAsync();
+    public Task UpdateAllUsersRatingsAsync(CancellationToken cancellationToken = default);
 
     public Task<AgeStatModel?> GetAverageAgeAsync();
 

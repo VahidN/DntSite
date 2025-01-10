@@ -4,8 +4,8 @@ namespace DntSite.Web.Features.AppConfigs.ScheduledTasks;
 
 public class DotNetVersionCheckJob(IAppConfigsEmailsService appConfigsEmailsService) : IScheduledTask
 {
-    public Task RunAsync()
-        => IsShuttingDown ? Task.CompletedTask : appConfigsEmailsService.SendNewDotNetVersionEmailToAdminsAsync();
-
-    public bool IsShuttingDown { get; set; }
+    public Task RunAsync(CancellationToken cancellationToken)
+        => cancellationToken.IsCancellationRequested
+            ? Task.CompletedTask
+            : appConfigsEmailsService.SendNewDotNetVersionEmailToAdminsAsync(cancellationToken);
 }

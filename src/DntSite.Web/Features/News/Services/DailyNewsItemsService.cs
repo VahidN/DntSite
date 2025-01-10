@@ -471,20 +471,26 @@ public class DailyNewsItemsService(
             => item.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: "")));
     }
 
-    public async Task UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction updateNewsStatusAction)
+    public async Task UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction updateNewsStatusAction,
+        CancellationToken cancellationToken)
     {
         var itemsNeedUpdate = updateNewsStatusAction == UpdateNewsStatusAction.UpdatePublicOnes
-            ? await _dailyNewsItem.Where(x => !x.IsDeleted).OrderByDescending(x => x.Id).ToListAsync()
+            ? await _dailyNewsItem.Where(x => !x.IsDeleted).OrderByDescending(x => x.Id).ToListAsync(cancellationToken)
             : await _dailyNewsItem.Where(x => x.IsDeleted &&
                                               x.LastHttpStatusCode.HasValue &&
                                               x.LastHttpStatusCode != HttpStatusCode.OK)
                 .OrderByDescending(x => x.Id)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
         foreach (var item in itemsNeedUpdate)
         {
             for (var @try = 0; @try < 2; @try++)
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 try
                 {
                     var url = item.Url;
@@ -509,13 +515,13 @@ public class DailyNewsItemsService(
                 }
             }
 
-            await uow.SaveChangesAsync();
+            await uow.SaveChangesAsync(cancellationToken);
 
             UpdateLuceneIndex(item);
 
             LogUpdateNewsHttpStatusCode(updateNewsStatusAction, item);
 
-            await Task.Delay(TimeSpan.FromSeconds(value: 1));
+            await Task.Delay(TimeSpan.FromSeconds(value: 1), cancellationToken);
         }
     }
 

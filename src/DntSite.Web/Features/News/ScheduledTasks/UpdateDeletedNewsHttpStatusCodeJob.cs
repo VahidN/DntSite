@@ -5,10 +5,9 @@ namespace DntSite.Web.Features.News.ScheduledTasks;
 
 public class UpdateDeletedNewsHttpStatusCodeJob(IDailyNewsItemsService dailyNewsItemsService) : IScheduledTask
 {
-    public Task RunAsync()
-        => IsShuttingDown
+    public Task RunAsync(CancellationToken cancellationToken)
+        => cancellationToken.IsCancellationRequested
             ? Task.CompletedTask
-            : dailyNewsItemsService.UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction.UpdateDeletesOnes);
-
-    public bool IsShuttingDown { get; set; }
+            : dailyNewsItemsService.UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction.UpdateDeletesOnes,
+                cancellationToken);
 }

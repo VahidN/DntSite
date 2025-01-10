@@ -36,7 +36,8 @@ public interface IEmailsFactoryService : IScopedService
         string inReplyTo,
         string references,
         TLayoutModel model,
-        string emailSubject)
+        string emailSubject,
+        CancellationToken cancellationToken = default)
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel;
 
@@ -52,7 +53,8 @@ public interface IEmailsFactoryService : IScopedService
         string references,
         TLayoutModel model,
         string emailSubject,
-        bool addIp)
+        bool addIp,
+        CancellationToken cancellationToken = default)
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel;
 

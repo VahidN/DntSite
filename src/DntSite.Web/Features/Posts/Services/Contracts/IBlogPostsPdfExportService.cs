@@ -5,9 +5,9 @@ namespace DntSite.Web.Features.Posts.Services.Contracts;
 
 public interface IBlogPostsPdfExportService : IScopedService
 {
-    public Task CreateMergedPdfOfPostsTagsAsync();
+    public Task CreateMergedPdfOfPostsTagsAsync(CancellationToken cancellationToken);
 
-    public Task ExportNotProcessedBlogPostsToSeparatePdfFilesAsync();
+    public Task ExportNotProcessedBlogPostsToSeparatePdfFilesAsync(CancellationToken cancellationToken);
 
     public ExportDocument? MapBlogPostToExportDocument(BlogPost? post, string siteRootUri);
 
@@ -15,5 +15,6 @@ public interface IBlogPostsPdfExportService : IScopedService
 
     public Task<IList<ExportDocument>> MapBlogPostsToExportDocumentsAsync(params IList<int>? blogPostIds);
 
-    public Task ExportBlogPostsToSeparatePdfFilesAsync(params IList<int>? blogPostIds);
+    public Task ExportBlogPostsToSeparatePdfFilesAsync(CancellationToken cancellationToken,
+        params IList<int>? blogPostIds);
 }

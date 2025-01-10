@@ -9,17 +9,15 @@ public class ExportToSeparatePdfFilesJob(
     ICourseTopicsPdfExportService courseTopicsPdfExportService,
     IQuestionsPdfExportService questionsPdfExportService) : IScheduledTask
 {
-    public async Task RunAsync()
+    public async Task RunAsync(CancellationToken cancellationToken)
     {
-        if (IsShuttingDown)
+        if (cancellationToken.IsCancellationRequested)
         {
             return;
         }
 
-        await questionsPdfExportService.ExportNotProcessedQuestionsToSeparatePdfFilesAsync();
-        await courseTopicsPdfExportService.ExportNotProcessedCourseTopicsToSeparatePdfFilesAsync();
-        await blogPostsPdfExportService.ExportNotProcessedBlogPostsToSeparatePdfFilesAsync();
+        await questionsPdfExportService.ExportNotProcessedQuestionsToSeparatePdfFilesAsync(cancellationToken);
+        await courseTopicsPdfExportService.ExportNotProcessedCourseTopicsToSeparatePdfFilesAsync(cancellationToken);
+        await blogPostsPdfExportService.ExportNotProcessedBlogPostsToSeparatePdfFilesAsync(cancellationToken);
     }
-
-    public bool IsShuttingDown { get; set; }
 }

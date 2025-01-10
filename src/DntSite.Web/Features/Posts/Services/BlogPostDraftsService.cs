@@ -60,11 +60,11 @@ public class BlogPostDraftsService(
         await uow.SaveChangesAsync();
     }
 
-    public async Task DeleteConvertedBlogPostDraftsAsync()
+    public async Task DeleteConvertedBlogPostDraftsAsync(CancellationToken cancellationToken)
     {
-        var list = await _blogPostDrafts.Where(x => x.IsConverted).ToListAsync();
+        var list = await _blogPostDrafts.Where(x => x.IsConverted).ToListAsync(cancellationToken);
         _blogPostDrafts.RemoveRange(list);
-        await uow.SaveChangesAsync();
+        await uow.SaveChangesAsync(cancellationToken);
     }
 
     public Task<List<BlogPostDraft>> FindUsersNotConvertedBlogPostDraftsAsync(int userId)
@@ -94,14 +94,19 @@ public class BlogPostDraftsService(
             .ThenBy(x => x.DateTimeToShow)
             .ToListAsync();
 
-    public async Task RunConvertDraftsToPostsJobAsync()
+    public async Task RunConvertDraftsToPostsJobAsync(CancellationToken cancellationToken)
     {
         var draftsToConvert = await _blogPostDrafts.Where(x
                 => !x.IsConverted && x.IsReady && x.DateTimeToShow.HasValue && x.DateTimeToShow <= DateTime.UtcNow)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         foreach (var draft in draftsToConvert)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             if (!draft.DateTimeToShow.HasValue)
             {
                 continue;

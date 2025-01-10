@@ -9,17 +9,15 @@ public class ExportToMergedPdfFilesJob(
     ILearningPathPdfExportsService learningPathPdfExportsService,
     ICourseTopicsPdfExportService courseTopicsPdfExportService) : IScheduledTask
 {
-    public async Task RunAsync()
+    public async Task RunAsync(CancellationToken cancellationToken)
     {
-        if (IsShuttingDown)
+        if (cancellationToken.IsCancellationRequested)
         {
             return;
         }
 
-        await learningPathPdfExportsService.CreateMergedPdfOfLearningPathsAsync();
-        await courseTopicsPdfExportService.CreateMergedPdfOfCoursesAsync();
-        await blogPostsPdfExportService.CreateMergedPdfOfPostsTagsAsync();
+        await learningPathPdfExportsService.CreateMergedPdfOfLearningPathsAsync(cancellationToken);
+        await courseTopicsPdfExportService.CreateMergedPdfOfCoursesAsync(cancellationToken);
+        await blogPostsPdfExportService.CreateMergedPdfOfPostsTagsAsync(cancellationToken);
     }
-
-    public bool IsShuttingDown { get; set; }
 }

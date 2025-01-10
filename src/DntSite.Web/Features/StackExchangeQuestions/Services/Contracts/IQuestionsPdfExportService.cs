@@ -11,7 +11,7 @@ public interface IQuestionsPdfExportService : IScopedService
 
     public Task<ExportDocument?> MapQuestionToExportDocumentAsync(int postId, string siteRootUri);
 
-    public Task ExportNotProcessedQuestionsToSeparatePdfFilesAsync();
+    public Task ExportNotProcessedQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken);
 
-    public Task ExportQuestionsToSeparatePdfFilesAsync(params IList<int>? postIds);
+    public Task ExportQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken, params IList<int>? postIds);
 }

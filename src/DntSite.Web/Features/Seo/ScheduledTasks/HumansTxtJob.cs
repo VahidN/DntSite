@@ -4,7 +4,8 @@ namespace DntSite.Web.Features.Seo.ScheduledTasks;
 
 public class HumansTxtJob(IHumansTxtFileService humansTxtFileService) : IScheduledTask
 {
-    public Task RunAsync() => IsShuttingDown ? Task.CompletedTask : humansTxtFileService.CreateHumansTxtFileAsync();
-
-    public bool IsShuttingDown { get; set; }
+    public Task RunAsync(CancellationToken cancellationToken)
+        => cancellationToken.IsCancellationRequested
+            ? Task.CompletedTask
+            : humansTxtFileService.CreateHumansTxtFileAsync(cancellationToken);
 }

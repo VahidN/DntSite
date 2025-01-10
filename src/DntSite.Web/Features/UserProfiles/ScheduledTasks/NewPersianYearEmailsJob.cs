@@ -4,7 +4,8 @@ namespace DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 public class NewPersianYearEmailsJob(IJobsEmailsService jobsEmailsService) : IScheduledTask
 {
-    public Task RunAsync() => IsShuttingDown ? Task.CompletedTask : jobsEmailsService.SendNewPersianYearEmailsAsync();
-
-    public bool IsShuttingDown { get; set; }
+    public Task RunAsync(CancellationToken cancellationToken)
+        => cancellationToken.IsCancellationRequested
+            ? Task.CompletedTask
+            : jobsEmailsService.SendNewPersianYearEmailsAsync(cancellationToken);
 }

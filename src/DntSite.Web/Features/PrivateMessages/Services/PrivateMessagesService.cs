@@ -84,17 +84,17 @@ public class PrivateMessagesService(
             .Take(count)
             .ToListAsync();
 
-    public async Task DeleteAllAsync()
+    public async Task DeleteAllAsync(CancellationToken cancellationToken)
     {
         var lastWeek = DateTime.UtcNow.AddDays(value: -7);
 
         var privateMessages = await _privateMessages.Where(x => x.Audit.CreatedAt <= lastWeek)
             .Include(x => x.Comments)
             .OrderByDescending(x => x.Id)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         _privateMessages.RemoveRange(privateMessages);
-        await uow.SaveChangesAsync();
+        await uow.SaveChangesAsync(cancellationToken);
     }
 
     public Task<int> GetUserUnReadPrivateMessagesCountAsync(int? userId)
