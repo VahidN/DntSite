@@ -82,7 +82,7 @@ public partial class DntPageSeo
     public string? OpenSearchUrl { set; get; }
 
     /// <summary>
-    ///     The publish date of the article
+    ///     The publishing date of the article
     /// </summary>
     [Parameter]
     public DateTime? DatePublished { set; get; }
@@ -94,7 +94,7 @@ public partial class DntPageSeo
     public DateTime? DateModified { set; get; }
 
     /// <summary>
-    ///     The publish date of the article
+    ///     The tags of the article
     /// </summary>
     [Parameter]
     public IReadOnlyList<string> Tags { set; get; } = [];
