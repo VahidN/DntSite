@@ -124,7 +124,7 @@ public class PdfExportService(
             return false;
         }
 
-        var lastWriteTimeUtc = files.Select(x => x.FileInfo.LastWriteTimeUtc.ToDateOnly())
+        var lastWriteTimeUtc = files.Select(x => x.FileInfo.CreationTimeUtc.ToDateOnly())
             .OrderByDescending(x => x)
             .FirstOrDefault();
 
@@ -181,6 +181,8 @@ public class PdfExportService(
             {
                 return null;
             }
+
+            outputPdfFilePath.TryDeleteFile();
 
             var metadata = await CreatePdfDocumentMetadataAsync(itemType, id, title, docs);
 
