@@ -106,4 +106,6 @@ public partial class DntPageSeo
     private string? LastModified => DateModified?.ToUniversalTime().ToString(format: "R", CultureInfo.InvariantCulture);
 
     private string? PubDate => DatePublished?.ToUniversalTime().ToString(format: "R", CultureInfo.InvariantCulture);
+
+    private bool HasRating => AverageRating is > 0 && TotalRaters is > 0;
 }

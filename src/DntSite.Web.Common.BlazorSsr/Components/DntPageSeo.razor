@@ -34,25 +34,28 @@
     <link rel="canonical" href="@CanonicalUrl"/>
     <meta name="robots" content="index, follow"/>
 
-    <script suppress-error="BL9992" type="application/ld+json">
-        {
-          "@@context": "https://schema.org/",
-          "@@type": "Article",
-          "headline": "@Title",
-          "author": {
-            "@@type": "Person",
-            "name": "@AuthorName"
-          },
-          "datePublished": "@DatePublished?.ToString(format: "yyyy-MM-dd", CultureInfo.InvariantCulture)",
-          "description": "@Description",
-          "image": "@ImageUrl",
-          "aggregateRating": {
-            "@@type": "AggregateRating",
-            "ratingValue": "@AverageRating",
-            "reviewCount": "@TotalRaters"
-          }
+    @if (HasRating)
+    {
+        <script suppress-error="BL9992" type="application/ld+json">
+            {
+              "@@context": "https://schema.org/",
+              "@@type": "Article",
+              "headline": "@Title",
+              "author": {
+                 "@@type": "Person",
+                 "name": "@AuthorName"
+              },
+              "datePublished": "@DatePublished?.ToString(format: "yyyy-MM-dd", CultureInfo.InvariantCulture)",
+              "description": "@Description",
+              "image": "@ImageUrl",
+              "aggregateRating": {
+                 "@@type": "AggregateRating",
+                 "ratingValue": "@AverageRating",
+                 "reviewCount": "@TotalRaters"
+              }
         }
-    </script>
+        </script>
+    }
 
     @if (!string.IsNullOrWhiteSpace(Title))
     {
