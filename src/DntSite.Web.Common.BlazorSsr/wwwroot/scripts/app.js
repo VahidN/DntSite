@@ -453,7 +453,7 @@ var DntBlazorSsr;
         }
         static scrollToCursor(editorElement) {
             editorElement.scrollIntoView({
-                behavior: "smooth",
+                behavior: "instant",
                 block: "center",
                 inline: "nearest"
             });

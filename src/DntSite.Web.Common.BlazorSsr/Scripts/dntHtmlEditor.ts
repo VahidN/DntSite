@@ -21,7 +21,7 @@ namespace DntBlazorSsr {
 
         static scrollToCursor(editorElement: HTMLElement) {
             editorElement.scrollIntoView({
-                behavior: "smooth",
+                behavior: "instant",
                 block: "center",
                 inline: "nearest"
             });
