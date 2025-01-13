@@ -458,6 +458,26 @@ var DntBlazorSsr;
                 inline: "nearest"
             });
         }
+        static setTextDirectionOnPaste(quill, editorElement) {
+            editorElement.addEventListener('paste', function (ce) {
+                const pastedText = ce.clipboardData?.getData('text/plain');
+                const dir = DntBlazorSsr.DntChangeInputDirectionDependOnLanguage.getDirection(pastedText);
+                if (dir === 'ltr') {
+                    DntHtmlEditor.setLtrDir(quill);
+                }
+                else {
+                    DntHtmlEditor.setRtlDir(quill);
+                }
+            }, true);
+        }
+        static setRtlDir(quill) {
+            quill.format('align', 'right', Quill.sources.USER);
+            quill.format('direction', 'rtl', Quill.sources.USER);
+        }
+        static setLtrDir(quill) {
+            quill.format('align', 'left', Quill.sources.USER);
+            quill.format('direction', 'ltr', Quill.sources.USER);
+        }
         static displayFullyLoadedEditor(outerDivElement) {
             outerDivElement.classList.remove('d-none');
         }
@@ -586,12 +606,10 @@ var DntBlazorSsr;
         static handleDirection(quill, value) {
             const { align } = quill.getFormat();
             if (align === 'right') {
-                quill.format('align', 'left', Quill.sources.USER);
-                quill.format('direction', 'ltr', Quill.sources.USER);
+                DntHtmlEditor.setLtrDir(quill);
             }
             else if (value === 'rtl') {
-                quill.format('align', 'right', Quill.sources.USER);
-                quill.format('direction', 'rtl', Quill.sources.USER);
+                DntHtmlEditor.setRtlDir(quill);
             }
             DntHtmlEditor.addDirectionToParagraphs();
         }
@@ -779,6 +797,7 @@ var DntBlazorSsr;
                 dntHtmlEditor.displayFullyLoadedEditor(outerDivElement);
                 dntHtmlEditor.synchronizeQuillAndTextArea(quill, textAreaElement);
                 dntHtmlEditor.scrollToCursor(editorElement);
+                dntHtmlEditor.setTextDirectionOnPaste(quill, editorElement);
             });
         }
     }

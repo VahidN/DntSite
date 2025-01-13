@@ -27,6 +27,32 @@ namespace DntBlazorSsr {
             });
         }
 
+        static setTextDirectionOnPaste(quill: any, editorElement: HTMLElement) {
+            editorElement.addEventListener('paste', function (ce) {
+                const pastedText = ce.clipboardData?.getData('text/plain');
+                const dir = DntChangeInputDirectionDependOnLanguage.getDirection(pastedText);
+                if (dir === 'ltr') {
+                    DntHtmlEditor.setLtrDir(quill);
+                } else {
+                    DntHtmlEditor.setRtlDir(quill);
+                }
+            }, true);
+        }
+
+        static setRtlDir(quill: any) {
+            // @ts-ignore
+            quill.format('align', 'right', Quill.sources.USER);
+            // @ts-ignore
+            quill.format('direction', 'rtl', Quill.sources.USER);
+        }
+
+        static setLtrDir(quill: any) {
+            // @ts-ignore
+            quill.format('align', 'left', Quill.sources.USER);
+            // @ts-ignore
+            quill.format('direction', 'ltr', Quill.sources.USER);
+        }
+
         static displayFullyLoadedEditor(outerDivElement: HTMLElement) {
             outerDivElement.classList.remove('d-none');
         }
@@ -184,16 +210,10 @@ namespace DntBlazorSsr {
 
             if (align === 'right') {
                 // adds class="ql-direction-ltr ql-align-left"
-                // @ts-ignore
-                quill.format('align', 'left', Quill.sources.USER);
-                // @ts-ignore
-                quill.format('direction', 'ltr', Quill.sources.USER);
+                DntHtmlEditor.setLtrDir(quill);
             } else if (value === 'rtl') {
                 // adds class="ql-align-right ql-direction-rtl"
-                // @ts-ignore
-                quill.format('align', 'right', Quill.sources.USER);
-                // @ts-ignore
-                quill.format('direction', 'rtl', Quill.sources.USER);
+                DntHtmlEditor.setRtlDir(quill);
             }
 
             DntHtmlEditor.addDirectionToParagraphs();
@@ -443,6 +463,7 @@ namespace DntBlazorSsr {
                 dntHtmlEditor.displayFullyLoadedEditor(outerDivElement);
                 dntHtmlEditor.synchronizeQuillAndTextArea(quill, textAreaElement);
                 dntHtmlEditor.scrollToCursor(editorElement);
+                dntHtmlEditor.setTextDirectionOnPaste(quill, editorElement);
             });
         }
     }

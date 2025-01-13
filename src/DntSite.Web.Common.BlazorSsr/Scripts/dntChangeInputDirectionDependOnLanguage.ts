@@ -11,11 +11,11 @@ namespace DntBlazorSsr {
             return new RegExp(`[${faComplexText}]`);
         }
 
-        static containsRtlText(text: string) {
+        static containsRtlText(text: string | undefined) {
             return !text ? false : DntChangeInputDirectionDependOnLanguage.containsRtlRegExp().test(text);
         }
 
-        static getDirection(text: string) {
+        static getDirection(text: string | undefined) {
             return DntChangeInputDirectionDependOnLanguage.containsRtlText(text) ? "rtl" : "ltr";
         }
 
@@ -28,7 +28,7 @@ namespace DntBlazorSsr {
         static enable() {
             document.querySelectorAll<HTMLInputElement>("input[type=text],input[type=search]").forEach(element => {
                 DntChangeInputDirectionDependOnLanguage.setDirection(element);
-                
+
                 element.onkeyup = () => {
                     DntChangeInputDirectionDependOnLanguage.setDirection(element);
                 };
