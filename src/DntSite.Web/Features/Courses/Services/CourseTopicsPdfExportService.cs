@@ -43,7 +43,7 @@ public class CourseTopicsPdfExportService(
 
             await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.AllCourses, course.Id, course.Title, docs);
 
-            await Task.Delay(TimeSpan.FromSeconds(seconds: 7), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(seconds: 60), cancellationToken);
         }
     }
 
@@ -122,7 +122,7 @@ public class CourseTopicsPdfExportService(
             }
 
             await pdfExportService.CreateSinglePdfFileAsync(_itemType, doc.Id, doc.Title, doc);
-            await Task.Delay(TimeSpan.FromSeconds(value: 7), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(value: 60), cancellationToken);
         }
     }
 

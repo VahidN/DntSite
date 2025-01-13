@@ -69,7 +69,7 @@ public class QuestionsPdfExportService(
             }
 
             await pdfExportService.CreateSinglePdfFileAsync(_itemType, doc.Id, doc.Title, doc);
-            await Task.Delay(TimeSpan.FromSeconds(value: 7), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(value: 60), cancellationToken);
         }
     }
 

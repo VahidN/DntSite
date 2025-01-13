@@ -49,7 +49,7 @@ public class LearningPathPdfExportsService(
             await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.LearningPaths, item.Id, item.Title,
                 [..blogPostDocs, ..courseTopicDocs, ..questionIds]);
 
-            await Task.Delay(TimeSpan.FromSeconds(seconds: 7), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(seconds: 60), cancellationToken);
         }
     }
 
