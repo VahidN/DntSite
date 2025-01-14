@@ -9,6 +9,7 @@ using DntSite.Web.Features.RoadMaps.Models;
 using DntSite.Web.Features.RoadMaps.Services.Contracts;
 using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
+using EFCoreSecondLevelCacheInterceptor;
 
 namespace DntSite.Web.Features.RoadMaps.Services;
 
@@ -49,7 +50,7 @@ public class LearningPathPdfExportsService(
             await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.LearningPaths, item.Id, item.Title,
                 [..blogPostDocs, ..courseTopicDocs, ..questionIds]);
 
-            await Task.Delay(TimeSpan.FromSeconds(seconds: 60), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }
     }
 
@@ -69,7 +70,12 @@ public class LearningPathPdfExportsService(
 
         var siteRootUri = (await appSettingsService.GetAppSettingModelAsync()).SiteRootUri;
 
-        var items = await _learningPaths.Include(x => x.Tags).Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToListAsync();
+        var items = await _learningPaths.NotCacheable()
+            .AsNoTracking()
+            .Include(x => x.Tags)
+            .Where(x => !x.IsDeleted)
+            .OrderBy(x => x.Id)
+            .ToListAsync();
 
         foreach (var item in items)
         {

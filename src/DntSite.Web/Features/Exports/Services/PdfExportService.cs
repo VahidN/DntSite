@@ -119,14 +119,14 @@ public class PdfExportService(
             return false;
         }
 
-        if (!files.Select(x => x.Id).Any(postIds.Contains))
+        var postFiles = files.Where(x => postIds.Contains(x.Id)).ToList();
+
+        if (postFiles.Count == 0)
         {
             return false;
         }
 
-        var lastWriteTimeUtc = files.Select(x => x.FileInfo.CreationTimeUtc.ToDateOnly())
-            .OrderByDescending(x => x)
-            .FirstOrDefault();
+        var lastWriteTimeUtc = postFiles.Max(x => x.FileInfo.CreationTimeUtc.ToDateOnly());
 
         var yesterday = DateTime.UtcNow.AddDays(value: -1).ToDateOnly();
         var today = DateTime.UtcNow.ToDateOnly();

@@ -6,6 +6,7 @@ using DntSite.Web.Features.Exports.Models;
 using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.RssFeeds.Models;
+using EFCoreSecondLevelCacheInterceptor;
 
 namespace DntSite.Web.Features.Courses.Services;
 
@@ -16,11 +17,11 @@ public class CourseTopicsPdfExportService(
 {
     private readonly DbSet<Course> _courses = uow.DbSet<Course>();
     private readonly DbSet<CourseTopic> _courseTopics = uow.DbSet<CourseTopic>();
-    private readonly WhatsNewItemType _itemType = WhatsNewItemType.AllCoursesTopics;
 
     public async Task CreateMergedPdfOfCoursesAsync(CancellationToken cancellationToken)
     {
-        var courses = await _courses.AsNoTracking()
+        var courses = await _courses.NotCacheable()
+            .AsNoTracking()
             .Include(x => x.CourseTopics)
             .Where(x => !x.IsDeleted)
             .ToListAsync(cancellationToken);
@@ -43,15 +44,17 @@ public class CourseTopicsPdfExportService(
 
             await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.AllCourses, course.Id, course.Title, docs);
 
-            await Task.Delay(TimeSpan.FromSeconds(seconds: 60), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }
     }
 
     public async Task ExportNotProcessedCourseTopicsToSeparatePdfFilesAsync(CancellationToken cancellationToken)
     {
-        var availableIds = pdfExportService.GetAvailableExportedFiles(_itemType).Select(x => x.Id).ToList();
+        var availableIds = pdfExportService.GetAvailableExportedFiles(WhatsNewItemType.AllCoursesTopics)
+            .Select(x => x.Id)
+            .ToList();
 
-        var query = _courseTopics.AsNoTracking().Where(x => !x.IsDeleted);
+        var query = _courseTopics.NotCacheable().AsNoTracking().Where(x => !x.IsDeleted);
 
         var idsNeedUpdate = availableIds.Count == 0
             ? await query.Select(x => x.Id).ToListAsync(cancellationToken)
@@ -69,7 +72,8 @@ public class CourseTopicsPdfExportService(
 
         var siteRootUri = (await appSettingsService.GetAppSettingModelAsync()).SiteRootUri;
 
-        var posts = await _courseTopics.AsNoTracking()
+        var posts = await _courseTopics.NotCacheable()
+            .AsNoTracking()
             .Include(topic => topic.Comments)
             .ThenInclude(topicComment => topicComment.User)
             .Include(topic => topic.User)
@@ -91,7 +95,8 @@ public class CourseTopicsPdfExportService(
 
         var siteRootUri = (await appSettingsService.GetAppSettingModelAsync()).SiteRootUri;
 
-        var posts = await _courseTopics.AsNoTracking()
+        var posts = await _courseTopics.NotCacheable()
+            .AsNoTracking()
             .Include(topic => topic.Comments)
             .ThenInclude(topicComment => topicComment.User)
             .Include(topic => topic.User)
@@ -121,14 +126,15 @@ public class CourseTopicsPdfExportService(
                 return;
             }
 
-            await pdfExportService.CreateSinglePdfFileAsync(_itemType, doc.Id, doc.Title, doc);
-            await Task.Delay(TimeSpan.FromSeconds(value: 60), cancellationToken);
+            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.AllCoursesTopics, doc.Id, doc.Title, doc);
+            await Task.Delay(TimeSpan.FromSeconds(value: 15), cancellationToken);
         }
     }
 
     public async Task<ExportDocument?> MapCoursePostToExportDocumentAsync(int postId, string siteRootUri)
     {
-        var post = await _courseTopics.AsNoTracking()
+        var post = await _courseTopics.NotCacheable()
+            .AsNoTracking()
             .Include(topic => topic.Comments)
             .ThenInclude(topicComment => topicComment.User)
             .Include(topic => topic.User)

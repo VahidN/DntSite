@@ -6,6 +6,7 @@ using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
+using EFCoreSecondLevelCacheInterceptor;
 
 namespace DntSite.Web.Features.StackExchangeQuestions.Services;
 
@@ -14,14 +15,15 @@ public class QuestionsPdfExportService(
     IAppSettingsService appSettingsService,
     IPdfExportService pdfExportService) : IQuestionsPdfExportService
 {
-    private readonly WhatsNewItemType _itemType = WhatsNewItemType.Questions;
     private readonly DbSet<StackExchangeQuestion> _questions = uow.DbSet<StackExchangeQuestion>();
 
     public async Task ExportNotProcessedQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken)
     {
-        var availableIds = pdfExportService.GetAvailableExportedFiles(_itemType).Select(x => x.Id).ToList();
+        var availableIds = pdfExportService.GetAvailableExportedFiles(WhatsNewItemType.Questions)
+            .Select(x => x.Id)
+            .ToList();
 
-        var query = _questions.AsNoTracking().Where(x => !x.IsDeleted);
+        var query = _questions.NotCacheable().AsNoTracking().Where(x => !x.IsDeleted);
 
         var idsNeedUpdate = availableIds.Count == 0
             ? await query.Select(x => x.Id).ToListAsync(cancellationToken)
@@ -39,7 +41,8 @@ public class QuestionsPdfExportService(
 
         var siteRootUri = (await appSettingsService.GetAppSettingModelAsync()).SiteRootUri;
 
-        var posts = await _questions.AsNoTracking()
+        var posts = await _questions.NotCacheable()
+            .AsNoTracking()
             .Include(question => question.Comments)
             .ThenInclude(postComment => postComment.User)
             .Include(question => question.User)
@@ -68,14 +71,15 @@ public class QuestionsPdfExportService(
                 return;
             }
 
-            await pdfExportService.CreateSinglePdfFileAsync(_itemType, doc.Id, doc.Title, doc);
-            await Task.Delay(TimeSpan.FromSeconds(value: 60), cancellationToken);
+            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.Questions, doc.Id, doc.Title, doc);
+            await Task.Delay(TimeSpan.FromSeconds(value: 15), cancellationToken);
         }
     }
 
     public async Task<ExportDocument?> MapQuestionToExportDocumentAsync(int postId, string siteRootUri)
     {
-        var post = await _questions.AsNoTracking()
+        var post = await _questions.NotCacheable()
+            .AsNoTracking()
             .Include(question => question.Comments)
             .ThenInclude(postComment => postComment.User)
             .Include(question => question.User)
