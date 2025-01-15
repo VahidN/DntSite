@@ -32,7 +32,7 @@ public class AppConfigsEmailsService(
                 new NewDotNetVersionEmailModel
                 {
                     Body = info
-                }, emailSubject: "نگارش جدیدی از دات‌نت برای نصب", cancellationToken);
+                }, emailSubject: "جهت اطلاع: نگارش جدیدی از دات‌نت برای نصب", cancellationToken);
         }
     }
 
