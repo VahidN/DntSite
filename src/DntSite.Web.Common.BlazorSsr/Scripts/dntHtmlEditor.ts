@@ -29,12 +29,15 @@ namespace DntBlazorSsr {
 
         static setTextDirectionOnPaste(quill: any, editorElement: HTMLElement) {
             editorElement.addEventListener('paste', function (ce) {
-                const pastedText = ce.clipboardData?.getData('text/plain');
-                const dir = DntChangeInputDirectionDependOnLanguage.getDirection(pastedText);
-                if (dir === 'ltr') {
-                    DntHtmlEditor.setLtrDir(quill);
-                } else {
-                    DntHtmlEditor.setRtlDir(quill);
+                const pastedHtml = ce.clipboardData?.getData('text/html');
+                if (pastedHtml) {
+                    const pastedText = ce.clipboardData?.getData('text/plain');
+                    const dir = DntChangeInputDirectionDependOnLanguage.getDirection(pastedText);
+                    if (dir === 'ltr') {
+                        DntHtmlEditor.setLtrDir(quill);
+                    } else {
+                        DntHtmlEditor.setRtlDir(quill);
+                    }
                 }
             }, true);
         }
