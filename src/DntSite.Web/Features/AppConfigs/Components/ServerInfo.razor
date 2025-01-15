@@ -107,13 +107,12 @@
             </div>
             <div>
                 <label>مدت زمان روشن بودن سرور: </label>
-                <span dir="ltr">@_info.ServerInfo.OS.UpTime</span>
+                <span dir="rtl">@_info.ServerInfo.OS.UpTime.ToFriendlyPersianTimeSpanString()</span>
             </div>
             <div>
                 <label>زمان جاری سرور: </label>
                 <span dir="rtl">@_info.ServerInfo.OS.ServerTime.ToLongPersianDateTimeString()</span>
             </div>
-			
             <div>
                 <label>نام کاربر پروسه برنامه: </label>
                 <span dir="ltr">@_info.ServerInfo.OS.UserName</span>
