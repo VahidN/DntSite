@@ -30,7 +30,7 @@ public class WebServerInfoService(
                 AppPath = "dotnet",
                 WaitForExit = TimeSpan.FromSeconds(value: 3),
                 KillProcessOnStart = false
-            }), DateTimeOffset.UtcNow.AddDays(days: 1));
+            }), DateTimeOffset.UtcNow.AddMinutes(minutes: 60));
 
     private Task<string?> GetDotNetInfoAsync()
         => cacheService.GetOrAddAsync(nameof(GetDotNetInfoAsync), nameof(WebServerInfoService), ()
