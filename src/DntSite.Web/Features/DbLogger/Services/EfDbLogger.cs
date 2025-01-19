@@ -45,6 +45,12 @@ public class EfDbLogger(
         var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
         var httpContext = httpContextAccessor?.HttpContext;
 
+        if (httpContext?.Request is not null)
+        {
+            var requestLog = httpContext.Request.LogRequest(httpContext.Response?.StatusCode);
+            message = $"<code>{message}</code><br/><br/>{requestLog}";
+        }
+
         var appLogItem = new AppLogItem
         {
             Url = httpContext.GetCurrentUrl(),
