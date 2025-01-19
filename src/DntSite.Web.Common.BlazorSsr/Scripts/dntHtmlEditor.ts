@@ -29,8 +29,8 @@ namespace DntBlazorSsr {
 
         static setTextDirectionOnPaste(quill: any, editorElement: HTMLElement) {
             editorElement.addEventListener('paste', function (ce) {
-                const pastedHtml = ce.clipboardData?.getData('text/html');
-                if (pastedHtml) {
+                const initialText = DntHtmlEditor.getEditorTextContent(quill);
+                if (initialText === "") {
                     const pastedText = ce.clipboardData?.getData('text/plain');
                     const dir = DntChangeInputDirectionDependOnLanguage.getDirection(pastedText);
                     if (dir === 'ltr') {
@@ -114,11 +114,21 @@ namespace DntBlazorSsr {
             return text?.replace(/&nbsp;/g, " ");
         }
 
+        static getEditorHtmlContent(quill: any): string {
+            // @ts-ignore
+            return DntHtmlEditor.cleanWhiteSpaces(quill.getSemanticHTML()) ?? "";
+        }
+
+        static getEditorTextContent(quill: any): string {
+            // @ts-ignore
+            return new DOMParser().parseFromString(DntHtmlEditor.getEditorHtmlContent(quill), 'text/html').body.textContent?.trim() || "";
+        }
+
         static synchronizeQuillAndTextArea(quill: any, textAreaElement: HTMLTextAreaElement) {
             // @ts-ignore
             quill.on('editor-change', (eventName, ...args) => {
                 DntHtmlEditor.addDirectionToParagraphs();
-                textAreaElement.value = DntHtmlEditor.cleanWhiteSpaces(quill.getSemanticHTML()) ?? "";
+                textAreaElement.value = DntHtmlEditor.getEditorHtmlContent(quill);
             });
         }
 
@@ -318,8 +328,7 @@ namespace DntBlazorSsr {
         }
 
         static setDirection(quill: any, direction: string) {
-            const initialContent = quill.getSemanticHTML();
-            const initialText = new DOMParser().parseFromString(initialContent, 'text/html').body.textContent || "";
+            const initialText = DntHtmlEditor.getEditorTextContent(quill);
             if (initialText === "") {
                 const isRtl = direction && direction === 'rtl';
                 quill.format('direction', isRtl ? 'rtl' : 'ltr');

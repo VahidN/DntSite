@@ -460,8 +460,8 @@ var DntBlazorSsr;
         }
         static setTextDirectionOnPaste(quill, editorElement) {
             editorElement.addEventListener('paste', function (ce) {
-                const pastedHtml = ce.clipboardData?.getData('text/html');
-                if (pastedHtml) {
+                const initialText = DntHtmlEditor.getEditorTextContent(quill);
+                if (initialText === "") {
                     const pastedText = ce.clipboardData?.getData('text/plain');
                     const dir = DntBlazorSsr.DntChangeInputDirectionDependOnLanguage.getDirection(pastedText);
                     if (dir === 'ltr') {
@@ -532,10 +532,16 @@ var DntBlazorSsr;
         static cleanWhiteSpaces(text) {
             return text?.replace(/&nbsp;/g, " ");
         }
+        static getEditorHtmlContent(quill) {
+            return DntHtmlEditor.cleanWhiteSpaces(quill.getSemanticHTML()) ?? "";
+        }
+        static getEditorTextContent(quill) {
+            return new DOMParser().parseFromString(DntHtmlEditor.getEditorHtmlContent(quill), 'text/html').body.textContent?.trim() || "";
+        }
         static synchronizeQuillAndTextArea(quill, textAreaElement) {
             quill.on('editor-change', (eventName, ...args) => {
                 DntHtmlEditor.addDirectionToParagraphs();
-                textAreaElement.value = DntHtmlEditor.cleanWhiteSpaces(quill.getSemanticHTML()) ?? "";
+                textAreaElement.value = DntHtmlEditor.getEditorHtmlContent(quill);
             });
         }
         static handleInsertImageUrl(quill, insertImageUrlLabel) {
@@ -695,8 +701,7 @@ var DntBlazorSsr;
             };
         }
         static setDirection(quill, direction) {
-            const initialContent = quill.getSemanticHTML();
-            const initialText = new DOMParser().parseFromString(initialContent, 'text/html').body.textContent || "";
+            const initialText = DntHtmlEditor.getEditorTextContent(quill);
             if (initialText === "") {
                 const isRtl = direction && direction === 'rtl';
                 quill.format('direction', isRtl ? 'rtl' : 'ltr');
