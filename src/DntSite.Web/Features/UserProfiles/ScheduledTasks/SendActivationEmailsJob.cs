@@ -7,5 +7,6 @@ public class SendActivationEmailsJob(IUsersManagerEmailsService emailsService) :
     public Task RunAsync(CancellationToken cancellationToken)
         => cancellationToken.IsCancellationRequested
             ? Task.CompletedTask
-            : emailsService.ResetNotActivatedUsersAndSendEmailAsync(from: null, cancellationToken);
+            : emailsService.ResetNotActivatedUsersAndSendEmailAsync(DateTime.UtcNow.AddYears(value: -1),
+                cancellationToken);
 }

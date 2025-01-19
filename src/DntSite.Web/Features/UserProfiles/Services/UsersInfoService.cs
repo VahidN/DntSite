@@ -396,13 +396,13 @@ public class UsersInfoService(
     {
         var nonWriters = await _users.AsNoTracking()
             .Where(user => user.IsActive && user.ReceiveDailyEmails && user.UserStat.NumberOfPosts <= 0 &&
-                           user.UserStat.NumberOfLinks <= 0)
+                           user.UserStat.NumberOfLinks <= 0 && user.LastVisitDateTime.HasValue)
             .OrderByDescending(x => x.Rating.TotalRating)
             .Take(count)
             .ToListAsync();
 
         var allWriters = await _users.AsNoTracking()
-            .Where(user => user.IsActive && user.ReceiveDailyEmails &&
+            .Where(user => user.IsActive && user.ReceiveDailyEmails && user.LastVisitDateTime.HasValue &&
                            (user.UserStat.NumberOfPosts > 0 || user.UserStat.NumberOfLinks > 0))
             .ToListAsync();
 

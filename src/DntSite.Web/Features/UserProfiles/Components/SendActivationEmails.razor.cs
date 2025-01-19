@@ -48,7 +48,7 @@ public partial class SendActivationEmails
         switch (SendActivationEmailsAction)
         {
             case SendActivationEmailsAction.ActivateAll:
-                await EmailsService.ResetNotActivatedUsersAndSendEmailAsync(from: null);
+                await EmailsService.ResetNotActivatedUsersAndSendEmailAsync(DateTime.UtcNow.AddYears(value: -1));
 
                 break;
             case SendActivationEmailsAction.ActivateOnlyLastMonth:

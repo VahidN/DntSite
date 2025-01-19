@@ -581,7 +581,7 @@ public class StatService(IUnitOfWork uow) : IStatService
         return uow.DbSet<User>()
             .AsNoTracking()
             .CountAsync(x => x.DateOfBirth.HasValue && x.IsActive && x.DateOfBirth.Value.Day == day &&
-                             x.DateOfBirth.Value.Month == month);
+                             x.DateOfBirth.Value.Month == month && x.LastVisitDateTime.HasValue);
     }
 
     public Task<List<User>> GetTodayBirthdayListAsync()
@@ -594,7 +594,7 @@ public class StatService(IUnitOfWork uow) : IStatService
             .Include(x => x.UserSocialNetwork)
             .AsNoTracking()
             .Where(x => x.DateOfBirth.HasValue && x.IsActive && x.DateOfBirth.Value.Day == day &&
-                        x.DateOfBirth.Value.Month == month)
+                        x.DateOfBirth.Value.Month == month && x.LastVisitDateTime.HasValue)
             .ToListAsync();
     }
 
