@@ -40,9 +40,22 @@ csharp_style_var_for_built_in_types = true:warning
 csharp_style_var_when_type_is_apparent = true:warning
 csharp_using_directive_placement = outside_namespace:warning
 
+# use language keywords instead of BCL types
+dotnet_style_predefined_type_for_locals_parameters_members = true:error
+dotnet_style_predefined_type_for_member_access = true:error
+
+# Pattern matching
+csharp_style_pattern_matching_over_is_with_cast_check = true:error
+csharp_style_pattern_matching_over_as_with_null_check = true:error
+csharp_style_inlined_variable_declaration = true:error
+
 dotnet_code_quality_unused_parameters = all:error
 csharp_style_unused_value_assignment_preference = discard_variable:warning
 dotnet_code_quality.CA1822.api_surface = private, internal
+
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:error
+dotnet_style_readonly_field = true:error
+
 
 dotnet_diagnostic.AsyncFixer01.severity = suggestion
 dotnet_diagnostic.AsyncFixer02.severity = error
@@ -66,6 +79,7 @@ dotnet_diagnostic.CA1056.severity = suggestion
 dotnet_diagnostic.CA1062.severity = warning
 dotnet_diagnostic.CA1303.severity = suggestion
 dotnet_diagnostic.CA1308.severity = suggestion
+dotnet_diagnostic.CA1310.severity = error
 dotnet_diagnostic.CA1501.severity = warning
 dotnet_diagnostic.CA1502.severity = warning
 dotnet_diagnostic.CA1505.severity = warning
