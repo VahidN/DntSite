@@ -7,4 +7,6 @@ public class FileUploadEmailModel : BaseEmailModel
     public required string ActionUrl { get; set; }
 
     public required string FriendlyName { get; set; }
+
+    public required string FormattedFileSize { get; set; }
 }

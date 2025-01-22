@@ -71,7 +71,8 @@ public class UploadFileController(
                 });
             }
 
-            await emailsService.UploadFileSendEmailAsync(fileName, uploadedFileUrl);
+            await emailsService.UploadFileSendEmailAsync(fileName, uploadedFileUrl,
+                savedFilePath.GetFormattedFileSize() ?? "0 B");
 
             return Ok(new FileUploadResultModel
             {

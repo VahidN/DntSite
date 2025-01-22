@@ -8,7 +8,7 @@
     <div align="center" dir="rtl" style="font-family: Tahoma; ">
         <div align="center" dir="ltr">
             <a dir="ltr" href="@Model.ActionUrl">
-                @Model.ActionUrl
+                @Model.ActionUrl (@Model.FormattedFileSize)
             </a>
             @if (Model.ActionUrl.IsImageFileUrl())
             {

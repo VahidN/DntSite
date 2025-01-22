@@ -20,34 +20,35 @@ public class AdminsEmailsService(
         var emails = (await commonService.GetAllActiveAdminsAsNoTrackingAsync()).Select(x => x.EMail).ToList();
 
         await emailsFactoryService.SendEmailToAllUsersAsync<NewReferrersEmail, NewReferrersEmailModel>(emails,
-            "NewReferrer", "", "NewReferrer", new NewReferrersEmailModel
+            messageId: "NewReferrer", inReplyTo: "", references: "NewReferrer", new NewReferrersEmailModel
             {
                 Source = sourceUri.ToString(),
                 Dest = destUri.ToString(),
                 AdminUrl = adminUrl
-            }, "ارجاع دهنده جدید برای تائید", true);
+            }, emailSubject: "ارجاع دهنده جدید برای تائید", addIp: true);
     }
 
     public Task CommonFileEditedSendEmailAsync(string name, string description)
         => emailsFactoryService.SendEmailToAllAdminsAsync<CommonFileEditedEmail, CommonFileEditedEmailModel>(
-            "CommonFileEdited", "", "CommonFileEdited", new CommonFileEditedEmailModel
+            messageId: "CommonFileEdited", inReplyTo: "", references: "CommonFileEdited", new CommonFileEditedEmailModel
             {
                 Name = name,
                 Description = description
             }, $"ویرایش فایل:  {name}");
 
-    public async Task UploadFileSendEmailAsync(string path, string actionUrl)
-        => await emailsFactoryService.SendEmailToAllAdminsAsync<FileUploadEmail, FileUploadEmailModel>("RedactorUpload",
-            "", "RedactorUpload", new FileUploadEmailModel
+    public async Task UploadFileSendEmailAsync(string path, string actionUrl, string formattedFileSize)
+        => await emailsFactoryService.SendEmailToAllAdminsAsync<FileUploadEmail, FileUploadEmailModel>(
+            messageId: "RedactorUpload", inReplyTo: "", references: "RedactorUpload", new FileUploadEmailModel
             {
                 ActionUrl = actionUrl,
                 FriendlyName = (await currentUserService.GetCurrentUserAsync())?.User?.FriendlyName ??
-                               SharedConstants.GuestUserName
+                               SharedConstants.GuestUserName,
+                FormattedFileSize = formattedFileSize
             }, $"آپلود فایل جدید:  {path}");
 
     public Task SendRecycleEmailAsync(string id, string title, string body)
-        => emailsFactoryService.SendEmailToAllAdminsAsync<RecycleEmail, RecycleEmailModel>("SendRecycle", "",
-            "SendRecycle", new RecycleEmailModel
+        => emailsFactoryService.SendEmailToAllAdminsAsync<RecycleEmail, RecycleEmailModel>(messageId: "SendRecycle",
+            inReplyTo: "", references: "SendRecycle", new RecycleEmailModel
             {
                 Id = id,
                 Title = title,
@@ -57,6 +58,6 @@ public class AdminsEmailsService(
     public Task TagEditedSendEmailAsync<TLayout, TLayoutModel>(TLayoutModel data)
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel
-        => emailsFactoryService.SendEmailToAllAdminsAsync<TLayout, TLayoutModel>("TagEdited", "", "TagEdited", data,
-            "ویرایش نام گروه‌ها");
+        => emailsFactoryService.SendEmailToAllAdminsAsync<TLayout, TLayoutModel>(messageId: "TagEdited", inReplyTo: "",
+            references: "TagEdited", data, emailSubject: "ویرایش نام گروه‌ها");
 }

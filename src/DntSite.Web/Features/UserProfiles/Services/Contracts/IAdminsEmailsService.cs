@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IAdminsEmailsService : IScopedService
 {
-    public Task UploadFileSendEmailAsync(string path, string actionUrl);
+    public Task UploadFileSendEmailAsync(string path, string actionUrl, string formattedFileSize);
 
     public Task TagEditedSendEmailAsync<TLayout, TLayoutModel>(TLayoutModel data)
         where TLayout : IComponent
