@@ -32,12 +32,17 @@ public class EfDbLogger(
 
         var message = formatter(state, exception);
 
-        if (exception is not null)
+        if (!message.IsEmpty())
         {
-            message = $"{message}{Environment.NewLine}{exception.Demystify()}";
+            message = message.ContainsHtmlTags() ? message : $"<code>{message}</code>";
         }
 
-        if (string.IsNullOrEmpty(message))
+        if (exception is not null)
+        {
+            message = $"{message}<br/><br/><code>{exception.Demystify()}</code>";
+        }
+
+        if (message.IsEmpty())
         {
             return;
         }
@@ -45,10 +50,10 @@ public class EfDbLogger(
         var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
         var httpContext = httpContextAccessor?.HttpContext;
 
-        if (httpContext?.Request is not null)
+        if (httpContext?.Request is not null && !HasRequestLog(message))
         {
             var requestLog = httpContext.Request.LogRequest(httpContext.Response?.StatusCode);
-            message = $"<code>{message}</code><br/><br/>{requestLog}";
+            message = $"{message}<br/><br/>{requestLog}";
         }
 
         var appLogItem = new AppLogItem
@@ -71,6 +76,9 @@ public class EfDbLogger(
             AppLogItem = appLogItem
         });
     }
+
+    private static bool HasRequestLog(string message)
+        => message.Contains(value: "Request Info", StringComparison.Ordinal);
 
     private sealed class NoopDisposable : IDisposable
     {
