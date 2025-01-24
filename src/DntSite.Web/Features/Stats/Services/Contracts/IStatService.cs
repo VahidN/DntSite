@@ -15,9 +15,9 @@ public interface IStatService : IScopedService
 
     public Task<AgeStatModel?> GetAverageAgeAsync();
 
-    public Task<List<User>> GetTodayBirthdayListAsync();
+    public Task<List<User>> GetTodayBirthdayListAsync(DateTime limit);
 
-    public Task<int> GetTodayBirthdayCountAsync();
+    public Task<int> GetTodayBirthdayCountAsync(DateTime limit);
 
     public Task<CoursesStatModel> GetCoursesStatAsync(bool onlyActives = true);
 

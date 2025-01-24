@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.Common.Services.Contracts;
+﻿using DntSite.Web.Features.Common.Models;
+using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.PrivateMessages.EmailLayouts;
 using DntSite.Web.Features.PrivateMessages.Models;
 using DntSite.Web.Features.PrivateMessages.Services.Contracts;
@@ -39,7 +40,8 @@ public class JobsEmailsService(
 
     public async Task SendDailyBirthDatesEmailAsync(CancellationToken cancellationToken)
     {
-        var emails = (await statService.GetTodayBirthdayListAsync()).Select(x => x.EMail).ToList();
+        var emails = (await statService.GetTodayBirthdayListAsync(SharedConstants.AYearAgo)).Select(x => x.EMail)
+            .ToList();
 
         await emailsFactoryService.SendEmailToAllUsersAsync<Birthday, BirthdayModel>(emails,
             messageId: "DailyBirthDates", inReplyTo: "DailyBirthDates", references: "DailyBirthDates",

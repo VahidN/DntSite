@@ -1,5 +1,6 @@
 using DntSite.Web.Features.Advertisements.Entities;
 using DntSite.Web.Features.Backlogs.Entities;
+using DntSite.Web.Features.Common.Models;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
@@ -28,7 +29,7 @@ public class StatService(IUnitOfWork uow) : IStatService
             NumberOfWriters = await NumberOfWritersAsync(),
             NumberOfLinks = await NumberOfLinksAsync(),
             BrowsersList = BrowsersList(),
-            NumberOfTodayBirthdays = await GetTodayBirthdayCountAsync(),
+            NumberOfTodayBirthdays = await GetTodayBirthdayCountAsync(SharedConstants.AYearAgo),
             NumberOfAds = await GetNumberOfAdsAsync(),
             NumberOfComingSoon = await GetNumberOfComingSoonAsync(),
             NumberOfCourses = await GetNumberOfCoursesAsync(),
@@ -573,31 +574,6 @@ public class StatService(IUnitOfWork uow) : IStatService
             ProjectsNumber = 1
         };
 
-    public Task<int> GetTodayBirthdayCountAsync()
-    {
-        var day = DateTime.UtcNow.Day;
-        var month = DateTime.UtcNow.Month;
-
-        return uow.DbSet<User>()
-            .AsNoTracking()
-            .CountAsync(x => x.DateOfBirth.HasValue && x.IsActive && x.DateOfBirth.Value.Day == day &&
-                             x.DateOfBirth.Value.Month == month && x.LastVisitDateTime.HasValue);
-    }
-
-    public Task<List<User>> GetTodayBirthdayListAsync()
-    {
-        var day = DateTime.UtcNow.Day;
-        var month = DateTime.UtcNow.Month;
-
-        return uow.DbSet<User>()
-            .Include(x => x.Roles)
-            .Include(x => x.UserSocialNetwork)
-            .AsNoTracking()
-            .Where(x => x.DateOfBirth.HasValue && x.IsActive && x.DateOfBirth.Value.Day == day &&
-                        x.DateOfBirth.Value.Month == month && x.LastVisitDateTime.HasValue)
-            .ToListAsync();
-    }
-
     public async Task UpdateUserRatingsAsync(User user)
     {
         if (user is null)
@@ -701,6 +677,33 @@ public class StatService(IUnitOfWork uow) : IStatService
         }
 
         await uow.SaveChangesAsync();
+    }
+
+    public Task<List<User>> GetTodayBirthdayListAsync(DateTime limit)
+    {
+        var day = DateTime.UtcNow.Day;
+        var month = DateTime.UtcNow.Month;
+
+        return uow.DbSet<User>()
+            .Include(x => x.Roles)
+            .Include(x => x.UserSocialNetwork)
+            .AsNoTracking()
+            .Where(x => x.DateOfBirth.HasValue && x.IsActive && x.DateOfBirth.Value.Day == day &&
+                        x.DateOfBirth.Value.Month == month && x.LastVisitDateTime.HasValue &&
+                        x.LastVisitDateTime >= limit)
+            .ToListAsync();
+    }
+
+    public Task<int> GetTodayBirthdayCountAsync(DateTime limit)
+    {
+        var day = DateTime.UtcNow.Day;
+        var month = DateTime.UtcNow.Month;
+
+        return uow.DbSet<User>()
+            .AsNoTracking()
+            .CountAsync(x => x.DateOfBirth.HasValue && x.IsActive && x.DateOfBirth.Value.Day == day &&
+                             x.DateOfBirth.Value.Month == month && x.LastVisitDateTime.HasValue &&
+                             x.LastVisitDateTime >= limit);
     }
 
     private Task<int> GetNumberOfQuestionsAsync()

@@ -1,4 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
+using DntSite.Web.Features.Common.Models;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
@@ -18,7 +19,7 @@ public partial class UsersBirthdays
     protected override async Task OnInitializedAsync()
     {
         AddBreadCrumbs();
-        _users = await StatService.GetTodayBirthdayListAsync();
+        _users = await StatService.GetTodayBirthdayListAsync(SharedConstants.AYearAgo);
         _ageStat = await StatService.GetAverageAgeAsync();
     }
 

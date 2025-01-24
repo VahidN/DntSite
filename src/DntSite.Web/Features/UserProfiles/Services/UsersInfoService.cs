@@ -392,23 +392,6 @@ public class UsersInfoService(
             .Take(count)
             .ToListAsync();
 
-    public async Task<List<User>> GetAllDailyEmailReceiversListAsync(int count = 300)
-    {
-        var nonWriters = await _users.AsNoTracking()
-            .Where(user => user.IsActive && user.ReceiveDailyEmails && user.UserStat.NumberOfPosts <= 0 &&
-                           user.UserStat.NumberOfLinks <= 0 && user.LastVisitDateTime.HasValue)
-            .OrderByDescending(x => x.Rating.TotalRating)
-            .Take(count)
-            .ToListAsync();
-
-        var allWriters = await _users.AsNoTracking()
-            .Where(user => user.IsActive && user.ReceiveDailyEmails && user.LastVisitDateTime.HasValue &&
-                           (user.UserStat.NumberOfPosts > 0 || user.UserStat.NumberOfLinks > 0))
-            .ToListAsync();
-
-        return nonWriters.Union(allWriters).ToList();
-    }
-
     public Task<List<User>> GetActiveProjectAuthorsListAsync(int count)
         => _users.Where(user => user.IsActive && user.UserStat.NumberOfProjects > 0)
             .OrderByDescending(x => x.UserStat.NumberOfProjects)
@@ -489,6 +472,25 @@ public class UsersInfoService(
                                 (user.LastVisitDateTime == null || user.LastVisitDateTime < limit))
             .OrderBy(user => user.Id)
             .ToListAsync();
+
+    public async Task<List<User>> GetAllDailyEmailReceiversListAsync(DateTime limit, int count = 300)
+    {
+        var nonWriters = await _users.AsNoTracking()
+            .Where(user => user.IsActive && user.ReceiveDailyEmails && user.UserStat.NumberOfPosts <= 0 &&
+                           user.UserStat.NumberOfLinks <= 0 && user.LastVisitDateTime.HasValue &&
+                           user.LastVisitDateTime >= limit)
+            .OrderByDescending(x => x.Rating.TotalRating)
+            .Take(count)
+            .ToListAsync();
+
+        var allWriters = await _users.AsNoTracking()
+            .Where(user => user.IsActive && user.ReceiveDailyEmails && user.LastVisitDateTime.HasValue &&
+                           user.LastVisitDateTime >= limit &&
+                           (user.UserStat.NumberOfPosts > 0 || user.UserStat.NumberOfLinks > 0))
+            .ToListAsync();
+
+        return nonWriters.Union(allWriters).ToList();
+    }
 
     private Task<List<User?>> GetActiveLinksAuthorUsersFromToFromAsync(int count, DateTime fromDate, DateTime toDate)
         => _users.Where(x => x.IsActive)

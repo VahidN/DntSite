@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.News.Services.Contracts;
+﻿using DntSite.Web.Features.Common.Models;
+using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.PrivateMessages.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
@@ -16,7 +17,7 @@ public class DailyNewsletterJob(
             return;
         }
 
-        var users = await usersService.GetAllDailyEmailReceiversListAsync();
+        var users = await usersService.GetAllDailyEmailReceiversListAsync(SharedConstants.AYearAgo);
         var dateTime = DateTime.UtcNow.ToIranTimeZoneDateTime().AddDays(value: -1);
 
         var content = await dailyNewsletter.GetEmailContentAsync(dateTime);
