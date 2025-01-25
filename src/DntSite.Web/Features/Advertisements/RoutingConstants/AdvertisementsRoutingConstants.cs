@@ -9,6 +9,7 @@ public static class AdvertisementsRoutingConstants
 
     public const string AdvertisementsFilterBase = $"{Advertisements}/filter";
     public const string AdvertisementsFilter = $"{AdvertisementsFilterBase}/{{Filter}}/page/{{CurrentPage:int}}";
+    public const string AdvertisementsOptionalFilter = $"{AdvertisementsFilterBase}/page/{{CurrentPage:int}}";
 
     public const string AdvertisementsDetailsBase = $"{Advertisements}/details";
     public const string AdvertisementsDetails = $"{AdvertisementsDetailsBase}/{{AdvertisementId:int}}";

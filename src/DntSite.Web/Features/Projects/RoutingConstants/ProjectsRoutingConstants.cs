@@ -10,6 +10,8 @@ public static class ProjectsRoutingConstants
     public const string ProjectsFilterFilterPageCurrentPage =
         $"{ProjectsFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
+    public const string ProjectsFilterOptionalFilterPageCurrentPage = $"{ProjectsFilterBase}/page/{{CurrentPage:int?}}";
+
     public const string ProjectsDetailsBase = "/project/details";
     public const string ProjectsDetailsProjectId = $"{ProjectsDetailsBase}/{{ProjectId:int}}";
 

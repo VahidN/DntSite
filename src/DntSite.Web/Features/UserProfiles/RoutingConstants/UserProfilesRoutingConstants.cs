@@ -44,6 +44,7 @@ public static class UserProfilesRoutingConstants
 
     public const string UsersFilterBase = $"{Users}/filter";
     public const string UsersFilterFilterPageCurrentPage = $"{UsersFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
+    public const string UsersFilterOptionalFilterPageCurrentPage = $"{UsersFilterBase}/page/{{CurrentPage:int?}}";
 
     public const string UsersName = $"{Users}/{{Name}}";
 
@@ -52,6 +53,7 @@ public static class UserProfilesRoutingConstants
 
     public const string UserFilterBase = $"{User}/filter";
     public const string UserFilterFilterPageCurrentPage = $"{UserFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
+    public const string UserFilterOptionalFilterPageCurrentPage = $"{UserFilterBase}/page/{{CurrentPage:int?}}";
 
     public const string UserName = $"{User}/{{Name}}";
 
@@ -63,6 +65,9 @@ public static class UserProfilesRoutingConstants
 
     public const string UsersManagerFilterFilterPageCurrentPage =
         $"{UsersManagerFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
+
+    public const string UsersManagerFilterOptionalFilterPageCurrentPage =
+        $"{UsersManagerFilterBase}/page/{{CurrentPage:int?}}";
 
     public const string JobSeekers = "/job-seekers";
 }

@@ -10,6 +10,9 @@ public static class QuestionsRoutingConstants
     public const string QuestionsFilterFilterPageCurrentPage =
         $"{QuestionsFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
+    public const string QuestionsFilterOptionalFilterPageCurrentPage =
+        $"{QuestionsFilterBase}/page/{{CurrentPage:int?}}";
+
     public const string QuestionsDetailsBase = $"{Questions}/details";
     public const string QuestionsDetailsQuestionId = $"{QuestionsDetailsBase}/{{QuestionId:int}}";
 

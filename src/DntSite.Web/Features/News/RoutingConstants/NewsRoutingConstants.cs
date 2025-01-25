@@ -9,6 +9,7 @@ public static class NewsRoutingConstants
 
     public const string NewsFilterBase = $"{News}/filter";
     public const string NewsFilterFilterPageCurrentPage = $"{NewsFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
+    public const string NewsFilterOptionalFilterPageCurrentPage = $"{NewsFilterBase}/page/{{CurrentPage:int?}}";
 
     public const string NewsRedirectBase = $"{News}/redirect";
     public const string NewsRedirectRedirectId = $"{NewsRedirectBase}/{{RedirectId:int}}";

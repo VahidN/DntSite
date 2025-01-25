@@ -20,6 +20,9 @@ public static class SurveysRoutingConstants
     public const string SurveysArchiveFilterFilterPageCurrentPage =
         $"{SurveysArchiveFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
+    public const string SurveysArchiveFilterOptionalFilterPageCurrentPage =
+        $"{SurveysArchiveFilterBase}/page/{{CurrentPage:int?}}";
+
     public const string SurveysArchiveDetailsBase = $"{SurveysArchive}/details";
     public const string SurveysArchiveDetailsSurveyId = $"{SurveysArchiveDetailsBase}/{{SurveyId:int}}";
 

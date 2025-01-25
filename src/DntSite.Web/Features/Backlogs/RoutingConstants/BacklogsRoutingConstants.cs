@@ -10,6 +10,8 @@ public static class BacklogsRoutingConstants
     public const string BacklogsFilterFilterPageCurrentPage =
         $"{BacklogsFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
+    public const string BacklogsFilterOptionalFilterPageCurrentPage = $"{BacklogsFilterBase}/page/{{CurrentPage:int?}}";
+
     public const string BacklogsDetailsBase = "/backlogs/details";
     public const string BacklogsDetailsBacklogId = $"{BacklogsDetailsBase}/{{BacklogId:int}}";
     public const string BacklogsTag = "/backlogs-tag";

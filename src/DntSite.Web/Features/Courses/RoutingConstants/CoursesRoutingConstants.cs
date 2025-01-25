@@ -9,6 +9,8 @@ public static class CoursesRoutingConstants
     public const string CoursesFilterFilterPageCurrentPage =
         $"{CoursesFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
+    public const string CoursesFilterOptionalFilterPageCurrentPage = $"{CoursesFilterBase}/page/{{CurrentPage:int?}}";
+
     public const string CoursesDetailsBase = "/courses/details";
     public const string CoursesDetailsCourseId = $"{CoursesDetailsBase}/{{CourseId:int}}";
     public const string CoursesCourseId = "/courses/{CourseId:int}";

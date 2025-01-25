@@ -24,6 +24,8 @@ public static class PostsRoutingConstants
     public const string PostsFilterFilterPageCurrentPage =
         $"{PostsFilterFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
+    public const string PostsFilterOptionalFilterPageCurrentPage = $"{PostsFilterFilterBase}/page/{{CurrentPage:int?}}";
+
     public const string PostsWriters = "/posts-writers";
     public const string PostsWritersPageCurrentPage = $"{PostsWriters}/page/{{CurrentPage:int?}}";
     public const string PostsWritersUserFriendlyName = $"{PostsWriters}/{{UserFriendlyName}}";

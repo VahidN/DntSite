@@ -5,6 +5,7 @@
 @attribute [Route(PostsRoutingConstants.PostsArchive)]
 @attribute [Route(PostsRoutingConstants.PostsPageCurrentPage)]
 @attribute [Route(PostsRoutingConstants.PostsFilterFilterPageCurrentPage)]
+@attribute [Route(PostsRoutingConstants.PostsFilterOptionalFilterPageCurrentPage)]
 
 <DntQueryBuilder TRecord="BlogPost"
                  Header="جستجوی پیشرفته مطالب"
@@ -47,7 +48,8 @@
                    value="@rule.Value"/>
         </QueryBuilderValueTemplate>
     </DntQueryBuilderProperty>
-    <DntQueryBuilderProperty Title="مدت زمان خواندن مطلب (دقیقه)" ValueExpression="blogPost => blogPost.ReadingTimeMinutes"/>
+    <DntQueryBuilderProperty Title="مدت زمان خواندن مطلب (دقیقه)"
+                             ValueExpression="blogPost => blogPost.ReadingTimeMinutes"/>
 </DntQueryBuilder>
 
 <ShowBlogPostsList BlogPosts="_blogPosts"

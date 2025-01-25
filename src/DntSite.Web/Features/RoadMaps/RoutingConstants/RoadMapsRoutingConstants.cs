@@ -12,6 +12,9 @@ public static class RoadMapsRoutingConstants
     public const string LearningPathsFilterFilterPageCurrentPage =
         $"{LearningPathsFilterBase}/{{Filter}}/page/{{CurrentPage:int?}}";
 
+    public const string LearningPathsFilterOptionalFilterPageCurrentPage =
+        $"{LearningPathsFilterBase}/page/{{CurrentPage:int?}}";
+
     public const string LearningPathsDetailsLearningPathId1 = "/LearningPaths/Details/{LearningPathId:int}";
 
     public const string LearningPathsDetailsBase = $"{LearningPaths2}/details";
