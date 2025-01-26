@@ -37,17 +37,18 @@ public static class MvcControllersConfig
             .AddLargeFilesUploadSupport()
             .AddOutputCache(options => { options.AddPolicy(AlwaysCachePolicy.Name, AlwaysCachePolicy.Instance); })
             .AddControllers(options => { options.Filters.Add<ApplyCorrectYeKeFilterAttribute>(); })
-            .AddJsonOptions(AddCustomJsonOptions);
+            .AddCustomJsonOptions();
 
-    private static void AddCustomJsonOptions(JsonOptions options)
-    {
-        var jsonSerializerOptions = options.JsonSerializerOptions;
-        jsonSerializerOptions.NumberHandling = JsonSerializerOptions.NumberHandling;
-        jsonSerializerOptions.PropertyNameCaseInsensitive = JsonSerializerOptions.PropertyNameCaseInsensitive;
-        jsonSerializerOptions.WriteIndented = JsonSerializerOptions.WriteIndented;
-        jsonSerializerOptions.DefaultIgnoreCondition = JsonSerializerOptions.DefaultIgnoreCondition;
-        jsonSerializerOptions.Converters.AddRange(JsonSerializerOptions.Converters);
-        jsonSerializerOptions.Encoder = JsonSerializerOptions.Encoder;
-        jsonSerializerOptions.ReferenceHandler = JsonSerializerOptions.ReferenceHandler;
-    }
+    private static IMvcBuilder AddCustomJsonOptions(this IMvcBuilder builder)
+        => builder.AddJsonOptions(options =>
+        {
+            var jsonSerializerOptions = options.JsonSerializerOptions;
+            jsonSerializerOptions.NumberHandling = JsonSerializerOptions.NumberHandling;
+            jsonSerializerOptions.PropertyNameCaseInsensitive = JsonSerializerOptions.PropertyNameCaseInsensitive;
+            jsonSerializerOptions.WriteIndented = JsonSerializerOptions.WriteIndented;
+            jsonSerializerOptions.DefaultIgnoreCondition = JsonSerializerOptions.DefaultIgnoreCondition;
+            jsonSerializerOptions.Converters.AddRange(JsonSerializerOptions.Converters);
+            jsonSerializerOptions.Encoder = JsonSerializerOptions.Encoder;
+            jsonSerializerOptions.ReferenceHandler = JsonSerializerOptions.ReferenceHandler;
+        });
 }
