@@ -3,7 +3,6 @@ using DntSite.Web.Features.DbLogger.Services;
 using DntSite.Web.Features.DbSeeder.Services;
 using DntSite.Web.Features.ServicesConfigs;
 using DntSite.Web.Features.UserProfiles.Endpoints;
-using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigureLogging(builder.Logging, builder.Environment, builder.Configuration);
@@ -42,10 +41,7 @@ void ConfigureMiddlewares(WebApplication app, IHostEnvironment env)
 {
     if (OperatingSystem.IsLinux())
     {
-        app.UseForwardedHeaders(new ForwardedHeadersOptions
-        {
-            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-        });
+        app.UseForwardedHeaders();
     }
 
     app.UseExceptionHandler(errorHandlingPath: "/Error", createScopeForErrors: true);

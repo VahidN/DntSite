@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.DbSeeder.Services.Contracts;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace DntSite.Web.Features.ServicesConfigs;
 
@@ -15,6 +16,8 @@ public static class ServicesRegistry
         host.AlwaysValidateScopes();
 
         services.AddOptions(configuration);
+        services.AddForwardedHeadersOptions();
+
         services.AddHttpContextAccessor();
         services.AddIPrincipal();
         services.ScanAllServices();
@@ -29,6 +32,9 @@ public static class ServicesRegistry
         services.AddCustomizedControllers();
         services.AddCustomizedAuthentication(siteSettings, environment);
     }
+
+    private static void AddForwardedHeadersOptions(this IServiceCollection services)
+        => services.Configure<ForwardedHeadersOptions>(options => { options.ForwardedHeaders = ForwardedHeaders.All; });
 
     private static void AlwaysValidateScopes(this IHostBuilder host)
         => host.UseDefaultServiceProvider(options =>
