@@ -60,7 +60,7 @@ public class FileController(
 
     [OutputCache(Duration = OutputCacheDuration.ADay, VaryByQueryKeys = ["id"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "[action]")]
-    [Microsoft.AspNetCore.Mvc.Route(template: "/users/[action]/{id?}")]
+    [Microsoft.AspNetCore.Mvc.Route(template: "/users/[action]/{id:int?}")]
     public async Task<IActionResult> EmailToImage([FromQuery] int? id)
     {
         var emailBytes = await usersService.GetEmailImageAsync(id);
