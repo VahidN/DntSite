@@ -70,4 +70,5 @@ public static class UserProfilesRoutingConstants
         $"{UsersManagerFilterBase}/page/{{CurrentPage:int?}}";
 
     public const string JobSeekers = "/job-seekers";
+    public const string JobSeekersOld = "/jobseekers";
 }
