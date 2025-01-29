@@ -165,12 +165,12 @@ public static partial class DntQueryBuilderExtensions
 
         if (!rule.Value.IsEmpty() && rule.Value.CanCovertTo(type))
         {
-            return rule.Value;
+            return rule.Value.Trim();
         }
 
         var defaultValue = type.GetDefaultValue();
 
-        return string.Create(CultureInfo.InvariantCulture, $"{defaultValue}");
+        return string.Create(CultureInfo.InvariantCulture, $"{defaultValue}").Trim();
     }
 
     private static string EscapeValue(this string? value)
