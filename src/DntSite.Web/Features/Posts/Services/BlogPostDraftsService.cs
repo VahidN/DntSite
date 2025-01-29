@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DntSite.Web.Features.Common.Services.Contracts;
+using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -116,7 +117,7 @@ public class BlogPostDraftsService(
         }
     }
 
-    public async Task<bool> ConvertDraftToLinkAsync(DailyNewsItemModel data, int draftId)
+    public async Task<OperationResult<DailyNewsItem?>> ConvertDraftToLinkAsync(DailyNewsItemModel data, int draftId)
     {
         ArgumentNullException.ThrowIfNull(data);
 
@@ -124,22 +125,22 @@ public class BlogPostDraftsService(
 
         if (draft is null)
         {
-            return false;
+            return ("چنین پیش نویسی در بانک اطلاعاتی وجود ندارد.", OperationStat.Failed, null);
         }
 
         if ((await dailyNewsItemsService.CheckUrlHashAsync(data.Url, id: null, isAdmin: true)).Stat ==
             OperationStat.Failed)
         {
-            return false;
+            return ("لینک وارد شده تکراری است.", OperationStat.Failed, null);
         }
 
-        await dailyNewsItemsService.AddNewsItemAsync(data, new User
+        var result = await dailyNewsItemsService.AddNewsItemAsync(data, new User
         {
             IsRestricted = false,
             Id = draft.UserId!.Value
         });
 
-        return true;
+        return ("لینک وارد شده با موفقیت ثبت شد", OperationStat.Succeeded, result);
     }
 
     private async Task SaveDraftToBlogPostAsync(BlogPostDraft draft)

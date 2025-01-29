@@ -3,6 +3,7 @@ using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.News.Models;
+using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
@@ -195,7 +196,7 @@ public partial class WriteDraft
             return;
         }
 
-        var succeeded = await BlogPostDraftsService.ConvertDraftToLinkAsync(new DailyNewsItemModel
+        var operationResult = await BlogPostDraftsService.ConvertDraftToLinkAsync(new DailyNewsItemModel
         {
             Url = ConvertToLinkModel.Url,
             DescriptionText = draft.Body,
@@ -203,9 +204,9 @@ public partial class WriteDraft
             Tags = draft.Tags
         }, draft.Id);
 
-        if (!succeeded)
+        if (!operationResult.IsSuccess)
         {
-            Alert.ShowAlert(AlertType.Danger, title: "خطا!", message: "امکان تبدیل این لینک وجود ندارد");
+            Alert.ShowAlert(AlertType.Danger, title: "خطا!", operationResult.Message);
 
             return;
         }
@@ -214,7 +215,8 @@ public partial class WriteDraft
 
         await BlogPostDraftsService.DeleteDraftAsync(draft);
 
-        ApplicationState.NavigateTo(PostsRoutingConstants.ComingSoon2);
+        ApplicationState.NavigateTo(NewsRoutingConstants.NewsDetailsBase.CombineUrl(
+            operationResult.Result?.Id.ToString(CultureInfo.InvariantCulture), escapeRelativeUrl: false));
     }
 
     private async Task PerformConvertToCommentAsync()

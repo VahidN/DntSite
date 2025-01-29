@@ -97,7 +97,8 @@
                               FieldIcon="@DntBootstrapIcons.BiLink"
                               @bind-Value="ConvertToLinkModel.Url"/>
 
-                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">
+                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ..."
+                           CancelConfirmMessage="تبدیل به لینک اشتراکی؟">
                     <i class="@DntBootstrapIcons.BiShare"></i>
                     تبدیل به لینک اشتراکی
                 </DntButton>
@@ -118,7 +119,8 @@
                                 FieldIcon="@DntBootstrapIcons.BiNewspaper"
                                 @bind-Value="ConvertToCommentModel.ReplyPostId"/>
 
-                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">
+                <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ..."
+                           CancelConfirmMessage="تبدیل به نظر تکمیلی؟">
                     <i class="@DntBootstrapIcons.BiChat"></i>
                     تبدیل به نظر تکمیلی
                 </DntButton>

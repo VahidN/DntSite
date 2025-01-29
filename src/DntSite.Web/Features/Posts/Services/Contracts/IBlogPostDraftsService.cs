@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.News.Models;
+﻿using DntSite.Web.Features.News.Entities;
+using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
 
@@ -28,5 +29,5 @@ public interface IBlogPostDraftsService : IScopedService
 
     public Task<BlogPostDraft?> FindBlogPostDraftIncludeUserAsync(int id);
 
-    public Task<bool> ConvertDraftToLinkAsync(DailyNewsItemModel data, int draftId);
+    public Task<OperationResult<DailyNewsItem?>> ConvertDraftToLinkAsync(DailyNewsItemModel data, int draftId);
 }
