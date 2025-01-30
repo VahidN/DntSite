@@ -43,7 +43,7 @@
   <ItemGroup>
     <PackageVersion Include="Meziantou.Analyzer" Version="2.0.186" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.5.0.109200" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.6.0.109712" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="9.0.1" />
   </ItemGroup>
 </Project>
