@@ -7,13 +7,21 @@ namespace DntSite.Web.Features.Exports.ModelsMappings;
 
 public static class ExportsMappersExtensions
 {
-    private static readonly CompositeFormat ParsedHtmlDocumentBodyTemplate = CompositeFormat.Parse(format: """
-        <div style="page-break-inside:avoid;page-break-before:always; margin-bottom:5pt;"></div>
-        <div>{0}</div>
-        {1}
-        <div style="page-break-inside:avoid;page-break-before:always;"></div>
-        {2}
-        """);
+    private static readonly CompositeFormat ParsedHtmlDocumentBodyWithCommentsTemplate = CompositeFormat.Parse(
+        format: """
+                <div style="page-break-inside:avoid;page-break-before:always; margin-bottom:5pt;"></div>
+                <div>{0}</div>
+                {1}
+                <div style="page-break-inside:avoid;page-break-before:always;"></div>
+                {2}
+                """);
+
+    private static readonly CompositeFormat ParsedHtmlDocumentBodyWithoutCommentsTemplate = CompositeFormat.Parse(
+        format: """
+                <div style="page-break-inside:avoid;page-break-before:always; margin-bottom:5pt;"></div>
+                <div>{0}</div>
+                {1}
+                """);
 
     private static readonly CompositeFormat ParsedPostBodyTemplate =
         CompositeFormat.Parse(format: "<div class='postBody'>{0}</div>");
@@ -32,8 +40,15 @@ public static class ExportsMappersExtensions
     {
         ArgumentNullException.ThrowIfNull(doc);
 
-        return string.Format(CultureInfo.InvariantCulture, ParsedHtmlDocumentBodyTemplate, doc.ToPostTitle(),
-            doc.ToPostBody(), doc.ToCommentsTree());
+        var postTitle = doc.ToPostTitle();
+        var postBody = doc.ToPostBody();
+        var commentsTree = doc.ToCommentsTree();
+
+        return commentsTree.IsEmpty()
+            ? string.Format(CultureInfo.InvariantCulture, ParsedHtmlDocumentBodyWithoutCommentsTemplate, postTitle,
+                postBody, commentsTree)
+            : string.Format(CultureInfo.InvariantCulture, ParsedHtmlDocumentBodyWithCommentsTemplate, postTitle,
+                postBody, commentsTree);
     }
 
     public static string ToHtmlWithLocalImageUrls(this string? html,
@@ -114,7 +129,7 @@ public static class ExportsMappersExtensions
 
         return string.IsNullOrWhiteSpace(doc.Title)
             ? string.Empty
-            : string.Format(CultureInfo.InvariantCulture, ParsedPostTitleTemplate, doc.Title, doc.Author,
+            : string.Format(CultureInfo.InvariantCulture, ParsedPostTitleTemplate, doc.Title.ApplyRle(), doc.Author,
                 doc.PersianDate.ToPersianNumbers(), doc.Url, new Uri(doc.Url).Host);
     }
 
