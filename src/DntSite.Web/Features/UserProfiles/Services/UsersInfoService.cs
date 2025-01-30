@@ -371,8 +371,8 @@ public class UsersInfoService(
             new GridifyMap<User>
             {
                 From = nameof(User.LastVisitDateTime),
-                To = user => user.LastVisitDateTime,
-                Convertor = persianDateStr => persianDateStr.ToGregorianDateTime() ?? DateTime.UtcNow
+                To = user => user.LastVisitDateTime!.Value.Date,
+                Convertor = persianDateStr => persianDateStr.ToGregorianDateTime()?.Date ?? DateTime.UtcNow.Date
             },
             new GridifyMap<User>
             {
