@@ -4,6 +4,9 @@ namespace DntSite.Web.Features.Common.Services.Contracts;
 
 public interface IEmailsFactoryService : IScopedService
 {
+    public Task InitEmailModelAsync<TLayoutModel>(TLayoutModel model)
+        where TLayoutModel : BaseEmailModel;
+
     public Task SendTextToAllAdminsAsync(string text);
 
     public Task SendNormalEmailAsync(string messageId,

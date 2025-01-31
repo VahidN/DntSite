@@ -1,6 +1,6 @@
 ﻿namespace DntSite.Web.Features.Common.Models;
 
-public abstract class BaseEmailModel
+public class BaseEmailModel
 {
     public string SiteTitle { set; get; } = null!;
 

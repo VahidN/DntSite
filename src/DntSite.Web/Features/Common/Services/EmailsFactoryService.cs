@@ -216,6 +216,20 @@ public class EmailsFactoryService(
         }
     }
 
+    public async Task InitEmailModelAsync<TLayoutModel>(TLayoutModel model)
+        where TLayoutModel : BaseEmailModel
+    {
+        ArgumentNullException.ThrowIfNull(model);
+
+        var appSetting = await GetAppSettingsAsync() ??
+                         throw new InvalidOperationException(message: "appSetting is null");
+
+        model.EmailSig = appSetting.SiteEmailsSig ?? "";
+        model.MsgDateTime = DateTime.UtcNow.ToLongPersianDateTimeString().ToPersianNumbers();
+        model.SiteTitle = appSetting.BlogName;
+        model.SiteRootUri = $"{appSetting.SiteRootUri.TrimEnd(trimChar: '/')}/";
+    }
+
     private string GetPickupFolderPath(SmtpServerSetting smtpServerSetting)
     {
         var folderName = string.IsNullOrWhiteSpace(smtpServerSetting.PickupFolderName)
@@ -246,17 +260,5 @@ public class EmailsFactoryService(
 
         return string.Create(CultureInfo.InvariantCulture,
             $"<br/><hr/><div align='center' dir='ltr'>Sent from IP: {ip} / {user.FriendlyName} / {user.UserId}</div>");
-    }
-
-    private async Task InitEmailModelAsync<TLayoutModel>(TLayoutModel model)
-        where TLayoutModel : BaseEmailModel
-    {
-        var appSetting = await GetAppSettingsAsync() ??
-                         throw new InvalidOperationException(message: "appSetting is null");
-
-        model.EmailSig = appSetting.SiteEmailsSig ?? "";
-        model.MsgDateTime = DateTime.UtcNow.ToLongPersianDateTimeString().ToPersianNumbers();
-        model.SiteTitle = appSetting.BlogName;
-        model.SiteRootUri = $"{appSetting.SiteRootUri.TrimEnd(trimChar: '/')}/";
     }
 }

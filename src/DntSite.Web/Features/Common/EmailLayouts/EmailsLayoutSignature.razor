@@ -1,0 +1,12 @@
+@if (_model is not null)
+{
+    <div>
+        <br/>
+        <br/>
+        با احترام<br/>
+        <a href="@_model.SiteRootUri"><span dir="@_model.EmailSig.GetDir()">@_model.EmailSig</span></a>
+        <br/>
+        <span dir="@_model.MsgDateTime.GetDir()">@_model.MsgDateTime</span>
+        <br/>
+    </div>
+}
