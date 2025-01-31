@@ -145,7 +145,7 @@ public static class ExportsMappersExtensions
         }
 
         var sb = new StringBuilder();
-        sb.AppendLine(value: "<div class='postBody'>");
+        sb.AppendLine(value: "<div class='postBody mt5'>");
         sb.AppendLine(value: "<h3>نظرات</h3>");
         sb.AppendLine(commentsHtml);
         sb.AppendLine(value: "</div>");

@@ -129,7 +129,7 @@ pre {
     overflow: hidden;
     word-wrap: break-word;
     box-shadow: 0 1px 3px #DBDBD4;
-    margin-bottom:20px;
+    margin-bottom:10px;
     margin-top:15px;
 }
 
@@ -146,10 +146,13 @@ pre {
     -ms-border-radius: 5px;
     -o-border-radius: 5px;
     border-radius: 5px;
-    padding: 10px 15px 10px 15px;
+    padding: 6px 15px 5px 15px;
     overflow-wrap: break-word;
     word-wrap: break-word;
-    margin-bottom: 15px;
+}
+
+.mt5 {
+  margin-top: 5px;
 }
 
 a:link, a:visited {
@@ -168,7 +171,6 @@ a:hover {
 
 pre, code {
     font-family: 'JetBrainsMono', 'Samim'  !important;
-    font-size: 0.9rem !important;
     white-space: pre-wrap;
     overflow: auto;
     word-break: break-word;
