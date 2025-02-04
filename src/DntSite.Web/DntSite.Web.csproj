@@ -46,8 +46,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
     <PackageReference Include="DNTCommon.Web.Core"/>
     <PackageReference Include="Gridify.EntityFramework"/>
-    <PackageReference Include="Humanizer.Core"/>
-    <PackageReference Include="Scrutor"/>
+    <PackageReference Include="Humanizer.Core"/>    
     <PackageReference Include="EFCoreSecondLevelCacheInterceptor.MemoryCache"/>    
     <PackageReference Include="Lucene.Net"/>
     <PackageReference Include="Lucene.Net.Analysis.Common"/>
