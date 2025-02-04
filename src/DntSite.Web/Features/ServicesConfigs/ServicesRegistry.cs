@@ -20,7 +20,7 @@ public static class ServicesRegistry
 
         services.AddHttpContextAccessor();
         services.AddIPrincipal();
-        services.ScanAllServices();
+        services.AutoInjectAllServices();
 
         var siteSettings = configuration.GetSiteSettings();
         services.AddConfiguredDbContext(siteSettings, environment);
@@ -56,38 +56,6 @@ public static class ServicesRegistry
         services.AddOptions<StartupSettingsModel>().Bind(configuration);
         services.Configure<AntiXssConfig>(options => configuration.GetSection(key: "AntiXssConfig").Bind(options));
         services.Configure<AntiDosConfig>(options => configuration.GetSection(key: "AntiDosConfig").Bind(options));
-    }
-
-    private static void ScanAllServices(this IServiceCollection services)
-    {
-        WriteLine(
-            string.Create(CultureInfo.InvariantCulture, $"{DateTime.UtcNow:HH:mm:ss.fff} Started ScanAllServices"));
-
-        // Using the `Scrutor` to add all of the application's services at once.
-        services.Scan(scan => scan.FromAssembliesOf(typeof(IDataSeedersRunner))
-            .AddClasses(classes => classes.AssignableTo<ISingletonService>())
-            .AsImplementedInterfaces()
-            .WithSingletonLifetime()
-            .AddClasses(classes => classes.AssignableTo<BackgroundService>())
-            .As<IHostedService>()
-            .WithSingletonLifetime()
-            .AddClasses(classes => classes.AssignableTo<IScopedService>())
-            .AsImplementedInterfaces()
-            .WithScopedLifetime()
-            .AddClasses(classes => classes.AssignableTo<ITransientService>())
-            .AsImplementedInterfaces()
-            .WithTransientLifetime()
-            .AddClasses(classes => classes.Where(type =>
-            {
-                var allInterfaces = type.GetInterfaces();
-
-                return allInterfaces.Contains(typeof(IMiddleware)) && allInterfaces.Contains(typeof(ISingletonService));
-            }))
-            .AsSelf()
-            .WithSingletonLifetime());
-
-        WriteLine(string.Create(CultureInfo.InvariantCulture,
-            $"{DateTime.UtcNow:HH:mm:ss.fff} Finished ScanAllServices"));
     }
 
     private static StartupSettingsModel GetSiteSettings(this IConfiguration configuration)
