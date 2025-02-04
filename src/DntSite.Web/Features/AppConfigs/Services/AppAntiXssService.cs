@@ -19,7 +19,9 @@ public class AppAntiXssService(
         {
             ConvertPToDiv = true,
             RemoveRelAndTargetFromInternalUrls = true,
-            HostUri = baseUri
+            HostUri = baseUri,
+            RemoveConsecutiveEmptyLines = true,
+            MaxAllowedConsecutiveEmptyLines = 2
         };
 
         if (baseUrl.IsEmpty() || baseUri is null)
