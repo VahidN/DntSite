@@ -191,7 +191,8 @@ public class DailyNewsScreenshotsService(
         await htmlToPngGenerator.GeneratePngFromHtmlAsync(new HtmlToPngGeneratorOptions
         {
             SourceHtmlFileOrUri = currentUrl,
-            OutputPngFile = path
+            OutputPngFile = path,
+            WaitForExit = TimeSpan.FromMinutes(minutes: 5)
         }, TimeSpan.FromMinutes(value: 10));
     }
 
