@@ -191,9 +191,9 @@ public class DailyNewsScreenshotsService(
         await htmlToPngGenerator.GeneratePngFromHtmlAsync(new HtmlToPngGeneratorOptions
         {
             SourceHtmlFileOrUri = currentUrl,
-            OutputPngFile = path,
+            OutputFilePath = path,
             WaitForExit = TimeSpan.FromMinutes(minutes: 5)
-        }, TimeSpan.FromMinutes(value: 10));
+        });
     }
 
     private Task<List<DailyNewsItem>> GetItemsNeedUpdateAsync()

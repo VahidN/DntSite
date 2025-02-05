@@ -189,9 +189,9 @@ public class PdfExportService(
             await htmlToPdfGenerator.GeneratePdfFromHtmlAsync(new HtmlToPdfGeneratorOptions
             {
                 SourceHtmlFileOrUri = tempHtmlDocFilePath,
-                OutputPdfFile = outputPdfFilePath,
+                OutputFilePath = outputPdfFilePath,
                 DocumentMetadata = metadata
-            }, _lockTimeout);
+            });
 
             cacheService.Remove(GetCacheKey(itemType, id));
         }
