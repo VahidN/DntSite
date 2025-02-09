@@ -36,6 +36,36 @@ html, body {
     font-family: 'Samim', Tahoma;
 }
 
+.h1, h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+}
+
+.h2, h2 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+}
+
+.h3, h3 {
+    font-size: 1.10rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+}
+
+.h4, h4 {
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin-top: 1.20rem;
+}
+
+.h5, h5 {
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-top: 1.20rem;
+}
+
 a {
     --bs-link-underline-opacity: 0;
     text-decoration-color: rgba(var(--bs-link-color-rgb), var(--bs-link-underline-opacity, 1)) !important;
