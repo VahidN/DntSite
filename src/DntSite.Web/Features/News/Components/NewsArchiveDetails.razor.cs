@@ -108,7 +108,7 @@ public partial class NewsArchiveDetails
             case CommentAction.Edit:
             case CommentAction.Cancel:
             default:
-                break;
+                return;
         }
 
         await GetCommentsAsync(model.FormPostId);

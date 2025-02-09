@@ -82,15 +82,15 @@ public partial class ManageBlogPostCommentItem
             case CommentAction.SubmitEditedComment:
             case CommentAction.SubmitNewComment:
             case CommentAction.Delete:
-                await HandleCommentAction.Invoke(new CommentActionModel
-                {
-                    Comment = Comment,
-                    CommentAction = CommentActionValue,
-                    FormCommentId = FormCommentId,
-                    FormPostId = FormPostId
-                });
-
                 break;
         }
+
+        await HandleCommentAction.Invoke(new CommentActionModel
+        {
+            Comment = Comment,
+            CommentAction = CommentActionValue,
+            FormCommentId = FormCommentId,
+            FormPostId = FormPostId
+        });
     }
 }

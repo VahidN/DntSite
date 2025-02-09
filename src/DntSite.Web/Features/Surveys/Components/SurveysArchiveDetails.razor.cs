@@ -99,7 +99,7 @@ public partial class SurveysArchiveDetails
             case CommentAction.Edit:
             case CommentAction.Cancel:
             default:
-                break;
+                return;
         }
 
         await GetCommentsAsync(model.FormPostId);

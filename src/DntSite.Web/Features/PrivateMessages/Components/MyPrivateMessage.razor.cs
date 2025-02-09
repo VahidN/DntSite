@@ -88,12 +88,6 @@ public partial class MyPrivateMessage
 
         switch (model.CommentAction)
         {
-            case CommentAction.ReplyToPost:
-                break;
-            case CommentAction.ReplyToComment:
-                break;
-            case CommentAction.Edit:
-                break;
             case CommentAction.Delete:
                 await PrivateMessageCommentsService.DeleteCommentAsync(model.FormCommentId);
 
@@ -114,7 +108,11 @@ public partial class MyPrivateMessage
 
                 break;
             case CommentAction.Cancel:
-                break;
+            case CommentAction.ReplyToPost:
+            case CommentAction.ReplyToComment:
+            case CommentAction.Edit:
+            default:
+                return;
         }
 
         await GetCommentsAsync(model.FormPostId);

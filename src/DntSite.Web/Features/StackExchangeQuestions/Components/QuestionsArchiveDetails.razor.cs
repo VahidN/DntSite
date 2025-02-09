@@ -17,6 +17,8 @@ public partial class QuestionsArchiveDetails
 
     private List<StackExchangeQuestionComment>? _questionComments;
 
+    private bool _showMarkQuestionCommentAsAnswer = true;
+
     [Parameter] public int? QuestionId { set; get; }
 
     private StackExchangeQuestion? CurrentPost => _details?.CurrentItem;
@@ -106,11 +108,15 @@ public partial class QuestionsArchiveDetails
                     ApplicationState.CurrentUser?.User?.IsRestricted ?? true);
 
                 break;
+            case CommentAction.ReplyToPost:
             case CommentAction.ReplyToComment:
             case CommentAction.Edit:
             case CommentAction.Cancel:
             default:
-                break;
+                _showMarkQuestionCommentAsAnswer = false;
+                StateHasChanged();
+
+                return;
         }
 
         await GetCommentsAsync(model.FormPostId);

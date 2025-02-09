@@ -104,8 +104,11 @@
                 UploadFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.FileUpload"
                 UploadImageFileApiPath="@ApiUrlsRoutingConstants.UploadFile.HttpPost.ImageUpload">
                 <AdditionalButtonsContent>
-                    <MarkQuestionCommentAsAnswer IsQuestionAnswered="CurrentPost.IsAnswered"
-                                                 QuestionComment="record"/>
+                    @if (_showMarkQuestionCommentAsAnswer)
+                    {
+                        <MarkQuestionCommentAsAnswer IsQuestionAnswered="CurrentPost.IsAnswered"
+                                                     QuestionComment="record"/>
+                    }
                 </AdditionalButtonsContent>
             </ShowBlogPostCommentItem>
         </ItemTemplate>

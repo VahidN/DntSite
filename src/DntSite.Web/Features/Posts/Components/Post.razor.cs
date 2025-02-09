@@ -146,7 +146,7 @@ public partial class Post
             case CommentAction.Edit:
             case CommentAction.Cancel:
             default:
-                break;
+                return;
         }
 
         await GetCommentsAsync(model.FormPostId);

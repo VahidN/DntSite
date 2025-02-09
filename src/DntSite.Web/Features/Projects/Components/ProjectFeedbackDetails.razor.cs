@@ -128,7 +128,7 @@ public partial class ProjectFeedbackDetails
             case CommentAction.Edit:
             case CommentAction.Cancel:
             default:
-                break;
+                return;
         }
 
         await GetCommentsAsync(model.FormPostId);
