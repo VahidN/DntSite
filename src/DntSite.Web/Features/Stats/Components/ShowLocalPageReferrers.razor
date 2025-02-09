@@ -2,19 +2,21 @@
 {
     <DntCard MarginTop="4">
         <Header>
-            <h5>صفحات مرتبط</h5>
+            <strong>صفحات مرتبط</strong>
         </Header>
         <ChildContent>
             <ul class="list-group">
                 @foreach (var item in _rows.Data)
                 {
-                    <a class="list-group-item list-group-item-action d-flex align-items-center" href="@item.ReferrerUrl">
+                    <a class="list-group-item list-group-item-action d-flex align-items-center"
+                       href="@item.ReferrerUrl">
                         @item.ReferrerTitle
                     </a>
                 }
                 @if (HasMoreData)
                 {
-                    <a class="list-group-item list-group-item-action d-flex align-items-center" href="@MoreLocalPageReferrersUrl">
+                    <a class="list-group-item list-group-item-action d-flex align-items-center"
+                       href="@MoreLocalPageReferrersUrl">
                         بیشتر ...
                         <i class='@DntBootstrapIcons.BiArrowLeftCircleFill ms-1'></i>
                     </a>

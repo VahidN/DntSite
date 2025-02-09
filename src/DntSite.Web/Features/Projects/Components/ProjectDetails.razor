@@ -4,10 +4,10 @@
             <div class="col-md-6">
                 @if (!string.IsNullOrWhiteSpace(Project!.SourcecodeRepositoryUrl))
                 {
-                    <h5>
+                    <strong>
                         <span aria-hidden="true" class="@DntBootstrapIcons.BiFileCode"></span>
                         آدرس مخزن کد پروژه
-                    </h5>
+                    </strong>
                     <div align="right" dir="ltr">
                         <a href="@Project.SourcecodeRepositoryUrl">
                             @if (!string.IsNullOrWhiteSpace(Project.Logo))
@@ -24,10 +24,10 @@
             <div class="col-md-6">
                 @if (!string.IsNullOrWhiteSpace(Project.RequiredDependencies))
                 {
-                    <h5>
+                    <strong>
                         <span aria-hidden="true" class="@DntBootstrapIcons.BiPuzzle"></span>
                         وابستگی‌های پروژه
-                    </h5>
+                    </strong>
                     <div class="editorText">@Project.RequiredDependencies.HtmlRaw()</div>
                 }
             </div>
@@ -37,30 +37,30 @@
             <div class="col-md-6">
                 @if (!string.IsNullOrWhiteSpace(Project.RelatedArticles))
                 {
-                    <h5>
+                    <strong>
                         <span aria-hidden="true" class="@DntBootstrapIcons.BiFileText"></span>
                         مقالات و مطالب مرتبط
-                    </h5>
+                    </strong>
                     <div class="editorText">@Project.RelatedArticles.HtmlRaw()</div>
                 }
             </div>
             <div class="col-md-6">
                 @if (!string.IsNullOrWhiteSpace(Project.DevelopersDescription))
                 {
-                    <h5>
+                    <strong>
                         <span aria-hidden="true" class="@DntBootstrapIcons.BiPeople"></span>
                         همکاران
-                    </h5>
+                    </strong>
                     <div class="editorText">@Project.DevelopersDescription.HtmlRaw()</div>
                 }
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-12">
-                <h5>
+                <strong>
                     <span aria-hidden="true" class="@DntBootstrapIcons.BiLock"></span>
                     نوع مجوز استفاده از پروژه
-                </h5>
+                </strong>
                 <div class="editorText">@Project.License.HtmlRaw()</div>
             </div>
         </div>

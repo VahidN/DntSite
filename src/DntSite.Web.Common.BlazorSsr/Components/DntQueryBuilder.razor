@@ -5,9 +5,9 @@
     <EditForm Model="this" method="post" OnValidSubmit="OnValidSubmitAsync" FormName="@FormName" Enhance>
         <fieldset class="@FieldSetClass" @attributes="@AdditionalAttributes">
             <legend class="w-auto" style="float: none; padding: inherit;">
-                <h3>
+                <strong>
                     <span class="@LegendHeaderClass">@Header</span>
-                </h3>
+                </strong>
             </legend>
             <div class="@FieldSetBodyClass">
                 @if (string.IsNullOrWhiteSpace(PreviousFilter))
@@ -51,7 +51,8 @@
                             <div class="@SearchRuleClass">
                                 <div class="col-auto">
                                     <span class="@RowPropertyTitleClass">@property.Title</span>
-                                    <input type="hidden" name="@rule.RulePropertyIndexName" value="@property.PropertyIndex"/>
+                                    <input type="hidden" name="@rule.RulePropertyIndexName"
+                                           value="@property.PropertyIndex"/>
                                 </div>
 
                                 <div class="col-auto">

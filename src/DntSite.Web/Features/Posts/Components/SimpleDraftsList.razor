@@ -4,7 +4,7 @@
     <DntCard>
         <Header>
             <DntLink Url="@TitleUrl" IsExternal="false">
-                <h5>@Title</h5>
+                <strong>@Title</strong>
             </DntLink>
         </Header>
         <ChildContent>
@@ -17,7 +17,8 @@
                             <div class="d-flex flex-row justify-content-start card-header entry-title shadow-sm">
                                 @if (!item.IsReady)
                                 {
-                                    <span alt="در حال تهیه" title="در حال تهیه" class="@DntBootstrapIcons.BiPencil me-2" aria-hidden="true"></span>
+                                    <span alt="در حال تهیه" title="در حال تهیه" class="@DntBootstrapIcons.BiPencil me-2"
+                                          aria-hidden="true"></span>
                                 }
                                 else
                                 {
@@ -60,7 +61,8 @@
                             {
                                 <div>
                                     <span aria-hidden="true" class="@DntBootstrapIcons.BiClock me-2 ms-3"></span>
-                                    <span class="text-muted">@item.DateTimeToShow.ToFriendlyPersianDateTextify().ToPersianNumbers()</span>
+                                    <span
+                                        class="text-muted">@item.DateTimeToShow.ToFriendlyPersianDateTextify().ToPersianNumbers()</span>
                                 </div>
                             }
 
@@ -85,7 +87,8 @@
                         @if (canUserEditThisDraft)
                         {
                             <div>
-                                <a href="@PostsRoutingConstants.WriteDraftEditBase/@Uri.EscapeDataString(ProtectionProvider.Encrypt(item.Id.ToString(CultureInfo.InvariantCulture)) ?? "")" class="btn btn-success btn-sm">ویرایش</a>
+                                <a href="@PostsRoutingConstants.WriteDraftEditBase/@Uri.EscapeDataString(ProtectionProvider.Encrypt(item.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
+                                   class="btn btn-success btn-sm">ویرایش</a>
                                 <a href="@PostsRoutingConstants.WriteDraftDeleteBase/@Uri.EscapeDataString(ProtectionProvider.Encrypt(item.Id.ToString(CultureInfo.InvariantCulture)) ?? "")"
                                    data-cancel-confirm-message="آیا می‌خواهید این پیش‌نویس را حذف کنید؟"
                                    class="btn btn-danger me-2 btn-sm">

@@ -1,5 +1,4 @@
 ﻿@typeparam TReactionEntity      where TReactionEntity : BaseReactionEntity<TForeignKeyEntity>, new()
-    @using DntSite.Web.Features.UserProfiles.Components
     @typeparam TForeignKeyEntity      where TForeignKeyEntity : BaseAuditedInteractiveEntity
 
 <div class="d-flex flex-column" @attributes="AdditionalAttributes">
@@ -69,13 +68,13 @@
                     <div class="card-header bg-success bg-opacity-50 d-flex justify-content-start">
                         <button type="button" class="btn-close align-self-center" data-dnt-btn-close="@ThumbsUpId">
                         </button>
-                        <h5 class="mt-1 ms-2">رضایتمندان!</h5>
+                        <strong class="mt-1 ms-2">رضایتمندان!</strong>
                     </div>
                     <div class="card-body d-flex flex-row flex-wrap justify-content-evenly">
                         @foreach (var user in _thumbsUpUsers)
                         {
                             <div>
-                                <PrintUser IsNavLink="false" User="@user"/>
+                                <DntSite.Web.Features.UserProfiles.Components.PrintUser IsNavLink="false" User="@user"/>
                             </div>
                         }
                     </div>
@@ -88,13 +87,13 @@
                     <div class="card-header bg-danger bg-opacity-50 d-flex justify-content-start">
                         <button type="button" class="btn-close align-self-center" data-dnt-btn-close="@ThumbsDownId">
                         </button>
-                        <h5 class="mt-1 ms-2">نارضایتمندان!</h5>
+                        <strong class="mt-1 ms-2">نارضایتمندان!</strong>
                     </div>
                     <div class="card-body d-flex flex-row flex-wrap justify-content-evenly">
                         @foreach (var user in _thumbsDownUsers)
                         {
                             <div>
-                                <PrintUser IsNavLink="false" User="@user"/>
+                                <DntSite.Web.Features.UserProfiles.Components.PrintUser IsNavLink="false" User="@user"/>
                             </div>
                         }
                     </div>

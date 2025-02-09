@@ -12,9 +12,9 @@
                         <DntSite.Web.Features.UserProfiles.Components.PrintUser User="@RecordUser" IsNavLink="false"/>
                     </div>
                     <DntLink IsExternal="false" Url="@PostUrlWithComment" id="@CommentHtmlId" name="@CommentHtmlId">
-                        <h5 class="mt-2" dir="@PostTitle.GetDir()">
+                        <strong class="mt-2" dir="@PostTitle.GetDir()">
                             @PostTitle
-                        </h5>
+                        </strong>
                     </DntLink>
                 </div>
                 <div class="d-flex align-items-center justify-content-start flex-wrap">
@@ -29,7 +29,7 @@
             {
                 <div class="d-flex align-items-center justify-content-start flex-wrap">
                     <a href="@(PostUrl)#comment-@CommentId" name="comment-@CommentId" id="comment-@CommentId">
-                        <h5 class="p-1">#</h5>
+                        <strong class="p-1">#</strong>
                     </a>
                     <div class="author p-1">
                         <DntPrintUserBrowser BrowserName="@CreatedByUserAgent"/>

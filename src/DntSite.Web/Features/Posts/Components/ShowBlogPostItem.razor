@@ -12,9 +12,9 @@
             @BeforeHeaderContent
         }
         <DntLink IsExternal="false" Url="@PostUrl">
-            <h5 class="mt-2" dir="@Title.GetDir()">
+            <strong class="mt-2" dir="@Title.GetDir()">
                 @Title
-            </h5>
+            </strong>
         </DntLink>
         @if (AdditionalHeaderContent is not null)
         {
@@ -61,7 +61,8 @@
             @if (ShowNumberOfViews)
             {
                 <div class="me-3">
-                    <span class="@DntBootstrapIcons.BiEye me-2" title="از طریق فید: @NumberOfViewsFromFeed.ToPersianNumbers()" aria-hidden="true"></span>
+                    <span class="@DntBootstrapIcons.BiEye me-2"
+                          title="از طریق فید: @NumberOfViewsFromFeed.ToPersianNumbers()" aria-hidden="true"></span>
                     <span class="text-muted">@NumberOfViews.ToPersianNumbers()</span>
                 </div>
             }

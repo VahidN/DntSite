@@ -8,17 +8,17 @@
         }
         <div class="row">
             <div class="col-md-6">
-                <h5>
+                <strong>
                     <span aria-hidden="true" class="@DntBootstrapIcons.BiCardChecklist"></span>
                     پیشنیاز‌های دوره
-                </h5>
+                </strong>
                 <span>@Course!.Requirements.HtmlRaw()</span>
             </div>
             <div class="col-md-6">
-                <h5>
+                <strong>
                     <span aria-hidden="true" class="@DntBootstrapIcons.BiPass"></span>
                     سطح دوره
-                </h5>
+                </strong>
                 <span>@Course.TopicsList.HtmlRaw()</span>
             </div>
         </div>
@@ -26,10 +26,10 @@
             @if (Course.CourseTopics.Any(x => x is { IsMainTopic: true, IsDeleted: false }))
             {
                 <div class="col-md-6">
-                    <h5>
+                    <strong>
                         <span aria-hidden="true" class="@DntBootstrapIcons.BiPencil"></span>
                         لیست سرفصل‌ها
-                    </h5>
+                    </strong>
                     <ul>
                         @foreach (var item in Course.CourseTopics.Where(x => x is { IsMainTopic: true, IsDeleted: false }))
                         {
@@ -45,10 +45,10 @@
             @if (Course.CourseTopics.Any(x => x is { IsMainTopic: false, IsDeleted: false }))
             {
                 <div class="col-md-6">
-                    <h5>
+                    <strong>
                         <span aria-hidden="true" class="@DntBootstrapIcons.BiWrench"></span>
                         لیست مطالب تکمیلی
-                    </h5>
+                    </strong>
                     <ul>
                         @foreach (var item in Course.CourseTopics.Where(x => x is { IsMainTopic: false, IsDeleted: false }))
                         {
