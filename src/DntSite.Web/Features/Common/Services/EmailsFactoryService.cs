@@ -84,7 +84,7 @@ public class EmailsFactoryService(
         var smtpServerSetting = appSetting.SmtpServerSetting;
         var pickupFolder = GetPickupFolderPath(smtpServerSetting);
 
-        await webMailService.SendEmailAsync(new SmtpConfig
+        webMailService.BackgroundQueueSendEmail(new SmtpConfig
             {
                 Server = smtpServerSetting.Address,
                 Port = smtpServerSetting.Port,
@@ -259,6 +259,6 @@ public class EmailsFactoryService(
             .GetCurrentUserAsync();
 
         return string.Create(CultureInfo.InvariantCulture,
-            $"<br/><hr/><div align='center' dir='ltr'>Sent from IP: {ip} / {user.FriendlyName} / {user.UserId}</div>");
+            $"<br/><hr/><div align='center' style='font-family:Tahoma;' dir='ltr'>Sent from IP: {ip} / {user.FriendlyName} / {user.UserId}</div>");
     }
 }
