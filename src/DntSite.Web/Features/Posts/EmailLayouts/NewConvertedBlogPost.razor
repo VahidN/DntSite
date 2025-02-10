@@ -1,13 +1,13 @@
 @using DntSite.Web.Features.Posts.Models
 <LayoutView Layout="@typeof(EmailsLayout)">
     با سلام
-    <br/>
+    <br/><br/>
     مطلب تبدیل شده جدید ذیل به سایت اضافه شده است:
-    <br/>
+    <br/><br/>
     <div dir="rtl" style="font-family: Tahoma; ">
         <strong>عنوان :</strong><br/>
         @Model.Source
-        <br/>
+        <br/><br/>
         <strong>مطلب :</strong><br/>
         @Model.Dest.HtmlRaw()
         <br/>
