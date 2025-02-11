@@ -21,6 +21,6 @@ public partial class ShowExportedFile
     private string Title => string.Create(CultureInfo.InvariantCulture,
         $"دریافت نگارش PDF با حجم {_exportFileLocation?.OutputPdfFileSize}");
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
         => _exportFileLocation = await PdfExportService.GetExportFileLocationAsync(ItemType, Id);
 }
