@@ -42,7 +42,6 @@
     <PackageReference Include="Microsoft.Web.LibraryManager.Build"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
-    <PackageReference Include="DNTPersianUtils.Core"/>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
     <PackageReference Include="DNTCommon.Web.Core"/>
     <PackageReference Include="Gridify.EntityFramework"/>

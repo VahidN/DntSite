@@ -17,7 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web"/>
-    <PackageReference Include="DNTPersianUtils.Core"/>
     <PackageReference Include="DNTCommon.Web.Core"/>
     <PackageReference Include="Microsoft.TypeScript.MSBuild">
       <PrivateAssets>all</PrivateAssets>
