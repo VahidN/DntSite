@@ -36,8 +36,9 @@ public partial class QuestionsArchive
     private async Task DoSearchAsync(string gridifyFilter)
     {
         await SearchItemsService.SaveSearchItemAsync(gridifyFilter);
-        await ShowDailyQuestionsItemsAsync(gridifyFilter);
-        StateHasChanged();
+
+        ApplicationState.NavigateTo(
+            $"{QuestionsRoutingConstants.QuestionsFilterBase}/{Uri.EscapeDataString(gridifyFilter ?? "*")}/page/1");
     }
 
     private async Task ShowDailyQuestionsItemsAsync(string? gridifyFilter)

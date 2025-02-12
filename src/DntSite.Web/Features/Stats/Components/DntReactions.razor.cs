@@ -55,11 +55,7 @@ public partial class DntReactions<TReactionEntity, TForeignKeyEntity>
 
     [Parameter] [EditorRequired] public required ICollection<TReactionEntity> Reactions { set; get; }
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        _reactionsInfo = GetReactionsInfo();
-    }
+    protected override void OnParametersSet() => _reactionsInfo = GetReactionsInfo();
 
     private async Task OnValidSubmitAsync()
     {

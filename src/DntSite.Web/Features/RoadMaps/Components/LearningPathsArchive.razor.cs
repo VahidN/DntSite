@@ -36,8 +36,9 @@ public partial class LearningPathsArchive
     private async Task DoSearchAsync(string gridifyFilter)
     {
         await SearchItemsService.SaveSearchItemAsync(gridifyFilter);
-        await ShowLearningPathsAsync(gridifyFilter);
-        StateHasChanged();
+
+        ApplicationState.NavigateTo(
+            $"{RoadMapsRoutingConstants.LearningPathsFilterBase}/{Uri.EscapeDataString(gridifyFilter ?? "*")}/page/1");
     }
 
     private async Task ShowLearningPathsAsync(string? gridifyFilter)

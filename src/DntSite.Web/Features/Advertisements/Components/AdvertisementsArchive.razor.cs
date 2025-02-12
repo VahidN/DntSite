@@ -37,8 +37,9 @@ public partial class AdvertisementsArchive
     private async Task DoSearchAsync(string gridifyFilter)
     {
         await SearchItemsService.SaveSearchItemAsync(gridifyFilter);
-        await ShowAdvertisementsAsync(gridifyFilter);
-        StateHasChanged();
+
+        ApplicationState.NavigateTo(
+            $"{AdvertisementsRoutingConstants.AdvertisementsFilterBase}/{Uri.EscapeDataString(gridifyFilter ?? "*")}/page/1");
     }
 
     private async Task ShowAdvertisementsAsync(string? gridifyFilter)

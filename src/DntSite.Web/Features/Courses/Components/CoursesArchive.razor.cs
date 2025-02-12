@@ -36,8 +36,9 @@ public partial class CoursesArchive
     private async Task DoSearchAsync(string gridifyFilter)
     {
         await SearchItemsService.SaveSearchItemAsync(gridifyFilter);
-        await ShowCoursesAsync(gridifyFilter);
-        StateHasChanged();
+
+        ApplicationState.NavigateTo(
+            $"{CoursesRoutingConstants.CoursesFilterBase}/{Uri.EscapeDataString(gridifyFilter ?? "*")}/page/1");
     }
 
     private async Task ShowCoursesAsync(string? gridifyFilter)

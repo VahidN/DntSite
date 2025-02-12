@@ -36,8 +36,9 @@ public partial class NewsArchive
     private async Task DoSearchAsync(string gridifyFilter)
     {
         await SearchItemsService.SaveSearchItemAsync(gridifyFilter);
-        await ShowDailyNewsItemsAsync(gridifyFilter);
-        StateHasChanged();
+
+        ApplicationState.NavigateTo(
+            $"{NewsRoutingConstants.NewsFilterBase}/{Uri.EscapeDataString(gridifyFilter ?? "*")}/page/1");
     }
 
     private async Task ShowDailyNewsItemsAsync(string? gridifyFilter)
