@@ -134,6 +134,32 @@ label {
     text-align: left !important;
 }
 
+.ql-editor li[data-list=bullet]:before {
+    content: "•";
+    margin: 0.4em;
+}
+
+.ql-editor ol {
+    padding-left: 0;
+    text-align: right;
+    direction: rtl;
+    padding-right: 1.5em;
+}
+
+.ql-editor li[data-list=bullet] > .ql-ui:before {
+    content: ''
+}
+
+
+.ql-editor li[data-list=ordered] > .ql-ui:before {
+    content: ''
+}
+
+.ql-editor li[data-list=ordered] {
+    list-style: decimal;
+}
+
+
 /*.ql-editor p, .ql-editor h1, .ql-editor h2, .ql-editor h3, .ql-editor h4, .ql-editor h5, .ql-editor h6 {
     text-align: right !important;
     direction: rtl !important;
