@@ -53,7 +53,8 @@ public static class ExportsMappersExtensions
 
     public static string ToHtmlWithLocalImageUrls(this string? html,
         string articleImagesFolderPath,
-        string courseImagesFolderPath)
+        string courseImagesFolderPath,
+        string newsImagesFolderPath)
     {
         if (html.IsEmpty())
         {
@@ -83,6 +84,14 @@ public static class ExportsMappersExtensions
             }
 
             relativePath = GetImageRelativePath(pattern: "file/courseimages?name=", imageUrl, courseImagesFolderPath,
+                fileName);
+
+            if (!relativePath.IsEmpty())
+            {
+                return relativePath;
+            }
+
+            relativePath = GetImageRelativePath(pattern: "file/NewsThumb?name=", imageUrl, newsImagesFolderPath,
                 fileName);
 
             if (!relativePath.IsEmpty())

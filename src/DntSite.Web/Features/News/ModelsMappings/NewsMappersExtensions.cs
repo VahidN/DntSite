@@ -7,7 +7,7 @@ namespace DntSite.Web.Features.News.ModelsMappings;
 
 public static class NewsMappersExtensions
 {
-    private static readonly CompositeFormat ParsedPostUrlTemplate =
+    public static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(NewsRoutingConstants.PostUrlTemplate);
 
     public static WhatsNewItemModel MapToWhatsNewItemModel(this DailyNewsItemComment item, string siteRootUri = "")

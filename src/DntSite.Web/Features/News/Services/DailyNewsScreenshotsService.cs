@@ -47,7 +47,7 @@ public class DailyNewsScreenshotsService(
                     return numberOfDownloadedFiles;
                 }
 
-                var (name, path) = GetImageInfo(item.Id);
+                var (name, path) = GetThumbnailImageInfo(item.Id);
                 currentUrl = item.Url;
 
                 item.FetchRetries = item.FetchRetries.HasValue ? item.FetchRetries.Value + 1 : 1;
@@ -104,7 +104,7 @@ public class DailyNewsScreenshotsService(
             return string.Empty;
         }
 
-        var (fileName, path) = GetImageInfo(item.Id);
+        var (fileName, path) = GetThumbnailImageInfo(item.Id);
 
         if (!File.Exists(path))
         {
@@ -159,6 +159,14 @@ public class DailyNewsScreenshotsService(
         await uow.SaveChangesAsync();
     }
 
+    public (string FileName, string Path) GetThumbnailImageInfo(int id)
+    {
+        var name = string.Create(CultureInfo.InvariantCulture, $"news-{id}.jpg");
+        var path = Path.Combine(appFoldersService.ThumbnailsServiceFolderPath, name);
+
+        return (name, path);
+    }
+
     private void InvalidateScreenshot(DailyNewsItem? post)
     {
         if (post is null)
@@ -166,7 +174,7 @@ public class DailyNewsScreenshotsService(
             return;
         }
 
-        var (_, path) = GetImageInfo(post.Id);
+        var (_, path) = GetThumbnailImageInfo(post.Id);
         path.TryDeleteFile(logger);
         post.PageThumbnail = null;
         post.FetchRetries = 0;
@@ -201,14 +209,6 @@ public class DailyNewsScreenshotsService(
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
-    private (string FileName, string Path) GetImageInfo(int id)
-    {
-        var name = string.Create(CultureInfo.InvariantCulture, $"news-{id}.jpg");
-        var path = Path.Combine(appFoldersService.ThumbnailsServiceFolderPath, name);
-
-        return (name, path);
-    }
-
     private List<int> GetAvailableImageFileIds()
     {
         var imageFiles = Directory.GetFiles(appFoldersService.ThumbnailsServiceFolderPath, searchPattern: "*.jpg");
@@ -240,7 +240,7 @@ public class DailyNewsScreenshotsService(
     {
         foreach (var item in itemsNeedUpdate.Where(item => availableImageFileIds.Contains(item.Id)))
         {
-            var (name, path) = GetImageInfo(item.Id);
+            var (name, path) = GetThumbnailImageInfo(item.Id);
 
             if (File.Exists(path))
             {

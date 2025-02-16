@@ -1,5 +1,6 @@
 ﻿@using DntSite.Web.Features.News.Entities
 @using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
 <DntSitePageTitle Group="اشتراک‌ها" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
 
 <DntLoading IsLoading="@(Posts is null)">
@@ -36,6 +37,10 @@
                           ShowSocialLinks="true"
                           ShowNumberOfViews="true"
                           ShowNumberOfComments="true">
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@post.Id"
+                                                                          ItemType="@WhatsNewItemType.News"/>
+            </AdditionalInfoContent>
             <AdditionalHeaderContent>
                 <PrintNewsRedirect Id="@post.Id"
                                    Url="@post.Url"

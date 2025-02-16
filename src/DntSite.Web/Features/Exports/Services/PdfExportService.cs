@@ -232,7 +232,7 @@ public class PdfExportService(
             mergedBodySb.ToString());
 
         htmlDoc = htmlDoc.ToHtmlWithLocalImageUrls(appFoldersService.GetFolderPath(FileType.Image),
-            appFoldersService.GetFolderPath(FileType.CourseImage));
+            appFoldersService.GetFolderPath(FileType.CourseImage), appFoldersService.GetFolderPath(FileType.NewsThumb));
 
         var tempHtmlDocFilePath = Path.Combine(appFoldersService.ExportsAssetsFolder, $"temp-{Guid.NewGuid():N}.html");
         await File.WriteAllTextAsync(tempHtmlDocFilePath, htmlDoc);

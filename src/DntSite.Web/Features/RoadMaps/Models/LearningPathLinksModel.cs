@@ -13,4 +13,6 @@ public class LearningPathLinksModel
     public IList<Guid> CourseTopicIds { set; get; } = [];
 
     public IList<int> QuestionIds { set; get; } = [];
+
+    public IList<int> NewsIds { set; get; } = [];
 }

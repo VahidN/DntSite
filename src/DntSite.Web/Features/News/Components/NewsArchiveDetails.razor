@@ -1,5 +1,6 @@
 ﻿@using DntSite.Web.Features.News.Entities
 @using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
 @attribute [Route(NewsRoutingConstants.NewsDetailsNewsId)]
 @attribute [Route(NewsRoutingConstants.NewsArchiveDetailsNewsId)]
 
@@ -56,6 +57,10 @@
                       EncryptEditDeleteIDs="true"
                       EditPostUrlTemplate="@NewsRoutingConstants.EditPostUrlTemplate"
                       DeletePostUrlTemplate="@NewsRoutingConstants.DeletePostUrlTemplate">
+        <AdditionalInfoContent>
+            <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@CurrentPost.Id"
+                                                                      ItemType="@WhatsNewItemType.News"/>
+        </AdditionalInfoContent>
         <AdditionalHeaderContent>
             <PrintNewsRedirect Id="@CurrentPost.Id"
                                Url="@CurrentPost.Url"

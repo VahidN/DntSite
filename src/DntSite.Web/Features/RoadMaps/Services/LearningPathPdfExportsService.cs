@@ -2,6 +2,7 @@ using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.Exports.Models;
 using DntSite.Web.Features.Exports.Services.Contracts;
+using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Posts.Services.Contracts;
 using DntSite.Web.Features.RoadMaps.Entities;
@@ -21,7 +22,8 @@ public class LearningPathPdfExportsService(
     IBlogPostsPdfExportService blogPostsPdfExportService,
     ICourseTopicsPdfExportService courseTopicsPdfExportService,
     IQuestionsPdfExportService questionsPdfExportService,
-    ICourseTopicsService courseTopicsService) : ILearningPathPdfExportsService
+    ICourseTopicsService courseTopicsService,
+    IDailyNewsPdfExportService dailyNewsPdfExportService) : ILearningPathPdfExportsService
 {
     private readonly DbSet<LearningPath> _learningPaths = uow.DbSet<LearningPath>();
 
@@ -36,20 +38,20 @@ public class LearningPathPdfExportsService(
                 return;
             }
 
-            var blogPostDocs = await blogPostsPdfExportService.MapBlogPostsToExportDocumentsAsync(item.PostIds);
-
             var courseTopicDocs =
                 await courseTopicsPdfExportService.MapCourseTopicsToExportDocumentsAsync(item.CourseTopicIds);
-
-            var questionIds = await questionsPdfExportService.MapQuestionsToExportDocumentsAsync(item.QuestionIds);
 
             if (await ShouldNotMergeItemsAsync(item, courseTopicDocs))
             {
                 continue;
             }
 
+            var questionDocs = await questionsPdfExportService.MapQuestionsToExportDocumentsAsync(item.QuestionIds);
+            var newsDocs = await dailyNewsPdfExportService.MapDailyNewsToExportDocumentsAsync(item.NewsIds);
+            var blogPostDocs = await blogPostsPdfExportService.MapBlogPostsToExportDocumentsAsync(item.PostIds);
+
             await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.LearningPaths, item.Id, item.Title,
-                [..blogPostDocs, ..courseTopicDocs, ..questionIds]);
+                [..blogPostDocs, ..courseTopicDocs, ..questionDocs, ..newsDocs]);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }
@@ -58,12 +60,15 @@ public class LearningPathPdfExportsService(
     private async Task<bool>
         ShouldNotMergeItemsAsync(LearningPathLinksModel item, IList<ExportDocument> courseTopicDocs)
         => (await pdfExportService.GetExportFileLocationAsync(WhatsNewItemType.LearningPaths, item.Id))?.IsReady ==
-            true && !HasChangedItem(item.PostIds, courseTopicDocs.Select(x => x.Id).ToList(), item.QuestionIds);
+            true && !HasChangedItem(item.PostIds, courseTopicDocs.Select(x => x.Id).ToList(), item.QuestionIds,
+                item.NewsIds);
 
-    private bool HasChangedItem(IList<int> postIds, IList<int> questionIds, IList<int> courseTopicIds)
+    private bool
+        HasChangedItem(IList<int> postIds, IList<int> questionIds, IList<int> courseTopicIds, IList<int> newsIds)
         => pdfExportService.HasChangedItem(WhatsNewItemType.Posts, postIds) ||
            pdfExportService.HasChangedItem(WhatsNewItemType.AllCoursesTopics, courseTopicIds) ||
-           pdfExportService.HasChangedItem(WhatsNewItemType.Questions, questionIds);
+           pdfExportService.HasChangedItem(WhatsNewItemType.Questions, questionIds) ||
+           pdfExportService.HasChangedItem(WhatsNewItemType.News, newsIds);
 
     private async Task<List<LearningPathLinksModel>> GetLinkIdsAsync()
     {
@@ -80,7 +85,7 @@ public class LearningPathPdfExportsService(
 
         foreach (var item in items)
         {
-            var links = GetLinks(item, siteRootUri);
+            var links = GetLearningPathLinks(item, siteRootUri);
 
             if (links.Count == 0)
             {
@@ -94,12 +99,22 @@ public class LearningPathPdfExportsService(
                 Tags = item.Tags.Where(x => !x.IsDeleted).Select(x => x.Name).ToList(),
                 CourseTopicIds = await GetCourseTopicIdsAsync(links),
                 PostIds = GetPostIds(links),
-                QuestionIds = GetQuestionIds(links)
+                QuestionIds = GetQuestionIds(links),
+                NewsIds = GetNewsIds(links)
             });
         }
 
         return results;
     }
+
+    private IList<int> GetNewsIds(List<string> links)
+        =>
+        [
+            ..GetItemPostIds(contains: "/news/details/", links, segmentNumber: 3)
+                .TryConvertToListOfT<int>(ignoreParsingFailures: true),
+            ..GetItemPostIds(contains: "/newsarchive/details/", links, segmentNumber: 3)
+                .TryConvertToListOfT<int>(ignoreParsingFailures: true)
+        ];
 
     private IList<int> GetQuestionIds(List<string> links)
         => GetItemPostIds(contains: "/questions/details/", links, segmentNumber: 3)
@@ -130,7 +145,7 @@ public class LearningPathPdfExportsService(
         return ids.ToList();
     }
 
-    private List<string> GetLinks(LearningPath item, string siteRootUri)
+    private List<string> GetLearningPathLinks(LearningPath item, string siteRootUri)
         => htmlHelperService.ExtractLinks(item.Description)
             .Where(link => link.IsValidUrl() && link.HaveTheSameDomain(siteRootUri))
             .ToList();

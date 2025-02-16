@@ -5,12 +5,14 @@ using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.News.ModelsMappings;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
@@ -31,7 +33,8 @@ public class DailyNewsItemsService(
     IPasswordHasherService passwordHasherService,
     IAppSettingsService appSettingsService,
     ICachedAppSettingsProvider cachedAppSettingsProvider,
-    IFullTextSearchService fullTextSearchService) : IDailyNewsItemsService
+    IFullTextSearchService fullTextSearchService,
+    IPdfExportService pdfExportService) : IDailyNewsItemsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<DailyNewsItem, object?>>> CustomOrders = new()
     {
@@ -333,6 +336,7 @@ public class DailyNewsItemsService(
         logger.LogWarning(message: "Deleted a DailyNewsItem record with Id={Id} and Title={Text}", item.Id, item.Title);
 
         UpdateLuceneIndex(item);
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, item.Id);
     }
 
     public async Task NotifyAddOrUpdateChangesAsync(DailyNewsItem? newsItem,
@@ -384,6 +388,7 @@ public class DailyNewsItemsService(
         await uow.SaveChangesAsync();
 
         UpdateLuceneIndex(result);
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, result.Id);
 
         return result;
     }
@@ -406,6 +411,7 @@ public class DailyNewsItemsService(
         await uow.SaveChangesAsync();
 
         UpdateLuceneIndex(newsItem);
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, newsItem.Id);
     }
 
     public async Task<OperationResult> CheckUrlHashAsync(string url, int? id, bool isAdmin)

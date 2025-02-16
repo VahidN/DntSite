@@ -4,6 +4,8 @@ namespace DntSite.Web.Features.News.Services.Contracts;
 
 public interface IDailyNewsScreenshotsService : IScopedService
 {
+    public (string FileName, string Path) GetThumbnailImageInfo(int id);
+
     public Task TryReDownloadFailedScreenshotsAsync();
 
     public Task<List<DailyNewsItem>> GetNeedScreenshotsItemsAsync(int count);

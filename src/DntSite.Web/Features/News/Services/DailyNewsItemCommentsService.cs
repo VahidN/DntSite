@@ -1,12 +1,14 @@
 ﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
+using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.ModelsMappings;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Persistence.Utils;
+using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
@@ -19,7 +21,8 @@ public class DailyNewsItemCommentsService(
     IDailyNewsEmailsService dailyNewsEmailsService,
     IUserRatingsService userRatingsService,
     IFullTextSearchService fullTextSearchService,
-    ILogger<DailyNewsItemCommentsService> logger) : IDailyNewsItemCommentsService
+    ILogger<DailyNewsItemCommentsService> logger,
+    IPdfExportService pdfExportService) : IDailyNewsItemCommentsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<DailyNewsItemComment, object?>>> CustomOrders =
         new()
@@ -129,6 +132,7 @@ public class DailyNewsItemCommentsService(
         fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
 
         await statService.RecalculateThisNewsPostCommentsCountsAsync(comment.ParentId);
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, comment.ParentId);
     }
 
     public async Task EditReplyAsync(int? commentId, string message)
@@ -151,6 +155,7 @@ public class DailyNewsItemCommentsService(
         fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
 
         await dailyNewsEmailsService.PostNewsReplySendEmailToAdminsAsync(comment);
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, comment.ParentId);
     }
 
     public async Task AddReplyAsync(int? replyId, int blogPostId, string message, int userId)
@@ -173,6 +178,7 @@ public class DailyNewsItemCommentsService(
 
         await SetParentAsync(result, blogPostId);
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, blogPostId);
 
         await SendEmailsAsync(result);
         await UpdateStatAsync(blogPostId, userId);

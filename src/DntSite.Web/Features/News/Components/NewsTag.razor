@@ -1,4 +1,5 @@
 @using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
 @attribute [Route(NewsRoutingConstants.NewsTag)]
 @attribute [Route(NewsRoutingConstants.NewsTagPageCurrentPage)]
 @attribute [Route(NewsRoutingConstants.NewsTagTagName)]
@@ -8,6 +9,16 @@
 
 @if (HasTag)
 {
+    if (_tagId.HasValue && _isExportedPdfFileReady)
+    {
+        <DntMessageBox Type="AlertType.Info" IsVisible="true" MarginBottom="4" MarginTop="2">
+            <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="_tagId.Value"
+                                                                      Caption="@TagCaption"
+                                                                      ButtonClass="btn-secondary"
+                                                                      ItemType="WhatsNewItemType.NewsTag"/>
+        </DntMessageBox>
+    }
+
     <ShowNewsArchiveList Posts="_posts"
                          CurrentPage="CurrentPage"
                          ItemsPerPage="PostItemsPerPage"
@@ -21,6 +32,7 @@ else
               ItemsPerPage="TagItemsPerPage"
               TotalItemCount="@_totalTagItemsCount"
               BasePath="@BasePath"
-              ShowExportedFile="false"
+              ShowExportedFile="true"
+              ItemType="WhatsNewItemType.NewsTag"
               Tags="_tags"/>
 }

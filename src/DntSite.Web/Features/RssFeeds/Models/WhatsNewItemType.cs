@@ -86,6 +86,11 @@ public sealed class WhatsNewItemType
             new WhatsNewItemType(value: "اشتراک‌ها", bgColor: "bg-secondary-subtle text-secondary-emphasis bg-gradient")
         },
         {
+            nameof(NewsTag),
+            new WhatsNewItemType(value: "گروه اشتراک‌ها",
+                bgColor: "bg-secondary-subtle text-secondary-emphasis bg-gradient")
+        },
+        {
             nameof(Tag),
             new WhatsNewItemType(value: "گروه‌ها", bgColor: "bg-success-subtle text-success-emphasis bg-gradient")
         },
@@ -167,6 +172,8 @@ public sealed class WhatsNewItemType
     public static WhatsNewItemType Comments => WhatsNewItemTypes[nameof(Comments)];
 
     public static WhatsNewItemType News => WhatsNewItemTypes[nameof(News)];
+
+    public static WhatsNewItemType NewsTag => WhatsNewItemTypes[nameof(NewsTag)];
 
     public static WhatsNewItemType Tag => WhatsNewItemTypes[nameof(Tag)];
 
