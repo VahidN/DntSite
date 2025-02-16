@@ -63,6 +63,13 @@ public static class AuthenticationConfig
                         return cookieValidatorService.ValidateAsync(context);
                     }
                 };
+
+                options.CookieManager = new ChunkingCookieManager
+                {
+                    // Slightly smaller chunk size
+                    ChunkSize = 3000,
+                    ThrowForPartialCookies = environment.IsDevelopment()
+                };
             });
 
         services.Configure<AntiforgeryOptions>(opts => { opts.Cookie.SameSite = SameSiteMode.Lax; });
