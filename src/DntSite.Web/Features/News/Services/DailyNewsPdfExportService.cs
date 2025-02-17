@@ -143,6 +143,8 @@ public class DailyNewsPdfExportService(
     {
         var body = post.BriefDescription ?? "";
 
+        body = body.WrapInDirectionalDiv(fontFamily: "inherit", fontSize: "inherit");
+
         var image = dailyNewsScreenshotsService.GetNewsThumbImage(post, siteRootUri);
 
         if (!image.IsEmpty())
