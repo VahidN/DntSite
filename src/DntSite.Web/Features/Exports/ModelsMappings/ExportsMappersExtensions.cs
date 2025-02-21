@@ -1,7 +1,6 @@
 using System.Text;
 using System.Web;
 using DntSite.Web.Features.Exports.Models;
-using DntSite.Web.Features.Exports.Utils;
 
 namespace DntSite.Web.Features.Exports.ModelsMappings;
 
@@ -28,7 +27,7 @@ public static class ExportsMappersExtensions
 
     private static readonly CompositeFormat ParsedPostTitleTemplate = CompositeFormat.Parse(format: """
         <div class='main'>
-         	<span class='titles' lang='fa'>عنوان: </span><h1>{0}</h1><br/>
+         	<span class='titles' lang='fa'>عنوان: </span><h1 dir='{5}'>{0}</h1><br/>
         	<span class='titles' lang='fa'>نویسنده: </span>{1}<br/>
         	<span class='titles' lang='fa'>تاریخ: </span><span dir='ltr'>{2}</span><br/>
         	<span class='titles' lang='fa'>آدرس: </span>
@@ -139,14 +138,27 @@ public static class ExportsMappersExtensions
         return string.IsNullOrWhiteSpace(doc.Title)
             ? string.Empty
             : string.Format(CultureInfo.InvariantCulture, ParsedPostTitleTemplate, doc.Title.ApplyRle(), doc.Author,
-                doc.PersianDate.ToPersianNumbers(), doc.Url, new Uri(doc.Url).Host);
+                doc.PersianDate.ToPersianNumbers(), doc.Url, new Uri(doc.Url).Host, doc.Title.GetDir());
     }
 
     private static string ToCommentsTree(this ExportDocument doc)
     {
         ArgumentNullException.ThrowIfNull(doc);
 
-        var (commentsHtml, numberOfComments) = new CommentsTreeView(doc.Comments).CommentsToHtml();
+        var (commentsHtml, numberOfComments) = new HtmlTreeViewBuilder<ExportComment, int?>
+        {
+            Items = doc.Comments,
+            OuterDivTemplate = data => $"<div id='userComments'>{data}</div>",
+            TreeItemBodyTemplate = comment => string.Format(CultureInfo.InvariantCulture, format: """
+                    <div class='postBody'>
+                      <div class='replyInfo'>
+                           <strong>{0}</strong>  در  <span dir='ltr'>{1}</span>
+                      </div>
+                      {2}
+                    </div>
+                    """, comment.Author, comment.PersianDate.ToPersianNumbers(),
+                comment.Body.WrapInDirectionalDiv(fontFamily: "inherit", fontSize: "inherit"))
+        }.ItemsToHtml();
 
         if (string.IsNullOrWhiteSpace(commentsHtml) || numberOfComments == 0)
         {

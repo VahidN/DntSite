@@ -25,11 +25,11 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="9.7.0" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="9.8.2" />
     <PackageVersion Include="EFCoreSecondLevelCacheInterceptor.MemoryCache" Version="5.0.0" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.4.0" />
-    <PackageVersion Include="Gridify.EntityFramework" Version="2.16.1" />
+    <PackageVersion Include="Gridify.EntityFramework" Version="2.16.2" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
     <PackageVersion Include="AutoMapper" Version="14.0.0" />
   </ItemGroup>

@@ -117,7 +117,7 @@ public class QuestionsPdfExportService(
             .Select(comment => new ExportComment
             {
                 Id = comment.Id,
-                ReplyToId = comment.ReplyId,
+                ParentItemId = comment.ReplyId,
                 Body = comment.Body,
                 PersianDate = comment.Audit.CreatedAtPersian,
                 Author = comment.User?.FriendlyName ?? "مهمان"
