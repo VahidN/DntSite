@@ -71,12 +71,6 @@ public partial class NewsTag
         _tags = results.Data.Select(x => (x.Name, x.Id, x.InUseCount)).ToList();
         _totalTagItemsCount = results.TotalItems;
 
-        _tagId = results.Data.FirstOrDefault(x => x.Name.Equals(TagName, StringComparison.OrdinalIgnoreCase))?.Id;
-
-        _isExportedPdfFileReady = _tagId.HasValue &&
-                                  (await PdfExportService.GetExportFileLocationAsync(WhatsNewItemType.NewsTag,
-                                      _tagId.Value))?.IsReady == true;
-
         AddTagsListBreadCrumbs();
     }
 
@@ -97,7 +91,19 @@ public partial class NewsTag
         _posts = await DailyNewsItemsService.GetDailyNewsItemsIncludeUserAndTagByTagNameAsync(TagName!,
             CurrentPage.Value - 1, PostItemsPerPage);
 
+        await SetShowExportedFileAsync();
         AddTagPostsBreadCrumbs();
+    }
+
+    private async Task SetShowExportedFileAsync()
+    {
+        _tagId = _posts?.Data.FirstOrDefault()
+            ?.Tags.FirstOrDefault(x => x.Name.Equals(TagName, StringComparison.OrdinalIgnoreCase))
+            ?.Id;
+
+        _isExportedPdfFileReady = _tagId.HasValue &&
+                                  (await PdfExportService.GetExportFileLocationAsync(WhatsNewItemType.NewsTag,
+                                      _tagId.Value))?.IsReady == true;
     }
 
     private void AddTagPostsBreadCrumbs()
