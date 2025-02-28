@@ -127,7 +127,7 @@ public partial class ShowProjectsReleases
             }
         ]);
 
-    private string GetPostAbsoluteUrl(ProjectRelease projectRelease)
+    private static string GetPostAbsoluteUrl(ProjectRelease projectRelease)
         => string.Create(CultureInfo.InvariantCulture,
             $"{ProjectsRoutingConstants.ProjectReleasesBase}/{projectRelease.ProjectId}/{projectRelease.Id}");
 }

@@ -107,7 +107,7 @@ public class LearningPathPdfExportsService(
         return results;
     }
 
-    private IList<int> GetNewsIds(List<string> links)
+    private static IList<int> GetNewsIds(List<string> links)
         =>
         [
             ..GetItemPostIds(contains: "/news/details/", links, segmentNumber: 3)
@@ -116,11 +116,11 @@ public class LearningPathPdfExportsService(
                 .TryConvertToListOfT<int>(ignoreParsingFailures: true)
         ];
 
-    private IList<int> GetQuestionIds(List<string> links)
+    private static IList<int> GetQuestionIds(List<string> links)
         => GetItemPostIds(contains: "/questions/details/", links, segmentNumber: 3)
             .TryConvertToListOfT<int>(ignoreParsingFailures: true);
 
-    private IList<int> GetPostIds(List<string> links)
+    private static IList<int> GetPostIds(List<string> links)
         => GetItemPostIds(contains: "/post/", links, segmentNumber: 2)
             .TryConvertToListOfT<int>(ignoreParsingFailures: true);
 
@@ -150,7 +150,7 @@ public class LearningPathPdfExportsService(
             .Where(link => link.IsValidUrl() && link.HaveTheSameDomain(siteRootUri))
             .ToList();
 
-    private List<string> GetItemPostIds(string contains, List<string> links, int segmentNumber)
+    private static List<string> GetItemPostIds(string contains, List<string> links, int segmentNumber)
     {
         var postIds = new List<string>();
 

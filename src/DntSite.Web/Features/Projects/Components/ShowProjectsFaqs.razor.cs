@@ -126,7 +126,7 @@ public partial class ShowProjectsFaqs
             }
         ]);
 
-    private string GetPostAbsoluteUrl(ProjectFaq faq)
+    private static string GetPostAbsoluteUrl(ProjectFaq faq)
         => string.Create(CultureInfo.InvariantCulture,
             $"{ProjectsRoutingConstants.ProjectFaqsBase}/{faq.ProjectId}/{faq.Id}");
 }

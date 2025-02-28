@@ -94,6 +94,6 @@ public partial class ShowBlogPostsComments
             }
         ]);
 
-    private string GetPostAbsoluteUrl(BlogPostComment comment)
+    private static string GetPostAbsoluteUrl(BlogPostComment comment)
         => string.Create(CultureInfo.InvariantCulture, $"{PostsRoutingConstants.PostBase}/{comment.ParentId}");
 }

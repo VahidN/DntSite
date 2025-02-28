@@ -78,7 +78,7 @@ public class PagedFilesListService(
         }
     }
 
-    private IEnumerable<FileInfo> GetFilesByExtensions(DirectoryInfo dir, params string[] extensions)
+    private static IEnumerable<FileInfo> GetFilesByExtensions(DirectoryInfo dir, params string[] extensions)
     {
         ArgumentNullException.ThrowIfNull(extensions);
 

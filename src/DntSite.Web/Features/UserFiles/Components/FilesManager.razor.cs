@@ -54,13 +54,13 @@ public partial class FilesManager
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..UserFilesBreadCrumbs.DefaultBreadCrumbs]);
 
-    private string GetFileUrl(FileModel record)
+    private static string GetFileUrl(FileModel record)
         => $"{ApiUrlsRoutingConstants.File.HttpAny.UserFile}?name={Uri.EscapeDataString(record.Name)}";
 
-    private string GetImageUrl(FileModel record)
+    private static string GetImageUrl(FileModel record)
         => $"{ApiUrlsRoutingConstants.File.HttpAny.Image}?name={Uri.EscapeDataString(record.Name)}";
 
-    private string GetFormName(FileModel record)
+    private static string GetFormName(FileModel record)
         => string.Create(CultureInfo.InvariantCulture, $"File_{record.Name.GetHashCode(StringComparison.Ordinal)}");
 
     private async Task OnDeleteFileAsync()

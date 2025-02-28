@@ -119,8 +119,8 @@ public class DailyNewsItemsService(
         return _dailyNewsItem.AsNoTracking()
             .Include(x => x.User)
             .Include(x => x.Tags)
-            .Where(x => x.IsDeleted == showDeletedItems)
-            .Where(x => x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(fromDate) >= 0 &&
+            .Where(x => x.IsDeleted == showDeletedItems &&
+                        x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(fromDate) >= 0 &&
                         x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(toDate) <= 0)
             .OrderByDescending(x => x.Rating.TotalRating)
             .ThenByDescending(x => x.Rating.TotalRaters)
@@ -204,8 +204,8 @@ public class DailyNewsItemsService(
 
         return await _dailyNewsItem.AsNoTracking()
             .Include(x => x.User)
-            .Where(x => x.IsDeleted == showDeletedItems)
-            .Where(x => x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(fromDate) >= 0 &&
+            .Where(x => x.IsDeleted == showDeletedItems &&
+                        x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(fromDate) >= 0 &&
                         x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(toDate) <= 0)
             .OrderByDescending(x => x.Id)
             .ToListAsync();
@@ -302,10 +302,7 @@ public class DailyNewsItemsService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _dailyNewsItem.AsNoTracking()
-            from t in b.Tags
-            where t.Name == tagName
-            select b;
+        var query = from b in _dailyNewsItem.AsNoTracking() from t in b.Tags where t.Name == tagName select b;
 
         query = query.Include(x => x.User)
             .Include(blogPost => blogPost.Tags)

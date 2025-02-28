@@ -11,7 +11,7 @@ public partial class DntQueryBuilder<TRecord>
 {
     private bool HasDefinedSearchRule => SearchRuleRows?.Count > 0;
 
-    private string FormName => $"QueryBuilder_{typeof(TRecord)}";
+    private static string FormName => $"QueryBuilder_{typeof(TRecord)}";
 
     private string GridifyFilter => SearchRuleRows.ToGridifyFilter();
 

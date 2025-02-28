@@ -57,6 +57,6 @@ public partial class ShowOnlineVisitorsList
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.SiteStatsBreadCrumbs]);
 
-    private string GetUserUrl(string friendlyName)
+    private static string GetUserUrl(string friendlyName)
         => UserProfilesRoutingConstants.Users.CombineUrl(friendlyName, escapeRelativeUrl: true);
 }

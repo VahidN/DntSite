@@ -94,7 +94,7 @@ public partial class ShowQuestionsComments
             }
         ]);
 
-    private string GetPostAbsoluteUrl(StackExchangeQuestionComment comment)
+    private static string GetPostAbsoluteUrl(StackExchangeQuestionComment comment)
         => string.Create(CultureInfo.InvariantCulture,
             $"{QuestionsRoutingConstants.QuestionsDetailsBase}/{comment.ParentId}");
 }

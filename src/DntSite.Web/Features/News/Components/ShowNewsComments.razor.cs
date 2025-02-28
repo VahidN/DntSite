@@ -94,6 +94,6 @@ public partial class ShowNewsComments
             }
         ]);
 
-    private string GetPostAbsoluteUrl(DailyNewsItemComment comment)
+    private static string GetPostAbsoluteUrl(DailyNewsItemComment comment)
         => string.Create(CultureInfo.InvariantCulture, $"{NewsRoutingConstants.NewsDetailsBase}/{comment.ParentId}");
 }

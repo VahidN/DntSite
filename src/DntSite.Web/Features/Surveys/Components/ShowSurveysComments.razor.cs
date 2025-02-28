@@ -93,7 +93,7 @@ public partial class ShowSurveysComments
             }
         ]);
 
-    private string GetPostAbsoluteUrl(SurveyComment comment)
+    private static string GetPostAbsoluteUrl(SurveyComment comment)
         => string.Create(CultureInfo.InvariantCulture,
             $"{SurveysRoutingConstants.SurveysArchiveDetailsBase}/{comment.ParentId}");
 }

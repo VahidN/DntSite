@@ -174,10 +174,7 @@ public class BlogPostsService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _blogPosts.AsNoTracking()
-            from t in b.Tags
-            where t.Name == tag
-            select b;
+        var query = from b in _blogPosts.AsNoTracking() from t in b.Tags where t.Name == tag select b;
 
         query = query.Where(blogPost => blogPost.IsDeleted == showDeletedItems)
             .Include(blogPost => blogPost.User)
@@ -306,8 +303,8 @@ public class BlogPostsService(
 
         return await _blogPosts.AsNoTracking()
             .Include(x => x.User)
-            .Where(x => x.IsDeleted == showDeletedItems)
-            .Where(x => x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(fromDate) >= 0 &&
+            .Where(x => x.IsDeleted == showDeletedItems &&
+                        x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(fromDate) >= 0 &&
                         x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(toDate) <= 0)
             .OrderByDescending(x => x.Id)
             .ToListAsync();
@@ -330,8 +327,8 @@ public class BlogPostsService(
         return _blogPosts.AsNoTracking()
             .Include(x => x.User)
             .Include(x => x.Tags)
-            .Where(x => x.IsDeleted == showDeletedItems)
-            .Where(x => x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(fromDate) >= 0 &&
+            .Where(x => x.IsDeleted == showDeletedItems &&
+                        x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(fromDate) >= 0 &&
                         x.Audit.CreatedAtPersian.Substring(0, 10).CompareTo(toDate) <= 0)
             .OrderByDescending(x => x.Rating.TotalRating)
             .ThenByDescending(x => x.Rating.TotalRaters)

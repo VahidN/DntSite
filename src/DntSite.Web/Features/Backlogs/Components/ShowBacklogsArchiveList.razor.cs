@@ -27,7 +27,7 @@ public partial class ShowBacklogsArchiveList
     private bool CanUserEditThisPost(Backlog post)
         => ApplicationState.CanCurrentUserEditThisItem(post.UserId, post.Audit.CreatedAt);
 
-    private ManageBacklogModel GetBacklogStatModel(Backlog? post)
+    private static ManageBacklogModel GetBacklogStatModel(Backlog? post)
         => new()
         {
             ConvertedBlogPostId = post?.ConvertedBlogPostId,

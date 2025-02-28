@@ -127,7 +127,7 @@ public partial class ShowProjectsComments
             }
         ]);
 
-    private string GetPostAbsoluteUrl(ProjectIssueComment issueComment)
+    private static string GetPostAbsoluteUrl(ProjectIssueComment issueComment)
         => string.Create(CultureInfo.InvariantCulture,
             $"{ProjectsRoutingConstants.ProjectFeedbacksBase}/{issueComment.Parent.ProjectId}/{issueComment.ParentId}");
 }

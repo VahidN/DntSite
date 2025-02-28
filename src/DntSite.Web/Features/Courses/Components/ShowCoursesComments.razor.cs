@@ -121,7 +121,7 @@ public partial class ShowCoursesComments
             }
         ]);
 
-    private string GetPostAbsoluteUrl(CourseTopicComment comment)
+    private static string GetPostAbsoluteUrl(CourseTopicComment comment)
         => string.Create(CultureInfo.InvariantCulture,
             $"{CoursesRoutingConstants.CoursesTopicBase}/{comment.Parent.CourseId}/{comment.Parent.DisplayId.ToString(format: "D")}");
 }

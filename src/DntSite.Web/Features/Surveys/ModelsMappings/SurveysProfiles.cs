@@ -21,7 +21,7 @@ public class SurveysProfiles : Profile
             .ForMember(survey => survey.Tags, opt => opt.Ignore())
             .AfterMap<AfterMapVoteModel>();
 
-    private DateTime? SetDueDate(VoteModel model)
+    private static DateTime? SetDueDate(VoteModel model)
     {
         if (model.ExpirationDate is null)
         {
@@ -43,14 +43,13 @@ public class SurveysProfiles : Profile
             .ForMember(model => model.Minute, opt => opt.MapFrom(survey => GetMinute(survey)))
             .ForMember(model => model.ExpirationDate,
                 opt => opt.MapFrom(survey => survey.DueDate.ToShortPersianDateString(true)))
-            .ForMember(model => model.Tags,
-                opt => opt.MapFrom(survey => Enumerable.Select(survey.Tags, tag => tag.Name).ToList()));
+            .ForMember(model => model.Tags, opt => opt.MapFrom(survey => survey.Tags.Select(tag => tag.Name).ToList()));
 
-    private int? GetHour(Survey survey) => survey.DueDate?.ToIranTimeZoneDateTime().Hour;
+    private static int? GetHour(Survey survey) => survey.DueDate?.ToIranTimeZoneDateTime().Hour;
 
-    private int? GetMinute(Survey survey) => survey.DueDate?.ToIranTimeZoneDateTime().Minute;
+    private static int? GetMinute(Survey survey) => survey.DueDate?.ToIranTimeZoneDateTime().Minute;
 
-    private string GetVoteItems(Survey survey)
+    private static string GetVoteItems(Survey survey)
         => survey.SurveyItems.Where(x => !x.IsDeleted)
             .OrderBy(x => x.Id)
             .Select(x => x.Title)

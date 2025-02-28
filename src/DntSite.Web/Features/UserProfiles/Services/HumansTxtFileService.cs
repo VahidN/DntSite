@@ -30,12 +30,12 @@ public class HumansTxtFileService(IUsersInfoService usersService, IAppFoldersSer
                 continue;
             }
 
-            sb.AppendLine("   Writer: " + item.FriendlyName);
+            sb.AppendLine(value: "   Writer: ").Append(item.FriendlyName);
             sb.AppendLine(value: "   From: Iran\n");
         }
 
         sb.AppendLine(value: "\n\n/* SITE */");
-        sb.AppendLine("   Last update: " + DateTime.UtcNow.ToShortDateString());
+        sb.AppendLine(value: "   Last update: ").Append(DateTime.UtcNow.ToShortDateString());
         sb.AppendLine(value: "   Language: Persian");
         sb.AppendLine(value: "   Doctype: HTML5");
         sb.AppendLine(value: "   IDE: Rider");

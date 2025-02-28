@@ -97,6 +97,6 @@ public partial class ShowAdvertisementsComments
             }
         ]);
 
-    private string GetPostAbsoluteUrl(AdvertisementComment comment)
+    private static string GetPostAbsoluteUrl(AdvertisementComment comment)
         => string.Format(CultureInfo.InvariantCulture, PostUrlTemplate, comment.ParentId);
 }

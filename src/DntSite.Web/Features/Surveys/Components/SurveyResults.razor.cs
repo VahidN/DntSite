@@ -16,7 +16,7 @@ public partial class SurveyResults
         return (double)item.TotalSurveys * 100 / Survey.TotalRaters;
     }
 
-    private string GetProgressBarType(double percent)
+    private static string GetProgressBarType(double percent)
         => percent switch
         {
             < 30 => "bg-danger",
