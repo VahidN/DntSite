@@ -21,12 +21,12 @@
     <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="9.0.0" />
     <PackageVersion Include="System.Net.Http.Json" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
-    <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.7.3" />
+    <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.8.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="9.8.2" />
-    <PackageVersion Include="EFCoreSecondLevelCacheInterceptor.MemoryCache" Version="5.0.0" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="9.9.1" />
+    <PackageVersion Include="EFCoreSecondLevelCacheInterceptor.MemoryCache" Version="5.2.1" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.4.0" />
     <PackageVersion Include="Gridify.EntityFramework" Version="2.16.2" />
@@ -41,7 +41,7 @@
   <ItemGroup>
     <PackageVersion Include="Meziantou.Analyzer" Version="2.0.188" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.6.0.109712" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.7.0.110445" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="9.0.2" />
   </ItemGroup>
 </Project>
