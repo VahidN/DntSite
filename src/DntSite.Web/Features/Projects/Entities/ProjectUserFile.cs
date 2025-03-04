@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Projects.Entities;
 
-public class ProjectUserFile : BaseUserFileEntity<ProjectUserFile, Project, ProjectUserFileVisitor>
-{
-}
+public class ProjectUserFile : BaseUserFileEntity<ProjectUserFile, Project, ProjectUserFileVisitor>;

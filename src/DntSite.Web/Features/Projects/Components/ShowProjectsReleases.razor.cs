@@ -47,7 +47,7 @@ public partial class ShowProjectsReleases
     {
         if (HasUserFriendlyName)
         {
-            return $@"آرشیو فایل‌های پروژه‌های {UserFriendlyName}";
+            return $"آرشیو فایل‌های پروژه‌های {UserFriendlyName}";
         }
 
         if (ProjectId.HasValue)

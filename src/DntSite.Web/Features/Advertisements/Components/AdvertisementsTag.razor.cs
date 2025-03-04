@@ -24,7 +24,7 @@ public partial class AdvertisementsTag
 
     private string MainTitle => !HasTag ? MainPageTitle : MainTagPageTitle;
 
-    private string MainTagPageTitle => $@"آرشیو گروه‌های آگهی‌های {TagName}";
+    private string MainTagPageTitle => $"آرشیو گروه‌های آگهی‌های {TagName}";
 
     private string MainTagPageUrl => !HasTag
         ? MainPageUrl

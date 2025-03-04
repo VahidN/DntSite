@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Projects.Entities;
 
-public class ProjectReleaseCommentVisitor : BaseVisitorEntity<ProjectReleaseComment>
-{
-}
+public class ProjectReleaseCommentVisitor : BaseVisitorEntity<ProjectReleaseComment>;

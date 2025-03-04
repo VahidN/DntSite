@@ -3,6 +3,4 @@
 namespace DntSite.Web.Features.Courses.Entities;
 
 public class CourseTopicComment : BaseCommentsEntity<CourseTopicComment, CourseTopic, CourseTopicCommentVisitor,
-    CourseTopicCommentBookmark, CourseTopicCommentReaction>
-{
-}
+    CourseTopicCommentBookmark, CourseTopicCommentReaction>;

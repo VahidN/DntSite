@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.News.Entities;
 
-public class DailyNewsItemTag : BaseTagEntity<DailyNewsItem>
-{
-}
+public class DailyNewsItemTag : BaseTagEntity<DailyNewsItem>;

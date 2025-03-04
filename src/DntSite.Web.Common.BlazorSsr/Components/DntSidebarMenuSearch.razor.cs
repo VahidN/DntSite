@@ -1,5 +1,3 @@
 namespace DntSite.Web.Common.BlazorSsr.Components;
 
-public partial class DntSidebarMenuSearch
-{
-}
+public partial class DntSidebarMenuSearch;

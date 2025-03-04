@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Surveys.Entities;
 
-public class SurveyUserFile : BaseUserFileEntity<SurveyUserFile, Survey, SurveyUserFileVisitor>
-{
-}
+public class SurveyUserFile : BaseUserFileEntity<SurveyUserFile, Survey, SurveyUserFileVisitor>;

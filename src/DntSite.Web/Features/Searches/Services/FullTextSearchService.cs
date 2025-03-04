@@ -381,6 +381,7 @@ public class FullTextSearchService : IFullTextSearchService
         {
             CloseSearchService();
 
+#pragma warning disable IDISP003
             _keywordAnalyzer = new KeywordAnalyzer();
 
             _lowerCaseHtmlStripAnalyzer = new LowerCaseHtmlStripAnalyzer(LuceneVersion);
@@ -405,6 +406,7 @@ public class FullTextSearchService : IFullTextSearchService
             TryUnlockDirectory();
             _indexWriter = new IndexWriter(_fsDirectory, new IndexWriterConfig(LuceneVersion, _analyzer));
             _searcherManager = new SearcherManager(_indexWriter, applyAllDeletes: true, searcherFactory: null);
+#pragma warning restore IDISP003
         }
         catch (FileNotFoundException)
         {
@@ -482,8 +484,6 @@ public class FullTextSearchService : IFullTextSearchService
 
     protected virtual void Dispose(bool disposing)
     {
-        using var @lock = _lockerService.Lock<FullTextSearchService>(_lockTimeout);
-
         if (_isDisposed)
         {
             return;
@@ -491,16 +491,10 @@ public class FullTextSearchService : IFullTextSearchService
 
         try
         {
-            if (!disposing)
+            if (disposing)
             {
-                return;
+                CloseSearchService();
             }
-
-            CloseSearchService();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Demystify(), message: "Dispose Error");
         }
         finally
         {

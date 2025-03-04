@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Backlogs.Entities;
 
-public class BacklogVisitor : BaseVisitorEntity<Backlog>
-{
-}
+public class BacklogVisitor : BaseVisitorEntity<Backlog>;

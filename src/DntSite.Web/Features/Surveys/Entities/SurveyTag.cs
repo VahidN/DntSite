@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Surveys.Entities;
 
-public class SurveyTag : BaseTagEntity<Survey>
-{
-}
+public class SurveyTag : BaseTagEntity<Survey>;

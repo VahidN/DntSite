@@ -3,6 +3,4 @@
 namespace DntSite.Web.Features.Searches.Entities;
 
 public class SearchItemComment : BaseCommentsEntity<SearchItemComment, SearchItem, SearchItemCommentVisitor,
-    SearchItemCommentBookmark, SearchItemCommentReaction>
-{
-}
+    SearchItemCommentBookmark, SearchItemCommentReaction>;

@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.StackExchangeQuestions.Entities;
 
-public class StackExchangeQuestionReaction : BaseReactionEntity<StackExchangeQuestion>
-{
-}
+public class StackExchangeQuestionReaction : BaseReactionEntity<StackExchangeQuestion>;

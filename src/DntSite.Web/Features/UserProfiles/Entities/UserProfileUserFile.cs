@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.UserProfiles.Entities;
 
-public class UserProfileUserFile : BaseUserFileEntity<UserProfileUserFile, User, UserProfileUserFileVisitor>
-{
-}
+public class UserProfileUserFile : BaseUserFileEntity<UserProfileUserFile, User, UserProfileUserFileVisitor>;

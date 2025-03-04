@@ -47,7 +47,7 @@ public partial class ShowProjectsFaqs
     {
         if (HasUserFriendlyName)
         {
-            return $@"آرشیو راهنماهای پروژه‌های {UserFriendlyName}";
+            return $"آرشیو راهنماهای پروژه‌های {UserFriendlyName}";
         }
 
         if (ProjectId.HasValue)

@@ -161,7 +161,7 @@ public class DailyNewsItemsService(
 
                 break;
             case PopularItem.Random:
-                query = query.OrderBy(x => Guid.NewGuid());
+                query = query.OrderBy(_ => Guid.NewGuid());
 
                 return query.Skip(skipRecords).Take(recordsPerPage).ToListAsync();
             case PopularItem.ByLastComments:

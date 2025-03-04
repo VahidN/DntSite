@@ -62,7 +62,7 @@ public class QuestionsService(
     public Task<StackExchangeQuestion?> GetLastActiveStackExchangeQuestionAsync()
         => _stackExchangeQuestions.AsNoTracking()
             .Include(question => question.User)
-            .OrderBy(question => Guid.NewGuid())
+            .OrderBy(_ => Guid.NewGuid())
             .FirstOrDefaultAsync(question => !question.IsAnswered && !question.IsDeleted);
 
     public async Task MarkAsAnsweredAsync(int id)
@@ -164,10 +164,7 @@ public class QuestionsService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _stackExchangeQuestions.AsNoTracking()
-            from t in b.Tags
-            where t.Name == tagName
-            select b;
+        var query = from b in _stackExchangeQuestions.AsNoTracking() from t in b.Tags where t.Name == tagName select b;
 
         query = query.Include(x => x.User)
             .Include(blogPost => blogPost.Tags)

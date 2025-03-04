@@ -31,7 +31,7 @@ public class UsersInfoService(
     {
         var user = await FindUserAsync(userId);
 
-        return user is not null && user.UserStat.NumberOfPosts >= 1;
+        return user?.UserStat.NumberOfPosts >= 1;
     }
 
     public async Task<bool> CheckEMailAsync(string eMail, int? userId)
@@ -207,10 +207,7 @@ public class UsersInfoService(
 
     public Task<List<User>> GetUsersListByRoleAsync(int count, string role)
     {
-        var query = from u in _users
-            from i in u.Roles
-            where i.Name == role
-            select u;
+        var query = from u in _users from i in u.Roles where i.Name == role select u;
 
         return query.OrderByDescending(x => x.UserStat.NumberOfPosts)
             .ThenBy(x => x.FriendlyName)
@@ -317,27 +314,21 @@ public class UsersInfoService(
 
     public Task<List<User>> GetAllActiveWritersListIncludePostsAsync()
     {
-        var query = from u in _users
-            where u.UserStat.NumberOfPosts > 0 && u.IsActive
-            select u;
+        var query = from u in _users where u.UserStat.NumberOfPosts > 0 && u.IsActive select u;
 
         return query.Include(x => x.BlogPosts).ToListAsync();
     }
 
     public Task<List<User>> GetAllActiveUsersListWithMinPostsCountAsync(int minPostCount)
     {
-        var query = from u in _users
-            where u.UserStat.NumberOfPosts >= minPostCount && u.IsActive
-            select u;
+        var query = from u in _users where u.UserStat.NumberOfPosts >= minPostCount && u.IsActive select u;
 
         return query.ToListAsync();
     }
 
     public Task<List<User>> GetAllActiveUsersListWithZeroPostCountAsync()
     {
-        var query = from u in _users
-            where u.UserStat.NumberOfPosts == 0 && u.IsActive && u.EmailIsValidated
-            select u;
+        var query = from u in _users where u.UserStat.NumberOfPosts == 0 && u.IsActive && u.EmailIsValidated select u;
 
         return query.ToListAsync();
     }
@@ -401,9 +392,7 @@ public class UsersInfoService(
 
     public Task<List<User?>> GetActiveArticleWritersListAsync(int count)
     {
-        var query = from u in _users
-            where u.UserStat.NumberOfPosts > 0 && u.IsActive
-            select u;
+        var query = from u in _users where u.UserStat.NumberOfPosts > 0 && u.IsActive select u;
 
         return query.OrderByDescending(x => x.UserStat.NumberOfPosts)
             .ThenBy(x => x.FriendlyName)

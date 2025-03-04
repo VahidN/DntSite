@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Projects.Entities;
 
-public class ProjectReleaseCommentBookmark : BaseBookmarkEntity<ProjectReleaseComment>
-{
-}
+public class ProjectReleaseCommentBookmark : BaseBookmarkEntity<ProjectReleaseComment>;

@@ -49,7 +49,7 @@ public static class ServicesRegistry
                ClaimsPrincipal.Current ?? new ClaimsPrincipal());
 
     private static void AddAutoMapper(this IServiceCollection services)
-        => services.AddAutoMapper(cfg => { }, typeof(AutoMapperConfig).Assembly);
+        => services.AddAutoMapper(_ => { }, typeof(AutoMapperConfig).Assembly);
 
     private static void AddOptions(this IServiceCollection services, IConfiguration configuration)
     {

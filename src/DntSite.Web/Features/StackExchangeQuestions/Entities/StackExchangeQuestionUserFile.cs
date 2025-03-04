@@ -3,6 +3,4 @@
 namespace DntSite.Web.Features.StackExchangeQuestions.Entities;
 
 public class StackExchangeQuestionUserFile : BaseUserFileEntity<StackExchangeQuestionUserFile, StackExchangeQuestion,
-    StackExchangeQuestionUserFileVisitor>
-{
-}
+    StackExchangeQuestionUserFileVisitor>;

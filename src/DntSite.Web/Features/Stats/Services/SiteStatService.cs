@@ -60,9 +60,7 @@ public class SiteStatService(IUnitOfWork uow) : ISiteStatService
 
                     break;
                 case SiteStatsDate.LastMonth:
-                    break;
                 case SiteStatsDate.LastYear:
-                    break;
                 case SiteStatsDate.FromTheBeginning:
                     break;
                 default:

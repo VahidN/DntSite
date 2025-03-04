@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Posts.Entities;
 
-public class BlogPostCommentBookmark : BaseBookmarkEntity<BlogPostComment>
-{
-}
+public class BlogPostCommentBookmark : BaseBookmarkEntity<BlogPostComment>;

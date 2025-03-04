@@ -209,10 +209,7 @@ public class VotesService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _votes.AsNoTracking()
-            from t in b.Tags
-            where t.Name == tag
-            select b;
+        var query = from b in _votes.AsNoTracking() from t in b.Tags where t.Name == tag select b;
 
         query = query.Where(x => x.IsDeleted == showDeletedItems)
             .Include(x => x.User)
@@ -276,12 +273,12 @@ public class VotesService(
             return;
         }
 
-        if (vote.DueDate.HasValue && vote.DueDate.Value <= DateTime.UtcNow)
+        if (vote.DueDate <= DateTime.UtcNow)
         {
             return;
         }
 
-        if (user is null || !user.IsActive)
+        if (user?.IsActive != true)
         {
             return;
         }

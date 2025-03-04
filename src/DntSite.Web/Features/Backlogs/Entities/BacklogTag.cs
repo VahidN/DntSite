@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Backlogs.Entities;
 
-public class BacklogTag : BaseTagEntity<Backlog>
-{
-}
+public class BacklogTag : BaseTagEntity<Backlog>;

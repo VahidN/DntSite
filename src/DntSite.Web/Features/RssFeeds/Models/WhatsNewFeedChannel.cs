@@ -1,5 +1,3 @@
 ﻿namespace DntSite.Web.Features.RssFeeds.Models;
 
-public class WhatsNewFeedChannel : FeedChannel<WhatsNewItemModel>
-{
-}
+public class WhatsNewFeedChannel : FeedChannel<WhatsNewItemModel>;

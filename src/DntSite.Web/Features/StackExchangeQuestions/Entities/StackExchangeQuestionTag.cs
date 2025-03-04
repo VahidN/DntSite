@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.StackExchangeQuestions.Entities;
 
-public class StackExchangeQuestionTag : BaseTagEntity<StackExchangeQuestion>
-{
-}
+public class StackExchangeQuestionTag : BaseTagEntity<StackExchangeQuestion>;

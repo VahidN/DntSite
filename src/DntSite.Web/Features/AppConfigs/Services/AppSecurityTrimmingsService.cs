@@ -56,87 +56,22 @@ public static class AppSecurityTrimmingsService
         return currentUser?.User?.UserStat.NumberOfPosts >= minNumberOfPosts;
     }
 
-    public static bool CanUserViewThisPost(this CurrentUserModel? userModel,
-        [NotNullWhen(returnValue: true)] BlogPost? post)
-    {
-        if (post is null)
-        {
-            return false;
-        }
-
-        if (post.NumberOfRequiredPoints is null or 0)
-        {
-            return true;
-        }
-
-        if (userModel?.UserId is null || userModel.User is null)
-        {
-            return false;
-        }
-
-        if (!userModel.IsAuthenticated)
-        {
-            return false;
-        }
-
-        if (userModel.IsAdmin)
-        {
-            return true;
-        }
-
-        if (IsTheSameAuthor(userModel, post.UserId))
-        {
-            return true;
-        }
-
-        if (!userModel.User.IsActive)
-        {
-            return false;
-        }
-
-        if (userModel.User.UserStat.NumberOfPosts >= post.NumberOfRequiredPoints.Value)
-        {
-            return true;
-        }
-
-        return false;
-    }
+    public static bool
+        CanUserViewThisPost(this CurrentUserModel? userModel, [NotNullWhen(returnValue: true)] BlogPost? post)
+        => post is not null && (post.NumberOfRequiredPoints is null or 0 || (userModel?.UserId is not null &&
+                                                                             userModel.User is not null &&
+                                                                             userModel.IsAuthenticated &&
+                                                                             (userModel.IsAdmin ||
+                                                                              IsTheSameAuthor(userModel, post.UserId) ||
+                                                                              (userModel.User.IsActive &&
+                                                                               userModel.User.UserStat.NumberOfPosts >=
+                                                                               post.NumberOfRequiredPoints.Value))));
 
     public static bool CanUserViewThisPost(this CurrentUserModel? userModel,
         [NotNullWhen(returnValue: true)] DailyNewsItem? post)
-    {
-        if (post is null)
-        {
-            return false;
-        }
-
-        if (userModel?.UserId is null || userModel.User is null)
-        {
-            return false;
-        }
-
-        if (!userModel.IsAuthenticated)
-        {
-            return false;
-        }
-
-        if (userModel.IsAdmin)
-        {
-            return true;
-        }
-
-        if (IsTheSameAuthor(userModel, post.UserId))
-        {
-            return true;
-        }
-
-        if (!userModel.User.IsActive)
-        {
-            return false;
-        }
-
-        return false;
-    }
+        => post is not null && userModel?.UserId is not null && userModel.User is not null &&
+           userModel.IsAuthenticated && (userModel.IsAdmin || IsTheSameAuthor(userModel, post.UserId) ||
+                                         userModel.User.IsActive);
 
     public static bool CanCurrentUserEditThisItem(this ApplicationState? applicationState,
         int? itemUserId,
@@ -145,27 +80,8 @@ public static class AppSecurityTrimmingsService
         var user = applicationState?.CurrentUser;
         var daysToClose = applicationState?.AppSetting?.MinimumRequiredPosts.MaxDaysToCloseATopic ?? 7;
 
-        if (user?.UserId is null || user.User is null)
-        {
-            return false;
-        }
-
-        if (!user.IsAuthenticated)
-        {
-            return false;
-        }
-
-        if (user.IsAdmin)
-        {
-            return true;
-        }
-
-        if (IsTheSameAuthor(user, itemUserId) && PostIsNotTooOld(createdAt, daysToClose))
-        {
-            return true;
-        }
-
-        return false;
+        return user?.UserId is not null && user.User is not null && user.IsAuthenticated && (user.IsAdmin ||
+            (IsTheSameAuthor(user, itemUserId) && PostIsNotTooOld(createdAt, daysToClose)));
     }
 
     public static bool CanCurrentUserPostAComment(this ApplicationState? applicationState,
@@ -221,42 +137,7 @@ public static class AppSecurityTrimmingsService
 
     public static bool CanUserEditThisDraft(this CurrentUserModel? userModel,
         [NotNullWhen(returnValue: true)] BlogPostDraft? post)
-    {
-        if (post is null)
-        {
-            return false;
-        }
-
-        if (userModel?.UserId is null || userModel.User is null)
-        {
-            return false;
-        }
-
-        if (!userModel.IsAuthenticated)
-        {
-            return false;
-        }
-
-        if (!userModel.User.IsActive)
-        {
-            return false;
-        }
-
-        if (post.IsConverted)
-        {
-            return false;
-        }
-
-        if (userModel.IsAdmin)
-        {
-            return true;
-        }
-
-        if (IsTheSameAuthor(userModel, post.UserId))
-        {
-            return true;
-        }
-
-        return false;
-    }
+        => post is not null && userModel?.UserId is not null && userModel.User is not null &&
+           userModel.IsAuthenticated && userModel.User.IsActive && !post.IsConverted &&
+           (userModel.IsAdmin || IsTheSameAuthor(userModel, post.UserId));
 }

@@ -3,6 +3,4 @@
 namespace DntSite.Web.Features.RoadMaps.Entities;
 
 public class LearningPathComment : BaseCommentsEntity<LearningPathComment, LearningPath, LearningPathCommentVisitor,
-    LearningPathCommentBookmark, LearningPathCommentReaction>
-{
-}
+    LearningPathCommentBookmark, LearningPathCommentReaction>;

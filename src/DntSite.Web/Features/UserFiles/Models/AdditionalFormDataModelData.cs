@@ -1,5 +1,3 @@
 ﻿namespace DntSite.Web.Features.UserFiles.Models;
 
-public class AdditionalFormDataModelData
-{
-}
+public class AdditionalFormDataModelData;

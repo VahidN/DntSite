@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.RoadMaps.Entities;
 
-public class LearningPathCommentVisitor : BaseVisitorEntity<LearningPathComment>
-{
-}
+public class LearningPathCommentVisitor : BaseVisitorEntity<LearningPathComment>;

@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Projects.Entities;
 
-public class ProjectReleaseReaction : BaseReactionEntity<ProjectRelease>
-{
-}
+public class ProjectReleaseReaction : BaseReactionEntity<ProjectRelease>;

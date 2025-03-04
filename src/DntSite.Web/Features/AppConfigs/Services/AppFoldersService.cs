@@ -4,11 +4,12 @@ using Microsoft.Extensions.Options;
 
 namespace DntSite.Web.Features.AppConfigs.Services;
 
-public class AppFoldersService : IAppFoldersService
+public sealed class AppFoldersService : IAppFoldersService
 {
     public const string AppDataFolder = "App_Data";
     public const string WwwRoot = "wwwroot";
     public const string UploadsFolder = "Uploads";
+    private readonly IDisposable? _disposableSettings;
 
     private readonly IWebHostEnvironment _webHostEnvironment;
     private string? _articleImagesPath;
@@ -34,7 +35,7 @@ public class AppFoldersService : IAppFoldersService
         _webHostEnvironment = webHostEnvironment;
         _siteSettings = siteSettings.CurrentValue;
 
-        siteSettings.OnChange(settings => _siteSettings = settings);
+        _disposableSettings = siteSettings.OnChange(settings => _siteSettings = settings);
     }
 
     public string DefaultConnectionString => _defaultConnectionString ??= GetDefaultConnectionString();
@@ -95,6 +96,8 @@ public class AppFoldersService : IAppFoldersService
 
         return path;
     }
+
+    public void Dispose() => _disposableSettings?.Dispose();
 
     private string GetWwwRootPath()
     {

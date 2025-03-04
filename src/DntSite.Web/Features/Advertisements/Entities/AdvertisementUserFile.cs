@@ -3,6 +3,4 @@
 namespace DntSite.Web.Features.Advertisements.Entities;
 
 public class AdvertisementUserFile : BaseUserFileEntity<AdvertisementUserFile, Advertisement,
-    AdvertisementUserFileVisitor>
-{
-}
+    AdvertisementUserFileVisitor>;

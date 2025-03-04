@@ -34,7 +34,7 @@ public partial class ShowCoursesComments
     {
         if (HasUserFriendlyName)
         {
-            return $@"آرشیو نظرات دوره‌های {UserFriendlyName}";
+            return $"آرشیو نظرات دوره‌های {UserFriendlyName}";
         }
 
         if (CourseId.HasValue)

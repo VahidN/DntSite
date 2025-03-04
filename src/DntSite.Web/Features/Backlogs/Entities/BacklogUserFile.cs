@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Backlogs.Entities;
 
-public class BacklogUserFile : BaseUserFileEntity<BacklogUserFile, Backlog, BacklogUserFileVisitor>
-{
-}
+public class BacklogUserFile : BaseUserFileEntity<BacklogUserFile, Backlog, BacklogUserFileVisitor>;

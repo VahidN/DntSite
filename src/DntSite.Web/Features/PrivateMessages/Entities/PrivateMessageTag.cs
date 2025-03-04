@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.PrivateMessages.Entities;
 
-public class PrivateMessageTag : BaseTagEntity<PrivateMessage>
-{
-}
+public class PrivateMessageTag : BaseTagEntity<PrivateMessage>;

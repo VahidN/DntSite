@@ -47,7 +47,7 @@ public partial class ShowProjectsComments
     {
         if (HasUserFriendlyName)
         {
-            return $@"آرشیو نظرات پروژه‌های {UserFriendlyName}";
+            return $"آرشیو نظرات پروژه‌های {UserFriendlyName}";
         }
 
         if (ProjectId.HasValue)

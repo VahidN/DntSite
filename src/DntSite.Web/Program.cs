@@ -7,7 +7,7 @@ using DntSite.Web.Features.UserProfiles.Endpoints;
 var builder = WebApplication.CreateBuilder(args);
 ConfigureLogging(builder.Logging, builder.Environment, builder.Configuration);
 ConfigureServices(builder.Host, builder.Services, builder.Environment, builder.Configuration);
-var webApp = builder.Build();
+await using var webApp = builder.Build();
 ConfigureMiddlewares(webApp, webApp.Environment);
 ConfigureEndpoints(webApp);
 InitApplication(webApp);

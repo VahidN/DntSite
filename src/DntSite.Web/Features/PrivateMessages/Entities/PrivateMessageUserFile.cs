@@ -3,6 +3,4 @@
 namespace DntSite.Web.Features.PrivateMessages.Entities;
 
 public class PrivateMessageUserFile : BaseUserFileEntity<PrivateMessageUserFile, PrivateMessage,
-    PrivateMessageUserFileVisitor>
-{
-}
+    PrivateMessageUserFileVisitor>;

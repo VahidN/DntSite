@@ -19,7 +19,7 @@ public partial class NewsRedirect
     {
         var newsItem = await DailyNewsItemsService.FindDailyNewsItemAsync(redirectId);
 
-        if (newsItem is null || newsItem.IsDeleted)
+        if (newsItem?.IsDeleted != false)
         {
             ApplicationState.NavigateToNotFoundPage();
 

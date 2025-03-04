@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.PrivateMessages.Entities;
 
-public class PrivateMessageReaction : BaseReactionEntity<PrivateMessage>
-{
-}
+public class PrivateMessageReaction : BaseReactionEntity<PrivateMessage>;

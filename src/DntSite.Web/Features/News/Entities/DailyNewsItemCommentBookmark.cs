@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.News.Entities;
 
-public class DailyNewsItemCommentBookmark : BaseBookmarkEntity<DailyNewsItemComment>
-{
-}
+public class DailyNewsItemCommentBookmark : BaseBookmarkEntity<DailyNewsItemComment>;

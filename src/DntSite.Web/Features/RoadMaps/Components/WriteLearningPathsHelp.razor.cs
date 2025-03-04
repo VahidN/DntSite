@@ -1,5 +1,3 @@
 namespace DntSite.Web.Features.RoadMaps.Components;
 
-public partial class WriteLearningPathsHelp
-{
-}
+public partial class WriteLearningPathsHelp;

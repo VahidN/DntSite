@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Backlogs.Entities;
 
-public class BacklogCommentBookmark : BaseBookmarkEntity<BacklogComment>
-{
-}
+public class BacklogCommentBookmark : BaseBookmarkEntity<BacklogComment>;

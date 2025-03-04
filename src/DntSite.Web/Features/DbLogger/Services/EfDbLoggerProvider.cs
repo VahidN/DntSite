@@ -8,6 +8,7 @@ namespace DntSite.Web.Features.DbLogger.Services;
 public class EfDbLoggerProvider : ILoggerProvider
 {
     private readonly IBackgroundQueueService _backgroundQueueService;
+    private readonly IDisposable? _disposableSiteSettings;
     private readonly IServiceProvider _serviceProvider;
     private StartupSettingsModel _siteSettings;
 
@@ -18,7 +19,7 @@ public class EfDbLoggerProvider : ILoggerProvider
         ArgumentNullException.ThrowIfNull(siteSettings);
 
         _siteSettings = siteSettings.CurrentValue;
-        siteSettings.OnChange(settings => _siteSettings = settings);
+        _disposableSiteSettings = siteSettings.OnChange(settings => _siteSettings = settings);
 
         _serviceProvider = serviceProvider;
         _backgroundQueueService = backgroundQueueService;
@@ -37,7 +38,7 @@ public class EfDbLoggerProvider : ILoggerProvider
     {
         if (disposing)
         {
-            // empty on purpose
+            _disposableSiteSettings?.Dispose();
         }
     }
 

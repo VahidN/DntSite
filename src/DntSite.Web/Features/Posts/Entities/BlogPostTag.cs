@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Posts.Entities;
 
-public class BlogPostTag : BaseTagEntity<BlogPost>
-{
-}
+public class BlogPostTag : BaseTagEntity<BlogPost>;

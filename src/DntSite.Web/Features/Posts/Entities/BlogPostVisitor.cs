@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Posts.Entities;
 
-public class BlogPostVisitor : BaseVisitorEntity<BlogPost>
-{
-}
+public class BlogPostVisitor : BaseVisitorEntity<BlogPost>;

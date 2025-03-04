@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.StackExchangeQuestions.Entities;
 
-public class StackExchangeQuestionCommentVisitor : BaseVisitorEntity<StackExchangeQuestionComment>
-{
-}
+public class StackExchangeQuestionCommentVisitor : BaseVisitorEntity<StackExchangeQuestionComment>;

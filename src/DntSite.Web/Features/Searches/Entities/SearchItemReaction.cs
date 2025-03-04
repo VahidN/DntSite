@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Searches.Entities;
 
-public class SearchItemReaction : BaseReactionEntity<SearchItem>
-{
-}
+public class SearchItemReaction : BaseReactionEntity<SearchItem>;

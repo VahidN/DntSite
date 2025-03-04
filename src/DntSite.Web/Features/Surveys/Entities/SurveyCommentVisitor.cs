@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Surveys.Entities;
 
-public class SurveyCommentVisitor : BaseVisitorEntity<SurveyComment>
-{
-}
+public class SurveyCommentVisitor : BaseVisitorEntity<SurveyComment>;

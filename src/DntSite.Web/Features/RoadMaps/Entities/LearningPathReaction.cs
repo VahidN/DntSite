@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.RoadMaps.Entities;
 
-public class LearningPathReaction : BaseReactionEntity<LearningPath>
-{
-}
+public class LearningPathReaction : BaseReactionEntity<LearningPath>;

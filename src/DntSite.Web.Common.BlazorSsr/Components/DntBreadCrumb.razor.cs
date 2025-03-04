@@ -67,7 +67,7 @@ public partial class DntBreadCrumb
 
     private void SetActiveClass(List<BreadCrumb> visibleItems)
     {
-        var lastBreadCrumbItem = BreadCrumbs is not null && BreadCrumbs.Count > 0 ? BreadCrumbs[^1] : null;
+        var lastBreadCrumbItem = BreadCrumbs?.Count > 0 ? BreadCrumbs[^1] : null;
 
         foreach (var item in visibleItems)
         {

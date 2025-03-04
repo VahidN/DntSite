@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.RoadMaps.Entities;
 
-public class LearningPathTag : BaseTagEntity<LearningPath>
-{
-}
+public class LearningPathTag : BaseTagEntity<LearningPath>;

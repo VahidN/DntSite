@@ -41,7 +41,6 @@ public static class DbContextConfig
                 switch (args.EventId)
                 {
                     case CacheableLogEventId.CacheHit:
-                        break;
                     case CacheableLogEventId.QueryResultCached:
                         break;
                     case CacheableLogEventId.QueryResultInvalidated:
@@ -52,17 +51,11 @@ public static class DbContextConfig
 
                         break;
                     case CacheableLogEventId.CachingSkipped:
-                        break;
                     case CacheableLogEventId.InvalidationSkipped:
-                        break;
                     case CacheableLogEventId.CachingSystemStarted:
-                        break;
                     case CacheableLogEventId.CachingError:
-                        break;
                     case CacheableLogEventId.QueryResultSuppressed:
-                        break;
                     case CacheableLogEventId.CacheDependenciesCalculated:
-                        break;
                     case CacheableLogEventId.CachePolicyCalculated:
                         break;
                 }

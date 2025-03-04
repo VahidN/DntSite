@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.PrivateMessages.Entities;
 
-public class PrivateMessageCommentBookmark : BaseBookmarkEntity<PrivateMessageComment>
-{
-}
+public class PrivateMessageCommentBookmark : BaseBookmarkEntity<PrivateMessageComment>;

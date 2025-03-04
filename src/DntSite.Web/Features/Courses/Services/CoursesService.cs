@@ -80,10 +80,7 @@ public class CoursesService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _courses.AsNoTracking()
-            from t in b.Tags
-            where t.Name == tag
-            select b;
+        var query = from b in _courses.AsNoTracking() from t in b.Tags where t.Name == tag select b;
 
         query = query.Include(x => x.User)
             .Include(blogPost => blogPost.Tags)
@@ -105,7 +102,7 @@ public class CoursesService(
 
         var user = await usersService.FindUserByFriendlyNameAsync(username);
 
-        if (user is null || !user.IsActive)
+        if (user?.IsActive != true)
         {
             return;
         }
@@ -129,7 +126,7 @@ public class CoursesService(
 
         var user = await usersService.FindUserByFriendlyNameAsync(username);
 
-        if (user is null || !user.IsActive)
+        if (user?.IsActive != true)
         {
             return;
         }
@@ -545,6 +542,6 @@ public class CoursesService(
             DateTime.UtcNow);
 
     private Task<long?> GetTotalNumberOfRatingsValueAsync(int userId, Course course)
-        => userRatingsService.TotalNumberOfRatingsValueAsync(forUserId: userId,
-            fromDate: DateTime.UtcNow.AddMonths(-course.NumberOfMonthsTotalRatingsRequired), toDate: DateTime.UtcNow);
+        => userRatingsService.TotalNumberOfRatingsValueAsync(
+            DateTime.UtcNow.AddMonths(-course.NumberOfMonthsTotalRatingsRequired), DateTime.UtcNow, userId);
 }

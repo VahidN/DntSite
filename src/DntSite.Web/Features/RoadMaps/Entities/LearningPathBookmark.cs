@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.RoadMaps.Entities;
 
-public class LearningPathBookmark : BaseBookmarkEntity<LearningPath>
-{
-}
+public class LearningPathBookmark : BaseBookmarkEntity<LearningPath>;

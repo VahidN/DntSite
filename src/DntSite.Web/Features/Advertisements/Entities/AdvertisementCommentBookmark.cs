@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Advertisements.Entities;
 
-public class AdvertisementCommentBookmark : BaseBookmarkEntity<AdvertisementComment>
-{
-}
+public class AdvertisementCommentBookmark : BaseBookmarkEntity<AdvertisementComment>;

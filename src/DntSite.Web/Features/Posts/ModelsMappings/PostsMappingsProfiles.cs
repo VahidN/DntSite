@@ -28,7 +28,7 @@ public class PostsMappingsProfiles : Profile
         => CreateMap<BlogPost, WriteArticleModel>(MemberList.None)
             .ForMember(model => model.ArticleBody, opt => opt.MapFrom(post => post.Body))
             .ForMember(model => model.ArticleTags,
-                opt => opt.MapFrom(post => Enumerable.Select(post.Tags, tag => tag.Name).ToList()));
+                opt => opt.MapFrom(post => post.Tags.Select(tag => tag.Name).ToList()));
 
     private void MapModelToDraft()
         => CreateMap<WriteDraftModel, BlogPostDraft>(MemberList.None)

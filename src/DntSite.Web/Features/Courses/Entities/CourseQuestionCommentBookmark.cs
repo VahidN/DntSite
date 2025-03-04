@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Courses.Entities;
 
-public class CourseQuestionCommentBookmark : BaseBookmarkEntity<CourseQuestionComment>
-{
-}
+public class CourseQuestionCommentBookmark : BaseBookmarkEntity<CourseQuestionComment>;

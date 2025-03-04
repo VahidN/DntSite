@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Courses.Entities;
 
-public class CourseQuestionTag : BaseTagEntity<CourseQuestion>
-{
-}
+public class CourseQuestionTag : BaseTagEntity<CourseQuestion>;

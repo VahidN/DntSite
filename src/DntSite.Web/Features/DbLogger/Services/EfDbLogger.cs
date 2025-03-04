@@ -82,11 +82,7 @@ public class EfDbLogger(
 
     private sealed class NoopDisposable : IDisposable
     {
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+        public void Dispose() => Dispose(disposing: true);
 
         private static void Dispose(bool disposing)
         {

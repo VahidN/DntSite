@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Projects.Entities;
 
-public class ProjectIssueCommentReaction : BaseReactionEntity<ProjectIssueComment>
-{
-}
+public class ProjectIssueCommentReaction : BaseReactionEntity<ProjectIssueComment>;

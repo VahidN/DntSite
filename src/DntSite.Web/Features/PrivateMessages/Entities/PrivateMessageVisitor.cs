@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.PrivateMessages.Entities;
 
-public class PrivateMessageVisitor : BaseVisitorEntity<PrivateMessage>
-{
-}
+public class PrivateMessageVisitor : BaseVisitorEntity<PrivateMessage>;

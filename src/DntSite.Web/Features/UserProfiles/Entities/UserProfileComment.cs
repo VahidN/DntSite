@@ -3,6 +3,4 @@
 namespace DntSite.Web.Features.UserProfiles.Entities;
 
 public class UserProfileComment : BaseCommentsEntity<UserProfileComment, User, UserProfileCommentVisitor,
-    UserProfileCommentBookmark, UserProfileCommentReaction>
-{
-}
+    UserProfileCommentBookmark, UserProfileCommentReaction>;

@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.UserProfiles.Entities;
 
-public class Role : BaseTagEntity<User>
-{
-}
+public class Role : BaseTagEntity<User>;

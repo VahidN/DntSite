@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.StackExchangeQuestions.Entities;
 
-public class StackExchangeQuestionBookmark : BaseBookmarkEntity<StackExchangeQuestion>
-{
-}
+public class StackExchangeQuestionBookmark : BaseBookmarkEntity<StackExchangeQuestion>;

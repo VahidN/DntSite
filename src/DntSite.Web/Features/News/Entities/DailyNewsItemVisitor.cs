@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.News.Entities;
 
-public class DailyNewsItemVisitor : BaseVisitorEntity<DailyNewsItem>
-{
-}
+public class DailyNewsItemVisitor : BaseVisitorEntity<DailyNewsItem>;

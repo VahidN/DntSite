@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Surveys.Entities;
 
-public class SurveyBookmark : BaseBookmarkEntity<Survey>
-{
-}
+public class SurveyBookmark : BaseBookmarkEntity<Survey>;

@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Projects.Entities;
 
-public class ProjectIssueType : BaseTagEntity<ProjectIssue>
-{
-}
+public class ProjectIssueType : BaseTagEntity<ProjectIssue>;

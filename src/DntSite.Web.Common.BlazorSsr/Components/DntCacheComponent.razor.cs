@@ -50,7 +50,7 @@ public partial class DntCacheComponent<TComponent>
     [EditorRequired]
     public required string CacheKey { get; set; }
 
-    private string CacheEntryKey => $"{CacheKeyPrefix}{CacheKey}";
+    private string CacheEntryKey => CacheKeyPrefix + CacheKey;
 
     protected override Task OnInitializedAsync() => ProcessAsync();
 

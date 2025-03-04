@@ -116,12 +116,12 @@ public partial class DntInputPersianDate
 
         var result = PersianDate.ToPersianDateTime();
 
-        if (result is null || !result.IsValidDateTime)
+        if (result?.IsValidDateTime != true)
         {
             return;
         }
 
-        SetDateNumberValues(new PersianDay(result.Year.Value, result.Month.Value, result.Day.Value));
+        SetDateNumberValues(new PersianDay(result.Year!.Value, result.Month!.Value, result.Day!.Value));
     }
 
     private void InitDateNumbersIfDateIsSet()

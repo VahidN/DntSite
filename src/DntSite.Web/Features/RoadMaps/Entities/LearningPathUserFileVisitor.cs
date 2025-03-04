@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.RoadMaps.Entities;
 
-public class LearningPathUserFileVisitor : BaseVisitorEntity<LearningPathUserFile>
-{
-}
+public class LearningPathUserFileVisitor : BaseVisitorEntity<LearningPathUserFile>;

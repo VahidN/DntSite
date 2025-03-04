@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Surveys.Entities;
 
-public class SurveyVisitor : BaseVisitorEntity<Survey>
-{
-}
+public class SurveyVisitor : BaseVisitorEntity<Survey>;

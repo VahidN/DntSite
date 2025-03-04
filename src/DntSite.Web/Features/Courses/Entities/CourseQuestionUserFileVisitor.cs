@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Courses.Entities;
 
-public class CourseQuestionUserFileVisitor : BaseVisitorEntity<CourseQuestionUserFile>
-{
-}
+public class CourseQuestionUserFileVisitor : BaseVisitorEntity<CourseQuestionUserFile>;

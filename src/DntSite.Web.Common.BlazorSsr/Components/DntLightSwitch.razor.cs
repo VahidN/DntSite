@@ -1,5 +1,3 @@
 namespace DntSite.Web.Common.BlazorSsr.Components;
 
-public partial class DntLightSwitch
-{
-}
+public partial class DntLightSwitch;

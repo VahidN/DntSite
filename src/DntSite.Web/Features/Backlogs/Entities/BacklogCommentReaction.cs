@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Backlogs.Entities;
 
-public class BacklogCommentReaction : BaseReactionEntity<BacklogComment>
-{
-}
+public class BacklogCommentReaction : BaseReactionEntity<BacklogComment>;

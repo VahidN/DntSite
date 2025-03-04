@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Advertisements.Entities;
 
-public class AdvertisementTag : BaseTagEntity<Advertisement>
-{
-}
+public class AdvertisementTag : BaseTagEntity<Advertisement>;

@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Advertisements.Entities;
 
-public class AdvertisementCommentReaction : BaseReactionEntity<AdvertisementComment>
-{
-}
+public class AdvertisementCommentReaction : BaseReactionEntity<AdvertisementComment>;

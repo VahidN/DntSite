@@ -24,7 +24,7 @@ public partial class AdvertisementsWritersList
 
     private string MainTitle => !HasUserFriendlyName ? MainPageTitle : MainUserPageTitle;
 
-    private string MainUserPageTitle => $@"آرشیو آگهی‌های {UserFriendlyName}";
+    private string MainUserPageTitle => $"آرشیو آگهی‌های {UserFriendlyName}";
 
     private string MainUserPageUrl
         => !HasUserFriendlyName ? MainPageUrl : $"{MainPageUrl}/{Uri.EscapeDataString(UserFriendlyName)}";

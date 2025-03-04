@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Searches.Entities;
 
-public class SearchItemUserFile : BaseUserFileEntity<SearchItemUserFile, SearchItem, SearchItemUserFileVisitor>
-{
-}
+public class SearchItemUserFile : BaseUserFileEntity<SearchItemUserFile, SearchItem, SearchItemUserFileVisitor>;

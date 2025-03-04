@@ -244,7 +244,7 @@ public partial class WriteDraft
 
         var blogPost = await BlogCommentsService.FindCommentPostAsync(ConvertToCommentModel.ReplyPostId);
 
-        if (blogPost is null || blogPost.IsDeleted)
+        if (blogPost?.IsDeleted != false)
         {
             Alert.ShowAlert(AlertType.Danger, title: "خطا!", message: "شماره مطلب وارد شده وجود خارجی ندارد.");
 

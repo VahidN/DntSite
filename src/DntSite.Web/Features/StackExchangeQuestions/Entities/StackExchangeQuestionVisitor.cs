@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.StackExchangeQuestions.Entities;
 
-public class StackExchangeQuestionVisitor : BaseVisitorEntity<StackExchangeQuestion>
-{
-}
+public class StackExchangeQuestionVisitor : BaseVisitorEntity<StackExchangeQuestion>;

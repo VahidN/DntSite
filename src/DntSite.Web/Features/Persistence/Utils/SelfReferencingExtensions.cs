@@ -30,7 +30,7 @@ public static class SelfReferencingExtensions
     private static void AppendChildren<TEntity>(ICollection<TEntity> originalList, TEntity parentItem)
         where TEntity : BaseSelfReferencingEntity<TEntity>
     {
-        foreach (var kid in originalList.Where(x => x.ReplyId.HasValue && x.ReplyId.Value == parentItem.Id))
+        foreach (var kid in originalList.Where(x => x.ReplyId == parentItem.Id))
         {
             parentItem.Children ??= [];
             parentItem.Children.Add(kid);

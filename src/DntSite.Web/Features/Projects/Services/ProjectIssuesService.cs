@@ -160,7 +160,7 @@ public class ProjectIssuesService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        if (issuePriorityId.HasValue && issuePriorityId.Value == 0)
+        if (issuePriorityId is 0)
         {
             issuePriorityId = null;
         }
@@ -187,7 +187,7 @@ public class ProjectIssuesService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        if (issueStatusId.HasValue && issueStatusId.Value == 0)
+        if (issueStatusId is 0)
         {
             issueStatusId = null;
         }
@@ -213,7 +213,7 @@ public class ProjectIssuesService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        if (issueTypeId.HasValue && issueTypeId.Value == 0)
+        if (issueTypeId is 0)
         {
             issueTypeId = null;
         }

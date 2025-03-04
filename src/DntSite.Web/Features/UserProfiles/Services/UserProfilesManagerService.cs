@@ -315,7 +315,7 @@ public class UserProfilesManagerService(
     {
         var user = await usersInfoService.FindUserAsync(userId);
 
-        if (user is null || user.EmailIsValidated)
+        if (user?.EmailIsValidated != false)
         {
             return;
         }

@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.UserProfiles.Entities;
 
-public class UserProfileCommentBookmark : BaseBookmarkEntity<UserProfileComment>
-{
-}
+public class UserProfileCommentBookmark : BaseBookmarkEntity<UserProfileComment>;

@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.UserProfiles.Entities;
 
-public class UserProfileReaction : BaseReactionEntity<User>
-{
-}
+public class UserProfileReaction : BaseReactionEntity<User>;

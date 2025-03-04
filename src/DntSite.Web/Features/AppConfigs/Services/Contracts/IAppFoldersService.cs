@@ -2,7 +2,7 @@ using DntSite.Web.Features.AppConfigs.Models;
 
 namespace DntSite.Web.Features.AppConfigs.Services.Contracts;
 
-public interface IAppFoldersService : ISingletonService
+public interface IAppFoldersService : ISingletonService, IDisposable
 {
     public string DefaultConnectionString { get; }
 

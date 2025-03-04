@@ -10,8 +10,8 @@ public partial class UserProfileManager
 {
     private string FormName => string.Create(CultureInfo.InvariantCulture, $"{nameof(UserProfileManager)}{User?.Id}");
 
-    private bool IsUserAdmin => User is not null && User.Roles.Any(x => string.Equals(x.Name, CustomRoles.Admin,
-        StringComparison.Ordinal));
+    private bool IsUserAdmin
+        => User?.Roles.Any(x => string.Equals(x.Name, CustomRoles.Admin, StringComparison.Ordinal)) == true;
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 

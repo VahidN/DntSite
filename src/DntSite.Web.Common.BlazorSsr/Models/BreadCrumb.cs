@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Security.Claims;
 
 namespace DntSite.Web.Common.BlazorSsr.Models;
@@ -5,7 +6,7 @@ namespace DntSite.Web.Common.BlazorSsr.Models;
 /// <summary>
 ///     Represents the current BreadCrumb
 /// </summary>
-public class BreadCrumb : IEqualityComparer<BreadCrumb>
+public class BreadCrumb : IEqualityComparer<BreadCrumb>, IEqualityComparer
 {
     /// <summary>
     ///     A constant URL of the current item
@@ -54,6 +55,41 @@ public class BreadCrumb : IEqualityComparer<BreadCrumb>
     internal string? FontWeightClass { set; get; }
 
     internal string? ActiveClass { set; get; }
+
+    public new bool Equals(object? x, object? y)
+    {
+        if (x == y)
+        {
+            return true;
+        }
+
+        if (x is null || y is null)
+        {
+            return false;
+        }
+
+        if (x is BreadCrumb a && y is BreadCrumb b)
+        {
+            return Equals(a, b);
+        }
+
+        throw new ArgumentException(message: "", nameof(x));
+    }
+
+    public int GetHashCode(object? obj)
+    {
+        if (obj is null)
+        {
+            return 0;
+        }
+
+        if (obj is BreadCrumb x)
+        {
+            return GetHashCode(x);
+        }
+
+        throw new ArgumentException(message: "", nameof(obj));
+    }
 
     public bool Equals(BreadCrumb? x, BreadCrumb? y)
     {

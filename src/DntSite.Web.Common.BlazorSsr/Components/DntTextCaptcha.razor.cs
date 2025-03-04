@@ -179,7 +179,7 @@ public partial class DntTextCaptcha
 
         _cacheKey = PasswordHasherService.CreateCryptographicallySecureGuid().ToString(GuidFormat);
 
-        CacheService.Add($"{CaptchaCacheKeyPrefix}{_cacheKey}", nameof(DntTextCaptcha), captchaNumber,
+        CacheService.Add(CaptchaCacheKeyPrefix + _cacheKey, nameof(DntTextCaptcha), captchaNumber,
             AbsoluteCaptchaExpirationRelativeToNow);
     }
 
@@ -190,7 +190,7 @@ public partial class DntTextCaptcha
             return;
         }
 
-        var captchaCacheKey = $"{CaptchaCacheKeyPrefix}{CaptchaHiddenCacheKey.Value.ToString(GuidFormat)}";
+        var captchaCacheKey = CaptchaCacheKeyPrefix + CaptchaHiddenCacheKey.Value.ToString(GuidFormat);
 
         if (!CacheService.TryGetValue(captchaCacheKey, out int realCaptchaValue))
         {
@@ -247,7 +247,7 @@ public partial class DntTextCaptcha
             return false;
         }
 
-        var antiDosCacheKey = $"{AntiDosCacheKeyPrefix}{HttpContext.GetIP()}";
+        var antiDosCacheKey = AntiDosCacheKeyPrefix + HttpContext.GetIP();
         var expiresAt = DateTimeOffset.UtcNow.AddMinutes(BanDurationRelativeToNow.Minutes);
 
         if (!CacheService.TryGetValue<ThrottleInfo>(antiDosCacheKey, out var clientThrottleInfo) ||

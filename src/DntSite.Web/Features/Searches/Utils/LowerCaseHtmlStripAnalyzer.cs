@@ -18,10 +18,18 @@ public class LowerCaseHtmlStripAnalyzer(LuceneVersion matchVersion) : Analyzer
 
     protected override TokenStreamComponents CreateComponents(string fieldName, TextReader reader)
     {
+        _standardTokenizer?.Dispose();
         _standardTokenizer = new StandardTokenizer(matchVersion, reader);
+
+        _standardFilter?.Dispose();
         _standardFilter = new StandardFilter(matchVersion, _standardTokenizer);
+
+        _lowerCaseFilter?.Dispose();
         _lowerCaseFilter = new LowerCaseFilter(matchVersion, _standardFilter);
+
         var stopWords = new CharArraySet(matchVersion, PersianStopwords.List, ignoreCase: true);
+
+        _tokenStream?.Dispose();
         _tokenStream = new StopFilter(matchVersion, _lowerCaseFilter, stopWords);
 
         return new TokenStreamComponents(_standardTokenizer, _tokenStream);
@@ -29,6 +37,7 @@ public class LowerCaseHtmlStripAnalyzer(LuceneVersion matchVersion) : Analyzer
 
     protected override TextReader InitReader(string fieldName, TextReader reader)
     {
+        _htmlStripCharFilter?.Dispose();
         _htmlStripCharFilter = new HTMLStripCharFilter(reader);
 
         return base.InitReader(fieldName, _htmlStripCharFilter);

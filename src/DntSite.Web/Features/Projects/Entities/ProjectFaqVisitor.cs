@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Projects.Entities;
 
-public class ProjectFaqVisitor : BaseVisitorEntity<ProjectFaq>
-{
-}
+public class ProjectFaqVisitor : BaseVisitorEntity<ProjectFaq>;

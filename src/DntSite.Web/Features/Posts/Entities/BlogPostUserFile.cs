@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Posts.Entities;
 
-public class BlogPostUserFile : BaseUserFileEntity<BlogPostUserFile, BlogPost, BlogPostUserFileVisitor>
-{
-}
+public class BlogPostUserFile : BaseUserFileEntity<BlogPostUserFile, BlogPost, BlogPostUserFileVisitor>;

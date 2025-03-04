@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Advertisements.Entities;
 
-public class AdvertisementVisitor : BaseVisitorEntity<Advertisement>
-{
-}
+public class AdvertisementVisitor : BaseVisitorEntity<Advertisement>;

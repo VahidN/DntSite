@@ -76,7 +76,7 @@ public class CurrentUserService(
     {
         var httpContext = httpContextAccessor.HttpContext;
 
-        if (httpContext is null || httpContext.IsGetRequest())
+        if (httpContext?.IsGetRequest() != false)
         {
             return;
         }

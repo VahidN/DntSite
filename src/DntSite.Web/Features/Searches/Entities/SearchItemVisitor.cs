@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Searches.Entities;
 
-public class SearchItemVisitor : BaseVisitorEntity<SearchItem>
-{
-}
+public class SearchItemVisitor : BaseVisitorEntity<SearchItem>;

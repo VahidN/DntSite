@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Projects.Entities;
 
-public class ProjectFaqTag : BaseTagEntity<ProjectFaq>
-{
-}
+public class ProjectFaqTag : BaseTagEntity<ProjectFaq>;

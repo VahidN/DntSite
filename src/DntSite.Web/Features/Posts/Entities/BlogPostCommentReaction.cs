@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Posts.Entities;
 
-public class BlogPostCommentReaction : BaseReactionEntity<BlogPostComment>
-{
-}
+public class BlogPostCommentReaction : BaseReactionEntity<BlogPostComment>;

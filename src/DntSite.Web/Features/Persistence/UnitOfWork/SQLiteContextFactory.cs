@@ -19,11 +19,14 @@ public class SqLiteContextFactory : IDesignTimeDbContextFactory<ApplicationDbCon
         services.AddScoped<IWebHostEnvironment, TestHostingEnvironment>();
         services.AddEfCoreInterceptors(new TestHostingEnvironment());
 
-        var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", false, true).Build();
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
         services.AddSingleton(_ => configuration);
         services.Configure<StartupSettingsModel>(configuration.Bind);
 
-        var serviceProvider = services.BuildServiceProvider();
+        using var serviceProvider = services.BuildServiceProvider();
 
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         optionsBuilder.UseConfiguredSqLite(serviceProvider);

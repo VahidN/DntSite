@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.News.Entities;
 
-public class DailyNewsItemReaction : BaseReactionEntity<DailyNewsItem>
-{
-}
+public class DailyNewsItemReaction : BaseReactionEntity<DailyNewsItem>;

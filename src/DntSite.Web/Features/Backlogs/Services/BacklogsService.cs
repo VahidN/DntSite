@@ -197,7 +197,7 @@ public class BacklogsService(
             .Include(x => x.DoneByUser)
             .Include(x => x.Reactions)
             .Include(x => x.Tags)
-            .OrderBy(backlog => Guid.NewGuid())
+            .OrderBy(_ => Guid.NewGuid())
             .FirstOrDefaultAsync(backlog
                 => !backlog.IsDeleted && !backlog.DoneByUserId.HasValue && !backlog.ConvertedBlogPostId.HasValue);
 

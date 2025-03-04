@@ -2,6 +2,4 @@
 
 namespace DntSite.Web.Features.Courses.Entities;
 
-public class CourseCommentReaction : BaseReactionEntity<CourseComment>
-{
-}
+public class CourseCommentReaction : BaseReactionEntity<CourseComment>;

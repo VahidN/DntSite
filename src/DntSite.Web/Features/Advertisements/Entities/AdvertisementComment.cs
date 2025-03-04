@@ -3,6 +3,4 @@
 namespace DntSite.Web.Features.Advertisements.Entities;
 
 public class AdvertisementComment : BaseCommentsEntity<AdvertisementComment, Advertisement, AdvertisementCommentVisitor,
-    AdvertisementCommentBookmark, AdvertisementCommentReaction>
-{
-}
+    AdvertisementCommentBookmark, AdvertisementCommentReaction>;

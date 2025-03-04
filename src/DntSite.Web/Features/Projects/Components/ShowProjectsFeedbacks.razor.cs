@@ -47,7 +47,7 @@ public partial class ShowProjectsFeedbacks
     {
         if (HasUserFriendlyName)
         {
-            return $@"آرشیو بازخوردهای پروژه‌های {UserFriendlyName}";
+            return $"آرشیو بازخوردهای پروژه‌های {UserFriendlyName}";
         }
 
         if (ProjectId.HasValue)
