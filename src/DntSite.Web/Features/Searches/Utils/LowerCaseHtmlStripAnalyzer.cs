@@ -18,21 +18,23 @@ public class LowerCaseHtmlStripAnalyzer(LuceneVersion matchVersion) : Analyzer
 
     protected override TokenStreamComponents CreateComponents(string fieldName, TextReader reader)
     {
-        _standardTokenizer?.Dispose();
+        DisposeTokenStreamComponents();
+#pragma warning disable IDISP003
         _standardTokenizer = new StandardTokenizer(matchVersion, reader);
-
-        _standardFilter?.Dispose();
         _standardFilter = new StandardFilter(matchVersion, _standardTokenizer);
-
-        _lowerCaseFilter?.Dispose();
         _lowerCaseFilter = new LowerCaseFilter(matchVersion, _standardFilter);
-
         var stopWords = new CharArraySet(matchVersion, PersianStopwords.List, ignoreCase: true);
-
-        _tokenStream?.Dispose();
         _tokenStream = new StopFilter(matchVersion, _lowerCaseFilter, stopWords);
-
+#pragma warning restore IDISP003
         return new TokenStreamComponents(_standardTokenizer, _tokenStream);
+    }
+
+    private void DisposeTokenStreamComponents()
+    {
+        _standardTokenizer?.Dispose();
+        _standardFilter?.Dispose();
+        _lowerCaseFilter?.Dispose();
+        _tokenStream?.Dispose();
     }
 
     protected override TextReader InitReader(string fieldName, TextReader reader)
@@ -54,16 +56,11 @@ public class LowerCaseHtmlStripAnalyzer(LuceneVersion matchVersion) : Analyzer
 
         try
         {
-            if (!disposing)
+            if (disposing)
             {
-                return;
+                DisposeTokenStreamComponents();
+                _htmlStripCharFilter?.Dispose();
             }
-
-            _standardFilter?.Dispose();
-            _standardTokenizer?.Dispose();
-            _tokenStream?.Dispose();
-            _lowerCaseFilter?.Dispose();
-            _htmlStripCharFilter?.Dispose();
         }
         finally
         {
