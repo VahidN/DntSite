@@ -5,7 +5,7 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 /// </summary>
 /// <typeparam name="TEnum"></typeparam>
 public partial class DntInputSelectEnumType<TEnum>
-    where TEnum : Enum
+    where TEnum : struct, Enum
 {
     /// <summary>
     ///     Additional user attributes
@@ -42,7 +42,7 @@ public partial class DntInputSelectEnumType<TEnum>
     ///     Sets the '@bind-Value' attribute to the provided string or object.
     /// </summary>
     [Parameter]
-    public TEnum Value { get; set; } = default!;
+    public TEnum Value { get; set; }
 
     /// <summary>
     ///     Specifies the field for which validation messages should be displayed.

@@ -3,8 +3,9 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 /// <summary>
 ///     A custom InputCheckboxList component
 /// </summary>
+/// <typeparam name="TEnum">struct, Enum</typeparam>
 public partial class DntInputCheckBoxEnumList<TEnum>
-    where TEnum : Enum
+    where TEnum : struct, Enum
 {
     private IReadOnlyDictionary<string, TEnum> _items = new Dictionary<string, TEnum>(StringComparer.Ordinal);
 

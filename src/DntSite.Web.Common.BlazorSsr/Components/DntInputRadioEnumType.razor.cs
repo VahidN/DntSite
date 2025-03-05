@@ -3,8 +3,9 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 /// <summary>
 ///     A custom radio component
 /// </summary>
+/// <typeparam name="TEnum">struct, Enum</typeparam>
 public partial class DntInputRadioEnumType<TEnum>
-    where TEnum : Enum
+    where TEnum : struct, Enum
 {
     /// <summary>
     ///     Additional user attributes
@@ -35,7 +36,7 @@ public partial class DntInputRadioEnumType<TEnum>
     ///     Sets the '@bind-Value' attribute to the provided string or object.
     /// </summary>
     [Parameter]
-    public TEnum Value { get; set; } = default!;
+    public TEnum Value { get; set; }
 
     /// <summary>
     ///     Specifies the field for which validation messages should be displayed.
