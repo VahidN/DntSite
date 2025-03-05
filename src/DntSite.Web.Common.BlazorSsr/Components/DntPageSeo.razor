@@ -33,6 +33,11 @@
     }
     <link rel="canonical" href="@CanonicalUrl"/>
     <meta name="robots" content="index, follow"/>
+    @if (ShowLlmsTxt)
+    {
+        <meta name="llms.txt" content="/llms.txt">
+        <meta name="llms-full.txt" content="/llms-full.txt">
+    }
 
     @if (HasRating)
     {

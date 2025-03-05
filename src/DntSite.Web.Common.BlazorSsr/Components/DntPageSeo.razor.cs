@@ -48,6 +48,11 @@ public partial class DntPageSeo
     public string? RssUrl { set; get; }
 
     /// <summary>
+    ///     https://llmstxt.org/
+    /// </summary>
+    public bool ShowLlmsTxt { set; get; } = true;
+
+    /// <summary>
     ///     The name of the writer of this document
     /// </summary>
     [Parameter]

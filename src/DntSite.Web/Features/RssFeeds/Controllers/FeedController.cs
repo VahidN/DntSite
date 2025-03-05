@@ -93,6 +93,13 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     [Microsoft.AspNetCore.Mvc.Route(template: "/blog/rss.xml")]
     public Task<IActionResult> SiteFeed() => LatestChanges();
 
+    [Microsoft.AspNetCore.Mvc.Route(template: "/llms.txt")]
+    public async Task<IActionResult> LlmsTxt() => new LlmsTxtResult<WhatsNewItemModel>(await GetLatestChangesAsync());
+
+    [Microsoft.AspNetCore.Mvc.Route(template: "/llms-full.txt")]
+    public async Task<IActionResult> LlmsFull()
+        => new LlmsFullTxtResult<WhatsNewItemModel>(await GetLatestChangesAsync());
+
     private Task<WhatsNewFeedChannel> GetLatestChangesAsync() => feedsService.GetLatestChangesAsync();
 
     public async Task<IActionResult> Courses()
