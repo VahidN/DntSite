@@ -16,6 +16,9 @@
         static enable(): void {
             window.addEventListener('online', DntStatusCheck.updateOnlineStatus);
             window.addEventListener('offline', DntStatusCheck.updateOnlineStatus);
+
+            // Initial check
+            DntStatusCheck.updateOnlineStatus();
         }
     }
 }
