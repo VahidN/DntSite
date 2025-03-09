@@ -1619,6 +1619,29 @@ var DntBlazorSsr;
 })(DntBlazorSsr || (DntBlazorSsr = {}));
 var DntBlazorSsr;
 (function (DntBlazorSsr) {
+    class DntStatusCheck {
+        static updateOnlineStatus() {
+            document.querySelectorAll('[id^="dnt-online-status-report"]').forEach(statusBarElement => {
+                if (navigator.onLine) {
+                    statusBarElement.classList.add('d-none');
+                    statusBarElement.innerHTML = '';
+                }
+                else {
+                    statusBarElement.classList.remove('d-none');
+                    statusBarElement.classList.add('badge', 'text-bg-danger', 'fs-6', 'mt-1', 'mb-2', 'show');
+                    statusBarElement.innerHTML = 'مرورگر در این لحظه آنلاین نیست. لطفا از اتصال خود به شبکه مطمئن شوید.';
+                }
+            });
+        }
+        static enable() {
+            window.addEventListener('online', DntStatusCheck.updateOnlineStatus);
+            window.addEventListener('offline', DntStatusCheck.updateOnlineStatus);
+        }
+    }
+    DntBlazorSsr.DntStatusCheck = DntStatusCheck;
+})(DntBlazorSsr || (DntBlazorSsr = {}));
+var DntBlazorSsr;
+(function (DntBlazorSsr) {
     class DntStickySidebar {
         static enable() {
             const sideBarMenu = document.querySelector("div#sidebar-menu > ul");
@@ -1823,6 +1846,7 @@ var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntUtilities {
         static enable() {
+            DntBlazorSsr.DntStatusCheck.enable();
             DntBlazorSsr.DntShowPassword.enable();
             DntBlazorSsr.DntReportErrors.enable();
             DntBlazorSsr.DntStyleSiteImages.enable();

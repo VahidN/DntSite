@@ -15,5 +15,9 @@
             @IsSubmittingText
             <span class="me-2 spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
         </div>
+        @if (string.Equals(Type.Value, ButtonType.Submit.Value, StringComparison.OrdinalIgnoreCase))
+        {
+            <div id="dnt-online-status-report"></div>
+        }
     </div>
 </div>
