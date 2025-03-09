@@ -1636,6 +1636,7 @@ var DntBlazorSsr;
         static enable() {
             window.addEventListener('online', DntStatusCheck.updateOnlineStatus);
             window.addEventListener('offline', DntStatusCheck.updateOnlineStatus);
+            DntStatusCheck.updateOnlineStatus();
         }
     }
     DntBlazorSsr.DntStatusCheck = DntStatusCheck;
