@@ -36,6 +36,9 @@ public class AppConfigsEmailsService(
         }
     }
 
+    /// <summary>
+    ///     https://github.com/dotnet/sdk/blob/a34f1ca17979f6cb283ad74c53ca68f8575fceb9/src/Cli/dotnet/commands/dotnet-sdk/check/LocalizableStrings.resx
+    /// </summary>
     private static bool IsNewVersionAvailable(string info)
         => info.Contains(value: "is available", StringComparison.OrdinalIgnoreCase) ||
            info.Contains(value: "newest", StringComparison.OrdinalIgnoreCase);
