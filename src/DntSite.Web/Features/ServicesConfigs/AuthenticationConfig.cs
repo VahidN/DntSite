@@ -48,7 +48,7 @@ public static class AuthenticationConfig
                 // or a cross-site top-level navigation with a "safe" HTTP method.
                 options.Cookie.SameSite = SameSiteMode.Lax;
 
-                options.SlidingExpiration = false;
+                options.SlidingExpiration = true;
 
                 options.ExpireTimeSpan =
                     TimeSpan.FromDays(siteSettings.DataProtectionOptions.LoginCookieExpirationDays);
