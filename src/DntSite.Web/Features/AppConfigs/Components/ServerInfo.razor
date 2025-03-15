@@ -126,6 +126,10 @@
                 <span dir="ltr">@_info.ServerInfo.OS.HostAddresses</span>
             </div>
             <div>
+                <label>تعداد اتصالات TCP فعال: </label>
+                <span dir="ltr">@_info.ServerInfo.OS.ActiveTcpConnectionsCount</span>
+            </div>
+            <div>
                 <label>متغیرهای محیطی: </label>
                 @foreach (var item in _info.ServerInfo.OS.EnvironmentVariables)
                 {
