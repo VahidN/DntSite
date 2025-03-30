@@ -111,7 +111,7 @@ public class UserProfilesManagerService(
             HashedPassword = passwordHasherService.GetPbkdf2Hash(model.Password1),
             SerialNumber = Guid.NewGuid().ToString(format: "N"),
             EMail = model.EMail.FixGmailDots(),
-            FriendlyName = model.FriendlyName.RemoveDiacritics().NormalizeUnderLines().RemovePunctuation(),
+            FriendlyName = model.FriendlyName.RemoveDiacritics().NormalizeUnderLines().RemovePunctuation().Trim(),
             ReceiveDailyEmails = true,
             RegistrationCode = Guid.NewGuid().ToString(format: "N", CultureInfo.InvariantCulture),
             IsActive = true,
