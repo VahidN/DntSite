@@ -621,6 +621,7 @@ var DntBlazorSsr;
         static convertMonoSpaceSpansToCodeOnPaste() {
             document.querySelectorAll("span.ql-font-monospace").forEach(element => {
                 const code = document.createElement('code');
+                code.dir = "ltr";
                 code.innerHTML = element.innerHTML;
                 element.replaceWith(code);
             });
@@ -628,7 +629,11 @@ var DntBlazorSsr;
         static makeInlineCode(quill) {
             const range = quill.getSelection();
             if (range) {
-                quill.formatText(range.index, range.length, 'code', true);
+                quill.formatText(range.index, range.length, {
+                    'code': true,
+                    'direction': 'ltr'
+                });
+                quill.formatText(range.index, range.length, 'dir', 'ltr');
             }
         }
         static handleDirection(quill, value) {
