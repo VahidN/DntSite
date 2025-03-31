@@ -471,6 +471,7 @@ var DntBlazorSsr;
                         DntHtmlEditor.setRtlDir(quill);
                     }
                 }
+                DntHtmlEditor.convertMonoSpaceSpansToCodeOnPaste();
             }, true);
         }
         static setRtlDir(quill) {
@@ -611,6 +612,24 @@ var DntBlazorSsr;
                 element.style.textAlign = 'right';
                 element.dir = 'rtl';
             });
+        }
+        static manageCleanStylesButton(editorElement) {
+            editorElement.querySelectorAll('*').forEach(element => {
+                element.removeAttribute('style');
+            });
+        }
+        static convertMonoSpaceSpansToCodeOnPaste() {
+            document.querySelectorAll("span.ql-font-monospace").forEach(element => {
+                const code = document.createElement('code');
+                code.innerHTML = element.innerHTML;
+                element.replaceWith(code);
+            });
+        }
+        static makeInlineCode(quill) {
+            const range = quill.getSelection();
+            if (range) {
+                quill.formatText(range.index, range.length, 'code', true);
+            }
         }
         static handleDirection(quill, value) {
             const { align } = quill.getFormat();
@@ -791,6 +810,8 @@ var DntBlazorSsr;
                         toolbar: {
                             container: `#${toolbarId}`,
                             handlers: {
+                                'inline-code': (value) => dntHtmlEditor.makeInlineCode(quill),
+                                'clean-styles': (value) => dntHtmlEditor.manageCleanStylesButton(editorElement),
                                 direction: (value) => dntHtmlEditor.handleDirection(quill, value),
                                 uploadImageFile: (value) => dntHtmlEditor.uploadFile(uniqueId, quill, acceptedUploadImageFormats, true, uploadImageFileApiPath, uploadOnlyImageFileErrorMessage, additionalJsonDataDuringImageFileUpload, maximumUploadImageSizeInBytes, maximumUploadImageSizeErrorMessage),
                                 insertImageUrl: (value) => dntHtmlEditor.handleInsertImageUrl(quill, insertImageUrlLabel),

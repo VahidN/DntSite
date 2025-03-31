@@ -39,6 +39,8 @@ namespace DntBlazorSsr {
                         DntHtmlEditor.setRtlDir(quill);
                     }
                 }
+
+                DntHtmlEditor.convertMonoSpaceSpansToCodeOnPaste();
             }, true);
         }
 
@@ -215,6 +217,28 @@ namespace DntBlazorSsr {
                 element.style.textAlign = 'right';
                 element.dir = 'rtl';
             });
+        }
+
+        static manageCleanStylesButton(editorElement: HTMLElement) {
+            editorElement.querySelectorAll('*').forEach(element => {
+                element.removeAttribute('style');
+            });
+        }
+
+        static convertMonoSpaceSpansToCodeOnPaste() {
+            document.querySelectorAll("span.ql-font-monospace").forEach(element => {
+                const code = document.createElement('code');
+                code.innerHTML = element.innerHTML;
+                element.replaceWith(code);
+            });
+        }
+
+        static makeInlineCode(quill: any) {
+            // @ts-ignore
+            const range = quill.getSelection();
+            if (range) {
+                quill.formatText(range.index, range.length, 'code', true);
+            }
         }
 
         static handleDirection(quill: any, value: any) {
@@ -445,6 +469,8 @@ namespace DntBlazorSsr {
                         toolbar: {
                             container: `#${toolbarId}`,
                             handlers: {
+                                'inline-code': (value: any) => dntHtmlEditor.makeInlineCode(quill),
+                                'clean-styles': (value: any) => dntHtmlEditor.manageCleanStylesButton(editorElement),
                                 direction: (value: any) => dntHtmlEditor.handleDirection(quill, value),
                                 uploadImageFile: (value: any) => dntHtmlEditor.uploadFile(uniqueId,
                                     quill,
