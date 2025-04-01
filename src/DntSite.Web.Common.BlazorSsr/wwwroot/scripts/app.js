@@ -471,7 +471,6 @@ var DntBlazorSsr;
                         DntHtmlEditor.setRtlDir(quill);
                     }
                 }
-                DntHtmlEditor.convertMonoSpaceSpansToCodeOnPaste();
             }, true);
         }
         static setRtlDir(quill) {
@@ -613,12 +612,12 @@ var DntBlazorSsr;
                 element.dir = 'rtl';
             });
         }
-        static manageCleanStylesButton(editorElement) {
+        static cleanAllStyles(editorElement) {
             editorElement.querySelectorAll('*').forEach(element => {
                 element.removeAttribute('style');
             });
         }
-        static convertMonoSpaceSpansToCodeOnPaste() {
+        static convertMonoSpaceSpansToCode() {
             document.querySelectorAll("span.ql-font-monospace").forEach(element => {
                 const code = document.createElement('code');
                 code.dir = "ltr";
@@ -644,7 +643,6 @@ var DntBlazorSsr;
             else if (value === 'rtl') {
                 DntHtmlEditor.setRtlDir(quill);
             }
-            DntHtmlEditor.addDirectionToParagraphs();
         }
         static uploadFile(uniqueId, quill, accept, isImage, apiUrl, uploadOnlyImageFileErrorMessage, additionalJsonData, maximumFileSizeInBytes, maximumUploadFileSizeErrorMessage) {
             let dntHtmlEditor = DntHtmlEditor;
@@ -816,8 +814,14 @@ var DntBlazorSsr;
                             container: `#${toolbarId}`,
                             handlers: {
                                 'inline-code': (value) => dntHtmlEditor.makeInlineCode(quill),
-                                'clean-styles': (value) => dntHtmlEditor.manageCleanStylesButton(editorElement),
-                                direction: (value) => dntHtmlEditor.handleDirection(quill, value),
+                                'clean-styles': (value) => {
+                                    dntHtmlEditor.cleanAllStyles(editorElement);
+                                    dntHtmlEditor.convertMonoSpaceSpansToCode();
+                                },
+                                direction: (value) => {
+                                    dntHtmlEditor.handleDirection(quill, value);
+                                    dntHtmlEditor.addDirectionToParagraphs();
+                                },
                                 uploadImageFile: (value) => dntHtmlEditor.uploadFile(uniqueId, quill, acceptedUploadImageFormats, true, uploadImageFileApiPath, uploadOnlyImageFileErrorMessage, additionalJsonDataDuringImageFileUpload, maximumUploadImageSizeInBytes, maximumUploadImageSizeErrorMessage),
                                 insertImageUrl: (value) => dntHtmlEditor.handleInsertImageUrl(quill, insertImageUrlLabel),
                                 uploadFile: (value) => dntHtmlEditor.uploadFile(uniqueId, quill, acceptedUploadFileFormats, false, uploadFileApiPath, uploadOnlyImageFileErrorMessage, additionalJsonDataDuringFileUpload, maximumUploadFileSizeInBytes, maximumUploadFileSizeErrorMessage)

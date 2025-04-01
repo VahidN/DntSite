@@ -39,8 +39,6 @@ namespace DntBlazorSsr {
                         DntHtmlEditor.setRtlDir(quill);
                     }
                 }
-
-                DntHtmlEditor.convertMonoSpaceSpansToCodeOnPaste();
             }, true);
         }
 
@@ -219,13 +217,13 @@ namespace DntBlazorSsr {
             });
         }
 
-        static manageCleanStylesButton(editorElement: HTMLElement) {
+        static cleanAllStyles(editorElement: HTMLElement) {
             editorElement.querySelectorAll('*').forEach(element => {
                 element.removeAttribute('style');
             });
         }
 
-        static convertMonoSpaceSpansToCodeOnPaste() {
+        static convertMonoSpaceSpansToCode() {
             document.querySelectorAll("span.ql-font-monospace").forEach(element => {
                 const code = document.createElement('code');
                 code.dir = "ltr";
@@ -257,8 +255,6 @@ namespace DntBlazorSsr {
                 // adds class="ql-align-right ql-direction-rtl"
                 DntHtmlEditor.setRtlDir(quill);
             }
-
-            DntHtmlEditor.addDirectionToParagraphs();
         }
 
         static uploadFile(uniqueId: string,
@@ -475,8 +471,14 @@ namespace DntBlazorSsr {
                             container: `#${toolbarId}`,
                             handlers: {
                                 'inline-code': (value: any) => dntHtmlEditor.makeInlineCode(quill),
-                                'clean-styles': (value: any) => dntHtmlEditor.manageCleanStylesButton(editorElement),
-                                direction: (value: any) => dntHtmlEditor.handleDirection(quill, value),
+                                'clean-styles': (value: any) => {
+                                    dntHtmlEditor.cleanAllStyles(editorElement);
+                                    dntHtmlEditor.convertMonoSpaceSpansToCode();
+                                },
+                                direction: (value: any) => {
+                                    dntHtmlEditor.handleDirection(quill, value);
+                                    dntHtmlEditor.addDirectionToParagraphs();
+                                },
                                 uploadImageFile: (value: any) => dntHtmlEditor.uploadFile(uniqueId,
                                     quill,
                                     acceptedUploadImageFormats,
