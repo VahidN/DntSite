@@ -982,41 +982,125 @@ var DntBlazorSsr;
 })(DntBlazorSsr || (DntBlazorSsr = {}));
 var DntBlazorSsr;
 (function (DntBlazorSsr) {
-    class DntPersianDatePicker {
-        static showDatePicker(inputElement) {
-            const _faNums = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-            const _arNums = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-            const _faDigitsRegex = /[۰۱۲۳۴۵۶۷۸۹]/g;
-            const _arDigitsRegex = /[٠١٢٣٤٥٦٧٨٩]/g;
-            const _enDigitsRegex = /[0-9]/g;
-            const _dayNames = ["شنبه", `یکشنبه`, `دوشنبه`, `سه‌شنبه`, `چهارشنبه`, `پنج‌شنبه`, 'جمعه'];
-            const _monthNames = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
-            let _datePicker = null;
-            let _textBox = null;
-            let _datePickerStyle = null;
-            let _isClickInsideDatePickerDiv = false;
-            const toEnglishNumbers = (inputNumber) => {
-                if (!inputNumber)
-                    return '';
-                let value = inputNumber.toString().trim();
-                if (!value)
-                    return '';
-                value = value.replace(_faDigitsRegex, (char) => `${_faNums.indexOf(char)}`);
-                return value.replace(_arDigitsRegex, (char) => `${_arNums.indexOf(char)}`);
-            };
-            const toPersianNumbers = (inputNumber) => {
-                if (!inputNumber)
-                    return '';
-                let value = inputNumber.toString().trim();
-                if (!value)
-                    return '';
-                return value.replace(_enDigitsRegex, (char) => `${_faNums[Number(char)]}`);
-            };
-            const todayPersianStr = toEnglishNumbers(new Intl.DateTimeFormat("fa", {
+    class DntPersianCalendar {
+        static toEnglishNumbers(inputNumber) {
+            if (!inputNumber)
+                return '';
+            let value = inputNumber.toString().trim();
+            if (!value)
+                return '';
+            value = value.replace(DntPersianCalendar.farsiDigitsRegex, (char) => `${DntPersianCalendar.farsiNumbers.indexOf(char)}`);
+            return value.replace(DntPersianCalendar.arabicDigitsRegex, (char) => `${DntPersianCalendar.arabicNumbers.indexOf(char)}`);
+        }
+        static toPersianNumbers(inputNumber) {
+            if (!inputNumber)
+                return '';
+            let value = inputNumber.toString().trim();
+            if (!value)
+                return '';
+            return value.replace(DntPersianCalendar.englishDigitsRegex, (char) => `${DntPersianCalendar.farsiNumbers[Number(char)]}`);
+        }
+        static toInt(text) {
+            return parseInt(text, 10);
+        }
+        static getTodayPersianStr() {
+            return DntPersianCalendar.toEnglishNumbers(new Intl.DateTimeFormat("fa", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit"
             }).format(Date.now()));
+        }
+        static getPersianDateParts(persianDateStr) {
+            if (!persianDateStr) {
+                persianDateStr = DntPersianCalendar.getTodayPersianStr();
+            }
+            let dateParts = persianDateStr.split(/[\/\-.]/, 3);
+            if (dateParts.length !== 3) {
+                return DntPersianCalendar.getPersianDateParts(DntPersianCalendar.getTodayPersianStr());
+            }
+            return [DntPersianCalendar.toInt(dateParts[0]), DntPersianCalendar.toInt(dateParts[1]), DntPersianCalendar.toInt(dateParts[2])];
+        }
+        static persianDatePartsToStr(parts) {
+            return !parts ? "" : `${parts[0]}/${String(parts[1]).padStart(2, '0')}/${String(parts[2]).padStart(2, '0')}`;
+        }
+        static getNextYear(date) {
+            const [pYear, pMonth, pDay] = DntPersianCalendar.getPersianDateParts(date);
+            return DntPersianCalendar.persianDatePartsToStr([pYear + 1, pMonth, pDay]);
+        }
+        static getPreviousYear(date) {
+            const [pYear, pMonth, pDay] = DntPersianCalendar.getPersianDateParts(date);
+            return DntPersianCalendar.persianDatePartsToStr([pYear - 1, pMonth, pDay]);
+        }
+        static getNextMonth(date) {
+            const [pYear, pMonth, pDay] = DntPersianCalendar.getPersianDateParts(date);
+            return pMonth < 12 ?
+                DntPersianCalendar.persianDatePartsToStr([pYear, pMonth + 1, pDay]) :
+                DntPersianCalendar.persianDatePartsToStr([pYear + 1, 1, pDay]);
+        }
+        static getPreviousMonth(date) {
+            const [pYear, pMonth, pDay] = DntPersianCalendar.getPersianDateParts(date);
+            return pMonth > 1 ?
+                DntPersianCalendar.persianDatePartsToStr([pYear, pMonth - 1, pDay]) :
+                DntPersianCalendar.persianDatePartsToStr([pYear - 1, 12, pDay]);
+        }
+        static isPersianLeapYear(pYear) {
+            const remainder = pYear % 33;
+            const leapYears = [1, 5, 9, 13, 17, 21, 25, 29];
+            return leapYears.includes(remainder);
+        }
+        static mod(a, b) {
+            return Math.abs(a - (b * Math.floor(a / b)));
+        }
+        static getWeekDay(date) {
+            return DntPersianCalendar.mod(DntPersianCalendar.getDiffDays('1392/03/25', date), 7);
+        }
+        static getDays(date) {
+            const [pYear, pMonth, pDay] = DntPersianCalendar.getPersianDateParts(date);
+            return pMonth < 8 ? (pMonth - 1) * 31 + pDay : 6 * 31 + (pMonth - 7) * 30 + pDay;
+        }
+        static getMonthDays(date) {
+            const [pYear, pMonth, pDay] = DntPersianCalendar.getPersianDateParts(date);
+            if (pMonth < 7)
+                return 31;
+            if (pMonth < 12)
+                return 30;
+            return DntPersianCalendar.isPersianLeapYear(pYear) ? 30 : 29;
+        }
+        static getDiffDays(date1, date2) {
+            let diffDays = DntPersianCalendar.getDays(date2) - DntPersianCalendar.getDays(date1);
+            const [pYear1, pMonth1, pDay1] = DntPersianCalendar.getPersianDateParts(date1);
+            const [pYear2, pMonth2, pDay2] = DntPersianCalendar.getPersianDateParts(date2);
+            let y1 = (pYear1 < pYear2) ? pYear1 : pYear2;
+            let y2 = (pYear1 < pYear2) ? pYear2 : pYear1;
+            for (let y = y1; y < y2; y++)
+                if (DntPersianCalendar.isPersianLeapYear(y))
+                    diffDays += (pYear1 < pYear2) ? 366 : -366;
+                else
+                    diffDays += (pYear1 < pYear2) ? 365 : -365;
+            return diffDays;
+        }
+        static changeDay(date, day) {
+            const [pYear, pMonth, pDay] = DntPersianCalendar.getPersianDateParts(date);
+            return DntPersianCalendar.persianDatePartsToStr([pYear, pMonth, day]);
+        }
+    }
+    DntPersianCalendar.arabicNumbers = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+    DntPersianCalendar.farsiDigitsRegex = /[۰۱۲۳۴۵۶۷۸۹]/g;
+    DntPersianCalendar.arabicDigitsRegex = /[٠١٢٣٤٥٦٧٨٩]/g;
+    DntPersianCalendar.farsiNumbers = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+    DntPersianCalendar.englishDigitsRegex = /[0-9]/g;
+    DntPersianCalendar.persianDayNames = ["شنبه", `یکشنبه`, `دوشنبه`, `سه‌شنبه`, `چهارشنبه`, `پنج‌شنبه`, 'جمعه'];
+    DntPersianCalendar.persianMonthNames = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+    DntBlazorSsr.DntPersianCalendar = DntPersianCalendar;
+})(DntBlazorSsr || (DntBlazorSsr = {}));
+var DntBlazorSsr;
+(function (DntBlazorSsr) {
+    class DntPersianDatePicker {
+        static showDatePicker(inputElement) {
+            let _datePicker = null;
+            let _textBox = null;
+            let _datePickerStyle = null;
+            let _isClickInsideDatePickerDiv = false;
             const init = () => {
                 _datePicker = createElement("div", document.body);
                 _datePickerStyle = _datePicker.style;
@@ -1040,7 +1124,7 @@ var DntBlazorSsr;
                     init();
                 }
                 _textBox = textBox;
-                _textBox.value = toEnglishNumbers(_textBox.value);
+                _textBox.value = DntBlazorSsr.DntPersianCalendar.toEnglishNumbers(_textBox.value);
                 if (_datePicker) {
                     _datePicker.tabIndex = 0;
                 }
@@ -1065,82 +1149,6 @@ var DntBlazorSsr;
                 }
                 drawCalendar(_textBox.value);
             };
-            const toInt = (text) => {
-                return parseInt(text, 10);
-            };
-            const getPersianDateParts = (persianDateStr) => {
-                if (!persianDateStr) {
-                    persianDateStr = todayPersianStr;
-                }
-                let dateParts = persianDateStr.split(/[\/\-.]/, 3);
-                if (dateParts.length !== 3) {
-                    return getPersianDateParts(todayPersianStr);
-                }
-                return [toInt(dateParts[0]), toInt(dateParts[1]), toInt(dateParts[2])];
-            };
-            const persianDatePartsToStr = (parts) => {
-                return !parts ? "" : `${parts[0]}/${String(parts[1]).padStart(2, '0')}/${String(parts[2]).padStart(2, '0')}`;
-            };
-            const nextYear = (date) => {
-                const parts = getPersianDateParts(date);
-                return persianDatePartsToStr([parts[0] + 1, parts[1], parts[2]]);
-            };
-            const previousYear = (date) => {
-                const parts = getPersianDateParts(date);
-                return persianDatePartsToStr([parts[0] - 1, parts[1], parts[2]]);
-            };
-            const nextMonth = (date) => {
-                const parts = getPersianDateParts(date);
-                return parts[1] < 12 ?
-                    persianDatePartsToStr([parts[0], parts[1] + 1, parts[2]]) :
-                    persianDatePartsToStr([parts[0] + 1, 1, parts[2]]);
-            };
-            const previousMonth = (date) => {
-                const parts = getPersianDateParts(date);
-                return parts[1] > 1 ?
-                    persianDatePartsToStr([parts[0], parts[1] - 1, parts[2]]) :
-                    persianDatePartsToStr([parts[0] - 1, 12, parts[2]]);
-            };
-            const isLeapYear = (year) => {
-                return (((((year - 474) % 2820) + 512) * 682) % 2816) < 682;
-            };
-            const mod = (a, b) => {
-                return Math.abs(a - (b * Math.floor(a / b)));
-            };
-            const getWeekDay = (date) => {
-                return mod(getDiffDays('1392/03/25', date), 7);
-            };
-            const getDays = (date) => {
-                const parts = getPersianDateParts(date);
-                return parts[1] < 8 ?
-                    (parts[1] - 1) * 31 + parts[2] :
-                    6 * 31 + (parts[1] - 7) * 30 + parts[2];
-            };
-            const getMonthDays = (date) => {
-                const parts = getPersianDateParts(date);
-                if (parts[1] < 7)
-                    return 31;
-                if (parts[1] < 12)
-                    return 30;
-                return isLeapYear(parts[0]) ? 30 : 29;
-            };
-            const getDiffDays = (date1, date2) => {
-                let diffDays = getDays(date2) - getDays(date1);
-                let dateArray1 = getPersianDateParts(date1);
-                let dateArray2 = getPersianDateParts(date2);
-                let y1 = (dateArray1[0] < dateArray2[0]) ? dateArray1[0] : dateArray2[0];
-                let y2 = (dateArray1[0] < dateArray2[0]) ? dateArray2[0] : dateArray1[0];
-                for (let y = y1; y < y2; y++)
-                    if (isLeapYear(y))
-                        diffDays += (dateArray1[0] < dateArray2[0]) ? 366 : -366;
-                    else
-                        diffDays += (dateArray1[0] < dateArray2[0]) ? 365 : -365;
-                return diffDays;
-            };
-            const changeDay = (date, day) => {
-                const parts = getPersianDateParts(date);
-                return persianDatePartsToStr([parts[0], parts[1], day]);
-            };
             const setValue = (date) => {
                 if (!_textBox) {
                     return;
@@ -1163,7 +1171,7 @@ var DntBlazorSsr;
                 button.classList.add('btn', 'btn-success', 'btn-sm');
                 setInnerHTML(button, "امروز");
                 button.onclick = () => {
-                    setValue(todayPersianStr);
+                    setValue(DntBlazorSsr.DntPersianCalendar.getTodayPersianStr());
                 };
                 td = createElement("td", tr);
                 td.colSpan = 2;
@@ -1185,30 +1193,30 @@ var DntBlazorSsr;
                 };
             };
             const drawCalendarRows = (table, date) => {
-                const weekDay = getWeekDay(changeDay(date, 1));
+                const weekDay = DntBlazorSsr.DntPersianCalendar.getWeekDay(DntBlazorSsr.DntPersianCalendar.changeDay(date, 1));
                 for (let row = 0; row < 7; row++) {
                     let tr = table.insertRow(row + 1);
                     if (row === 6)
                         setClassName(tr, "table-danger");
-                    else if (mod(row, 2) !== 1)
+                    else if (DntBlazorSsr.DntPersianCalendar.mod(row, 2) !== 1)
                         setClassName(tr, "datePickerRow");
                     const th = createElement("th", tr);
-                    setInnerHTML(th, _dayNames[row]);
+                    setInnerHTML(th, DntBlazorSsr.DntPersianCalendar.persianDayNames[row]);
                     setClassName(th, "text-center");
                     for (let col = 0; col < 6; col++) {
                         const cellValue = col * 7 + row - weekDay + 1;
                         let td = createElement("td", tr);
-                        if (cellValue > 0 && cellValue <= getMonthDays(date)) {
-                            setInnerHTML(td, `<button class="btn btn-outline-secondary btn-sm">${toPersianNumbers(cellValue.toString())}</button>`);
-                            let cellDate = changeDay(date, cellValue);
+                        if (cellValue > 0 && cellValue <= DntBlazorSsr.DntPersianCalendar.getMonthDays(date)) {
+                            setInnerHTML(td, `<button class="btn btn-outline-secondary btn-sm">${DntBlazorSsr.DntPersianCalendar.toPersianNumbers(cellValue.toString())}</button>`);
+                            let cellDate = DntBlazorSsr.DntPersianCalendar.changeDay(date, cellValue);
                             let cellClassName = "text-center";
                             if (cellDate === _textBox?.value)
                                 cellClassName = "text-center bg-info";
-                            else if (cellDate === todayPersianStr)
+                            else if (cellDate === DntBlazorSsr.DntPersianCalendar.getTodayPersianStr())
                                 cellClassName = "text-center bg-warning";
                             setClassName(td, cellClassName);
                             td.onclick = () => {
-                                setValue(changeDay(date, cellValue));
+                                setValue(DntBlazorSsr.DntPersianCalendar.changeDay(date, cellValue));
                             };
                         }
                     }
@@ -1223,17 +1231,17 @@ var DntBlazorSsr;
                 button.classList.add('btn', 'btn-primary', 'btn-sm', 'me-1');
                 setInnerHTML(button, "❰");
                 button.onclick = () => {
-                    drawCalendar(previousMonth(date));
+                    drawCalendar(DntBlazorSsr.DntPersianCalendar.getPreviousMonth(date));
                 };
                 let span = createElement("strong", td);
-                const parts = getPersianDateParts(date);
-                setInnerHTML(span, _monthNames[parts[1] - 1]);
+                const [pYear, pMonth, pDay] = DntBlazorSsr.DntPersianCalendar.getPersianDateParts(date);
+                setInnerHTML(span, DntBlazorSsr.DntPersianCalendar.persianMonthNames[pMonth - 1]);
                 setClassName(span, "datePickerMonth");
                 button = createElement("button", td);
                 button.classList.add('btn', 'btn-primary', 'btn-sm', 'ms-1');
                 setInnerHTML(button, "❱");
                 button.onclick = () => {
-                    drawCalendar(nextMonth(date));
+                    drawCalendar(DntBlazorSsr.DntPersianCalendar.getNextMonth(date));
                 };
                 td = createElement("td", tr);
                 td.colSpan = 4;
@@ -1242,16 +1250,16 @@ var DntBlazorSsr;
                 button.classList.add('btn', 'btn-primary', 'btn-sm', 'me-1');
                 setInnerHTML(button, "❰");
                 button.onclick = () => {
-                    drawCalendar(previousYear(date));
+                    drawCalendar(DntBlazorSsr.DntPersianCalendar.getPreviousYear(date));
                 };
                 span = createElement("strong", td);
-                setInnerHTML(span, toPersianNumbers(String(parts[0])));
+                setInnerHTML(span, DntBlazorSsr.DntPersianCalendar.toPersianNumbers(String(pYear)));
                 setClassName(span, "datePickerYear");
                 button = createElement("button", td);
                 button.classList.add('btn', 'btn-primary', 'btn-sm', 'ms-1');
                 setInnerHTML(button, "❱");
                 button.onclick = () => {
-                    drawCalendar(nextYear(date));
+                    drawCalendar(DntBlazorSsr.DntPersianCalendar.getNextYear(date));
                 };
             };
             const createCalendarTable = () => {
