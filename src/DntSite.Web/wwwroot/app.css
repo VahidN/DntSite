@@ -181,6 +181,14 @@ pre, code {
     margin-bottom: 0.3rem;
 }
 
+code {
+    padding: 1px 4px;
+    border: 1px solid #e1e1e8;
+    color: #d14;
+    background-color: #f7f7f9;
+    border-radius: 6px;
+}
+
 img {
     border: 0 none;
     max-width: 100%;
