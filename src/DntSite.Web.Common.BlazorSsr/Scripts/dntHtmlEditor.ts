@@ -221,6 +221,11 @@ namespace DntBlazorSsr {
             editorElement.querySelectorAll('*').forEach(element => {
                 element.removeAttribute('style');
             });
+
+            editorElement.querySelectorAll("li.ql-direction-ltr").forEach(element => {
+                element.removeAttribute('class');
+                element.removeAttribute('style');
+            });
         }
 
         static convertMonoSpaceSpansToCode() {
