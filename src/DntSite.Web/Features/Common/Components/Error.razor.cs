@@ -1,5 +1,5 @@
 using DntSite.Web.Features.AppConfigs.Components;
-using DntSite.Web.Features.Common.RoutingConstants;
+using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Common.Components;
 
@@ -11,7 +11,7 @@ public partial class Error
 
     [Inject] internal ILogger<Error> Logger { get; set; } = null!;
 
-    [Inject] internal IUAParserService UaParserService { get; set; } = null!;
+    [Inject] internal ISpidersService SpidersService { get; set; } = null!;
 
     [Inject] public NavigationManager NavigationManager { set; get; } = null!;
 
@@ -31,7 +31,7 @@ public partial class Error
             return;
         }
 
-        if (!IsThisPageCalledDirectly && !await UaParserService.IsSpiderClientAsync(HttpContext))
+        if (!IsThisPageCalledDirectly && !await SpidersService.IsSpiderClientAsync(HttpContext))
         {
             Logger.LogError(message: "{Request}", httpRequest.LogRequest(ResponseCode));
         }

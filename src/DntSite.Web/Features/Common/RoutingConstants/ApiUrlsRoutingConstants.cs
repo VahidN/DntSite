@@ -2,6 +2,14 @@ namespace DntSite.Web.Features.Common.RoutingConstants;
 
 internal static class ApiUrlsRoutingConstants
 {
+    internal static class Welcome
+    {
+        internal static class HttpGet
+        {
+            internal const string Log = "/Welcome/Log";
+        }
+    }
+
     internal static class Feed
     {
         internal static class HttpAny

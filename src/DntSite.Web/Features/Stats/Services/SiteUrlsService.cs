@@ -11,6 +11,7 @@ namespace DntSite.Web.Features.Stats.Services;
 public class SiteUrlsService(
     IUnitOfWork uow,
     IUAParserService uaParserService,
+    ISpidersService spidersService,
     IReferrersValidatorService referrersValidatorService,
     ICachedAppSettingsProvider appSettingsProvider,
     ILogger<SiteUrlsService> logger) : ISiteUrlsService
@@ -136,15 +137,16 @@ public class SiteUrlsService(
     {
         ArgumentNullException.ThrowIfNull(context);
 
+        var ip = context.GetIP() ?? "::1";
         var ua = context.GetUserAgent();
 
         return new LastSiteUrlVisitorStat
         {
             VisitTime = DateTime.UtcNow,
-            Ip = context.GetIP() ?? "::1",
+            Ip = ip,
             UserAgent = ua,
             DisplayName = context.User.GetFirstUserClaimValue(UserRolesService.DisplayNameClaim),
-            IsSpider = await uaParserService.IsSpiderClientAsync(ua),
+            IsSpider = await spidersService.IsSpiderClientAsync(ip, ua),
             ClientInfo = await uaParserService.GetClientInfoAsync(context)
         };
     }

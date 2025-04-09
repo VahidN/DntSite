@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Models;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
@@ -12,7 +13,7 @@ public class CurrentUserService(
     IHttpContextAccessor httpContextAccessor,
     IUserRolesService rolesService,
     IUsersInfoService usersService,
-    IUAParserService uaParserService,
+    ISpidersService spidersService,
     ICachedAppSettingsProvider appSettingsService) : ICurrentUserService
 {
     public int? GetCurrentUserId() => httpContextAccessor.HttpContext?.User.GetUserId();
@@ -44,8 +45,7 @@ public class CurrentUserService(
                httpContext.User.HasClaim(ClaimTypes.Role, roleName);
     }
 
-    public Task<bool> IsCurrentUserSpiderAsync()
-        => uaParserService.IsSpiderClientAsync(httpContextAccessor.HttpContext?.GetUserAgent() ?? "Unknown");
+    public Task<bool> IsCurrentUserSpiderAsync() => spidersService.IsSpiderClientAsync(httpContextAccessor.HttpContext);
 
     public bool IsCurrentUserAuthenticated() => httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true;
 
