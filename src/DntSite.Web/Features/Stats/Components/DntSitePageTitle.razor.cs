@@ -1,7 +1,7 @@
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
-namespace DntSite.Web.Features.Common.Components;
+namespace DntSite.Web.Features.Stats.Components;
 
 public partial class DntSitePageTitle
 {
