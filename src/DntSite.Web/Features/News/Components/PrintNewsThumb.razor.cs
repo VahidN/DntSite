@@ -17,4 +17,7 @@ public partial class PrintNewsThumb
         => string.Create(CultureInfo.InvariantCulture, $"{NewsRoutingConstants.NewsRedirectBase}/{Id}");
 
     private string FileName => string.Create(CultureInfo.InvariantCulture, $"news-{Id}.jpg");
+
+    private string RedirectUrl
+        => string.Create(CultureInfo.InvariantCulture, $"{NewsRoutingConstants.NewsRedirectBase}/{Id}");
 }
