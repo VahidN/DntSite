@@ -462,8 +462,18 @@ public class UsersInfoService(
             .OrderBy(user => user.Id)
             .ToListAsync();
 
-    public async Task<List<User>> GetAllDailyEmailReceiversListAsync(DateTime limit, int count = 300)
+    public async Task<List<User>> GetAllDailyEmailReceiversListAsync(DateTime limit,
+        bool sendToAllEachMonth,
+        int count = 300)
     {
+        if (sendToAllEachMonth && DateTime.UtcNow.GetPersianDayOfMonth() == 1)
+        {
+            return await _users.AsNoTracking()
+                .Where(user => user.IsActive && user.EmailIsValidated && user.ReceiveDailyEmails)
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+        }
+
         var nonWriters = await _users.AsNoTracking()
             .Where(user => user.IsActive && user.ReceiveDailyEmails && user.UserStat.NumberOfPosts <= 0 &&
                            user.UserStat.NumberOfLinks <= 0 && user.LastVisitDateTime.HasValue &&

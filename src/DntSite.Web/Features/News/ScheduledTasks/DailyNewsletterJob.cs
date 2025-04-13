@@ -17,9 +17,10 @@ public class DailyNewsletterJob(
             return;
         }
 
-        var users = await usersService.GetAllDailyEmailReceiversListAsync(SharedConstants.AYearAgo);
-        var dateTime = DateTime.UtcNow.ToIranTimeZoneDateTime().AddDays(value: -1);
+        var users = await usersService.GetAllDailyEmailReceiversListAsync(SharedConstants.AYearAgo,
+            sendToAllEachMonth: true);
 
+        var dateTime = DateTime.UtcNow.ToIranTimeZoneDateTime().AddDays(value: -1);
         var content = await dailyNewsletter.GetEmailContentAsync(dateTime);
 
         if (string.IsNullOrWhiteSpace(content))

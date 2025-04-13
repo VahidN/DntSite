@@ -85,7 +85,8 @@ public interface IUsersInfoService : IScopedService
 
     public Task<List<User>> GetActiveLinksWritersListAsync(int count = 1000);
 
-    public Task<List<User>> GetAllDailyEmailReceiversListAsync(DateTime limit, int count = 300);
+    public Task<List<User>>
+        GetAllDailyEmailReceiversListAsync(DateTime limit, bool sendToAllEachMonth, int count = 300);
 
     public Task<List<User>> GetActiveProjectAuthorsListAsync(int count);
 
