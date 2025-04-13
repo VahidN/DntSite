@@ -226,6 +226,11 @@ namespace DntBlazorSsr {
                 element.removeAttribute('class');
                 element.removeAttribute('style');
             });
+
+            editorElement.querySelectorAll("div.ql-code-block").forEach(element => {
+                element.classList.remove('ql-direction-rtl', 'ql-align-right');
+                element.removeAttribute('style');
+            });
         }
 
         static convertMonoSpaceSpansToCode() {
