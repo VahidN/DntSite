@@ -21,7 +21,7 @@
     <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="9.0.0" />
     <PackageVersion Include="System.Net.Http.Json" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="3.0.71" />
-    <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.8.1" />
+    <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.8.3" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
@@ -39,7 +39,7 @@
     <PackageVersion Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.197" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.198" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.8.0.113526" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="9.0.4" />
