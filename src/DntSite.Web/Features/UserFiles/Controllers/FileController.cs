@@ -1,6 +1,5 @@
 ﻿using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
-using DntSite.Web.Features.Common.Utils.WebToolkit;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 using Microsoft.AspNetCore.OutputCaching;
 using IActionResult = Microsoft.AspNetCore.Mvc.IActionResult;
@@ -18,15 +17,15 @@ public class FileController(
 
     [OutputCache(Duration = OutputCacheDuration.AMonth, VaryByQueryKeys = ["name"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "[action]")]
-    public IActionResult Avatar([FromQuery] string name) => FlushFile(FileType.Avatar, name, name.MimeType());
+    public IActionResult Avatar([FromQuery] string name) => FlushFile(FileType.Avatar, name, name.GetMimeType());
 
     [OutputCache(Duration = OutputCacheDuration.AMonth, VaryByQueryKeys = ["name"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "[action]")]
-    public IActionResult Image([FromQuery] string name) => FlushFile(FileType.Image, name, name.MimeType());
+    public IActionResult Image([FromQuery] string name) => FlushFile(FileType.Image, name, name.GetMimeType());
 
     //تمام قسمت‌های خصوصی سایت نباید کش داشته باشند
     [Microsoft.AspNetCore.Mvc.Route(template: "[action]")]
-    public IActionResult MessagesImages(string name) => FlushFile(FileType.MessagesImages, name, name.MimeType());
+    public IActionResult MessagesImages(string name) => FlushFile(FileType.MessagesImages, name, name.GetMimeType());
 
     [OutputCache(Duration = OutputCacheDuration.AMonth, VaryByQueryKeys = ["name"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "[action]")]
@@ -56,7 +55,7 @@ public class FileController(
     [OutputCache(Duration = OutputCacheDuration.AMonth, VaryByQueryKeys = ["name"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "[action]")]
     public IActionResult CourseImages([FromQuery] string name)
-        => FlushFile(FileType.CourseImage, name, name.MimeType());
+        => FlushFile(FileType.CourseImage, name, name.GetMimeType());
 
     [OutputCache(Duration = OutputCacheDuration.ADay, VaryByQueryKeys = ["id"])]
     [Microsoft.AspNetCore.Mvc.Route(template: "[action]")]
@@ -65,7 +64,7 @@ public class FileController(
     {
         var emailBytes = await usersService.GetEmailImageAsync(id);
 
-        return File(emailBytes, ImageMimeType.Png);
+        return File(emailBytes, contentType: "image/png");
     }
 
     private IActionResult FlushFile(FileType fileType, string name, string contentType = "application/octet-stream")

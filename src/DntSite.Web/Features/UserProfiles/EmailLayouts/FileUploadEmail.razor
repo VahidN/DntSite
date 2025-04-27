@@ -1,4 +1,3 @@
-@using DntSite.Web.Features.Common.Utils.WebToolkit
 @using DntSite.Web.Features.UserProfiles.Models
 <LayoutView Layout="@typeof(EmailsLayout)">
     با سلام
@@ -10,7 +9,7 @@
             <a dir="ltr" href="@Model.ActionUrl">
                 @Model.ActionUrl (@Model.FormattedFileSize)
             </a>
-            @if (Model.ActionUrl.IsImageFileUrl())
+            @if (Model.ActionUrl.IsValidImageFileUrl())
             {
                 <br/>
                 <br/>
