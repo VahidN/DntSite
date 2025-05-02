@@ -61,12 +61,16 @@ var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntApplyBootstrapTable {
         static enable() {
-            document.querySelectorAll("table:not([class~='table'])").forEach(element => {
+            DntApplyBootstrapTable.applyTo(document, "rtl");
+        }
+        static applyTo(htmlElement, direction) {
+            htmlElement.querySelectorAll("table:not([class~='table'])").forEach(element => {
                 element.classList.add('table', 'table-striped', 'table-hover', 'table-bordered', 'table-condensed');
                 element.style.maxWidth = "100%";
                 element.style.width = "auto";
                 element.style.marginLeft = "auto";
                 element.style.marginRight = "auto";
+                element.style.direction = direction;
             });
         }
     }
@@ -624,6 +628,7 @@ var DntBlazorSsr;
                 element.classList.remove('ql-direction-rtl', 'ql-align-right');
                 element.removeAttribute('style');
             });
+            DntBlazorSsr.DntApplyBootstrapTable.applyTo(editorElement, "rtl");
         }
         static convertMonoSpaceSpansToCode() {
             document.querySelectorAll("span.ql-font-monospace").forEach(element => {

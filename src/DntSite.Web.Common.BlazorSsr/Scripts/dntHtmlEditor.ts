@@ -231,6 +231,8 @@ namespace DntBlazorSsr {
                 element.classList.remove('ql-direction-rtl', 'ql-align-right');
                 element.removeAttribute('style');
             });
+
+            DntApplyBootstrapTable.applyTo(editorElement, "rtl");
         }
 
         static convertMonoSpaceSpansToCode() {
