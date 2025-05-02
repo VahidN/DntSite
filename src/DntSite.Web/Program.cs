@@ -3,6 +3,7 @@ using DntSite.Web.Features.DbLogger.Services;
 using DntSite.Web.Features.DbSeeder.Services;
 using DntSite.Web.Features.ServicesConfigs;
 using DntSite.Web.Features.UserProfiles.Endpoints;
+using Microsoft.Extensions.Logging.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigureLogging(builder.Logging, builder.Environment, builder.Configuration);
@@ -29,7 +30,12 @@ void ConfigureLogging(ILoggingBuilder logging, IHostEnvironment env, IConfigurat
 
     if (env.IsDevelopment())
     {
-        logging.AddConsole();
+        logging.AddSimpleConsole(opts =>
+        {
+            opts.TimestampFormat = "yyyy-MM-ddTHH:mm:ss.fffffffZ-";
+            opts.ColorBehavior = LoggerColorBehavior.Enabled;
+        });
+
         logging.AddDebug();
     }
 
