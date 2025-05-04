@@ -218,9 +218,7 @@ namespace DntBlazorSsr {
         }
 
         static cleanAllStyles(editorElement: HTMLElement) {
-            editorElement.querySelectorAll('*').forEach(element => {
-                element.removeAttribute('style');
-            });
+            DntHtmlEditor.removeAllStyles(editorElement);
 
             editorElement.querySelectorAll("li.ql-direction-ltr").forEach(element => {
                 element.removeAttribute('class');
@@ -232,7 +230,24 @@ namespace DntBlazorSsr {
                 element.removeAttribute('style');
             });
 
-            DntApplyBootstrapTable.applyTo(editorElement, "rtl");
+            DntApplyBootstrapTable.applyBootstrapStyles(editorElement, "rtl");
+            DntApplyBootstrapTable.centerAlignAllTableCells(editorElement);
+            DntHtmlEditor.normalizeAllHeaders(editorElement);
+        }
+
+        static removeAllStyles(editorElement: HTMLElement) {
+            editorElement.querySelectorAll('*').forEach(element => {
+                element.removeAttribute('style');
+            });
+        }
+
+        static normalizeAllHeaders(editorElement: HTMLElement) {
+            const headers = editorElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            headers.forEach(header => {
+                const strong = document.createElement('strong');
+                strong.innerHTML = header.innerHTML;
+                header.replaceWith(strong);
+            });
         }
 
         static convertMonoSpaceSpansToCode() {

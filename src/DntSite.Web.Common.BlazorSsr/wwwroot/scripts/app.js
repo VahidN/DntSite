@@ -61,9 +61,9 @@ var DntBlazorSsr;
 (function (DntBlazorSsr) {
     class DntApplyBootstrapTable {
         static enable() {
-            DntApplyBootstrapTable.applyTo(document, "rtl");
+            DntApplyBootstrapTable.applyBootstrapStyles(document, "rtl");
         }
-        static applyTo(htmlElement, direction) {
+        static applyBootstrapStyles(htmlElement, direction) {
             htmlElement.querySelectorAll("table:not([class~='table'])").forEach(element => {
                 element.classList.add('table', 'table-striped', 'table-hover', 'table-bordered', 'table-condensed');
                 element.style.maxWidth = "100%";
@@ -71,6 +71,16 @@ var DntBlazorSsr;
                 element.style.marginLeft = "auto";
                 element.style.marginRight = "auto";
                 element.style.direction = direction;
+            });
+        }
+        static centerAlignAllTableCells(editorElement) {
+            const tables = editorElement.querySelectorAll('table');
+            tables.forEach(table => {
+                const cells = table.querySelectorAll('th, td');
+                cells.forEach(cell => {
+                    cell.style.textAlign = 'center';
+                    cell.style.verticalAlign = 'middle';
+                });
             });
         }
     }
@@ -617,9 +627,7 @@ var DntBlazorSsr;
             });
         }
         static cleanAllStyles(editorElement) {
-            editorElement.querySelectorAll('*').forEach(element => {
-                element.removeAttribute('style');
-            });
+            DntHtmlEditor.removeAllStyles(editorElement);
             editorElement.querySelectorAll("li.ql-direction-ltr").forEach(element => {
                 element.removeAttribute('class');
                 element.removeAttribute('style');
@@ -628,7 +636,22 @@ var DntBlazorSsr;
                 element.classList.remove('ql-direction-rtl', 'ql-align-right');
                 element.removeAttribute('style');
             });
-            DntBlazorSsr.DntApplyBootstrapTable.applyTo(editorElement, "rtl");
+            DntBlazorSsr.DntApplyBootstrapTable.applyBootstrapStyles(editorElement, "rtl");
+            DntBlazorSsr.DntApplyBootstrapTable.centerAlignAllTableCells(editorElement);
+            DntHtmlEditor.normalizeAllHeaders(editorElement);
+        }
+        static removeAllStyles(editorElement) {
+            editorElement.querySelectorAll('*').forEach(element => {
+                element.removeAttribute('style');
+            });
+        }
+        static normalizeAllHeaders(editorElement) {
+            const headers = editorElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            headers.forEach(header => {
+                const strong = document.createElement('strong');
+                strong.innerHTML = header.innerHTML;
+                header.replaceWith(strong);
+            });
         }
         static convertMonoSpaceSpansToCode() {
             document.querySelectorAll("span.ql-font-monospace").forEach(element => {
