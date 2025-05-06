@@ -25,7 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="10.9.0" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="11.0.0" />
     <PackageVersion Include="EFCoreSecondLevelCacheInterceptor.MemoryCache" Version="5.2.4" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.4.0" />

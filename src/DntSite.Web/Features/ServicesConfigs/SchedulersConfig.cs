@@ -13,13 +13,6 @@ namespace DntSite.Web.Features.ServicesConfigs;
 
 public static class SchedulersConfig
 {
-    public static void RunHostedServicesConcurrently(this IServiceCollection services)
-        => services.Configure<HostOptions>(options =>
-        {
-            options.ServicesStartConcurrently = true;
-            options.ServicesStopConcurrently = true;
-        });
-
     public static void AddSchedulers(this IServiceCollection services)
         => services.AddDNTScheduler(options =>
         {

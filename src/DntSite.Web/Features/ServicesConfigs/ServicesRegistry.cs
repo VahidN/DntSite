@@ -33,21 +33,6 @@ public static class ServicesRegistry
         services.AddCustomizedAuthentication(siteSettings, environment);
     }
 
-    private static void AddForwardedHeadersOptions(this IServiceCollection services)
-        => services.Configure<ForwardedHeadersOptions>(options => { options.ForwardedHeaders = ForwardedHeaders.All; });
-
-    private static void AlwaysValidateScopes(this IHostBuilder host)
-        => host.UseDefaultServiceProvider(options =>
-        {
-            options.ValidateScopes = true;
-            options.ValidateOnBuild = true;
-        });
-
-    private static void AddIPrincipal(this IServiceCollection services)
-        => services.AddScoped<IPrincipal>(provider
-            => provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User ??
-               ClaimsPrincipal.Current ?? new ClaimsPrincipal());
-
     private static void AddAutoMapper(this IServiceCollection services)
         => services.AddAutoMapper(_ => { }, typeof(AutoMapperConfig).Assembly);
 
