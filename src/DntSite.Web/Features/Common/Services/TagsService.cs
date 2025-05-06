@@ -90,7 +90,7 @@ public class TagsService(IUnitOfWork uow) : ITagsService
             .Union(array5)
             .Union(array6)
             .Union(array7)
-            .Distinct(StringComparer.InvariantCultureIgnoreCase)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(x => x)];
     }
 

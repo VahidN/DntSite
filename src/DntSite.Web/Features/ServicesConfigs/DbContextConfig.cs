@@ -64,11 +64,10 @@ public static class DbContextConfig
             .CacheAllQueriesExceptContainingTypes(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(value: 5),
                 typeof(AppLogItem), typeof(SiteUrl), typeof(SiteReferrer))
             .SkipCachingCommands(commandText
-                => commandText.Contains(value: "NEWID()", StringComparison.InvariantCultureIgnoreCase))
+                => commandText.Contains(value: "NEWID()", StringComparison.OrdinalIgnoreCase))
             .SkipCacheInvalidationCommands(ShouldIgnoreForAllCommands)
             .UseDbCallsIfCachingProviderIsDown(TimeSpan.FromMinutes(value: 1)));
 
     private static bool ShouldIgnoreForAllCommands(string commandText)
-        => NamesToIgnoreForAllCommands.Any(item
-            => commandText.Contains(item, StringComparison.InvariantCultureIgnoreCase));
+        => NamesToIgnoreForAllCommands.Any(item => commandText.Contains(item, StringComparison.OrdinalIgnoreCase));
 }

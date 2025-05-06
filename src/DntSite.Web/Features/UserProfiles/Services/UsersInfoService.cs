@@ -45,7 +45,7 @@ public class UsersInfoService(
 
         var bannedItems = (await configsService.GetAppSettingsAsync())?.BannedEmails;
 
-        if (bannedItems?.Any(email => eMail.EndsWith(email, StringComparison.InvariantCultureIgnoreCase)) == true)
+        if (bannedItems?.Any(email => eMail.EndsWith(email, StringComparison.OrdinalIgnoreCase)) == true)
         {
             return false;
         }
