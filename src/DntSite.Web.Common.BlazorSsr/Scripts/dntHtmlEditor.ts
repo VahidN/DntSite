@@ -219,17 +219,6 @@ namespace DntBlazorSsr {
 
         static cleanAllStyles(editorElement: HTMLElement) {
             DntHtmlEditor.removeAllStyles(editorElement);
-
-            editorElement.querySelectorAll("li.ql-direction-ltr").forEach(element => {
-                element.removeAttribute('class');
-                element.removeAttribute('style');
-            });
-
-            editorElement.querySelectorAll("div.ql-code-block").forEach(element => {
-                element.classList.remove('ql-direction-rtl', 'ql-align-right');
-                element.removeAttribute('style');
-            });
-
             DntApplyBootstrapTable.applyBootstrapStyles(editorElement, "rtl");
             DntApplyBootstrapTable.centerAlignAllTableCells(editorElement);
             DntHtmlEditor.normalizeAllHeaders(editorElement);
@@ -238,6 +227,25 @@ namespace DntBlazorSsr {
         static removeAllStyles(editorElement: HTMLElement) {
             editorElement.querySelectorAll('*').forEach(element => {
                 element.removeAttribute('style');
+            });
+
+            editorElement.querySelectorAll("li.ql-direction-ltr,p.ql-direction-ltr").forEach(element => {
+                element.removeAttribute('class');
+                element.removeAttribute('style');
+                element.removeAttribute('dir');
+            });
+
+            editorElement.querySelectorAll("div.ql-code-block").forEach(element => {
+                element.classList.remove('ql-direction-rtl', 'ql-align-right');
+                element.removeAttribute('style');
+                element.removeAttribute('dir');
+            });
+
+            editorElement.querySelectorAll("li").forEach(element => {
+                if (element.hasAttribute("data-list")) {
+                    element.setAttribute("data-list", "bullet");
+                }
+                element.classList.remove("ql-indent-1");
             });
         }
 

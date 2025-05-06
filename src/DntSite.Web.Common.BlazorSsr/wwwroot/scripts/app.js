@@ -628,14 +628,6 @@ var DntBlazorSsr;
         }
         static cleanAllStyles(editorElement) {
             DntHtmlEditor.removeAllStyles(editorElement);
-            editorElement.querySelectorAll("li.ql-direction-ltr").forEach(element => {
-                element.removeAttribute('class');
-                element.removeAttribute('style');
-            });
-            editorElement.querySelectorAll("div.ql-code-block").forEach(element => {
-                element.classList.remove('ql-direction-rtl', 'ql-align-right');
-                element.removeAttribute('style');
-            });
             DntBlazorSsr.DntApplyBootstrapTable.applyBootstrapStyles(editorElement, "rtl");
             DntBlazorSsr.DntApplyBootstrapTable.centerAlignAllTableCells(editorElement);
             DntHtmlEditor.normalizeAllHeaders(editorElement);
@@ -644,12 +636,31 @@ var DntBlazorSsr;
             editorElement.querySelectorAll('*').forEach(element => {
                 element.removeAttribute('style');
             });
+            editorElement.querySelectorAll("li.ql-direction-ltr,p.ql-direction-ltr").forEach(element => {
+                element.removeAttribute('class');
+                element.removeAttribute('style');
+                element.removeAttribute('dir');
+            });
+            editorElement.querySelectorAll("div.ql-code-block").forEach(element => {
+                element.classList.remove('ql-direction-rtl', 'ql-align-right');
+                element.removeAttribute('style');
+                element.removeAttribute('dir');
+            });
+            editorElement.querySelectorAll("li").forEach(element => {
+                if (element.hasAttribute("data-list")) {
+                    element.setAttribute("data-list", "bullet");
+                }
+                element.classList.remove("ql-indent-1");
+            });
         }
         static normalizeAllHeaders(editorElement) {
             const headers = editorElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
             headers.forEach(header => {
                 const strong = document.createElement('strong');
                 strong.innerHTML = header.innerHTML;
+                strong.dir = "rtl";
+                strong.style.textAlign = "right";
+                strong.classList.add("ql-align-right", "ql-direction-rtl");
                 header.replaceWith(strong);
             });
         }
