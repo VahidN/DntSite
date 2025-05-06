@@ -246,6 +246,9 @@ namespace DntBlazorSsr {
             headers.forEach(header => {
                 const strong = document.createElement('strong');
                 strong.innerHTML = header.innerHTML;
+                strong.dir = "rtl";
+                strong.style.textAlign = "right";
+                strong.classList.add("ql-align-right", "ql-direction-rtl");
                 header.replaceWith(strong);
             });
         }
