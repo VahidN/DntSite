@@ -19,6 +19,13 @@ public static class SchedulersConfig
             options.AddScheduledTask<DotNetVersionCheckJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 5, Minute: 30, Second: 1 });
 
+            options.AddScheduledTask<FreeSpaceCheckJob>(utcNow =>
+            {
+                var now = GetNowIranTime(utcNow);
+
+                return now.Hour % 6 == 0 && now is { Minute: 10, Second: 1 };
+            });
+
             options.AddScheduledTask<WebReadersListJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 30, Second: 1 });
 
@@ -43,8 +50,8 @@ public static class SchedulersConfig
                 return now.Hour % 2 == 0 && now is { Minute: 10, Second: 1 };
             });
 
-            options.AddScheduledTask<HumansTxtJob>(
-                utcNow => GetNowIranTime(utcNow) is { Hour: 3, Minute: 1, Second: 1 });
+            options.AddScheduledTask<HumansTxtJob>(utcNow
+                => GetNowIranTime(utcNow) is { Hour: 3, Minute: 1, Second: 1 });
 
             options.AddScheduledTask<DraftsJob>(utcNow =>
             {

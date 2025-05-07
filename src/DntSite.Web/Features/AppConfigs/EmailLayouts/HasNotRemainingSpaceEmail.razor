@@ -1,0 +1,17 @@
+﻿@using DntSite.Web.Features.AppConfigs.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    فضای خالی باقیمانده بر روی سرور کافی نیست:
+    <br/>
+    <br/>
+    <pre align="left" dir="ltr" style="font-family: Tahoma; ">
+        @Model.Body
+    </pre>
+</LayoutView>
+
+@code {
+
+    [Parameter] public HasNotRemainingSpaceEmailModel Model { set; get; } = null!;
+
+}

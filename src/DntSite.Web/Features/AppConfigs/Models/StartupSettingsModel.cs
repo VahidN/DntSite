@@ -2,6 +2,8 @@
 
 public class StartupSettingsModel
 {
+    public int MaxAvailableFreeSpaceInMegaBytes { set; get; }
+
     public required AdminUserSeedModel AdminUserSeed { get; set; }
 
     public required ConnectionStringsModel ConnectionStrings { get; set; }
