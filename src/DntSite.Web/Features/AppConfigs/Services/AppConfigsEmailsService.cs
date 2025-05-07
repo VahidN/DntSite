@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace DntSite.Web.Features.AppConfigs.Services;
 
-public class AppConfigsEmailsService : IAppConfigsEmailsService
+public sealed class AppConfigsEmailsService : IAppConfigsEmailsService
 {
     private readonly IDisposable? _disposableSettings;
     private readonly IEmailsFactoryService _emailsFactoryService;
@@ -19,6 +19,8 @@ public class AppConfigsEmailsService : IAppConfigsEmailsService
         IWebServerInfoService webServerInfoService,
         IOptionsMonitor<StartupSettingsModel> siteSettings)
     {
+        ArgumentNullException.ThrowIfNull(siteSettings);
+
         _emailsFactoryService = emailsFactoryService;
         _executeApplicationProcess = executeApplicationProcess;
         _webServerInfoService = webServerInfoService;
