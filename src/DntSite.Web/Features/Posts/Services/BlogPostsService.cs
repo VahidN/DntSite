@@ -430,7 +430,8 @@ public class BlogPostsService(
 
         if (IsPublicPost(blogPost))
         {
-            fullTextSearchService.AddOrUpdateLuceneDocument(blogPost.MapToPostWhatsNewItemModel(siteRootUri: ""));
+            fullTextSearchService.AddOrUpdateLuceneDocument(
+                blogPost.MapToPostWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
         }
 
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, blogPost.Id);
@@ -492,7 +493,10 @@ public class BlogPostsService(
         logger.LogWarning(message: "Deleted a BlogPost record with Id={Id} and Title={Text}", post.Id, post.Title);
 
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, post.Id);
-        fullTextSearchService.DeleteLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+
+        fullTextSearchService.DeleteLuceneDocument(post
+            .MapToPostWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
 
         await statService.RecalculateTagsInUseCountsAsync<BlogPostTag, BlogPost>();
 
@@ -540,7 +544,8 @@ public class BlogPostsService(
 
         if (IsPublicPost(post))
         {
-            fullTextSearchService.AddOrUpdateLuceneDocument(post.MapToPostWhatsNewItemModel(siteRootUri: ""));
+            fullTextSearchService.AddOrUpdateLuceneDocument(
+                post.MapToPostWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
         }
 
         return post;
@@ -556,7 +561,7 @@ public class BlogPostsService(
             .ToListAsync();
 
         await fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToPostWhatsNewItemModel(siteRootUri: "")));
+            => item.MapToPostWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private static bool IsPublicPost(BlogPost blogPost) => blogPost.NumberOfRequiredPoints is null or 0;

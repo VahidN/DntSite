@@ -87,7 +87,9 @@ public partial class Post
     }
 
     private void SetSimilarPostsId()
-        => _documentTypeIdHash = _blogPost?.CurrentItem?.MapToPostWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
+        => _documentTypeIdHash = _blogPost?.CurrentItem
+            ?.MapToPostWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash;
 
     private async Task ManageOldBloggerLinksAsync()
     {

@@ -10,20 +10,21 @@ public static class SurveysMappersExtensions
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(SurveysRoutingConstants.PostUrlTemplate);
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this Survey item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this Survey item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
+
+        var content = item.SurveyItems.Any(x => !x.IsDeleted)
+            ? item.SurveyItems.Where(x => !x.IsDeleted).Select(x => x.Title).Aggregate((s1, s2) => s1 + "<br/>" + s2)
+            : "";
 
         return new WhatsNewItemModel
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content =
-                item.SurveyItems.Any(x => !x.IsDeleted)
-                    ? item.SurveyItems.Where(x => !x.IsDeleted)
-                        .Select(x => x.Title)
-                        .Aggregate((s1, s2) => s1 + "<br/>" + s2)
-                    : "",
+            Content = showBriefDescription ? content.GetBriefDescription(charLength: 450) : content,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -41,7 +42,9 @@ public static class SurveysMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this SurveyComment item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this SurveyComment item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -49,7 +52,7 @@ public static class SurveysMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

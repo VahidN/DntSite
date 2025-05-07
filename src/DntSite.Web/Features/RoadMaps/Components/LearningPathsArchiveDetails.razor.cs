@@ -66,7 +66,9 @@ public partial class LearningPathsArchiveDetails
     }
 
     private void SetSimilarPostsId()
-        => _documentTypeIdHash = _learningPath?.CurrentItem?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
+        => _documentTypeIdHash = _learningPath?.CurrentItem
+            ?.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash;
 
     private bool IsLearningPathPublic()
         => _learningPath?.CurrentItem is not null && !_learningPath.CurrentItem.IsDeleted;

@@ -225,7 +225,8 @@ public class CourseTopicsService(
         logger.LogWarning(message: "Deleted a CourseTopic record with Id={Id} and Title={Text}", courseTopic.Id,
             courseTopic.Title);
 
-        fullTextSearchService.DeleteLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: "")
+        fullTextSearchService.DeleteLuceneDocument(courseTopic
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
             .DocumentTypeIdHash);
 
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
@@ -244,7 +245,9 @@ public class CourseTopicsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            courseTopic.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
     }
 
@@ -261,7 +264,10 @@ public class CourseTopicsService(
         await uow.SaveChangesAsync();
 
         await SetParentAsync(courseTopic, courseId);
-        fullTextSearchService.AddOrUpdateLuceneDocument(courseTopic.MapToWhatsNewItemModel(siteRootUri: ""));
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            courseTopic.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
 
         return courseTopic;
@@ -288,7 +294,8 @@ public class CourseTopicsService(
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SetParentAsync(CourseTopic result, int courseId)

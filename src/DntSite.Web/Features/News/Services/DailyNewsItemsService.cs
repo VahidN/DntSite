@@ -471,7 +471,7 @@ public class DailyNewsItemsService(
             .ToListAsync();
 
         await fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: "")));
+            => item.MapToNewsWhatsNewItemModel(showBriefDescription: false, siteRootUri: "", newsThumbImage: "")));
     }
 
     public async Task UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction updateNewsStatusAction,
@@ -561,13 +561,13 @@ public class DailyNewsItemsService(
         if (item.IsDeleted)
         {
             fullTextSearchService.DeleteLuceneDocument(item
-                .MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: "")
+                .MapToNewsWhatsNewItemModel(showBriefDescription: false, siteRootUri: "", newsThumbImage: "")
                 .DocumentTypeIdHash);
         }
         else
         {
             fullTextSearchService.AddOrUpdateLuceneDocument(
-                item.MapToNewsWhatsNewItemModel(siteRootUri: "", newsThumbImage: ""));
+                item.MapToNewsWhatsNewItemModel(showBriefDescription: false, siteRootUri: "", newsThumbImage: ""));
         }
     }
 

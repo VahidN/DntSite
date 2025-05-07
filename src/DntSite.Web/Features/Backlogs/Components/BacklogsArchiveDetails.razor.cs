@@ -74,7 +74,9 @@ public partial class BacklogsArchiveDetails
     }
 
     private void SetSimilarPostsId()
-        => _documentTypeIdHash = _backlogs?.CurrentItem?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
+        => _documentTypeIdHash = _backlogs?.CurrentItem
+            ?.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash;
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..BacklogsBreadCrumbs.DefaultBreadCrumbs]);
 }

@@ -159,7 +159,8 @@ public class ProjectFaqsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(projectFaq.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            projectFaq.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
     public async Task<ProjectFaq?> AddProjectFaqAsync(ProjectFaqFormModel writeProjectFaqFormModel,
@@ -174,7 +175,8 @@ public class ProjectFaqsService(
         var result = AddProjectFaq(projectFaq);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            result.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
 
         return result;
     }
@@ -207,7 +209,8 @@ public class ProjectFaqsService(
         logger.LogWarning(message: "Deleted a ProjectFaq record with Id={Id} and Title={Text}", projectFaq.Id,
             projectFaq.Title);
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(projectFaq.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            projectFaq.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
     public async Task NotifyDeleteChangesAsync(ProjectFaq? projectFaq, User? currentUserUser)
@@ -233,6 +236,6 @@ public class ProjectFaqsService(
             .ToListAsync();
 
         await fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: "")));
+            => item.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 }

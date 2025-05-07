@@ -438,7 +438,9 @@ public class CoursesService(
 
         logger.LogWarning(message: "Deleted a Course record with Id={Id} and Title={Text}", course.Id, course.Title);
 
-        fullTextSearchService.DeleteLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        fullTextSearchService.DeleteLuceneDocument(course
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(Course? course)
@@ -474,7 +476,8 @@ public class CoursesService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
     }
 
     public async Task<Course?> AddCourseItemAsync(CourseModel writeCourseModel, User? user)
@@ -490,7 +493,8 @@ public class CoursesService(
         var course = AddCourse(item);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
 
         return course;
     }
@@ -519,7 +523,8 @@ public class CoursesService(
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task<OperationResult> CheckNumberOfMonthsRequiredAsync(int userId, Course course)

@@ -51,30 +51,30 @@ public class FeedsService(
     IQuestionsCommentsService questionsCommentsService,
     IDailyNewsScreenshotsService dailyNewsScreenshotsService) : IFeedsService
 {
-    public async Task<WhatsNewFeedChannel> GetLatestChangesAsync(int take = 30)
+    public async Task<WhatsNewFeedChannel> GetLatestChangesAsync(bool showBriefDescription, int take = 30)
     {
         var result = new List<WhatsNewItemModel>();
-        result.AddRange((await GetProjectsNewsAsync()).RssItems ?? []);
-        result.AddRange((await GetProjectsFilesAsync()).RssItems ?? []);
-        result.AddRange((await GetProjectsIssuesAsync()).RssItems ?? []);
-        result.AddRange((await GetProjectsIssuesRepliesAsync()).RssItems ?? []);
-        result.AddRange((await GetProjectsFaqsAsync()).RssItems ?? []);
-        result.AddRange((await GetPostsAsync()).RssItems ?? []);
-        result.AddRange((await GetCommentsAsync()).RssItems ?? []);
-        result.AddRange((await GetNewsAsync()).RssItems ?? []);
-        result.AddRange((await GetNewsCommentsAsync()).RssItems ?? []);
-        result.AddRange((await GetAllDraftsAsync()).RssItems ?? []);
-        result.AddRange((await GetAllVotesAsync()).RssItems ?? []);
-        result.AddRange((await GetVotesRepliesAsync()).RssItems ?? []);
-        result.AddRange((await GetAllAdvertisementsAsync()).RssItems ?? []);
-        result.AddRange((await GetAdvertisementCommentsAsync()).RssItems ?? []);
-        result.AddRange((await GetAllCoursesAsync()).RssItems ?? []);
-        result.AddRange((await GetAllCoursesTopicsAsync()).RssItems ?? []);
-        result.AddRange((await GetCourseTopicsRepliesAsync()).RssItems ?? []);
-        result.AddRange((await GetLearningPathsAsync()).RssItems ?? []);
-        result.AddRange((await GetBacklogsAsync()).RssItems ?? []);
-        result.AddRange((await GetQuestionsFeedItemsAsync()).RssItems ?? []);
-        result.AddRange((await GetQuestionsCommentsFeedItemsAsync()).RssItems ?? []);
+        result.AddRange((await GetProjectsNewsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetProjectsFilesAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetProjectsIssuesAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetProjectsIssuesRepliesAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetProjectsFaqsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetPostsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetCommentsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetNewsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetNewsCommentsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetAllDraftsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetAllVotesAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetVotesRepliesAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetAllAdvertisementsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetAdvertisementCommentsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetAllCoursesAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetAllCoursesTopicsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetCourseTopicsRepliesAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetLearningPathsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetBacklogsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetQuestionsFeedItemsAsync(showBriefDescription)).RssItems ?? []);
+        result.AddRange((await GetQuestionsCommentsFeedItemsAsync(showBriefDescription)).RssItems ?? []);
 
         var rssItems = result.OrderByDescending(x => x.PublishDate).Take(take).ToList();
         var appSetting = await GetAppSettingsAsync();
@@ -84,7 +84,8 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetQuestionsCommentsFeedItemsAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetQuestionsCommentsFeedItemsAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
@@ -94,13 +95,18 @@ public class FeedsService(
             recordsPerPage, showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Data
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.QuestionsComments.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetBacklogsAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetBacklogsAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int? userId = null,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
@@ -114,13 +120,18 @@ public class FeedsService(
             pagerSortBy, isAscending, isNewItems, isDone, isInProgress);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Data
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.Backlogs.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetQuestionsFeedItemsAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetQuestionsFeedItemsAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int? userId = null,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
@@ -133,13 +144,18 @@ public class FeedsService(
             showDeletedItems, pagerSortBy, isAscending, isNewItems, isDone);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Data
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.Questions.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetLearningPathsAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetLearningPathsAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int? userId = null,
         int recordsPerPage = 15,
         bool showAll = false,
@@ -151,23 +167,31 @@ public class FeedsService(
             showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Data
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.LearningPaths.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAllCoursesTopicsAsync()
+    public async Task<WhatsNewFeedChannel> GetAllCoursesTopicsAsync(bool showBriefDescription)
     {
         var list = await courseTopicsService.GetPagedAllActiveCoursesTopicsAsync();
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.AllCoursesTopics.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAllCoursesAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetAllCoursesAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int recordsPerPage = 15,
         bool onlyActive = true,
         bool showOnlyFinished = true,
@@ -178,13 +202,18 @@ public class FeedsService(
             onlyActive, showOnlyFinished, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Data
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.AllCourses.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAllVotesAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetAllVotesAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int recordsPerPage = 20,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
@@ -194,13 +223,18 @@ public class FeedsService(
             isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Data
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.AllVotes.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAllAdvertisementsAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetAllAdvertisementsAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int recordsPerPage = 20,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
@@ -210,13 +244,17 @@ public class FeedsService(
             pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Data
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.AllAdvertisements.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAllDraftsAsync()
+    public async Task<WhatsNewFeedChannel> GetAllDraftsAsync(bool showBriefDescription)
     {
         var list = await blogPostDraftsService.ComingSoonItemsAsync();
         var appSetting = await GetAppSettingsAsync();
@@ -226,7 +264,8 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsNewsAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetProjectsNewsAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
@@ -236,13 +275,18 @@ public class FeedsService(
             showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Data.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Data
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.ProjectsNews.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsFilesAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetProjectsFilesAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
@@ -253,7 +297,8 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => item.MapToProjectsReleasesWhatsNewItemModel(appSetting.SiteRootUri))
+        var rssItems = list.Data.Select(item
+                => item.MapToProjectsReleasesWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
             .ToList();
 
         var title = $"فید {WhatsNewItemType.ProjectsFiles.Value}";
@@ -261,7 +306,8 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsIssuesAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetProjectsIssuesAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
@@ -272,7 +318,8 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => item.MapToProjectsIssuesWhatsNewItemModel(appSetting.SiteRootUri))
+        var rssItems = list.Data.Select(item
+                => item.MapToProjectsIssuesWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
             .ToList();
 
         var title = $"فید {WhatsNewItemType.ProjectsIssues.Value}";
@@ -280,29 +327,41 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsIssuesRepliesAsync(int count = 15, bool showDeletedItems = false)
+    public async Task<WhatsNewFeedChannel> GetProjectsIssuesRepliesAsync(bool showBriefDescription,
+        int count = 15,
+        bool showDeletedItems = false)
     {
         var list = await projectIssueCommentsService.GetLastIssueCommentsIncludeBlogPostAndUserAsync(count,
             showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Select(item => item.MapToProjectsIssuesWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Select(item
+                => item.MapToProjectsIssuesWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.ProjectsIssuesReplies.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetVotesRepliesAsync(int count = 15, bool showDeletedItems = false)
+    public async Task<WhatsNewFeedChannel> GetVotesRepliesAsync(bool showBriefDescription,
+        int count = 15,
+        bool showDeletedItems = false)
     {
         var list = await voteCommentsService.GetLastVoteCommentsIncludeBlogPostAndUserAsync(count, showDeletedItems);
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.VotesReplies.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAdvertisementCommentsAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetAdvertisementCommentsAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int recordsPerPage = 15,
         bool showDeletedItems = false)
     {
@@ -310,13 +369,17 @@ public class FeedsService(
             recordsPerPage, showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.AdvertisementComments.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetProjectsFaqsAsync(int pageNumber = 0,
+    public async Task<WhatsNewFeedChannel> GetProjectsFaqsAsync(bool showBriefDescription,
+        int pageNumber = 0,
         int recordsPerPage = 10,
         bool showDeletedItems = false)
     {
@@ -324,13 +387,18 @@ public class FeedsService(
             showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Select(item => item.MapToProjectsFaqsWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Select(item
+                => item.MapToProjectsFaqsWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.ProjectsFaqs.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFaqsAsync(int? projectId,
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFaqsAsync(bool showBriefDescription,
+        int? projectId,
         int pageNumber = 0,
         int recordsPerPage = 10,
         bool showDeletedItems = false,
@@ -353,7 +421,11 @@ public class FeedsService(
             showDeletedItems, pagerSortBy, isAscending);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Data.Select(item => item.MapToProjectFaqWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Data
+            .Select(item => item.MapToProjectFaqWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید راهنمای پروژه {0}", project.Title);
 
         return (new WhatsNewFeedChannel
@@ -364,7 +436,8 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFilesAsync(int? projectId,
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectFilesAsync(bool showBriefDescription,
+        int? projectId,
         int pageNumber = 0,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
@@ -388,7 +461,8 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => item.MapToProjectReleaseWhatsNewItemModel(appSetting.SiteRootUri))
+        var rssItems = list.Data.Select(item
+                => item.MapToProjectReleaseWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید فایل‌های پروژه‌ {0}", project.Title);
@@ -401,7 +475,8 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesAsync(int? projectId,
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesAsync(bool showBriefDescription,
+        int? projectId,
         int pageNumber = 0,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
@@ -425,7 +500,8 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Data.Select(item => item.MapToProjectIssueWhatsNewItemModel(appSetting.SiteRootUri))
+        var rssItems = list.Data.Select(item
+                => item.MapToProjectIssueWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید بازخورد‌های پروژه {0}", project.Title);
@@ -438,7 +514,9 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(int? projectId,
+    public async Task<(WhatsNewFeedChannel? Items, Project? Project)> GetProjectIssuesRepliesAsync(
+        bool showBriefDescription,
+        int? projectId,
         int count = 15,
         bool showDeletedItems = false)
     {
@@ -460,8 +538,9 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list
-            .Select(item => item.MapToProjectIssuesWhatsNewItemModel(appSetting.SiteRootUri, projectId.Value))
+        var rssItems = list.Select(item
+                => item.MapToProjectIssuesWhatsNewItemModel(appSetting.SiteRootUri, projectId.Value,
+                    showBriefDescription))
             .ToList();
 
         var feedTitle = string.Format(CultureInfo.InvariantCulture, format: "فید پاسخ ‌به بازخورد‌های پروژه‌ {0}",
@@ -475,13 +554,15 @@ public class FeedsService(
         }, project);
     }
 
-    public async Task<WhatsNewFeedChannel> GetPostsAsync(int count = 15, bool showDeletedItems = false)
+    public async Task<WhatsNewFeedChannel> GetPostsAsync(bool showBriefDescription,
+        int count = 15,
+        bool showDeletedItems = false)
     {
         var items = await blogPostsService.GetLastBlogPostsIncludeAuthorTagsAsync(count, showDeletedItems);
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Where(item => !IsPrivate(item))
-            .Select(item => item.MapToPostWhatsNewItemModel(appSetting.SiteRootUri))
+            .Select(item => item.MapToPostWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
             .ToList();
 
         var title = $"فید {WhatsNewItemType.Posts.Value}";
@@ -489,13 +570,15 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetCommentsAsync(int count = 15, bool showDeletedItems = false)
+    public async Task<WhatsNewFeedChannel> GetCommentsAsync(bool showBriefDescription,
+        int count = 15,
+        bool showDeletedItems = false)
     {
         var items = await blogCommentsService.GetLastBlogCommentsIncludeBlogPostAndUserAsync(count, showDeletedItems);
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Where(item => !IsPrivateComment(item))
-            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri))
+            .Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
             .ToList();
 
         var title = $"فید {WhatsNewItemType.Comments.Value}";
@@ -503,12 +586,14 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetNewsAsync(int count = 15, bool showDeletedItems = false)
+    public async Task<WhatsNewFeedChannel> GetNewsAsync(bool showBriefDescription,
+        int count = 15,
+        bool showDeletedItems = false)
     {
         var list = await dailyNewsItemsService.GetLastDailyNewsItemsIncludeUserAsync(count, showDeletedItems);
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = list.Select(item => item.MapToNewsWhatsNewItemModel(appSetting.SiteRootUri,
+        var rssItems = list.Select(item => item.MapToNewsWhatsNewItemModel(showBriefDescription, appSetting.SiteRootUri,
                 dailyNewsScreenshotsService.GetNewsThumbImage(item, appSetting.SiteRootUri)))
             .ToList();
 
@@ -517,7 +602,8 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetTagAsync(string tag,
+    public async Task<WhatsNewFeedChannel> GetTagAsync(bool showBriefDescription,
+        string tag,
         int pageNumber = 0,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
@@ -530,7 +616,7 @@ public class FeedsService(
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Data.Where(item => !IsPrivate(item))
-            .Select(item => item.MapToTagWhatsNewItemModel(appSetting.SiteRootUri))
+            .Select(item => item.MapToTagWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
             .ToList();
 
         var title = string.Format(CultureInfo.InvariantCulture, format: "فید گروه {0}", tag);
@@ -538,7 +624,8 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetAuthorAsync(string authorName,
+    public async Task<WhatsNewFeedChannel> GetAuthorAsync(bool showBriefDescription,
+        string authorName,
         int pageNumber = 0,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
@@ -551,7 +638,7 @@ public class FeedsService(
         var appSetting = await GetAppSettingsAsync();
 
         var rssItems = items.Data.Where(item => !IsPrivate(item))
-            .Select(item => item.MapToAuthorWhatsNewItemModel(appSetting.SiteRootUri))
+            .Select(item => item.MapToAuthorWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
             .ToList();
 
         var title = string.Format(CultureInfo.InvariantCulture, format: "فید مطالب {0}", authorName);
@@ -559,20 +646,26 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetNewsCommentsAsync(int count = 15, bool showDeletedItems = false)
+    public async Task<WhatsNewFeedChannel> GetNewsCommentsAsync(bool showBriefDescription,
+        int count = 15,
+        bool showDeletedItems = false)
     {
         var items =
             await dailyNewsItemCommentsService.GetLastBlogNewsCommentsIncludeBlogPostAndUserAsync(count,
                 showDeletedItems);
 
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = items.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = items.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.NewsComments.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetNewsAuthorAsync(string name,
+    public async Task<WhatsNewFeedChannel> GetNewsAuthorAsync(bool showBriefDescription,
+        string name,
         int pageNumber = 0,
         int recordsPerPage = 20,
         bool showDeletedItems = false,
@@ -584,8 +677,8 @@ public class FeedsService(
 
         var appSetting = await GetAppSettingsAsync();
 
-        var rssItems = items.Data.Select(item => item.MapToAuthorWhatsNewItemModel(appSetting.SiteRootUri,
-                dailyNewsScreenshotsService.GetNewsThumbImage(item, appSetting.SiteRootUri)))
+        var rssItems = items.Data.Select(item => item.MapToAuthorWhatsNewItemModel(showBriefDescription,
+                appSetting.SiteRootUri, dailyNewsScreenshotsService.GetNewsThumbImage(item, appSetting.SiteRootUri)))
             .ToList();
 
         var title = string.Format(CultureInfo.InvariantCulture, format: "فید اشتراک‌های {0}", name);
@@ -593,11 +686,16 @@ public class FeedsService(
         return GetFeedChannel(title, appSetting, rssItems);
     }
 
-    public async Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync(int count = 15, bool onlyActives = true)
+    public async Task<WhatsNewFeedChannel> GetCourseTopicsRepliesAsync(bool showBriefDescription,
+        int count = 15,
+        bool onlyActives = true)
     {
         var list = await courseTopicCommentsService.GetLastTopicCommentsIncludePostAndUserAsync(count, onlyActives);
         var appSetting = await GetAppSettingsAsync();
-        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri)).ToList();
+
+        var rssItems = list.Select(item => item.MapToWhatsNewItemModel(appSetting.SiteRootUri, showBriefDescription))
+            .ToList();
+
         var title = $"فید {WhatsNewItemType.CourseTopicsReplies.Value}";
 
         return GetFeedChannel(title, appSetting, rssItems);

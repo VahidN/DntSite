@@ -260,7 +260,8 @@ public class ProjectIssuesService(
         logger.LogWarning(message: "Deleted a ProjectIssue record with Id={Id} and Title={Text}", projectIssue.Id,
             projectIssue.Title);
 
-        fullTextSearchService.DeleteLuceneDocument(projectIssue.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")
+        fullTextSearchService.DeleteLuceneDocument(projectIssue
+            .MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
             .DocumentTypeIdHash);
     }
 
@@ -290,7 +291,7 @@ public class ProjectIssuesService(
         await uow.SaveChangesAsync();
 
         fullTextSearchService.AddOrUpdateLuceneDocument(
-            projectIssue.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: ""));
+            projectIssue.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
     public async Task<ProjectIssue?> AddProjectIssueAsync(IssueModel issueModel, User? user, int projectId)
@@ -303,7 +304,8 @@ public class ProjectIssuesService(
         var result = AddProjectIssue(projectIssue);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            result.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
 
         return result;
     }
@@ -328,7 +330,7 @@ public class ProjectIssuesService(
             .ToListAsync();
 
         await fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")));
+            => item.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SendIssueEmailsAsync(ProjectIssue projectIssue)

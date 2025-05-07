@@ -10,7 +10,9 @@ public static class AdvertisementsMappersExtensions
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(AdvertisementsRoutingConstants.PostUrlTemplate);
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this Advertisement item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this Advertisement item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -18,7 +20,7 @@ public static class AdvertisementsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -36,7 +38,9 @@ public static class AdvertisementsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this AdvertisementComment item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this AdvertisementComment item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -44,7 +48,7 @@ public static class AdvertisementsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

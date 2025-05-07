@@ -239,8 +239,9 @@ public class VotesService(
         surveyItem.IsDeleted = true;
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.DeleteLuceneDocument(
-            surveyItem.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        fullTextSearchService.DeleteLuceneDocument(surveyItem
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
 
         logger.LogWarning(message: "Deleted a SurveyItem record with Id={Id} and Title={Text}", surveyItem.Id,
             surveyItem.Title);
@@ -323,7 +324,8 @@ public class VotesService(
 
         await voteItemsService.AddOrUpdateVoteItemsAsync(surveyItem, writeSurveyModel);
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(surveyItem.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            surveyItem.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
     public async Task<Survey?> AddNewsSurveyAsync(VoteModel writeSurveyModel, User? user)
@@ -333,7 +335,8 @@ public class VotesService(
         var result = await AddNewSurveyAndTagsAsync(writeSurveyModel, user);
         await voteItemsService.AddNewSurveyItemsAsync(writeSurveyModel, result);
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
 
         return result;
     }
@@ -361,7 +364,8 @@ public class VotesService(
             .AsNoTracking()
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task<Survey> AddNewSurveyAndTagsAsync(VoteModel writeSurveyModel, User? user)

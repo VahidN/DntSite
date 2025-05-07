@@ -14,7 +14,7 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
     // It runs in a http context less environment.
     public async Task<string> GetEmailContentAsync(DateTime fromDateTime, bool showBriefDescription)
     {
-        var posts = (await feedsService.GetLatestChangesAsync()).RssItems?.Where(x
+        var posts = (await feedsService.GetLatestChangesAsync(showBriefDescription)).RssItems?.Where(x
             => x.PublishDate >= new DateTimeOffset(fromDateTime));
 
         if (posts is null)
@@ -45,7 +45,7 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
                 : "align='right'";
 
             data.AppendFormat(CultureInfo.InvariantCulture, format: "<div {2} dir='{0}'>{1}</div>", contentDir,
-                showBriefDescription ? post.Content.GetBriefDescription(charLength: 450) : post.Content, contentAlign);
+                post.Content, contentAlign);
 
             data.AppendFormat(CultureInfo.InvariantCulture, format: "<br>{0}<br><br>", Hr);
         }

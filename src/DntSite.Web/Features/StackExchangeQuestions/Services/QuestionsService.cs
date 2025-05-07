@@ -226,7 +226,10 @@ public class QuestionsService(
         logger.LogWarning(message: "Deleted a StackExchangeQuestion record with Id={Id} and Title={Text}", question.Id,
             question.Title);
 
-        fullTextSearchService.DeleteLuceneDocument(question.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        fullTextSearchService.DeleteLuceneDocument(question
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, question.Id);
     }
 
@@ -266,7 +269,9 @@ public class QuestionsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(question.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            question.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, question.Id);
     }
 
@@ -283,7 +288,9 @@ public class QuestionsService(
         var result = AddStackExchangeQuestion(question);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, question.Id);
 
         return result;
@@ -317,6 +324,7 @@ public class QuestionsService(
             .Where(x => !x.IsDeleted)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 }

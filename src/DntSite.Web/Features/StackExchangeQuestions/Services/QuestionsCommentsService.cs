@@ -112,7 +112,10 @@ public class QuestionsCommentsService(
         logger.LogWarning(message: "Deleted a QuestionsCommentsService record with Id={Id} and Text={Text}", comment.Id,
             comment.Body);
 
-        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        fullTextSearchService.DeleteLuceneDocument(comment
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, comment.ParentId);
 
         await statService.RecalculateThisStackExchangeQuestionCommentsCountsAsync(comment.ParentId);
@@ -135,7 +138,9 @@ public class QuestionsCommentsService(
         comment.Body = antiXssService.GetSanitizedHtml(modelComment);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            comment.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, comment.ParentId);
 
         await questionsEmailsService.PostQuestionCommentReplySendEmailToAdminsAsync(comment);
@@ -164,7 +169,10 @@ public class QuestionsCommentsService(
         await uow.SaveChangesAsync();
 
         await SetParentAsync(result, modelFormPostId);
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, comment.ParentId);
 
         await SendEmailsAsync(result);
@@ -210,7 +218,8 @@ public class QuestionsCommentsService(
             .Where(x => !x.Parent.IsDeleted)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SetParentAsync(StackExchangeQuestionComment result, int modelFormPostId)

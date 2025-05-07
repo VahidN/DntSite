@@ -98,7 +98,8 @@ public partial class ProjectFeedbackDetails
     }
 
     private void SetSimilarPostsId()
-        => _documentTypeIdHash = _issueTopic?.CurrentItem?.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")
+        => _documentTypeIdHash = _issueTopic?.CurrentItem
+            ?.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
             .DocumentTypeIdHash;
 
     private void AddBreadCrumbs(string name)

@@ -91,10 +91,7 @@ public class ProjectsService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _projects.AsNoTracking()
-            from t in b.Tags
-            where t.Name == tag
-            select b;
+        var query = from b in _projects.AsNoTracking() from t in b.Tags where t.Name == tag select b;
 
         query = query.Where(x => x.IsDeleted == showDeletedItems)
             .Include(x => x.User)
@@ -178,7 +175,9 @@ public class ProjectsService(
 
         logger.LogWarning(message: "Deleted a Project record with Id={Id} and Title={Text}", project.Id, project.Title);
 
-        fullTextSearchService.DeleteLuceneDocument(project.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        fullTextSearchService.DeleteLuceneDocument(project
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(Project? project, User? currentUserUser)
@@ -219,7 +218,8 @@ public class ProjectsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(project.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            project.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
     public async Task<Project?> AddProjectAsync(ProjectModel writeProjectModel, User? user)
@@ -235,7 +235,8 @@ public class ProjectsService(
         var result = AddProject(project);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
 
         return result;
     }
@@ -261,7 +262,8 @@ public class ProjectsService(
             .AsNoTracking()
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SavePostedPhotoAsync(Project? project, ProjectModel writeProjectModel)

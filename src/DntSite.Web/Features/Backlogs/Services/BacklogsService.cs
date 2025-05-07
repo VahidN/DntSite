@@ -208,10 +208,7 @@ public class BacklogsService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _backlogs.AsNoTracking()
-            from t in b.Tags
-            where t.Name == tagName
-            select b;
+        var query = from b in _backlogs.AsNoTracking() from t in b.Tags where t.Name == tagName select b;
 
         query = query.Include(x => x.User)
             .Include(x => x.DoneByUser)
@@ -270,7 +267,9 @@ public class BacklogsService(
 
         logger.LogWarning(message: "Deleted a Backlog record with Id={Id} and Title={Text}", backlog.Id, backlog.Title);
 
-        fullTextSearchService.DeleteLuceneDocument(backlog.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        fullTextSearchService.DeleteLuceneDocument(backlog
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
     }
 
     public async Task NotifyDeleteChangesAsync(Backlog? backlog, BacklogModel? writeBacklogModel)
@@ -302,7 +301,8 @@ public class BacklogsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(backlog.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            backlog.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
     public async Task<Backlog?> AddBacklogAsync(BacklogModel writeBacklogModel, User? user)
@@ -318,7 +318,8 @@ public class BacklogsService(
         var result = AddBacklog(item);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
 
         return result;
     }
@@ -511,7 +512,8 @@ public class BacklogsService(
             .Where(x => !x.IsDeleted)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task UpdateStatAsync(Backlog backlog)

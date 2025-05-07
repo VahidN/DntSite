@@ -129,7 +129,9 @@ public class DailyNewsItemCommentsService(
         logger.LogWarning(message: "Deleted a DailyNewsItemComment record with Id={Id} and Text={Text}", comment.Id,
             comment.Body);
 
-        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        fullTextSearchService.DeleteLuceneDocument(comment
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
 
         await statService.RecalculateThisNewsPostCommentsCountsAsync(comment.ParentId);
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, comment.ParentId);
@@ -152,7 +154,8 @@ public class DailyNewsItemCommentsService(
         comment.Body = antiXssService.GetSanitizedHtml(message);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            comment.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
 
         await dailyNewsEmailsService.PostNewsReplySendEmailToAdminsAsync(comment);
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, comment.ParentId);
@@ -177,7 +180,10 @@ public class DailyNewsItemCommentsService(
         await uow.SaveChangesAsync();
 
         await SetParentAsync(result, blogPostId);
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, blogPostId);
 
         await SendEmailsAsync(result);
@@ -194,7 +200,8 @@ public class DailyNewsItemCommentsService(
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SetParentAsync(DailyNewsItemComment result, int modelFormPostId)

@@ -10,7 +10,9 @@ public static class NewsMappersExtensions
     public static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(NewsRoutingConstants.PostUrlTemplate);
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this DailyNewsItemComment item, string siteRootUri = "")
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this DailyNewsItemComment item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -18,7 +20,7 @@ public static class NewsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -39,6 +41,7 @@ public static class NewsMappersExtensions
     }
 
     public static WhatsNewItemModel MapToAuthorWhatsNewItemModel(this DailyNewsItem item,
+        bool showBriefDescription,
         string siteRootUri = "",
         string newsThumbImage = "")
     {
@@ -48,7 +51,10 @@ public static class NewsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = $"{item.BriefDescription} {newsThumbImage}",
+            Content =
+                showBriefDescription
+                    ? item.BriefDescription.GetBriefDescription(charLength: 450)
+                    : $"{item.BriefDescription} {newsThumbImage}",
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -68,6 +74,7 @@ public static class NewsMappersExtensions
     }
 
     public static WhatsNewItemModel MapToNewsWhatsNewItemModel(this DailyNewsItem item,
+        bool showBriefDescription,
         string siteRootUri = "",
         string newsThumbImage = "")
     {
@@ -77,7 +84,10 @@ public static class NewsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = $"{item.BriefDescription} {newsThumbImage}",
+            Content =
+                showBriefDescription
+                    ? item.BriefDescription.GetBriefDescription(charLength: 450)
+                    : $"{item.BriefDescription} {newsThumbImage}",
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

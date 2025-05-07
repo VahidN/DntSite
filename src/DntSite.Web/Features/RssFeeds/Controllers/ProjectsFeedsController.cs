@@ -15,24 +15,25 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
     public Task<IActionResult> Get() => ProjectsNews();
 
     public async Task<IActionResult> ProjectsNews()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsNewsAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsNewsAsync(showBriefDescription: true));
 
     public async Task<IActionResult> ProjectsFiles()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsFilesAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsFilesAsync(showBriefDescription: true));
 
     public async Task<IActionResult> ProjectsIssues()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsIssuesAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsIssuesAsync(showBriefDescription: true));
 
     public async Task<IActionResult> ProjectsIssuesReplies()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsIssuesRepliesAsync());
+        => new FeedResult<WhatsNewItemModel>(
+            await feedsService.GetProjectsIssuesRepliesAsync(showBriefDescription: true));
 
     public async Task<IActionResult> ProjectsFaqs()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsFaqsAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetProjectsFaqsAsync(showBriefDescription: true));
 
     [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
     public async Task<IActionResult> ProjectFaqs(int? id = null)
     {
-        var (items, _) = await feedsService.GetProjectFaqsAsync(id);
+        var (items, _) = await feedsService.GetProjectFaqsAsync(showBriefDescription: true, id);
 
         if (items is null)
         {
@@ -45,7 +46,7 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
     [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
     public async Task<IActionResult> ProjectFiles(int? id = null)
     {
-        var (items, _) = await feedsService.GetProjectFilesAsync(id);
+        var (items, _) = await feedsService.GetProjectFilesAsync(showBriefDescription: true, id);
 
         if (items is null)
         {
@@ -58,7 +59,7 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
     [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
     public async Task<IActionResult> ProjectIssues(int? id = null)
     {
-        var (items, _) = await feedsService.GetProjectIssuesAsync(id);
+        var (items, _) = await feedsService.GetProjectIssuesAsync(showBriefDescription: true, id);
 
         if (items is null)
         {
@@ -71,7 +72,7 @@ public class ProjectsFeedsController(IFeedsService feedsService) : ControllerBas
     [Microsoft.AspNetCore.Mvc.Route(template: "{id:int?}")]
     public async Task<IActionResult> ProjectIssuesReplies(int? id = null)
     {
-        var (items, _) = await feedsService.GetProjectIssuesRepliesAsync(id);
+        var (items, _) = await feedsService.GetProjectIssuesRepliesAsync(showBriefDescription: true, id);
 
         if (items is null)
         {

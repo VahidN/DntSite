@@ -14,7 +14,8 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     [Microsoft.AspNetCore.Mvc.Route(template: "/[controller]")]
     public Task<IActionResult> Index() => Posts();
 
-    public async Task<IActionResult> Posts() => new FeedResult<WhatsNewItemModel>(await feedsService.GetPostsAsync());
+    public async Task<IActionResult> Posts()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetPostsAsync(showBriefDescription: true));
 
     [Microsoft.AspNetCore.Mvc.Route(template: "/feeds/posts/{name?}")]
     public async Task<IActionResult> UserPosts(string? name = null)
@@ -28,7 +29,7 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     }
 
     public async Task<IActionResult> Comments()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetCommentsAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetCommentsAsync(showBriefDescription: true));
 
     [Microsoft.AspNetCore.Mvc.Route(template: "/feeds/comments/{name?}")]
     public async Task<IActionResult> UserComments(string? name = null)
@@ -41,7 +42,8 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
         return await Comments();
     }
 
-    public async Task<IActionResult> News() => new FeedResult<WhatsNewItemModel>(await feedsService.GetNewsAsync());
+    public async Task<IActionResult> News()
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetNewsAsync(showBriefDescription: true));
 
     [Microsoft.AspNetCore.Mvc.Route(template: "{id?}")]
     public async Task<IActionResult> Tag(string? id = null)
@@ -51,7 +53,7 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
             return NotFound();
         }
 
-        return new FeedResult<WhatsNewItemModel>(await feedsService.GetTagAsync(id));
+        return new FeedResult<WhatsNewItemModel>(await feedsService.GetTagAsync(showBriefDescription: true, id));
     }
 
     [Microsoft.AspNetCore.Mvc.Route(template: "{id?}")]
@@ -62,11 +64,11 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
             return NotFound();
         }
 
-        return new FeedResult<WhatsNewItemModel>(await feedsService.GetAuthorAsync(id));
+        return new FeedResult<WhatsNewItemModel>(await feedsService.GetAuthorAsync(showBriefDescription: true, id));
     }
 
     public async Task<IActionResult> NewsComments()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetNewsCommentsAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetNewsCommentsAsync(showBriefDescription: true));
 
     [Microsoft.AspNetCore.Mvc.Route(template: "{id?}")]
     public async Task<IActionResult> NewsAuthor(string? id = null)
@@ -76,7 +78,7 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
             return NotFound();
         }
 
-        return new FeedResult<WhatsNewItemModel>(await feedsService.GetNewsAuthorAsync(id));
+        return new FeedResult<WhatsNewItemModel>(await feedsService.GetNewsAuthorAsync(showBriefDescription: true, id));
     }
 
     public async Task<IActionResult> LatestChanges()
@@ -100,20 +102,22 @@ public class FeedController(IFeedsService feedsService) : ControllerBase
     public async Task<IActionResult> LlmsFull()
         => new LlmsFullTxtResult<WhatsNewItemModel>(await GetLatestChangesAsync());
 
-    private Task<WhatsNewFeedChannel> GetLatestChangesAsync() => feedsService.GetLatestChangesAsync();
+    private Task<WhatsNewFeedChannel> GetLatestChangesAsync()
+        => feedsService.GetLatestChangesAsync(showBriefDescription: true);
 
     public async Task<IActionResult> Courses()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllCoursesAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllCoursesAsync(showBriefDescription: true));
 
     public async Task<IActionResult> CoursesTopics()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllCoursesTopicsAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllCoursesTopicsAsync(showBriefDescription: true));
 
     public async Task<IActionResult> CoursesComments()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetCourseTopicsRepliesAsync());
+        => new FeedResult<WhatsNewItemModel>(
+            await feedsService.GetCourseTopicsRepliesAsync(showBriefDescription: true));
 
     public async Task<IActionResult> Surveys()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllVotesAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllVotesAsync(showBriefDescription: true));
 
     public async Task<IActionResult> Announcements()
-        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllAdvertisementsAsync());
+        => new FeedResult<WhatsNewItemModel>(await feedsService.GetAllAdvertisementsAsync(showBriefDescription: true));
 }

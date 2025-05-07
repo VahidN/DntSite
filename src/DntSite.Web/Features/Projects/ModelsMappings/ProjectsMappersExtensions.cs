@@ -12,7 +12,8 @@ public static class ProjectsMappersExtensions
 
     public static WhatsNewItemModel MapToProjectIssuesWhatsNewItemModel(this ProjectIssueComment item,
         string siteRootUri,
-        int projectId)
+        int projectId,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -20,7 +21,7 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -40,7 +41,9 @@ public static class ProjectsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToProjectIssueWhatsNewItemModel(this ProjectIssue item, string siteRootUri)
+    public static WhatsNewItemModel MapToProjectIssueWhatsNewItemModel(this ProjectIssue item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -48,7 +51,7 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Description,
+            Content = showBriefDescription ? item.Description.GetBriefDescription(charLength: 450) : item.Description,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -68,7 +71,9 @@ public static class ProjectsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToProjectReleaseWhatsNewItemModel(this ProjectRelease item, string siteRootUri)
+    public static WhatsNewItemModel MapToProjectReleaseWhatsNewItemModel(this ProjectRelease item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -76,7 +81,8 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.FileDescription,
+            Content =
+                showBriefDescription ? item.FileDescription.GetBriefDescription(charLength: 450) : item.FileDescription,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -96,7 +102,9 @@ public static class ProjectsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToProjectFaqWhatsNewItemModel(this ProjectFaq item, string siteRootUri)
+    public static WhatsNewItemModel MapToProjectFaqWhatsNewItemModel(this ProjectFaq item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -104,7 +112,7 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Description,
+            Content = showBriefDescription ? item.Description.GetBriefDescription(charLength: 450) : item.Description,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -124,7 +132,9 @@ public static class ProjectsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToProjectsFaqsWhatsNewItemModel(this ProjectFaq item, string siteRootUri)
+    public static WhatsNewItemModel MapToProjectsFaqsWhatsNewItemModel(this ProjectFaq item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -132,7 +142,7 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Description,
+            Content = showBriefDescription ? item.Description.GetBriefDescription(charLength: 450) : item.Description,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -152,7 +162,9 @@ public static class ProjectsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this Project item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this Project item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -160,7 +172,7 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Description,
+            Content = showBriefDescription ? item.Description.GetBriefDescription(charLength: 450) : item.Description,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -178,7 +190,9 @@ public static class ProjectsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToProjectsReleasesWhatsNewItemModel(this ProjectRelease item, string siteRootUri)
+    public static WhatsNewItemModel MapToProjectsReleasesWhatsNewItemModel(this ProjectRelease item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -186,7 +200,8 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.FileDescription,
+            Content =
+                showBriefDescription ? item.FileDescription.GetBriefDescription(charLength: 450) : item.FileDescription,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -206,7 +221,9 @@ public static class ProjectsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToProjectsIssuesWhatsNewItemModel(this ProjectIssue item, string siteRootUri)
+    public static WhatsNewItemModel MapToProjectsIssuesWhatsNewItemModel(this ProjectIssue item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -214,7 +231,7 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Description,
+            Content = showBriefDescription ? item.Description.GetBriefDescription(charLength: 450) : item.Description,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -235,7 +252,8 @@ public static class ProjectsMappersExtensions
     }
 
     public static WhatsNewItemModel MapToProjectsIssuesWhatsNewItemModel(this ProjectIssueComment item,
-        string siteRootUri)
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -243,7 +261,7 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

@@ -70,7 +70,9 @@ public partial class SurveysArchiveDetails
     }
 
     private void SetSimilarPostsId()
-        => _documentTypeIdHash = _surveys?.CurrentItem?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
+        => _documentTypeIdHash = _surveys?.CurrentItem
+            ?.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash;
 
     private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..SurveysBreadCrumbs.DefaultBreadCrumbs]);
 

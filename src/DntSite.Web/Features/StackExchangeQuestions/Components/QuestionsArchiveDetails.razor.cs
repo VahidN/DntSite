@@ -73,7 +73,9 @@ public partial class QuestionsArchiveDetails
     }
 
     private void SetSimilarPostsId()
-        => _documentTypeIdHash = _details?.CurrentItem?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
+        => _documentTypeIdHash = _details?.CurrentItem
+            ?.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash;
 
     private async Task UpdateStatAsync()
     {

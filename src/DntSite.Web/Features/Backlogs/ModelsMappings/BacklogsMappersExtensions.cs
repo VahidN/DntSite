@@ -10,7 +10,9 @@ public static class BacklogsMappersExtensions
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(BacklogsRoutingConstants.PostUrlTemplate);
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this Backlog item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this Backlog item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -18,7 +20,7 @@ public static class BacklogsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Description,
+            Content = showBriefDescription ? item.Description.GetBriefDescription(charLength: 450) : item.Description,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

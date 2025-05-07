@@ -173,7 +173,9 @@ public class AdvertisementCommentsService(
         logger.LogWarning(message: "Deleted a AdvertisementComment record with Id={Id} and Text={Text}", comment.Id,
             comment.Body);
 
-        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        fullTextSearchService.DeleteLuceneDocument(comment
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
 
         await UpdateStatAsync(comment);
     }
@@ -195,7 +197,8 @@ public class AdvertisementCommentsService(
         comment.Body = antiXssService.GetSanitizedHtml(modelComment);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            comment.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
 
         await emailsService.AdvertisementCommentSendEmailToAdminsAsync(comment);
     }
@@ -222,7 +225,9 @@ public class AdvertisementCommentsService(
         await uow.SaveChangesAsync();
 
         await SetParentAsync(result, modelFormPostId);
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
 
         await SendEmailsAsync(result);
         await UpdateStatAsync(result);
@@ -240,7 +245,8 @@ public class AdvertisementCommentsService(
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SetParentAsync(AdvertisementComment result, int modelFormPostId)

@@ -10,7 +10,9 @@ public static class PostsMappersExtensions
     public static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(PostsRoutingConstants.PostUrlTemplate);
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this BlogPostComment item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this BlogPostComment item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -18,7 +20,7 @@ public static class PostsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -37,7 +39,9 @@ public static class PostsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToAuthorWhatsNewItemModel(this BlogPost item, string siteRootUri)
+    public static WhatsNewItemModel MapToAuthorWhatsNewItemModel(this BlogPost item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -45,7 +49,7 @@ public static class PostsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -64,7 +68,9 @@ public static class PostsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToTagWhatsNewItemModel(this BlogPost item, string siteRootUri)
+    public static WhatsNewItemModel MapToTagWhatsNewItemModel(this BlogPost item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -72,7 +78,7 @@ public static class PostsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -91,7 +97,9 @@ public static class PostsMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToPostWhatsNewItemModel(this BlogPost item, string siteRootUri)
+    public static WhatsNewItemModel MapToPostWhatsNewItemModel(this BlogPost item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -99,7 +107,7 @@ public static class PostsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

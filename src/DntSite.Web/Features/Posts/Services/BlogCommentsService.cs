@@ -113,7 +113,10 @@ public class BlogCommentsService(
         foreach (var item in list)
         {
             item.IsDeleted = true;
-            fullTextSearchService.DeleteLuceneDocument(item.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+
+            fullTextSearchService.DeleteLuceneDocument(item
+                .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+                .DocumentTypeIdHash);
         }
 
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, postId);
@@ -193,7 +196,10 @@ public class BlogCommentsService(
             comment.Body);
 
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, comment.ParentId);
-        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+
+        fullTextSearchService.DeleteLuceneDocument(comment
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
 
         await statService.RecalculateThisBlogPostCommentsCountsAsync(comment.ParentId);
     }
@@ -215,7 +221,9 @@ public class BlogCommentsService(
         comment.Body = antiXssService.GetSanitizedHtml(message);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            comment.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, comment.ParentId);
 
         await blogCommentsEmailsService.PostReplySendEmailToAdminsAsync(comment);
@@ -240,7 +248,10 @@ public class BlogCommentsService(
         await uow.SaveChangesAsync();
 
         await SetParentAsync(result, blogPostId);
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
+
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, comment.ParentId);
 
         await SendEmailsAsync(result);
@@ -257,7 +268,8 @@ public class BlogCommentsService(
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SetParentAsync(BlogPostComment result, int modelFormPostId)

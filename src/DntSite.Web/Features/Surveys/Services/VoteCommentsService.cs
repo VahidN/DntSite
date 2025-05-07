@@ -172,7 +172,10 @@ public class VoteCommentsService(
         logger.LogWarning(message: "Deleted a SurveyComment record with Id={Id} and Body={Text}", comment.Id,
             comment.Body);
 
-        fullTextSearchService.DeleteLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash);
+        fullTextSearchService.DeleteLuceneDocument(comment
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash);
+
         await statService.RecalculateThisVoteCommentsCountsAsync(comment.ParentId);
     }
 
@@ -193,7 +196,9 @@ public class VoteCommentsService(
         comment.Body = antiXssService.GetSanitizedHtml(modelComment);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            comment.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+
         await votesEmailsService.VoteCommentSendEmailToAdminsAsync(comment);
     }
 
@@ -220,7 +225,9 @@ public class VoteCommentsService(
         await uow.SaveChangesAsync();
 
         await SetParentAsync(result, modelFormPostId);
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
 
         await SendEmailsAsync(result);
         await UpdateStatAsync(modelFormPostId, currentUserUserId);
@@ -238,7 +245,8 @@ public class VoteCommentsService(
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SetParentAsync(SurveyComment result, int modelFormPostId)

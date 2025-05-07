@@ -129,7 +129,7 @@ public class ProjectReleasesService(
             projectRelease.FileDescription);
 
         fullTextSearchService.DeleteLuceneDocument(projectRelease
-            .MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "")
+            .MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
             .DocumentTypeIdHash);
     }
 
@@ -162,7 +162,7 @@ public class ProjectReleasesService(
         await uow.SaveChangesAsync();
 
         fullTextSearchService.AddOrUpdateLuceneDocument(
-            projectRelease.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: ""));
+            projectRelease.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
     public async Task<ProjectRelease?> AddProjectReleaseAsync(ProjectPostFileModel projectPostFileModel,
@@ -178,7 +178,8 @@ public class ProjectReleasesService(
         var result = _projectReleases.Add(project).Entity;
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            result.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
 
         return result;
     }
@@ -238,7 +239,7 @@ public class ProjectReleasesService(
             .ToListAsync();
 
         await fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "")));
+            => item.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SavePostedFileAsync(ProjectRelease? projectRelease, ProjectPostFileModel model)

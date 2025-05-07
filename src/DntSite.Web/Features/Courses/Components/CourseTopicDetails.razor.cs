@@ -113,7 +113,7 @@ public partial class CourseTopicDetails
     }
 
     private void SetSimilarPostsId()
-        => _documentTypeIdHash = _courseTopic?.ThisTopic?.MapToWhatsNewItemModel(siteRootUri: "").DocumentTypeIdHash;
+        => _documentTypeIdHash = _courseTopic?.ThisTopic?.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false).DocumentTypeIdHash;
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([

@@ -15,7 +15,7 @@ public partial class WhatsNewFeedRenderer
 
     private async Task ShowRssItemsAsync()
     {
-        var rssItems = (await FeedsService.GetLatestChangesAsync()).RssItems ?? [];
+        var rssItems = (await FeedsService.GetLatestChangesAsync(false)).RssItems ?? [];
 
         _posts = new PagedResultModel<LuceneSearchResult>
         {

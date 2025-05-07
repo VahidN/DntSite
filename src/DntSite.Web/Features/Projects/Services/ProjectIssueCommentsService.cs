@@ -174,7 +174,8 @@ public class ProjectIssueCommentsService(
         logger.LogWarning(message: "Deleted a  ProjectIssueComment record with Id={Id} and Text={Text}", comment.Id,
             comment.Body);
 
-        fullTextSearchService.DeleteLuceneDocument(comment.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")
+        fullTextSearchService.DeleteLuceneDocument(comment
+            .MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
             .DocumentTypeIdHash);
 
         await UpdateStatAsync(comment.ParentId, comment.Parent.ProjectId, comment.UserId);
@@ -198,7 +199,9 @@ public class ProjectIssueCommentsService(
         comment.Body = antiXssService.GetSanitizedHtml(modelComment);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(comment.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            comment.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+
         await projectsEmailsService.ProjectIssueCommentSendEmailToAdminsAsync(comment);
         await UpdateStatAsync(comment.ParentId, comment.Parent.ProjectId, comment.UserId);
     }
@@ -225,7 +228,9 @@ public class ProjectIssueCommentsService(
         await uow.SaveChangesAsync();
 
         await SetParentAsync(result, modelFormPostId);
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: ""));
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            result.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
 
         await NotifyNewCommentAsync(modelFormPostId, currentUserUserId, result);
     }
@@ -242,7 +247,7 @@ public class ProjectIssueCommentsService(
             .ToListAsync();
 
         await fullTextSearchService.IndexTableAsync(items.Select(item
-            => item.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "")));
+            => item.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 
     private async Task SetParentAsync(ProjectIssueComment result, int modelFormPostId)

@@ -10,7 +10,9 @@ public static class LearningPathsMappersExtensions
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(RoadMapsRoutingConstants.PostUrlTemplate);
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this LearningPath item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this LearningPath item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -18,7 +20,7 @@ public static class LearningPathsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Description,
+            Content = showBriefDescription ? item.Description.GetBriefDescription(charLength: 450) : item.Description,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

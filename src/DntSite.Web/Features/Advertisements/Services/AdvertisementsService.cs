@@ -110,7 +110,8 @@ public class AdvertisementsService(
         var result = _advertisements.Add(newsItem).Entity;
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
 
         return result;
     }
@@ -131,7 +132,8 @@ public class AdvertisementsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.DeleteLuceneDocument(advertisement.MapToWhatsNewItemModel(siteRootUri: "")
+        fullTextSearchService.DeleteLuceneDocument(advertisement
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
             .DocumentTypeIdHash);
     }
 
@@ -170,7 +172,8 @@ public class AdvertisementsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(advertisement.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            advertisement.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
 
         return advertisement;
     }
@@ -226,10 +229,7 @@ public class AdvertisementsService(
     {
         var now = DateTime.UtcNow;
 
-        var query = from b in _advertisements.AsNoTracking()
-            from t in b.Tags
-            where t.Name == tag
-            select b;
+        var query = from b in _advertisements.AsNoTracking() from t in b.Tags where t.Name == tag select b;
 
         query = query.Where(x => x.IsDeleted == showDeletedItems && (!x.DueDate.HasValue || x.DueDate.Value >= now))
             .Include(x => x.User)
@@ -311,7 +311,8 @@ public class AdvertisementsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(advertisement.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            advertisement.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
     public Task NotifyAddOrUpdateChangesAsync(Advertisement? advertisement) => NotifyDeleteChangesAsync(advertisement);
@@ -350,6 +351,7 @@ public class AdvertisementsService(
             .Include(x => x.User)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 }

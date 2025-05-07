@@ -10,7 +10,9 @@ public static class CourseMappersExtensions
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(CoursesRoutingConstants.PostUrlTemplate);
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this CourseTopicComment item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this CourseTopicComment item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -18,7 +20,7 @@ public static class CourseMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -38,7 +40,9 @@ public static class CourseMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this CourseTopic item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this CourseTopic item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -46,7 +50,7 @@ public static class CourseMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Body,
+            Content = showBriefDescription ? item.Body.GetBriefDescription(charLength: 450) : item.Body,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -66,7 +70,9 @@ public static class CourseMappersExtensions
         };
     }
 
-    public static WhatsNewItemModel MapToWhatsNewItemModel(this Course item, string siteRootUri)
+    public static WhatsNewItemModel MapToWhatsNewItemModel(this Course item,
+        string siteRootUri,
+        bool showBriefDescription)
     {
         ArgumentNullException.ThrowIfNull(item);
 
@@ -74,7 +80,7 @@ public static class CourseMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content = item.Description,
+            Content = showBriefDescription ? item.Description.GetBriefDescription(charLength: 450) : item.Description,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

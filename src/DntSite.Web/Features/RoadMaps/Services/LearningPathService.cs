@@ -170,10 +170,7 @@ public class LearningPathService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _learningPaths.AsNoTracking()
-            from t in b.Tags
-            where t.Name == tagName
-            select b;
+        var query = from b in _learningPaths.AsNoTracking() from t in b.Tags where t.Name == tagName select b;
 
         query = query.Include(x => x.User)
             .Include(blogPost => blogPost.Tags)
@@ -218,7 +215,8 @@ public class LearningPathService(
         logger.LogWarning(message: "Deleted a LearningPath record with Id={Id} and Title={Text}", learningPathItem.Id,
             learningPathItem.Title);
 
-        fullTextSearchService.DeleteLuceneDocument(learningPathItem.MapToWhatsNewItemModel(siteRootUri: "")
+        fullTextSearchService.DeleteLuceneDocument(learningPathItem
+            .MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
             .DocumentTypeIdHash);
 
         if (learningPathItem.UserId is not null)
@@ -255,7 +253,9 @@ public class LearningPathService(
         await uow.SaveChangesAsync();
 
         await statService.RecalculateTagsInUseCountsAsync<LearningPathTag, LearningPath>();
-        fullTextSearchService.AddOrUpdateLuceneDocument(learningPathItem.MapToWhatsNewItemModel(siteRootUri: ""));
+
+        fullTextSearchService.AddOrUpdateLuceneDocument(
+            learningPathItem.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
     public async Task<LearningPath?> AddLearningPathAsync(LearningPathModel writeLearningPathModel, User? user)
@@ -272,7 +272,8 @@ public class LearningPathService(
 
         await statService.RecalculateTagsInUseCountsAsync<LearningPathTag, LearningPath>();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: ""));
+        fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
+            showBriefDescription: false));
 
         return result;
     }
@@ -300,6 +301,7 @@ public class LearningPathService(
             .Where(x => !x.IsDeleted)
             .ToListAsync();
 
-        await fullTextSearchService.IndexTableAsync(items.Select(item => item.MapToWhatsNewItemModel(siteRootUri: "")));
+        await fullTextSearchService.IndexTableAsync(items.Select(item
+            => item.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)));
     }
 }
