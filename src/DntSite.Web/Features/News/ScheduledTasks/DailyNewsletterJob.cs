@@ -21,7 +21,7 @@ public class DailyNewsletterJob(
             sendToAllEachMonth: true);
 
         var dateTime = DateTime.UtcNow.ToIranTimeZoneDateTime().AddDays(value: -1);
-        var content = await dailyNewsletter.GetEmailContentAsync(dateTime);
+        var content = await dailyNewsletter.GetEmailContentAsync(dateTime, showBriefDescription: true);
 
         if (string.IsNullOrWhiteSpace(content))
         {
