@@ -650,18 +650,23 @@ var DntBlazorSsr;
                 if (element.hasAttribute("data-list")) {
                     element.setAttribute("data-list", "bullet");
                 }
-                element.classList.remove("ql-indent-1");
+                element.classList.remove("ql-indent-1", "ql-indent-2", "ql-indent-3");
             });
         }
         static normalizeAllHeaders(editorElement) {
-            const headers = editorElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
-            headers.forEach(header => {
+            editorElement.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(headerElement => {
                 const strong = document.createElement('strong');
-                strong.innerHTML = header.innerHTML;
+                strong.innerHTML = headerElement.innerHTML;
                 strong.dir = "rtl";
                 strong.style.textAlign = "right";
                 strong.classList.add("ql-align-right", "ql-direction-rtl");
-                header.replaceWith(strong);
+                headerElement.replaceWith(strong);
+            });
+            editorElement.querySelectorAll('p').forEach(element => {
+                element.removeAttribute('style');
+                element.style.textAlign = "right";
+                element.setAttribute('dir', "rtl");
+                element.classList.add("ql-align-right", "ql-direction-rtl");
             });
         }
         static convertMonoSpaceSpansToCode() {
