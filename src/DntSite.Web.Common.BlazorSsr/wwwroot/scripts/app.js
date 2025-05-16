@@ -655,12 +655,13 @@ var DntBlazorSsr;
         }
         static normalizeAllHeaders(editorElement) {
             editorElement.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(headerElement => {
-                const strong = document.createElement('strong');
-                strong.innerHTML = headerElement.innerHTML;
-                strong.dir = "rtl";
-                strong.style.textAlign = "right";
-                strong.classList.add("ql-align-right", "ql-direction-rtl");
-                headerElement.replaceWith(strong);
+                const paragraphElement = document.createElement('p');
+                paragraphElement.innerHTML = headerElement.innerHTML;
+                paragraphElement.dir = "rtl";
+                paragraphElement.style.textAlign = "right";
+                paragraphElement.style.fontWeight = "bold";
+                paragraphElement.classList.add("ql-align-right", "ql-direction-rtl");
+                headerElement.replaceWith(paragraphElement);
             });
             editorElement.querySelectorAll('p').forEach(element => {
                 element.removeAttribute('style');
@@ -669,12 +670,15 @@ var DntBlazorSsr;
                 element.classList.add("ql-align-right", "ql-direction-rtl");
             });
         }
-        static convertMonoSpaceSpansToCode() {
-            document.querySelectorAll("span.ql-font-monospace").forEach(element => {
+        static convertMonoSpaceSpansToCode(editorElement) {
+            editorElement.querySelectorAll("span.ql-font-monospace").forEach(element => {
                 const code = document.createElement('code');
                 code.dir = "ltr";
                 code.innerHTML = element.innerHTML;
                 element.replaceWith(code);
+            });
+            editorElement.querySelectorAll('code').forEach(codeElement => {
+                codeElement.innerHTML = codeElement.innerText;
             });
         }
         static makeInlineCode(quill) {
@@ -868,7 +872,7 @@ var DntBlazorSsr;
                                 'inline-code': (value) => dntHtmlEditor.makeInlineCode(quill),
                                 'clean-styles': (value) => {
                                     dntHtmlEditor.cleanAllStyles(editorElement);
-                                    dntHtmlEditor.convertMonoSpaceSpansToCode();
+                                    dntHtmlEditor.convertMonoSpaceSpansToCode(editorElement);
                                 },
                                 direction: (value) => {
                                     dntHtmlEditor.handleDirection(quill, value);
