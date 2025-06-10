@@ -25,8 +25,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="11.2.0" />
-    <PackageVersion Include="EFCoreSecondLevelCacheInterceptor.MemoryCache" Version="5.2.4" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="11.5.0" />
+    <PackageVersion Include="EFCoreSecondLevelCacheInterceptor.MemoryCache" Version="5.3.0" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.4.0" />
     <PackageVersion Include="Gridify.EntityFramework" Version="2.16.3" />
@@ -41,7 +41,7 @@
   <ItemGroup>
     <PackageVersion Include="Meziantou.Analyzer" Version="2.0.201" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="4.14.0" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.9.0.115408" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.11.0.117924" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="9.0.5" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.13.1" />
