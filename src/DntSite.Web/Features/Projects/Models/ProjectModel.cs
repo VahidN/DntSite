@@ -9,8 +9,9 @@ public class ProjectModel
     public string Title { set; get; } = default!;
 
     [Display(Name = "آیکون یا لوگوی پروژه")]
-    [UploadFileExtensions(fileExtensions: ".jpg,.gif,.png,.jpeg", ErrorMessage = "لطفا فقط فایل تصویری ارسال کنید.")]
-    [AllowUploadOnlyImageFiles(maxWidth: 200, maxHeight: 200,
+    [UploadFileExtensions(FileExtensions = ".jpg,.gif,.png,.jpeg", MaxFileSizeInBytes = 1 * 1024 * 1024,
+        MinFileSizeInBytes = 100, ErrorMessage = "لطفا فقط فایل تصویری ارسال کنید.")]
+    [AllowUploadOnlyImageFiles(MaxWidth = 200, MaxHeight = 200,
         ErrorMessage = "لطفا یک فایل تصویری معتبر 200 در 200 پیکسل را ارسال کنید")]
     public IFormFileCollection? PhotoFiles { set; get; }
 
