@@ -25,7 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Polly" Version="8.2.0" />
-    <PackageVersion Include="DNTCommon.Web.Core" Version="11.6.1" />
+    <PackageVersion Include="DNTCommon.Web.Core" Version="11.7.0" />
     <PackageVersion Include="EFCoreSecondLevelCacheInterceptor.MemoryCache" Version="5.3.0" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.4.0" />
@@ -39,7 +39,7 @@
     <PackageVersion Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.201" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.202" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="4.14.0" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.11.0.117924" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="9.0.6" />
