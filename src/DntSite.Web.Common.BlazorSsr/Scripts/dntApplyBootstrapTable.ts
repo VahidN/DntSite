@@ -22,6 +22,7 @@ namespace DntBlazorSsr {
                 cells.forEach(cell => {
                     cell.style.textAlign = 'center';
                     cell.style.verticalAlign = 'middle';
+                    cell.classList.add('text-center', 'align-middle');
                 });
             });
         }
