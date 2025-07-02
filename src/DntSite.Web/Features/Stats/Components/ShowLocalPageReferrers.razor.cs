@@ -37,6 +37,6 @@ public partial class ShowLocalPageReferrers
         }
 
         _rows = await SiteReferrersService.GetPagedSiteReferrersAsync(LocalUrl, PageNumber - 1, RecordsPerPage,
-            isLocalReferrer: true);
+            isLocalReferrer: true, StatsRoutingConstants.IgnoresList);
     }
 }

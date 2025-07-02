@@ -1,4 +1,5 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Stats.RoutingConstants;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Stats.Services;
@@ -7,12 +8,6 @@ public class ReferrersValidatorService(
     ICachedAppSettingsProvider appSettingsProvider,
     IUrlNormalizationService urlNormalizationService) : IReferrersValidatorService
 {
-    private static readonly string[] IgnoresList =
-    [
-        "/api/", "/file/", "/feed/", "/feeds/", "/error/", "/search-results/", "/whats-new/", "/more-like-this/",
-        "/delete", "/edit"
-    ];
-
     private readonly HashSet<string> _protectedUrls = new(StringComparer.OrdinalIgnoreCase);
 
     public async Task<string?> GetNormalizedUrlAsync([NotNullIfNotNull(nameof(url))] string? url)
@@ -123,7 +118,7 @@ public class ReferrersValidatorService(
 
     private static bool HasIgnorePattern(string url, string rootUrl)
         => url.IsReferrerToThisSite(rootUrl) &&
-           IgnoresList.Any(item => url.Contains(item, StringComparison.OrdinalIgnoreCase));
+           StatsRoutingConstants.IgnoresList.Any(item => url.Contains(item, StringComparison.OrdinalIgnoreCase));
 
     private static string? GetNormalizedPostUrl(string? url)
     {

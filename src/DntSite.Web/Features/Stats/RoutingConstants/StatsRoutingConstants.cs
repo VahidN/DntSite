@@ -32,4 +32,10 @@ public static class StatsRoutingConstants
 
     public const string MoreLocalPageReferrersUrlPageCurrentPage =
         $"{MoreLocalPageReferrers}/page/{{CurrentPage:int?}}";
+
+    public static readonly string[] IgnoresList =
+    [
+        "/api/", "/file/", "/feed", "/feeds", "/error", "/search-results/", "/whats-new", "/more-like-this/",
+        "/delete", "/edit", "/filter/", "/page/", "/*/"
+    ];
 }

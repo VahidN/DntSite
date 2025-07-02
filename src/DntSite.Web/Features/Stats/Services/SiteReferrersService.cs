@@ -134,7 +134,8 @@ public class SiteReferrersService(
     public async Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string? destinationUrl,
         int pageNumber,
         int recordsPerPage,
-        bool isLocalReferrer)
+        bool isLocalReferrer,
+        string[] ignoredUrlsPatterns)
     {
         if (string.IsNullOrWhiteSpace(destinationUrl))
         {
@@ -151,6 +152,7 @@ public class SiteReferrersService(
         var query = _referrers.AsNoTracking()
             .Include(x => x.DestinationSiteUrl)
             .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer && x.DestinationSiteUrl != null &&
+                        !ignoredUrlsPatterns.Any(pattern => x.ReferrerUrl.Contains(pattern)) &&
                         x.DestinationSiteUrl.Url == url && !x.DestinationSiteUrl.IsProtectedPage &&
                         x.DestinationSiteUrl.Title != "")
             .OrderByDescending(x => x.VisitsCount)

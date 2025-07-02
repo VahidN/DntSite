@@ -26,7 +26,8 @@ public interface ISiteReferrersService : IScopedService
     public Task<PagedResultModel<SiteReferrer>> GetPagedSiteReferrersAsync(string? destinationUrl,
         int pageNumber,
         int recordsPerPage,
-        bool isLocalReferrer);
+        bool isLocalReferrer,
+        string[] ignoredUrlsPatterns);
 
     public Task RemoveSiteReferrerAsync(int id);
 }
