@@ -149,6 +149,7 @@ public class SiteReferrersService(
             return new PagedResultModel<SiteReferrer>();
         }
 
+#pragma warning disable CA1307
         var query = _referrers.AsNoTracking()
             .Include(x => x.DestinationSiteUrl)
             .Where(x => !x.IsDeleted && x.IsLocalReferrer == isLocalReferrer && x.DestinationSiteUrl != null &&
@@ -157,6 +158,7 @@ public class SiteReferrersService(
                         x.DestinationSiteUrl.Title != "")
             .OrderByDescending(x => x.VisitsCount)
             .ThenByDescending(x => x.LastVisitTime);
+#pragma warning restore CA1307
 
         return await query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage);
     }
