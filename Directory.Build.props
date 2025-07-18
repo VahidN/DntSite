@@ -45,22 +45,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Using Include="System.Globalization"/>
-        <Using Include="System.Text.Json"/>
-        <Using Include="System.FormattableString" Static="True"/>
-        <Using Include="System.Console" Static="True"/>
-        <Using Include="System.Security.Cryptography"/>
-        <Using Include="System.Diagnostics.CodeAnalysis"/>
-        <Using Include="System.Text.Json.Serialization"/>
-        <Using Include="System.Linq.Expressions"/>
-        <Using Include="System.Reflection"/>
-        <Using Include="System.ComponentModel.DataAnnotations"/>
-        <Using Include="System.Diagnostics"/>
-        <Using Include="System.ComponentModel.DataAnnotations.Schema"/>
-        <Using Include="System.Net"/>
-        <Using Include="System.Net.Http.Headers"/>
-        <Using Include="System.Net.Http.Json"/>
-        <Using Include="System.Text.Json"/>
+        <Using Include="System.Globalization" />
+        <Using Include="System.Text.Json" />
+        <Using Include="System.FormattableString" Static="True" />
+        <Using Include="System.Console" Static="True" />
+        <Using Include="System.Security.Cryptography" />
+        <Using Include="System.Diagnostics.CodeAnalysis" />
+        <Using Include="System.Text.Json.Serialization" />
+        <Using Include="System.Linq.Expressions" />
+        <Using Include="System.Reflection" />
+        <Using Include="System.ComponentModel.DataAnnotations" />
+        <Using Include="System.Diagnostics" />
+        <Using Include="System.ComponentModel.DataAnnotations.Schema" />
+        <Using Include="System.Net" />
+        <Using Include="System.Net.Http.Headers" />
+        <Using Include="System.Net.Http.Json" />
+        <Using Include="System.Text.Json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -91,6 +91,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="Properties/BannedSymbols.txt"/>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="Properties/BannedSymbols.txt" />
     </ItemGroup>
 </Project>
