@@ -228,6 +228,10 @@ namespace DntBlazorSsr {
             editorElement.querySelectorAll('*').forEach(element => {
                 element.removeAttribute('style');
             });
+			
+            editorElement.querySelectorAll('sup').forEach(element => {
+                element.remove();
+            });
 
             editorElement.querySelectorAll("li.ql-direction-ltr,p.ql-direction-ltr").forEach(element => {
                 element.removeAttribute('class');
