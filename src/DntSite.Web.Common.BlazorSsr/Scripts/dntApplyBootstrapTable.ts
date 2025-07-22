@@ -12,6 +12,7 @@ namespace DntBlazorSsr {
                 element.style.marginLeft = "auto";
                 element.style.marginRight = "auto";
                 element.style.direction = direction;
+				element.dir = direction;
             });
         }
 
