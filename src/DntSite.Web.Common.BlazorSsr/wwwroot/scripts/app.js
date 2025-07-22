@@ -71,6 +71,7 @@ var DntBlazorSsr;
                 element.style.marginLeft = "auto";
                 element.style.marginRight = "auto";
                 element.style.direction = direction;
+                element.dir = direction;
             });
         }
         static centerAlignAllTableCells(editorElement) {
@@ -636,6 +637,9 @@ var DntBlazorSsr;
         static removeAllStyles(editorElement) {
             editorElement.querySelectorAll('*').forEach(element => {
                 element.removeAttribute('style');
+            });
+            editorElement.querySelectorAll('sup').forEach(element => {
+                element.remove();
             });
             editorElement.querySelectorAll("li.ql-direction-ltr,p.ql-direction-ltr").forEach(element => {
                 element.removeAttribute('class');
