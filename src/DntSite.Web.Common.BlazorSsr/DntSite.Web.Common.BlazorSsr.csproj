@@ -3,28 +3,28 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Using Include="DNTCommon.Web.Core"/>
-    <Using Include="DNTPersianUtils.Core"/>
-    <Using Include="Microsoft.AspNetCore.Components"/>
-    <Using Include="Microsoft.AspNetCore.Mvc"/>
-    <Using Include="Microsoft.AspNetCore.Http"/>
-    <Using Include="Microsoft.AspNetCore.Authorization"/>
+    <Using Include="DNTCommon.Web.Core" />
+    <Using Include="DNTPersianUtils.Core" />
+    <Using Include="Microsoft.AspNetCore.Components" />
+    <Using Include="Microsoft.AspNetCore.Mvc" />
+    <Using Include="Microsoft.AspNetCore.Http" />
+    <Using Include="Microsoft.AspNetCore.Authorization" />
 
-    <Using Include="DntSite.Web.Common.BlazorSsr.Models"/>
+    <Using Include="DntSite.Web.Common.BlazorSsr.Models" />
   </ItemGroup>
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web"/>
-    <PackageReference Include="DNTCommon.Web.Core"/>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="DNTCommon.Web.Core" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Remove="tsconfig.json"/>
+    <Content Remove="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="tsconfig.json">
