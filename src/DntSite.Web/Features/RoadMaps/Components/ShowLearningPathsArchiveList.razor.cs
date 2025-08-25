@@ -23,6 +23,5 @@ public partial class ShowLearningPathsArchiveList
 
     private static List<string> GetTags(LearningPath? post) => post?.Tags.Select(x => x.Name).ToList() ?? [];
 
-    private bool CanUserEditThisPost(LearningPath post)
-        => ApplicationState.CanCurrentUserEditThisItem(post.UserId, post.Audit.CreatedAt);
+    private bool CanUserEditThisPost(LearningPath post) => ApplicationState.CanCurrentUserEditThisItem(post.UserId);
 }

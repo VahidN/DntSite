@@ -34,8 +34,7 @@ public partial class LearningPathsArchiveDetails
 
     private bool CanUserDeleteThisPost => ApplicationState.IsCurrentUserAdmin;
 
-    private bool CanUserEditThisPost
-        => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);
+    private bool CanUserEditThisPost => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId);
 
     private List<string> GetTags() => CurrentPost?.Tags.Select(x => x.Name).ToList() ?? [];
 

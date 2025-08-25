@@ -93,8 +93,7 @@ public partial class WriteLearningPaths
     {
         var learningPathItem = await LearningPathService.GetLearningPathAsync(id);
 
-        if (learningPathItem is null || !ApplicationState.CanCurrentUserEditThisItem(learningPathItem.UserId,
-                learningPathItem.Audit.CreatedAt))
+        if (learningPathItem is null || !ApplicationState.CanCurrentUserEditThisItem(learningPathItem.UserId))
         {
             ApplicationState.NavigateToUnauthorizedPage();
 
