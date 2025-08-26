@@ -27,7 +27,7 @@ public partial class MyPrivateMessage
 
     private bool CanUserDeleteThisPost => CanUserEditThisPost;
 
-    private bool CanUserEditThisPost => ApplicationState.CanCurrentUserEditThisItem(PrivateMessageId.ToInt());
+    private bool CanUserEditThisPost => ApplicationState.CanCurrentUserEditThisItem(_firstPrivateMessage?.UserId);
 
     [InjectComponentScoped] internal IPrivateMessageCommentsService PrivateMessageCommentsService { set; get; } = null!;
 

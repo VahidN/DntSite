@@ -78,10 +78,23 @@ public static class AppSecurityTrimmingsService
         DateTime? createdAt = null)
     {
         var user = applicationState?.CurrentUser;
-        var daysToClose = applicationState?.AppSetting?.MinimumRequiredPosts.MaxDaysToCloseATopic ?? 7;
 
-        return user?.UserId is not null && user.User is not null && user.IsAuthenticated && (user.IsAdmin ||
-            (IsTheSameAuthor(user, itemUserId) && PostIsNotTooOld(createdAt, daysToClose)));
+        if (user?.UserId is null || user.User is null || !user.IsAuthenticated)
+        {
+            return false;
+        }
+
+        if (user.IsAdmin)
+        {
+            return true;
+        }
+
+        if (!IsTheSameAuthor(user, itemUserId))
+        {
+            return false;
+        }
+
+        return !applicationState.IsPostClosed(createdAt);
     }
 
     public static bool CanCurrentUserPostAComment(this ApplicationState? applicationState,
@@ -132,8 +145,17 @@ public static class AppSecurityTrimmingsService
     private static bool IsTheSameAuthor(CurrentUserModel user, int? postUserId)
         => user.UserId is not null && postUserId is not null && postUserId.Value == user.UserId.Value;
 
-    private static bool PostIsNotTooOld(DateTime? createdAt, int daysToClose)
-        => createdAt.HasValue && DateTime.UtcNow.AddDays(-daysToClose) < createdAt.Value;
+    private static bool IsPostClosed(this ApplicationState? applicationState, DateTime? createdAt)
+    {
+        if (!createdAt.HasValue)
+        {
+            return false;
+        }
+
+        var daysToClose = applicationState?.AppSetting?.MinimumRequiredPosts.MaxDaysToCloseATopic ?? 7;
+
+        return DateTime.UtcNow.AddDays(-daysToClose) > createdAt.Value;
+    }
 
     public static bool CanUserEditThisDraft(this CurrentUserModel? userModel,
         [NotNullWhen(returnValue: true)] BlogPostDraft? post)
