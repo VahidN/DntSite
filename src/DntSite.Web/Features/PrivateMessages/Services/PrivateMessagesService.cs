@@ -1,4 +1,6 @@
-﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+﻿using DntSite.Web.Features.AppConfigs.Models;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.RoutingConstants;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -14,6 +16,7 @@ public class PrivateMessagesService(
     IUnitOfWork uow,
     IAppAntiXssService antiXssService,
     IUsersInfoService usersService,
+    IAppFoldersService appFoldersService,
     IPrivateMessagesEmailsService privateMessagesEmailsService) : IPrivateMessagesService
 {
     private readonly DbSet<PrivateMessage> _privateMessages = uow.DbSet<PrivateMessage>();
@@ -157,7 +160,7 @@ public class PrivateMessagesService(
         }
 
         privateMessage.Title = model.Title;
-        privateMessage.Body = antiXssService.GetSanitizedHtml(model.DescriptionText);
+        privateMessage.Body = GetSanitizedHtml(model);
 
         await uow.SaveChangesAsync();
     }
@@ -240,7 +243,7 @@ public class PrivateMessagesService(
 
         var privateMessage = await AddPrivateMessageAsync(new PrivateMessage
         {
-            Body = antiXssService.GetSanitizedHtml(model.DescriptionText),
+            Body = GetSanitizedHtml(model),
             Title = model.Title,
             EmailsSent = false,
             UserId = fromUserId.Value,
@@ -260,4 +263,9 @@ public class PrivateMessagesService(
 
         return entity;
     }
+
+    private string GetSanitizedHtml(ContactUsModel model)
+        => antiXssService.GetSanitizedHtml(model.DescriptionText,
+            appFoldersService.GetFolderPath(FileType.MessagesImages),
+            $"{ApiUrlsRoutingConstants.File.HttpAny.MessagesImages}?name=");
 }

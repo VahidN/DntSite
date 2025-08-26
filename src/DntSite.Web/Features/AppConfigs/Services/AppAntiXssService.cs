@@ -8,7 +8,9 @@ public class AppAntiXssService(
     IAppFoldersService appFoldersService,
     IHttpContextAccessor httpContextAccessor) : IAppAntiXssService
 {
-    public string GetSanitizedHtml(string? html)
+    public string GetSanitizedHtml(string? html,
+        string? outputImageFolder = null,
+        string? imageApiUrlPattern = $"{ApiUrlsRoutingConstants.File.HttpAny.Image}?name=")
     {
         var httpContext = httpContextAccessor.HttpContext;
 
@@ -31,11 +33,10 @@ public class AppAntiXssService(
 
         return antiXssService.GetSanitizedHtml(html, remoteImagesOptions: new FixRemoteImagesOptions
         {
-            OutputImageFolder = appFoldersService.ArticleImagesFolderPath,
+            OutputImageFolder = outputImageFolder ?? appFoldersService.ArticleImagesFolderPath,
             HostUri = baseUri,
             ImageUrlBuilder = savedFileName
-                => baseUrl.CombineUrl(
-                    $"{ApiUrlsRoutingConstants.File.HttpAny.Image}?name={Uri.EscapeDataString(savedFileName)}",
+                => baseUrl.CombineUrl($"{imageApiUrlPattern}{Uri.EscapeDataString(savedFileName)}",
                     escapeRelativeUrl: false)
         }, htmlModificationRules: rules);
     }
