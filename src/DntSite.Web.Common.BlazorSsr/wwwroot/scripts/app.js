@@ -64,7 +64,7 @@ var DntBlazorSsr;
             DntApplyBootstrapTable.applyBootstrapStyles(document, "rtl");
         }
         static applyBootstrapStyles(htmlElement, direction) {
-            htmlElement.querySelectorAll("table:not([class~='table'])").forEach(element => {
+            htmlElement.querySelectorAll("table:not(.table)").forEach(element => {
                 element.classList.add('table', 'table-striped', 'table-hover', 'table-bordered', 'table-condensed');
                 element.style.maxWidth = "100%";
                 element.style.width = "auto";

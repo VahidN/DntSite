@@ -5,14 +5,14 @@ namespace DntBlazorSsr {
         }
 
         static applyBootstrapStyles(htmlElement: ParentNode, direction: string): void {
-            htmlElement.querySelectorAll<HTMLTableElement>("table:not([class~='table'])").forEach(element => {
+            htmlElement.querySelectorAll<HTMLTableElement>("table:not(.table)").forEach(element => {
                 element.classList.add('table', 'table-striped', 'table-hover', 'table-bordered', 'table-condensed');
                 element.style.maxWidth = "100%";
                 element.style.width = "auto";
                 element.style.marginLeft = "auto";
                 element.style.marginRight = "auto";
                 element.style.direction = direction;
-				element.dir = direction;
+                element.dir = direction;
             });
         }
 
