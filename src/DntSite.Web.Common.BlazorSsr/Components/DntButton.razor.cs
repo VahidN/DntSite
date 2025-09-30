@@ -54,14 +54,14 @@ public partial class DntButton
     public required string IsSubmittingText { get; set; }
 
     /// <summary>
-    ///     The InputText's column width. Its default value is `9`.
+    ///     The InputText's column width. Its default value is `10`.
     /// </summary>
     [Parameter]
-    public int ButtonColumnWidth { get; set; } = 9;
+    public int ButtonColumnWidth { get; set; } = 10;
 
     /// <summary>
-    ///     The label's column width of the custom InputText. Its default value is `3`.
+    ///     The label's column width of the custom InputText. Its default value is `2`.
     /// </summary>
     [Parameter]
-    public int LabelColumnWidth { get; set; } = 3;
+    public int LabelColumnWidth { get; set; } = 2;
 }

@@ -19,14 +19,12 @@
             <DntInputText AutoCompleteType="AutoCompleteType.On"
                           FieldIcon="@DntBootstrapIcons.BiNewspaper"
                           @bind-Value="WriteNewsModel.Title"
-                          LabelColumnWidth="2"
-                          InputTextColumnWidth="10"/>
+            />
 
             <DntInputText AutoCompleteType="AutoCompleteType.Off"
                           FieldIcon="@DntBootstrapIcons.BiShare"
                           @bind-Value="WriteNewsModel.Url"
-                          LabelColumnWidth="2"
-                          InputTextColumnWidth="10"/>
+            />
 
             <DntHtmlEditor @bind-Value="WriteNewsModel.DescriptionText"
                            LabelName="توضیحات"
@@ -48,8 +46,7 @@
                            Placeholder=""
                            Theme="snow"
                            Direction="rtl"
-                           LabelColumnWidth="2"
-                           InputTextColumnWidth="10"/>
+            />
 
             <DntInputTag
                 FieldIcon="@DntBootstrapIcons.BiTag"
@@ -59,13 +56,9 @@
                 FieldRemoveButtonTitle="حذف تگ از لیست"
                 AutoCompleteDataList="AutoCompleteDataList"
                 @bind-InputTags="WriteNewsModel.Tags"
-                LabelColumnWidth="2"
-                InputTextColumnWidth="10"/>
+            />
 
-            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ..."
-                       LabelColumnWidth="2"
-                       ButtonColumnWidth="10">ارسال
-            </DntButton>
+            <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
         </EditForm>
 
         <WriteNewsHelp/>

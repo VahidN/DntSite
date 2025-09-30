@@ -23,16 +23,16 @@ public partial class DntInputCheckBoxEnumList<TEnum>
     public int InputRowMarginBottom { get; set; } = 3;
 
     /// <summary>
-    ///     The InputCheckBoxList's column width. Its default value is `9`.
+    ///     The InputCheckBoxList's column width. Its default value is `10`.
     /// </summary>
     [Parameter]
-    public int InputCheckBoxListColumnWidth { get; set; } = 9;
+    public int InputCheckBoxListColumnWidth { get; set; } = 10;
 
     /// <summary>
-    ///     The label's column width of the custom InputCheckBoxList. Its default value is `3`.
+    ///     The label's column width of the custom InputCheckBoxList. Its default value is `2`.
     /// </summary>
     [Parameter]
-    public int LabelColumnWidth { get; set; } = 3;
+    public int LabelColumnWidth { get; set; } = 2;
 
     /// <summary>
     ///     Sets the '@bind-SelectedValues' attribute to the provided string or object.

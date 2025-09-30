@@ -71,15 +71,15 @@ public partial class DntHtmlEditor
 
     /// <summary>
     ///     The InputText's column width. Its default value is `9`.
-    /// </summary>
+    /// </summary>10
     [Parameter]
-    public int InputTextColumnWidth { get; set; } = 9;
+    public int InputTextColumnWidth { get; set; } = 10;
 
     /// <summary>
-    ///     The label's column width of the custom InputText. Its default value is `3`.
+    ///     The label's column width of the custom InputText. Its default value is `2`.
     /// </summary>
     [Parameter]
-    public int LabelColumnWidth { get; set; } = 3;
+    public int LabelColumnWidth { get; set; } = 2;
 
     /// <summary>
     ///     The label name of the custom InputText

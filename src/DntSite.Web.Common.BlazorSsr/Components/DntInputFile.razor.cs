@@ -20,16 +20,16 @@ public partial class DntInputFile
     public int InputRowMarginBottom { get; set; } = 3;
 
     /// <summary>
-    ///     The InputFiles column width. Its default value is `9`.
+    ///     The InputFiles column width. Its default value is `10`.
     /// </summary>
     [Parameter]
-    public int InputFileColumnWidth { get; set; } = 9;
+    public int InputFileColumnWidth { get; set; } = 10;
 
     /// <summary>
-    ///     The label's column width of the custom InputFile. Its default value is `3`.
+    ///     The label's column width of the custom InputFile. Its default value is `2`.
     /// </summary>
     [Parameter]
-    public int LabelColumnWidth { get; set; } = 3;
+    public int LabelColumnWidth { get; set; } = 2;
 
     /// <summary>
     ///     The label name of the custom InputText

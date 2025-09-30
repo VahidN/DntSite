@@ -25,16 +25,16 @@ public partial class DntInputSelect<T>
     public int InputRowMarginBottom { get; set; } = 3;
 
     /// <summary>
-    ///     The InputText's column width. Its default value is `9`.
+    ///     The InputText's column width. Its default value is `10`.
     /// </summary>
     [Parameter]
-    public int InputTextColumnWidth { get; set; } = 9;
+    public int InputTextColumnWidth { get; set; } = 10;
 
     /// <summary>
-    ///     The label's column width of the custom InputText. Its default value is `3`.
+    ///     The label's column width of the custom InputText. Its default value is `2`.
     /// </summary>
     [Parameter]
-    public int LabelColumnWidth { get; set; } = 3;
+    public int LabelColumnWidth { get; set; } = 2;
 
     /// <summary>
     ///     Sets the '@bind-Value' attribute to the provided string or object.
