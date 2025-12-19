@@ -8,13 +8,13 @@ namespace DntSite.Web.Features.RoadMaps.Services.Contracts;
 
 public interface ILearningPathService : IScopedService
 {
-    public ValueTask<LearningPath?> FindLearningPathAsync(int id);
+    ValueTask<LearningPath?> FindLearningPathAsync(int id);
 
-    public Task<LearningPath?> GetLearningPathAsync(int id, bool showDeletedItems = false);
+    Task<LearningPath?> GetLearningPathAsync(int id, bool showDeletedItems = false);
 
-    public LearningPath AddLearningPath(LearningPath data);
+    LearningPath AddLearningPath(LearningPath data);
 
-    public Task<PagedResultModel<LearningPath>> GetLearningPathsAsync(int pageNumber,
+    Task<PagedResultModel<LearningPath>> GetLearningPathsAsync(int pageNumber,
         int? userId = null,
         int recordsPerPage = 15,
         bool showAll = false,
@@ -22,28 +22,28 @@ public interface ILearningPathService : IScopedService
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    public Task<PagedResultModel<LearningPath>> GetLastPagedLearningPathsAsync(DntQueryBuilderModel state,
+    Task<PagedResultModel<LearningPath>> GetLastPagedLearningPathsAsync(DntQueryBuilderModel state,
         bool showDeletedItems = false,
         bool showAll = false);
 
-    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    public Task<LearningPathDetailsModel> LearningPathDetailsAsync(int id, bool showDeletedItems = false);
+    Task<LearningPathDetailsModel> LearningPathDetailsAsync(int id, bool showDeletedItems = false);
 
-    public Task<List<LearningPath>> GetAllPublicLearningPathsOfDateAsync(DateTime date);
+    Task<List<LearningPath>> GetAllPublicLearningPathsOfDateAsync(DateTime date);
 
-    public string GetTagPdfFileName(LearningPath tag, string fileName = "dot-net-tips-learning-path-");
+    string GetTagPdfFileName(LearningPath tag, string fileName = "dot-net-tips-learning-path-");
 
-    public Task UpdateStatAsync(int learningPathId, bool isFromFeed);
+    Task UpdateStatAsync(int learningPathId, bool isFromFeed);
 
-    public Task<PagedResultModel<LearningPath>> GetLearningPathsByTagNameAsync(string tagName,
+    Task<PagedResultModel<LearningPath>> GetLearningPathsByTagNameAsync(string tagName,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    public Task<PagedResultModel<LearningPath>> GetLastPagedLearningPathsOfUserAsync(string name,
+    Task<PagedResultModel<LearningPath>> GetLastPagedLearningPathsOfUserAsync(string name,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
@@ -51,15 +51,15 @@ public interface ILearningPathService : IScopedService
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    public Task MarkAsDeletedAsync(LearningPath? learningPathItem);
+    Task MarkAsDeletedAsync(LearningPath? learningPathItem);
 
-    public Task NotifyDeleteChangesAsync(LearningPath? learningPathItem);
+    Task NotifyDeleteChangesAsync(LearningPath? learningPathItem);
 
-    public Task UpdateLearningPathAsync(LearningPath? learningPathItem, LearningPathModel writeLearningPathModel);
+    Task UpdateLearningPathAsync(LearningPath? learningPathItem, LearningPathModel? writeLearningPathModel);
 
-    public Task<LearningPath?> AddLearningPathAsync(LearningPathModel writeLearningPathModel, User? user);
+    Task<LearningPath?> AddLearningPathAsync(LearningPathModel? writeLearningPathModel, User? user);
 
-    public Task NotifyAddOrUpdateChangesAsync(LearningPath? learningPathItem);
+    Task NotifyAddOrUpdateChangesAsync(LearningPath? learningPathItem);
 
-    public Task IndexLearningPathsAsync();
+    Task IndexLearningPathsAsync();
 }

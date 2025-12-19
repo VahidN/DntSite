@@ -9,22 +9,22 @@ namespace DntSite.Web.Features.Courses.Services.Contracts;
 
 public interface ICourseTopicsService : IScopedService
 {
-    public Task<bool> CanUserAddCourseTopicAsync(CurrentUserModel? user, int courseId);
+    Task<bool> CanUserAddCourseTopicAsync(CurrentUserModel? user, int courseId);
 
-    public ValueTask<CourseTopic?> FindCourseTopicAsync(int id);
+    ValueTask<CourseTopic?> FindCourseTopicAsync(int id);
 
-    public Task<CourseTopic?> FindCourseTopicAsync(Guid id);
+    Task<CourseTopic?> FindCourseTopicAsync(Guid id);
 
-    public Task<PagedResultModel<CourseTopic>> GetPagedAllCoursesTopicsAsync(int pageNumber,
+    Task<PagedResultModel<CourseTopic>> GetPagedAllCoursesTopicsAsync(int pageNumber,
         bool isMain,
         int recordsPerPage = 5,
         bool onlyActive = true,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    public CourseTopic AddCourseTopic(CourseTopic topic);
+    CourseTopic AddCourseTopic(CourseTopic topic);
 
-    public Task<PagedResultModel<CourseTopic>> GetPagedCourseTopicsAsync(int courseId,
+    Task<PagedResultModel<CourseTopic>> GetPagedCourseTopicsAsync(int courseId,
         int pageNumber,
         bool isMain,
         int recordsPerPage = 5,
@@ -32,33 +32,31 @@ public interface ICourseTopicsService : IScopedService
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    public Task<CourseTopicModel?> GetTopicAsync(Guid topicId, bool onlyActive = true);
+    Task<CourseTopicModel?> GetTopicAsync(Guid topicId, bool onlyActive = true);
 
-    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    public Task<CourseTopic?> FindTopicAsync(Guid topicId, bool onlyActive = true);
+    Task<CourseTopic?> FindTopicAsync(Guid topicId, bool onlyActive = true);
 
-    public Task UpdateNumberOfViewsAsync(Guid topicId, bool fromFeed, bool onlyActive = true);
+    Task UpdateNumberOfViewsAsync(Guid topicId, bool fromFeed, bool onlyActive = true);
 
-    public Task<List<CourseTopic>> GetAllPublicTopicsOfDateAsync(DateTime date);
+    Task<List<CourseTopic>> GetAllPublicTopicsOfDateAsync(DateTime date);
 
-    public Task<List<CourseTopic>> GetPagedAllActiveCoursesTopicsAsync();
+    Task<List<CourseTopic>> GetPagedAllActiveCoursesTopicsAsync();
 
-    public Task<List<CourseTopic>> GetPagedAllActiveCoursesTopicsAsync(int count, bool onlyActive = true);
+    Task<List<CourseTopic>> GetPagedAllActiveCoursesTopicsAsync(int count, bool onlyActive = true);
 
-    public Task<List<CourseTopic>> GetAllCourseTopicsAsync(int courseId, bool onlyActive = true);
+    Task<List<CourseTopic>> GetAllCourseTopicsAsync(int courseId, bool onlyActive = true);
 
-    public Task<int> GetAllCourseTopicsCountAsync(bool onlyActive = true);
+    Task<int> GetAllCourseTopicsCountAsync(bool onlyActive = true);
 
-    public Task MarkAsDeletedAsync(CourseTopic? courseTopic);
+    Task MarkAsDeletedAsync(CourseTopic? courseTopic);
 
-    public Task UpdateCourseTopicItemAsync(CourseTopic? courseTopic, CourseTopicItemModel writeCourseItemModel);
+    Task UpdateCourseTopicItemAsync(CourseTopic? courseTopic, CourseTopicItemModel? writeCourseItemModel);
 
-    public Task<CourseTopic?> AddCourseTopicItemAsync(CourseTopicItemModel writeCourseItemModel,
-        User? user,
-        int courseId);
+    Task<CourseTopic?> AddCourseTopicItemAsync(CourseTopicItemModel? writeCourseItemModel, User? user, int courseId);
 
-    public Task NotifyAddOrUpdateChangesAsync(CourseTopic? courseTopic);
+    Task NotifyAddOrUpdateChangesAsync(CourseTopic? courseTopic);
 
-    public Task IndexCourseTopicsAsync();
+    Task IndexCourseTopicsAsync();
 }

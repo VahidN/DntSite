@@ -232,7 +232,7 @@ public class CourseTopicsService(
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
     }
 
-    public async Task UpdateCourseTopicItemAsync(CourseTopic? courseTopic, CourseTopicItemModel writeCourseItemModel)
+    public async Task UpdateCourseTopicItemAsync(CourseTopic? courseTopic, CourseTopicItemModel? writeCourseItemModel)
     {
         ArgumentNullException.ThrowIfNull(writeCourseItemModel);
 
@@ -251,7 +251,7 @@ public class CourseTopicsService(
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
     }
 
-    public async Task<CourseTopic?> AddCourseTopicItemAsync(CourseTopicItemModel writeCourseItemModel,
+    public async Task<CourseTopic?> AddCourseTopicItemAsync(CourseTopicItemModel? writeCourseItemModel,
         User? user,
         int courseId)
     {

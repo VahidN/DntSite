@@ -148,7 +148,7 @@ public class PrivateMessagesService(
         return firstPrivateMessage?.CanUserReadMessage(userId) != true ? null : firstPrivateMessage;
     }
 
-    public async Task EditFirstPrivateMessageAsync(int id, int? userId, ContactUsModel model)
+    public async Task EditFirstPrivateMessageAsync(int id, int? userId, ContactUsModel? model)
     {
         ArgumentNullException.ThrowIfNull(model);
 

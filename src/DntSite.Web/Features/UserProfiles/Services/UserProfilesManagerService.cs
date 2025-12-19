@@ -223,7 +223,7 @@ public class UserProfilesManagerService(
 
             var dir = appFoldersService.AvatarsFolderPath;
             var fileName = $"{Guid.NewGuid():N}.jpg";
-            var fileNamePath = Path.Combine(dir, fileName);
+            var fileNamePath = dir.SafePathCombine(fileName);
             await File.WriteAllBytesAsync(fileNamePath, imageData);
 
             user.Photo = fileName;

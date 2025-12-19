@@ -6,7 +6,7 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 public partial class DntCacheComponent<TComponent>
     where TComponent : IComponent
 {
-    private const string CacheKeyPrefix = $"__{nameof(DntCacheComponent<TComponent>)}__";
+    private readonly string _cacheKeyPrefix = $"__DntCacheComponent_{typeof(TComponent).Name}__";
     private string? _cachedContent;
 
     [Inject] internal HtmlRenderer HtmlRenderer { set; get; } = null!;
@@ -50,23 +50,22 @@ public partial class DntCacheComponent<TComponent>
     [EditorRequired]
     public required string CacheKey { get; set; }
 
-    private string CacheEntryKey => CacheKeyPrefix + CacheKey;
+    private string CacheEntryKey => _cacheKeyPrefix + CacheKey;
 
     protected override Task OnInitializedAsync() => ProcessAsync();
 
     public void InvalidateCache() => CacheService.Remove(CacheEntryKey);
 
     private async Task ProcessAsync()
-        => _cachedContent = await CacheService.GetOrAddAsync(CacheEntryKey, nameof(DntCacheComponent<TComponent>),
-            async () =>
+        => _cachedContent = await CacheService.GetOrAddAsync(CacheEntryKey, _cacheKeyPrefix, async () =>
+        {
+            return await HtmlRenderer.Dispatcher.InvokeAsync(async () =>
             {
-                return await HtmlRenderer.Dispatcher.InvokeAsync(async () =>
-                {
-                    var output = await HtmlRenderer.RenderComponentAsync<TComponent>(Parameters is null
-                        ? ParameterView.Empty
-                        : ParameterView.FromDictionary(Parameters));
+                var output = await HtmlRenderer.RenderComponentAsync<TComponent>(Parameters is null
+                    ? ParameterView.Empty
+                    : ParameterView.FromDictionary(Parameters));
 
-                    return output.ToHtmlString();
-                });
-            }, ExpiresOn.GetMemoryCacheEntryOptions(ExpiresAfter, ExpiresSliding, Priority));
+                return output.ToHtmlString();
+            });
+        }, ExpiresOn.GetMemoryCacheEntryOptions(ExpiresAfter, ExpiresSliding, Priority));
 }

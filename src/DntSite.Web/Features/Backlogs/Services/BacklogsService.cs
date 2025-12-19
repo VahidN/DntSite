@@ -285,7 +285,7 @@ public class BacklogsService(
             $"پیشنهاد شماره {backlog.Id} حذف شد."));
     }
 
-    public async Task UpdateBacklogAsync(Backlog? backlog, BacklogModel writeBacklogModel)
+    public async Task UpdateBacklogAsync(Backlog? backlog, BacklogModel? writeBacklogModel)
     {
         ArgumentNullException.ThrowIfNull(writeBacklogModel);
 
@@ -305,7 +305,7 @@ public class BacklogsService(
             backlog.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
-    public async Task<Backlog?> AddBacklogAsync(BacklogModel writeBacklogModel, User? user)
+    public async Task<Backlog?> AddBacklogAsync(BacklogModel? writeBacklogModel, User? user)
     {
         ArgumentNullException.ThrowIfNull(writeBacklogModel);
 

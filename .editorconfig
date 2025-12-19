@@ -50,6 +50,8 @@ csharp_prefer_braces = true # Prefer curly braces even for one line of code
 csharp_prefer_simple_default_expression = true:warning
 csharp_prefer_simple_using_statement = false:silent
 csharp_prefer_static_local_function = true:warning
+csharp_prefer_static_anonymous_function = true:warning
+csharp_prefer_system_threading_lock = true:warning
 
 csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:warning
 
@@ -731,6 +733,7 @@ dotnet_diagnostic.RCS1209.severity = suggestion
 dotnet_diagnostic.RCS1210.severity = error
 dotnet_diagnostic.RCS1217.severity = suggestion
 dotnet_diagnostic.RCS1212.severity = suggestion
+dotnet_diagnostic.RCS1256.severity = suggestion
 
 dotnet_diagnostic.RE0001.severity = warning
 

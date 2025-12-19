@@ -5,5 +5,5 @@ public interface IHumansTxtFileService : IScopedService
     /// <summary>
     ///     More info: http://humanstxt.org/Standard.html
     /// </summary>
-    public Task CreateHumansTxtFileAsync(CancellationToken cancellationToken);
+    Task CreateHumansTxtFileAsync(CancellationToken cancellationToken);
 }

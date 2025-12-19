@@ -18,7 +18,7 @@
             @if (ApplicationState.IsCurrentUserAdmin)
             {
                 <DntInputPersianDate LabelName="تاریخ انتشار"
-                                     @bind-Year="WriteDraftModel.PersianDateYear"
+                                     @bind-Year="WriteDraftModel!.PersianDateYear"
                                      @bind-Month="WriteDraftModel.PersianDateMonth"
                                      @bind-Day="WriteDraftModel.PersianDateDay"
                                      FromYear="1403"
@@ -36,7 +36,7 @@
 
             <DntInputText AutoCompleteType="AutoCompleteType.Off"
                           FieldIcon="@DntBootstrapIcons.BiNewspaper"
-                          @bind-Value="WriteDraftModel.Title"/>
+                          @bind-Value="WriteDraftModel!.Title"/>
 
             <DntHtmlEditor @bind-Value="WriteDraftModel.ArticleBody"
                            LabelName=""
@@ -95,7 +95,7 @@
 
                 <DntInputText AutoCompleteType="AutoCompleteType.Off"
                               FieldIcon="@DntBootstrapIcons.BiLink"
-                              @bind-Value="ConvertToLinkModel.Url"/>
+                              @bind-Value="ConvertToLinkModel!.Url"/>
 
                 <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ..."
                            CancelConfirmMessage="تبدیل به لینک اشتراکی؟">
@@ -117,7 +117,7 @@
 
                 <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
                                 FieldIcon="@DntBootstrapIcons.BiNewspaper"
-                                @bind-Value="ConvertToCommentModel.ReplyPostId"/>
+                                @bind-Value="ConvertToCommentModel!.ReplyPostId"/>
 
                 <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ..."
                            CancelConfirmMessage="تبدیل به نظر تکمیلی؟">

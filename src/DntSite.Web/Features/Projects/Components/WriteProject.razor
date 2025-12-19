@@ -17,7 +17,7 @@
 
             <DntInputText AutoCompleteType="AutoCompleteType.On"
                           FieldIcon="@DntBootstrapIcons.BiNewspaper"
-                          @bind-Value="WriteProjectModel.Title"/>
+                          @bind-Value="WriteProjectModel!.Title"/>
 
             @if (!string.IsNullOrWhiteSpace(WriteProjectModel.Logo))
             {

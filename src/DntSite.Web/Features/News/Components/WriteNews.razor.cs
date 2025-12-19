@@ -18,7 +18,7 @@ public partial class WriteNews
     public IList<string>? AutoCompleteDataList { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(WriteNews))]
-    public DailyNewsItemModel WriteNewsModel { get; set; } = new();
+    public DailyNewsItemModel? WriteNewsModel { get; set; }
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
@@ -38,6 +38,7 @@ public partial class WriteNews
 
     protected override async Task OnInitializedAsync()
     {
+        WriteNewsModel ??= new DailyNewsItemModel();
         ApplicationState.DoNotLogPageReferrer = true;
 
         AutoCompleteDataList = await TagsService.GetTagNamesArrayAsync(count: 2000);
@@ -134,7 +135,7 @@ public partial class WriteNews
 
     private async Task PerformAsync()
     {
-        var checkUrlHashResult = await DailyNewsItemsService.CheckUrlHashAsync(WriteNewsModel.Url, EditId.ToInt(),
+        var checkUrlHashResult = await DailyNewsItemsService.CheckUrlHashAsync(WriteNewsModel?.Url, EditId.ToInt(),
             ApplicationState.IsCurrentUserAdmin);
 
         if (checkUrlHashResult.Stat == OperationStat.Failed)

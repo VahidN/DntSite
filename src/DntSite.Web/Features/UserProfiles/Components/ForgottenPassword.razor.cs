@@ -16,7 +16,7 @@ public partial class ForgottenPassword
 
     [Inject] internal IAppFoldersService AppFoldersService { set; get; } = null!;
 
-    [SupplyParameterFromForm] public ForgottenPasswordModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public ForgottenPasswordModel? Model { get; set; }
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
@@ -24,6 +24,7 @@ public partial class ForgottenPassword
     {
         base.OnInitialized();
 
+        Model ??= new ForgottenPasswordModel();
         ApplicationState.DoNotLogPageReferrer = true;
         AddBreadCrumbs();
     }

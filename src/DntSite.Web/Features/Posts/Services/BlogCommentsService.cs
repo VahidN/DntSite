@@ -64,7 +64,7 @@ public class BlogCommentsService(
         return post.Title;
     }
 
-    public ValueTask<BlogPost?> FindCommentPostAsync(int blogPostId) => _blogPosts.FindAsync(blogPostId);
+    public ValueTask<BlogPost?> FindCommentPostAsync(int? blogPostId) => _blogPosts.FindAsync(blogPostId);
 
     public Task<List<BlogPostComment>> GetLastBlogCommentsOnlyAsync(int count, bool showDeletedItems = false)
         => _blogComments.AsNoTracking()
@@ -229,16 +229,16 @@ public class BlogCommentsService(
         await blogCommentsEmailsService.PostReplySendEmailToAdminsAsync(comment);
     }
 
-    public async Task AddReplyAsync(int? replyId, int blogPostId, string message, int userId)
+    public async Task AddReplyAsync(int? replyId, int? blogPostId, string message, int userId)
     {
-        if (string.IsNullOrWhiteSpace(message))
+        if (string.IsNullOrWhiteSpace(message) || blogPostId is null)
         {
             return;
         }
 
         var comment = new BlogPostComment
         {
-            ParentId = blogPostId,
+            ParentId = blogPostId.Value,
             ReplyId = replyId,
             Body = antiXssService.GetSanitizedHtml(message),
             UserId = userId
@@ -247,7 +247,7 @@ public class BlogCommentsService(
         var result = AddBlogComment(comment);
         await uow.SaveChangesAsync();
 
-        await SetParentAsync(result, blogPostId);
+        await SetParentAsync(result, blogPostId.Value);
 
         fullTextSearchService.AddOrUpdateLuceneDocument(result.MapToWhatsNewItemModel(siteRootUri: "",
             showBriefDescription: false));
@@ -255,7 +255,7 @@ public class BlogCommentsService(
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Posts, comment.ParentId);
 
         await SendEmailsAsync(result);
-        await UpdateStatAsync(blogPostId, userId);
+        await UpdateStatAsync(blogPostId.Value, userId);
     }
 
     public async Task IndexBlogPostCommentsAsync()

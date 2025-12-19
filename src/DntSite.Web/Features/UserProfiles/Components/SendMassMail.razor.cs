@@ -22,7 +22,7 @@ public partial class SendMassMail
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
-    [SupplyParameterFromForm] public MassEmailModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public MassEmailModel? Model { get; set; }
 
     private async Task PerformAsync()
     {
@@ -41,13 +41,18 @@ public partial class SendMassMail
 
     private async Task SendEmailsToAdminsAsync(string body)
     {
+        if (Model is null)
+        {
+            return;
+        }
+
         var adminsEmails = (await CommonService.GetAllActiveAdminsAsNoTrackingAsync()).Select(x => x.EMail).ToList();
         await EmailsFactoryService.SendMassEmailAsync(adminsEmails, $"اطلاعیه: {Model.NewsTitle.Trim()}", body);
     }
 
     private async Task SendEmailsToWritersAsync(string body)
     {
-        if (Model.Groups?.Contains(MassEmailGroup.Writer) != true)
+        if (Model?.Groups?.Contains(MassEmailGroup.Writer) != true)
         {
             return;
         }
@@ -61,7 +66,7 @@ public partial class SendMassMail
 
     private async Task SendEmailsToReadersAsync(string body)
     {
-        if (Model.Groups?.Contains(MassEmailGroup.Reader) != true)
+        if (Model?.Groups?.Contains(MassEmailGroup.Reader) != true)
         {
             return;
         }
@@ -74,6 +79,7 @@ public partial class SendMassMail
 
     protected override void OnInitialized()
     {
+        Model ??= new MassEmailModel();
         base.OnInitialized();
         AddBreadCrumbs();
     }

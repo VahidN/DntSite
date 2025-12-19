@@ -252,7 +252,7 @@ public class QuestionsService(
     }
 
     public async Task UpdateQuestionsItemAsync(StackExchangeQuestion? question,
-        QuestionModel writeQuestionModel,
+        QuestionModel? writeQuestionModel,
         User? user)
     {
         ArgumentNullException.ThrowIfNull(writeQuestionModel);
@@ -275,7 +275,7 @@ public class QuestionsService(
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.Questions, question.Id);
     }
 
-    public async Task<StackExchangeQuestion?> AddStackExchangeQuestionAsync(QuestionModel writeQuestionModel,
+    public async Task<StackExchangeQuestion?> AddStackExchangeQuestionAsync(QuestionModel? writeQuestionModel,
         User? user)
     {
         ArgumentNullException.ThrowIfNull(writeQuestionModel);
@@ -300,7 +300,7 @@ public class QuestionsService(
         => _stackExchangeQuestions.Add(data).Entity;
 
     public async Task NotifyAddOrUpdateChangesAsync(StackExchangeQuestion? question,
-        QuestionModel writeQuestionModel,
+        QuestionModel? writeQuestionModel,
         User? user)
     {
         ArgumentNullException.ThrowIfNull(writeQuestionModel);

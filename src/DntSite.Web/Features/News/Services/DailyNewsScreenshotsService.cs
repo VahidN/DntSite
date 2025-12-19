@@ -162,7 +162,7 @@ public class DailyNewsScreenshotsService(
     public (string FileName, string Path) GetThumbnailImageInfo(int id)
     {
         var name = string.Create(CultureInfo.InvariantCulture, $"news-{id}.jpg");
-        var path = Path.Combine(appFoldersService.ThumbnailsServiceFolderPath, name);
+        var path = appFoldersService.ThumbnailsServiceFolderPath.SafePathCombine(name);
 
         return (name, path);
     }

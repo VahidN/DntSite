@@ -5,7 +5,7 @@ namespace DntSite.Web.Features.Stats.Services.Contracts;
 
 public interface IOnlineVisitorsService : ISingletonService
 {
-    public OnlineVisitorsInfoModel GetOnlineVisitorsInfo();
+    OnlineVisitorsInfoModel GetOnlineVisitorsInfo();
 
-    public void ProcessNewVisitor(LastSiteUrlVisitorStat item);
+    void ProcessNewVisitor(LastSiteUrlVisitorStat item);
 }

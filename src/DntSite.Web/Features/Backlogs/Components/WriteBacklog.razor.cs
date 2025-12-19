@@ -17,7 +17,7 @@ public partial class WriteBacklog
     public IList<string>? AutoCompleteDataList { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(WriteBacklog))]
-    public BacklogModel WriteBacklogModel { get; set; } = new();
+    public BacklogModel? WriteBacklogModel { get; set; }
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
@@ -33,6 +33,8 @@ public partial class WriteBacklog
 
     protected override async Task OnInitializedAsync()
     {
+        WriteBacklogModel ??= new BacklogModel();
+
         if (!ApplicationState.CanCurrentUserCreateANewBacklog())
         {
             Alert.ShowAlert(AlertType.Danger, title: "عدم دسترسی",

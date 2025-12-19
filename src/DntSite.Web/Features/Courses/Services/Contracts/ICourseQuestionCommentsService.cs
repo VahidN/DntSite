@@ -6,17 +6,17 @@ namespace DntSite.Web.Features.Courses.Services.Contracts;
 
 public interface ICourseQuestionCommentsService : IScopedService
 {
-    public Task<List<CourseQuestionComment>> GetRootCommentsOfQuestionsAsync(int postId,
+    Task<List<CourseQuestionComment>> GetRootCommentsOfQuestionsAsync(int postId,
         int count = 1000,
         bool onlyActives = true);
 
-    public CourseQuestionComment AddCourseQuestionComment(CourseQuestionComment comment);
+    CourseQuestionComment AddCourseQuestionComment(CourseQuestionComment comment);
 
-    public ValueTask<CourseQuestionComment?> FindCourseQuestionCommentAsync(int commentId);
+    ValueTask<CourseQuestionComment?> FindCourseQuestionCommentAsync(int commentId);
 
-    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    public Task<PagedResultModel<CourseQuestionComment>> GetLastPagedCommentsAsNoTrackingAsync(int courseId,
+    Task<PagedResultModel<CourseQuestionComment>> GetLastPagedCommentsAsNoTrackingAsync(int courseId,
         int pageNumber,
         int recordsPerPage = 8,
         bool onlyActives = true,

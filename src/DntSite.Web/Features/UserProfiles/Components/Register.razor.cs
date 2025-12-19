@@ -18,12 +18,13 @@ public partial class Register
 
     [Inject] internal IAppFoldersService AppFoldersService { set; get; } = null!;
 
-    [SupplyParameterFromForm] public RegisterModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public RegisterModel? Model { get; set; }
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
+        Model ??= new RegisterModel();
         ApplicationState.DoNotLogPageReferrer = true;
 
         await CurrentUserService.ClearExistingAuthenticationCookiesAsync(clearAdminCookies: false);

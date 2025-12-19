@@ -18,9 +18,9 @@ public class CachedAppSettingsProvider(IServiceProvider serviceProvider, ILocker
 
         using var @lock = await lockerService.LockAsync<CachedAppSettingsProvider>(TimeSpan.FromSeconds(value: 5));
 
-        _appSetting = await serviceProvider.RunScopedServiceAsync<IUnitOfWork, AppSetting>(async uow =>
+        _appSetting = await serviceProvider.RunScopedServiceAsync<IUnitOfWork, AppSetting>(async (uow, ct) =>
         {
-            return await uow.DbSet<AppSetting>().AsNoTracking().OrderBy(x => x.Id).FirstOrDefaultAsync() ??
+            return await uow.DbSet<AppSetting>().AsNoTracking().OrderBy(x => x.Id).FirstOrDefaultAsync(ct) ??
                    new AppSetting
                    {
                        BlogName = "DNT",

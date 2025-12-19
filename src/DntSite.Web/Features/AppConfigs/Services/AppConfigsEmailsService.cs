@@ -68,7 +68,7 @@ public sealed class AppConfigsEmailsService : IAppConfigsEmailsService
             AppPath = "dotnet",
             WaitForExit = TimeSpan.FromSeconds(value: 3),
             KillProcessOnStart = false
-        });
+        }, cancellationToken);
 
         if (IsNewVersionAvailable(info))
         {

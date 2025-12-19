@@ -277,7 +277,7 @@ public class ProjectIssuesService(
         await UpdateStatAsync(projectIssue);
     }
 
-    public async Task UpdateProjectIssueAsync(ProjectIssue? projectIssue, IssueModel issueModel)
+    public async Task UpdateProjectIssueAsync(ProjectIssue? projectIssue, IssueModel? issueModel)
     {
         ArgumentNullException.ThrowIfNull(issueModel);
 
@@ -294,7 +294,7 @@ public class ProjectIssuesService(
             projectIssue.MapToProjectsIssuesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
-    public async Task<ProjectIssue?> AddProjectIssueAsync(IssueModel issueModel, User? user, int projectId)
+    public async Task<ProjectIssue?> AddProjectIssueAsync(IssueModel? issueModel, User? user, int projectId)
     {
         ArgumentNullException.ThrowIfNull(issueModel);
 
@@ -310,7 +310,7 @@ public class ProjectIssuesService(
         return result;
     }
 
-    public async Task NotifyAddOrUpdateChangesAsync(ProjectIssue? projectIssue, IssueModel issueModel, User? user)
+    public async Task NotifyAddOrUpdateChangesAsync(ProjectIssue? projectIssue, IssueModel? issueModel, User? user)
     {
         if (projectIssue is null)
         {

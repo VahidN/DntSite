@@ -460,7 +460,7 @@ public class CoursesService(
         });
     }
 
-    public async Task UpdateCourseItemAsync(Course? course, CourseModel writeCourseModel)
+    public async Task UpdateCourseItemAsync(Course? course, CourseModel? writeCourseModel)
     {
         ArgumentNullException.ThrowIfNull(writeCourseModel);
 
@@ -480,7 +480,7 @@ public class CoursesService(
             showBriefDescription: false));
     }
 
-    public async Task<Course?> AddCourseItemAsync(CourseModel writeCourseModel, User? user)
+    public async Task<Course?> AddCourseItemAsync(CourseModel? writeCourseModel, User? user)
     {
         ArgumentNullException.ThrowIfNull(writeCourseModel);
 
@@ -499,7 +499,7 @@ public class CoursesService(
         return course;
     }
 
-    public async Task NotifyAddOrUpdateChangesAsync(Course? course, CourseModel writeCourseModel, User? user)
+    public async Task NotifyAddOrUpdateChangesAsync(Course? course, CourseModel? writeCourseModel, User? user)
     {
         if (course is null || writeCourseModel is null || user is null)
         {

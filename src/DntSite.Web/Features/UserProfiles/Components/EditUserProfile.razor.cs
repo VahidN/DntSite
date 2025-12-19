@@ -25,12 +25,13 @@ public partial class EditUserProfile
 
     [InjectComponentScoped] internal ICurrentUserService CurrentUserService { set; get; } = null!;
 
-    [SupplyParameterFromForm] public UserProfileModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public UserProfileModel? Model { get; set; }
 
     private string PageTitle => $"تنظیمات کاربری من «{_userFriendlyName}»";
 
     protected override async Task OnInitializedAsync()
     {
+        Model ??= new UserProfileModel();
         var currentUser = await CurrentUserService.GetCurrentImpersonatedUserAsync(EditUserId.ToInt());
 
         if (currentUser is null)
@@ -73,7 +74,7 @@ public partial class EditUserProfile
                 break;
             case OperationStat.Succeeded:
                 ApplicationState.NavigationManager.NavigateTo(
-                    $"{UserProfilesRoutingConstants.Users}/{Uri.EscapeDataString(Model.FriendlyName ?? _userFriendlyName ?? "")}");
+                    $"{UserProfilesRoutingConstants.Users}/{Uri.EscapeDataString(Model?.FriendlyName ?? _userFriendlyName ?? "")}");
 
                 break;
         }

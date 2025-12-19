@@ -5,7 +5,7 @@ namespace DntSite.Web.Features.SideBar.Services.Contracts;
 
 public interface ICustomSidebarService : IScopedService
 {
-    public Task<CustomSidebar?> GetCustomSidebarAsync();
+    Task<CustomSidebar?> GetCustomSidebarAsync();
 
-    public Task AddOrUpdateCustomSidebarAsync(CustomSidebarModel formData);
+    Task AddOrUpdateCustomSidebarAsync(CustomSidebarModel? formData);
 }

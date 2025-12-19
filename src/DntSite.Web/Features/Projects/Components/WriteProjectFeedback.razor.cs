@@ -19,7 +19,7 @@ public partial class WriteProjectFeedback
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [SupplyParameterFromForm(FormName = nameof(WriteProjectFeedback))]
-    public IssueModel IssueModel { get; set; } = new();
+    public IssueModel? IssueModel { get; set; }
 
     [Parameter] public string? EditId { set; get; }
 
@@ -37,6 +37,8 @@ public partial class WriteProjectFeedback
 
     protected override async Task OnInitializedAsync()
     {
+        IssueModel ??= new IssueModel();
+
         if (!ProjectId.HasValue)
         {
             ApplicationState.NavigateToNotFoundPage();

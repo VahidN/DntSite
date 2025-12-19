@@ -13,11 +13,17 @@ public partial class AddNewProjectAdvertisementForm
     [Parameter] [EditorRequired] public EventCallback<WriteAdvertisementModel> OnValidSubmit { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(AddNewProjectAdvertisementForm))]
-    public AddNewProjectAdvertisementModel Model { set; get; } = new();
+    public AddNewProjectAdvertisementModel? Model { set; get; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Model ??= new AddNewProjectAdvertisementModel();
+    }
 
     private async Task PerformAsync()
     {
-        if (!OnValidSubmit.HasDelegate)
+        if (!OnValidSubmit.HasDelegate || Model is null)
         {
             return;
         }
@@ -33,6 +39,11 @@ public partial class AddNewProjectAdvertisementForm
 
     private string GetArticleBody()
     {
+        if (Model is null)
+        {
+            return string.Empty;
+        }
+
         List<List<string>> rows =
         [
             ["توضیحات عمومی پروژه", Model.GeneralConditions.Trim()],

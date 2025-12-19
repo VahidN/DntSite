@@ -17,7 +17,7 @@ public partial class WriteQuestion
     public IList<string>? AutoCompleteDataList { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(WriteQuestion))]
-    public QuestionModel WriteQuestionModel { get; set; } = new();
+    public QuestionModel? WriteQuestionModel { get; set; }
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
@@ -31,6 +31,7 @@ public partial class WriteQuestion
 
     protected override async Task OnInitializedAsync()
     {
+        WriteQuestionModel ??= new QuestionModel();
         AutoCompleteDataList = await TagsService.GetTagNamesArrayAsync(count: 2000);
         AddBreadCrumbs();
 

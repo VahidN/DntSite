@@ -5,13 +5,13 @@ namespace DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
 
 public interface IQuestionsPdfExportService : IScopedService
 {
-    public Task<IList<ExportDocument>> MapQuestionsToExportDocumentsAsync(params IList<int>? postIds);
+    Task<IList<ExportDocument>> MapQuestionsToExportDocumentsAsync(params IList<int>? postIds);
 
-    public ExportDocument? MapQuestionToExportDocument(StackExchangeQuestion? post, string siteRootUri);
+    ExportDocument? MapQuestionToExportDocument(StackExchangeQuestion? post, string siteRootUri);
 
-    public Task<ExportDocument?> MapQuestionToExportDocumentAsync(int postId, string siteRootUri);
+    Task<ExportDocument?> MapQuestionToExportDocumentAsync(int postId, string siteRootUri);
 
-    public Task ExportNotProcessedQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken);
+    Task ExportNotProcessedQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken);
 
-    public Task ExportQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken, params IList<int>? postIds);
+    Task ExportQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken, params IList<int>? postIds);
 }

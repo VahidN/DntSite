@@ -365,7 +365,7 @@ public class BlogPostsService(
 
                 fileExt = ModifyImagesExt(fileExt);
                 var finalName = fileName + fileExt;
-                var path = Path.Combine(blogDir, finalName);
+                var path = blogDir.SafePathCombine(finalName);
 
                 if (File.Exists(path))
                 {

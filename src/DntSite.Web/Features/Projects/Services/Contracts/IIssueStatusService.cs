@@ -5,14 +5,13 @@ namespace DntSite.Web.Features.Projects.Services.Contracts;
 
 public interface IIssueStatusService : IScopedService
 {
-    public ValueTask<ProjectIssueStatus?> FindIssueStatusAsync(int id);
+    ValueTask<ProjectIssueStatus?> FindIssueStatusAsync(int id);
 
-    public ProjectIssueStatus AddIssueStatus(ProjectIssueStatus data);
+    ProjectIssueStatus AddIssueStatus(ProjectIssueStatus data);
 
-    public Task<List<ProjectIssueStatus>>
-        GetAllProjectIssueStatusListAsNoTrackingAsync(int count, bool isActive = true);
+    Task<List<ProjectIssueStatus>> GetAllProjectIssueStatusListAsNoTrackingAsync(int count, bool isActive = true);
 
-    public Task<List<SimpleItemModel>> GetProjectIssueStatusListAsync(int projectId, int count, bool isActive = true);
+    Task<List<SimpleItemModel>> GetProjectIssueStatusListAsync(int projectId, int count, bool isActive = true);
 
-    public Task<int> GetNewProjectIssueStatusCountAsync(int projectId, bool showDeletedItems = false);
+    Task<int> GetNewProjectIssueStatusCountAsync(int projectId, bool showDeletedItems = false);
 }

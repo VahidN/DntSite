@@ -4,27 +4,27 @@ namespace DntSite.Web.Features.AppConfigs.Services.Contracts;
 
 public interface IAppFoldersService : ISingletonService, IDisposable
 {
-    public string DefaultConnectionString { get; }
+    string DefaultConnectionString { get; }
 
-    public string DatabaseFolderPath { get; }
+    string DatabaseFolderPath { get; }
 
-    public string WwwRootPath { get; }
+    string WwwRootPath { get; }
 
-    public string ExportsPath { get; }
+    string ExportsPath { get; }
 
-    public string ExportsAssetsFolder { get; }
+    string ExportsAssetsFolder { get; }
 
-    public string AvatarsFolderPath { get; }
+    string AvatarsFolderPath { get; }
 
-    public string ArticleImagesFolderPath { get; }
+    string ArticleImagesFolderPath { get; }
 
-    public string ThumbnailsServiceFolderPath { get; }
+    string ThumbnailsServiceFolderPath { get; }
 
-    public string CustomFontWithPersianDigitsPath { get; }
+    string CustomFontWithPersianDigitsPath { get; }
 
-    public string LuceneIndexFolderPath { get; }
+    string LuceneIndexFolderPath { get; }
 
-    public string GetFolderPath(FileType fileType);
+    string GetFolderPath(FileType fileType);
 
-    public string GetWebRootAppDataFolderPath(params string[] folders);
+    string GetWebRootAppDataFolderPath(params string[] folders);
 }

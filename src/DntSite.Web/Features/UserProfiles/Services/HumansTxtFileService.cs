@@ -13,7 +13,7 @@ public class HumansTxtFileService(IUsersInfoService usersService, IAppFoldersSer
     public async Task CreateHumansTxtFileAsync(CancellationToken cancellationToken)
     {
         var content = await CreateHumansListAsync();
-        var path = Path.Combine(appFoldersService.WwwRootPath, path2: "humans.txt");
+        var path = appFoldersService.WwwRootPath.SafePathCombine("humans.txt");
         await File.WriteAllTextAsync(path, content, Encoding.UTF8, cancellationToken);
     }
 

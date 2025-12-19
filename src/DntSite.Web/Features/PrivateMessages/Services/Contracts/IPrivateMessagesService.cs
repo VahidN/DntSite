@@ -7,54 +7,54 @@ namespace DntSite.Web.Features.PrivateMessages.Services.Contracts;
 
 public interface IPrivateMessagesService : IScopedService
 {
-    public Task<PrivateMessage> AddPrivateMessageAsync(PrivateMessage pm);
+    Task<PrivateMessage> AddPrivateMessageAsync(PrivateMessage pm);
 
-    public Task<OperationResult> AddPrivateMessageAsync(User? fromUser, int? toUserId, ContactUsModel? model);
+    Task<OperationResult> AddPrivateMessageAsync(User? fromUser, int? toUserId, ContactUsModel? model);
 
-    public Task TryMarkMainMessageAsReadAsync(int messageId, int? currentUserId);
+    Task TryMarkMainMessageAsReadAsync(int messageId, int? currentUserId);
 
-    public Task TryMarkMainMessageAsUnReadAsync(int messageId, int? currentUserId);
+    Task TryMarkMainMessageAsUnReadAsync(int messageId, int? currentUserId);
 
-    public Task EditFirstPrivateMessageAsync(int id, int? userId, ContactUsModel model);
+    Task EditFirstPrivateMessageAsync(int id, int? userId, ContactUsModel? model);
 
-    public Task RemovePrivateMessageAsync(int id);
+    Task RemovePrivateMessageAsync(int id);
 
-    public ValueTask<PrivateMessage?> FindPrivateMessageAsync(int id);
+    ValueTask<PrivateMessage?> FindPrivateMessageAsync(int id);
 
-    public Task<PrivateMessage?> GetFirstAllowedPrivateMessageAsync(int? id, int? userId);
+    Task<PrivateMessage?> GetFirstAllowedPrivateMessageAsync(int? id, int? userId);
 
-    public Task<PrivateMessage?> GetFirstPrivateMessageAsync(int messageId, bool showDeletedItems = false);
+    Task<PrivateMessage?> GetFirstPrivateMessageAsync(int messageId, bool showDeletedItems = false);
 
-    public Task<PagedResultModel<PrivateMessage>> GetUserPrivateMessagesAsNoTrackingAsync(int userId,
+    Task<PagedResultModel<PrivateMessage>> GetUserPrivateMessagesAsNoTrackingAsync(int userId,
         int pageNumber,
         int recordsPerPage = 20,
         bool showDeletedItems = false);
 
-    public Task<List<PrivateMessage>> GetAllPrivateMessagesOfThisIdAsync(int firstMessageId,
+    Task<List<PrivateMessage>> GetAllPrivateMessagesOfThisIdAsync(int firstMessageId,
         int count = 1000,
         bool showDeletedItems = false);
 
-    public Task<List<PrivateMessage>> GetRootPrivateMessagesAsync(int firstMessageId,
+    Task<List<PrivateMessage>> GetRootPrivateMessagesAsync(int firstMessageId,
         int count = 1000,
         bool showDeletedItems = false);
 
-    public Task<PagedResultModel<PrivateMessage>> GetUserSentPrivateMessagesAsNoTrackingAsync(int userId,
+    Task<PagedResultModel<PrivateMessage>> GetUserSentPrivateMessagesAsNoTrackingAsync(int userId,
         int pageNumber,
         int recordsPerPage = 20,
         bool showDeletedItems = false);
 
-    public Task<PagedResultModel<PrivateMessage>> GetAllPrivateMessagesAsNoTrackingAsync(int pageNumber,
+    Task<PagedResultModel<PrivateMessage>> GetAllPrivateMessagesAsNoTrackingAsync(int pageNumber,
         int recordsPerPage = 20);
 
-    public Task<List<PrivateMessage>> GetAllPrivateMessagesOfThisIdAsNoTrackingAsync(int firstMessageId,
+    Task<List<PrivateMessage>> GetAllPrivateMessagesOfThisIdAsNoTrackingAsync(int firstMessageId,
         int count = 1000,
         bool showDeletedItems = false);
 
-    public Task DeleteAllAsync(CancellationToken cancellationToken);
+    Task DeleteAllAsync(CancellationToken cancellationToken);
 
-    public Task<int> GetUserUnReadPrivateMessagesCountAsync(int? userId);
+    Task<int> GetUserUnReadPrivateMessagesCountAsync(int? userId);
 
-    public Task<PagedResultModel<PrivateMessage>> GetAllUserPrivateMessagesAsNoTrackingAsync(int userId,
+    Task<PagedResultModel<PrivateMessage>> GetAllUserPrivateMessagesAsNoTrackingAsync(int userId,
         int pageNumber,
         int recordsPerPage = 20,
         bool showDeletedItems = false);

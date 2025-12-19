@@ -50,8 +50,8 @@ public static class DbSetsConfigs
 
             if (entityType.IsKeyless || !baseType.IsAssignableFrom(clrType) ||
                 ShouldSkipClrType(exceptTheseTypes, clrType) ||
-                clrType.GetCustomAttribute<TableAttribute>() is not null ||
-                clrType.GetCustomAttribute<ComplexTypeAttribute>() is not null ||
+                Attribute.IsDefined(clrType, typeof(TableAttribute), inherit: true) ||
+                Attribute.IsDefined(clrType, typeof(ComplexTypeAttribute), inherit: true) ||
                 displayName.Contains(value: ' ', StringComparison.Ordinal))
             {
                 continue;

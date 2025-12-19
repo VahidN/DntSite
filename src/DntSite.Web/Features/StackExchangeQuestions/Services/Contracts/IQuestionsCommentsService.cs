@@ -5,7 +5,7 @@ namespace DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
 
 public interface IQuestionsCommentsService : IScopedService
 {
-    public Task<PagedResultModel<StackExchangeQuestionComment>> GetLastPagedStackExchangeQuestionCommentsOfUserAsync(
+    Task<PagedResultModel<StackExchangeQuestionComment>> GetLastPagedStackExchangeQuestionCommentsOfUserAsync(
         string name,
         int pageNumber,
         int recordsPerPage = 8,
@@ -13,38 +13,37 @@ public interface IQuestionsCommentsService : IScopedService
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    public Task<PagedResultModel<StackExchangeQuestionComment>>
-        GetLastPagedStackExchangeQuestionCommentsAsNoTrackingAsync(int pageNumber,
-            int recordsPerPage = 8,
-            bool showDeletedItems = false,
-            PagerSortBy pagerSortBy = PagerSortBy.Date,
-            bool isAscending = false);
+    Task<PagedResultModel<StackExchangeQuestionComment>> GetLastPagedStackExchangeQuestionCommentsAsNoTrackingAsync(
+        int pageNumber,
+        int recordsPerPage = 8,
+        bool showDeletedItems = false,
+        PagerSortBy pagerSortBy = PagerSortBy.Date,
+        bool isAscending = false);
 
-    public Task<List<StackExchangeQuestionComment>> GetRootCommentsOfQuestionAsync(int postId,
+    Task<List<StackExchangeQuestionComment>> GetRootCommentsOfQuestionAsync(int postId,
         int count = 1000,
         bool showDeletedItems = false);
 
-    public ValueTask<StackExchangeQuestionComment?> FindStackExchangeQuestionCommentAsync(int commentId);
+    ValueTask<StackExchangeQuestionComment?> FindStackExchangeQuestionCommentAsync(int commentId);
 
-    public Task<StackExchangeQuestionComment?> FindStackExchangeQuestionCommentIncludeParentAsync(int commentId);
+    Task<StackExchangeQuestionComment?> FindStackExchangeQuestionCommentIncludeParentAsync(int commentId);
 
-    public Task DeleteCommentAsync(int? modelFormCommentId);
+    Task DeleteCommentAsync(int? modelFormCommentId);
 
-    public Task EditReplyAsync(int? modelFormCommentId, string modelComment);
+    Task EditReplyAsync(int? modelFormCommentId, string modelComment);
 
-    public StackExchangeQuestionComment AddStackExchangeQuestionComment(StackExchangeQuestionComment comment);
+    StackExchangeQuestionComment AddStackExchangeQuestionComment(StackExchangeQuestionComment comment);
 
-    public Task AddReplyAsync(int? modelFormCommentId,
+    Task AddReplyAsync(int? modelFormCommentId,
         int modelFormPostId,
         string modelComment,
         int currentUserUserId,
         bool userIsRestricted);
 
-    public Task<StackExchangeQuestionComment?> MarkQuestionCommentAsAnswerAsync(
-        StackExchangeQuestionComment? questionComment,
+    Task<StackExchangeQuestionComment?> MarkQuestionCommentAsAnswerAsync(StackExchangeQuestionComment? questionComment,
         bool isAnswer);
 
-    public Task NotifyQuestionCommentIsApprovedAsync(StackExchangeQuestionComment? comment);
+    Task NotifyQuestionCommentIsApprovedAsync(StackExchangeQuestionComment? comment);
 
-    public Task IndexStackExchangeQuestionCommentsAsync();
+    Task IndexStackExchangeQuestionCommentsAsync();
 }

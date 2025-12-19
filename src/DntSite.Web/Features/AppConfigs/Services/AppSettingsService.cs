@@ -100,7 +100,7 @@ public class AppSettingsService(
 
     public AppSetting AddAppSetting(AppSetting data) => _blogConfigs.Add(data).Entity;
 
-    public async Task AddOrUpdateAppSettingsAsync(AppSettingModel model)
+    public async Task AddOrUpdateAppSettingsAsync(AppSettingModel? model)
     {
         ArgumentNullException.ThrowIfNull(model);
 

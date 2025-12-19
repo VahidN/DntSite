@@ -20,7 +20,7 @@
                     اگر علاقمند نیستید که ایمیل‌های خودکار سایت را دریافت نمائید، لطفا تیک گزینه دریافت
                     ایمیل را بردارید.
                 </li>
-                @if (!Model.IsRestricted)
+                @if (!Model!.IsRestricted)
                 {
                     <li>
                         با انتخاب گزینه‌ی جویای کار، در منوی افراد جویای کار سایت، لیست خواهید شد. در این
@@ -41,7 +41,7 @@
 
             <DntInputText AutoCompleteType="AutoCompleteType.On"
                           FieldIcon="@DntBootstrapIcons.BiPerson"
-                          @bind-Value="Model.UserName"
+                          @bind-Value="Model!.UserName"
                           OptionalLabel="(انگلیسی؛ جهت لاگین)"
                           dir="ltr"/>
 

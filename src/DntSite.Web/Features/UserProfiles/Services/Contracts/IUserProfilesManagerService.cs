@@ -5,43 +5,43 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IUserProfilesManagerService : IScopedService
 {
-    public string UsersCantRegisterErrorMessage { get; }
+    string UsersCantRegisterErrorMessage { get; }
 
-    public Task DisableInactiveUsersAsync(int month);
+    Task DisableInactiveUsersAsync(int month);
 
-    public Task NotifyInactiveUsersAsync(int month, CancellationToken cancellationToken);
+    Task NotifyInactiveUsersAsync(int month, CancellationToken cancellationToken);
 
-    public Task ResetRegistrationCodeAsync(User user);
+    Task ResetRegistrationCodeAsync(User user);
 
-    public Task UpdateUserLastActivityDateAsync(int userId);
+    Task UpdateUserLastActivityDateAsync(int userId);
 
-    public Task<User> AddUserAsync(RegisterModel model);
+    Task<User> AddUserAsync(RegisterModel model);
 
-    public Task<OperationResult> ActivateEmailAsync(string name);
+    Task<OperationResult> ActivateEmailAsync(string name);
 
-    public Task<int> GetGeneralAdvertisementUserIdAsync();
+    Task<int> GetGeneralAdvertisementUserIdAsync();
 
-    public Task UpdateUserImageFromGravatarAsync(User user);
+    Task UpdateUserImageFromGravatarAsync(User user);
 
-    public Task<OperationResult<(string Password, User? User)>> ResetPasswordAsync(string name);
+    Task<OperationResult<(string Password, User? User)>> ResetPasswordAsync(string name);
 
-    public Task<OperationResult> ChangeUserPasswordAsync(int? userId, string newPassword);
+    Task<OperationResult> ChangeUserPasswordAsync(int? userId, string newPassword);
 
-    public Task SendActivateYourAccountEmailAsync(int userId);
+    Task SendActivateYourAccountEmailAsync(int userId);
 
-    public Task UserIsNotRestrictedAsync(int userId);
+    Task UserIsNotRestrictedAsync(int userId);
 
-    public Task UserIsRestrictedAsync(int userId);
+    Task UserIsRestrictedAsync(int userId);
 
-    public Task DisableUserAsync(int userId);
+    Task DisableUserAsync(int userId);
 
-    public Task ActivateUserAsync(int userId);
+    Task ActivateUserAsync(int userId);
 
-    public Task<OperationResult> RegisterUserAsync(RegisterModel? model, bool canUsersRegister, int? currentUserId);
+    Task<OperationResult> RegisterUserAsync(RegisterModel? model, bool canUsersRegister, int? currentUserId);
 
-    public Task<OperationResult> ProcessForgottenPasswordAsync(ForgottenPasswordModel? model);
+    Task<OperationResult> ProcessForgottenPasswordAsync(ForgottenPasswordModel? model);
 
-    public Task<OperationResult> EditUserSocialNetworksAsync(int? editUserId, UserSocialNetworkModel? model);
+    Task<OperationResult> EditUserSocialNetworksAsync(int? editUserId, UserSocialNetworkModel? model);
 
-    public Task<OperationResult> EditUserProfileAsync(UserProfileModel? model, int? editUserId);
+    Task<OperationResult> EditUserProfileAsync(UserProfileModel? model, int? editUserId);
 }

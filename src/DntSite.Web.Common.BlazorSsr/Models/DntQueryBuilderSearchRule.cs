@@ -6,9 +6,12 @@ namespace DntSite.Web.Common.BlazorSsr.Models;
 /// <summary>
 ///     Defines a search rule
 /// </summary>
+/// <typeparam name="TRecord">Type of the record</typeparam>
 public class DntQueryBuilderSearchRule<TRecord>
     where TRecord : class
 {
+    private readonly string _rowsName = $"DntQueryBuilder.{typeof(TRecord).Name}.SearchRuleRows";
+
     public int RulePropertyIndex { set; get; }
 
     [IgnoreDataMember] public DntQueryBuilderProperty<TRecord>? QueryBuilderProperty { set; get; }
@@ -36,17 +39,17 @@ public class DntQueryBuilderSearchRule<TRecord>
     public DntQueryBuilderOperationLogic NextOperationLogic { set; get; }
 
     public string RulePropertyIndexName => string.Create(CultureInfo.InvariantCulture,
-        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(RulePropertyIndex)}");
+        $"{_rowsName}[{SearchRuleRowIndex}].{nameof(RulePropertyIndex)}");
 
     public string RuleOperationKindName => string.Create(CultureInfo.InvariantCulture,
-        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(OperationKind)}");
+        $"{_rowsName}[{SearchRuleRowIndex}].{nameof(OperationKind)}");
 
     public string RuleOperationName => string.Create(CultureInfo.InvariantCulture,
-        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(Operation)}");
+        $"{_rowsName}[{SearchRuleRowIndex}].{nameof(Operation)}");
 
     public string RuleValueName => string.Create(CultureInfo.InvariantCulture,
-        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(Value)}");
+        $"{_rowsName}[{SearchRuleRowIndex}].{nameof(Value)}");
 
     public string RuleNextOperationLogicName => string.Create(CultureInfo.InvariantCulture,
-        $"{nameof(DntQueryBuilder<TRecord>.SearchRuleRows)}[{SearchRuleRowIndex}].{nameof(NextOperationLogic)}");
+        $"{_rowsName}[{SearchRuleRowIndex}].{nameof(NextOperationLogic)}");
 }

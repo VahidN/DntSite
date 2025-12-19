@@ -17,7 +17,7 @@ public partial class WriteLearningPaths
     public IList<string>? AutoCompleteDataList { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(WriteLearningPaths))]
-    public LearningPathModel WriteLearningPathModel { get; set; } = new();
+    public LearningPathModel? WriteLearningPathModel { get; set; }
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
@@ -33,6 +33,8 @@ public partial class WriteLearningPaths
 
     protected override async Task OnInitializedAsync()
     {
+        WriteLearningPathModel ??= new LearningPathModel();
+
         AddBreadCrumbs();
 
         AutoCompleteDataList = await TagsService.GetTagNamesArrayAsync(count: 2000);

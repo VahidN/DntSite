@@ -14,7 +14,7 @@ public partial class PublicContactUs
 
     [Inject] internal IAppFoldersService AppFoldersService { set; get; } = null!;
 
-    [SupplyParameterFromForm] public PublicContactUsModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public PublicContactUsModel? Model { get; set; }
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
@@ -39,6 +39,7 @@ public partial class PublicContactUs
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        Model ??= new PublicContactUsModel();
 
         AddBreadCrumbs();
     }

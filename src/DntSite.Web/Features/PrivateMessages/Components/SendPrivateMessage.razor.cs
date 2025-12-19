@@ -21,7 +21,7 @@ public partial class SendPrivateMessage
 
     [InjectComponentScoped] internal IPrivateMessagesService PrivateMessagesService { set; get; } = null!;
 
-    [SupplyParameterFromForm] public ContactUsModel Model { set; get; } = new();
+    [SupplyParameterFromForm] public ContactUsModel? Model { set; get; }
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
@@ -31,6 +31,8 @@ public partial class SendPrivateMessage
 
     protected override async Task OnInitializedAsync()
     {
+        Model ??= new ContactUsModel();
+
         if (!ApplicationState.HttpContext.IsGetRequest())
         {
             return;
@@ -58,7 +60,7 @@ public partial class SendPrivateMessage
         var firstPrivateMessage =
             await PrivateMessagesService.GetFirstAllowedPrivateMessageAsync(id, ApplicationState.CurrentUser?.UserId);
 
-        if (firstPrivateMessage is null)
+        if (firstPrivateMessage is null || Model is null)
         {
             ApplicationState.NavigateToNotFoundPage();
 

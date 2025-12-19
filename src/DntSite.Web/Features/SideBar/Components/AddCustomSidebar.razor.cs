@@ -18,10 +18,12 @@ public partial class AddCustomSidebar
 
     [InjectComponentScoped] internal IEmailsFactoryService EmailsFactoryService { set; get; } = null!;
 
-    [SupplyParameterFromForm] public CustomSidebarModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public CustomSidebarModel? Model { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        Model ??= new CustomSidebarModel();
+
         if (ApplicationState.HttpContext.IsGetRequest())
         {
             await InitDataAsync();

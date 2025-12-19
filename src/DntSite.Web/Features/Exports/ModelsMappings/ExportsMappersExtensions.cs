@@ -112,7 +112,7 @@ public static class ExportsMappersExtensions
             return null;
         }
 
-        var path = Path.Combine(imagesFolderPath, fileName);
+        var path = imagesFolderPath.SafePathCombine(fileName);
 
         if (!path.FileExists())
         {

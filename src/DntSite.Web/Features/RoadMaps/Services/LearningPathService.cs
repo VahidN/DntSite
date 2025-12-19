@@ -236,7 +236,7 @@ public class LearningPathService(
             $"مسیر راه شماره {learningPathItem.Id} حذف شد."));
     }
 
-    public async Task UpdateLearningPathAsync(LearningPath? learningPathItem, LearningPathModel writeLearningPathModel)
+    public async Task UpdateLearningPathAsync(LearningPath? learningPathItem, LearningPathModel? writeLearningPathModel)
     {
         ArgumentNullException.ThrowIfNull(writeLearningPathModel);
 
@@ -258,7 +258,7 @@ public class LearningPathService(
             learningPathItem.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
-    public async Task<LearningPath?> AddLearningPathAsync(LearningPathModel writeLearningPathModel, User? user)
+    public async Task<LearningPath?> AddLearningPathAsync(LearningPathModel? writeLearningPathModel, User? user)
     {
         ArgumentNullException.ThrowIfNull(writeLearningPathModel);
 

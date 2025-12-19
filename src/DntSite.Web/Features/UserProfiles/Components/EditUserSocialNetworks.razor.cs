@@ -27,12 +27,13 @@ public partial class EditUserSocialNetworks
 
     [Inject] internal IMapper Mapper { set; get; } = null!;
 
-    [SupplyParameterFromForm] public UserSocialNetworkModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public UserSocialNetworkModel? Model { get; set; }
 
     private string PageTitle => $"تنظیمات کاربری من «{_userFriendlyName}» در شبکه‌های اجتماعی";
 
     protected override async Task OnInitializedAsync()
     {
+        Model ??= new UserSocialNetworkModel();
         var currentUser = await CurrentUserService.GetCurrentImpersonatedUserAsync(EditUserId.ToInt());
 
         if (ApplicationState.HttpContext.IsGetRequest())

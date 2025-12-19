@@ -5,7 +5,7 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface ICookieValidatorService : IScopedService
 {
-    public Task ValidateAsync(CookieValidatePrincipalContext context);
+    Task ValidateAsync(CookieValidatePrincipalContext context);
 
-    public Task<bool> IsValidateUserAsync(ClaimsIdentity? claimsIdentity);
+    Task<bool> IsValidateUserAsync(ClaimsIdentity? claimsIdentity);
 }

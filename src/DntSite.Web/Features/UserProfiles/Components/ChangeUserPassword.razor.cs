@@ -13,7 +13,7 @@ public partial class ChangeUserPassword
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
-    [SupplyParameterFromForm] public ChangeUserPasswordModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public ChangeUserPasswordModel? Model { get; set; }
 
     [Parameter] public string? UserId { set; get; }
 
@@ -34,6 +34,7 @@ public partial class ChangeUserPassword
 
     protected override async Task OnInitializedAsync()
     {
+        Model ??= new ChangeUserPasswordModel();
         var user = await UsersService.FindUserAsync(UserId.ToInt());
 
         if (user is null)

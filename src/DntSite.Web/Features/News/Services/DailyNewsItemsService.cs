@@ -337,7 +337,7 @@ public class DailyNewsItemsService(
     }
 
     public async Task NotifyAddOrUpdateChangesAsync(DailyNewsItem? newsItem,
-        DailyNewsItemModel writeNewsModel,
+        DailyNewsItemModel? writeNewsModel,
         User? user)
     {
         ArgumentNullException.ThrowIfNull(writeNewsModel);
@@ -371,7 +371,7 @@ public class DailyNewsItemsService(
         }, user?.FriendlyName ?? SharedConstants.GuestUserName);
     }
 
-    public async Task<DailyNewsItem> AddNewsItemAsync(DailyNewsItemModel writeNewsModel, User? user)
+    public async Task<DailyNewsItem> AddNewsItemAsync(DailyNewsItemModel? writeNewsModel, User? user)
     {
         ArgumentNullException.ThrowIfNull(writeNewsModel);
 
@@ -390,7 +390,7 @@ public class DailyNewsItemsService(
         return result;
     }
 
-    public async Task UpdateNewsItemAsync(DailyNewsItem? newsItem, DailyNewsItemModel writeNewsModel)
+    public async Task UpdateNewsItemAsync(DailyNewsItem? newsItem, DailyNewsItemModel? writeNewsModel)
     {
         ArgumentNullException.ThrowIfNull(writeNewsModel);
 
@@ -411,7 +411,7 @@ public class DailyNewsItemsService(
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, newsItem.Id);
     }
 
-    public async Task<OperationResult> CheckUrlHashAsync(string url, int? id, bool isAdmin)
+    public async Task<OperationResult> CheckUrlHashAsync(string? url, int? id, bool isAdmin)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -500,7 +500,8 @@ public class DailyNewsItemsService(
                     item.LastHttpStatusCodeCheckDateTime = DateTime.UtcNow;
 
                     item.LastHttpStatusCode =
-                        await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, throwOnException: true);
+                        await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, throwOnException: true,
+                            cancellationToken);
 
                     item.IsDeleted = item.LastHttpStatusCode == HttpStatusCode.NotFound;
                 }

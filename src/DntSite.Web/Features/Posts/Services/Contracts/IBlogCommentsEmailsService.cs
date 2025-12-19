@@ -4,11 +4,11 @@ namespace DntSite.Web.Features.Posts.Services.Contracts;
 
 public interface IBlogCommentsEmailsService : IScopedService
 {
-    public Task PostReplySendEmailToAdminsAsync(BlogPostComment data);
+    Task PostReplySendEmailToAdminsAsync(BlogPostComment data);
 
-    public Task PostReplySendEmailToWritersAsync(BlogPostComment comment);
+    Task PostReplySendEmailToWritersAsync(BlogPostComment comment);
 
-    public Task PostReplySendEmailToPersonAsync(BlogPostComment comment);
+    Task PostReplySendEmailToPersonAsync(BlogPostComment comment);
 
-    public Task ConvertedToReplySendEmailAsync(int postId, string title, int userIdValue);
+    Task ConvertedToReplySendEmailAsync(int postId, string title, int userIdValue);
 }

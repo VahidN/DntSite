@@ -201,7 +201,7 @@ public class ProjectsService(
         await UpdateStatAsync(new ProjectModel(), currentUserUser);
     }
 
-    public async Task UpdateProjectAsync(Project? project, ProjectModel writeProjectModel)
+    public async Task UpdateProjectAsync(Project? project, ProjectModel? writeProjectModel)
     {
         ArgumentNullException.ThrowIfNull(writeProjectModel);
 
@@ -222,7 +222,7 @@ public class ProjectsService(
             project.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
-    public async Task<Project?> AddProjectAsync(ProjectModel writeProjectModel, User? user)
+    public async Task<Project?> AddProjectAsync(ProjectModel? writeProjectModel, User? user)
     {
         ArgumentNullException.ThrowIfNull(writeProjectModel);
 
@@ -241,8 +241,10 @@ public class ProjectsService(
         return result;
     }
 
-    public async Task NotifyAddOrUpdateChangesAsync(Project? project, ProjectModel writeProjectModel, User? user)
+    public async Task NotifyAddOrUpdateChangesAsync(Project? project, ProjectModel? writeProjectModel, User? user)
     {
+        ArgumentNullException.ThrowIfNull(writeProjectModel);
+
         if (project is null || user is null)
         {
             return;

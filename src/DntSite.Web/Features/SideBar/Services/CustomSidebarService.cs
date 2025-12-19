@@ -12,7 +12,7 @@ public class CustomSidebarService(IUnitOfWork uow, IAppAntiXssService antiXssSer
 
     public Task<CustomSidebar?> GetCustomSidebarAsync() => _customSidebar.OrderBy(x => x.Id).FirstOrDefaultAsync();
 
-    public async Task AddOrUpdateCustomSidebarAsync(CustomSidebarModel formData)
+    public async Task AddOrUpdateCustomSidebarAsync(CustomSidebarModel? formData)
     {
         ArgumentNullException.ThrowIfNull(formData);
 

@@ -4,19 +4,19 @@ namespace DntSite.Web.Features.News.Services.Contracts;
 
 public interface IDailyNewsScreenshotsService : IScopedService
 {
-    public (string FileName, string Path) GetThumbnailImageInfo(int id);
+    (string FileName, string Path) GetThumbnailImageInfo(int id);
 
-    public Task TryReDownloadFailedScreenshotsAsync();
+    Task TryReDownloadFailedScreenshotsAsync();
 
-    public Task<List<DailyNewsItem>> GetNeedScreenshotsItemsAsync(int count);
+    Task<List<DailyNewsItem>> GetNeedScreenshotsItemsAsync(int count);
 
-    public Task DeleteImageAsync(DailyNewsItem? post);
+    Task DeleteImageAsync(DailyNewsItem? post);
 
-    public Task<int> DownloadScreenshotsAsync(int count, CancellationToken cancellationToken);
+    Task<int> DownloadScreenshotsAsync(int count, CancellationToken cancellationToken);
 
-    public Task UpdateAllNewsPageThumbnailsAsync();
+    Task UpdateAllNewsPageThumbnailsAsync();
 
-    public string GetNewsThumbImage(DailyNewsItem? item, string siteRootUri);
+    string GetNewsThumbImage(DailyNewsItem? item, string siteRootUri);
 
-    public Task InvalidateAllYoutubeScreenshotsAsync();
+    Task InvalidateAllYoutubeScreenshotsAsync();
 }

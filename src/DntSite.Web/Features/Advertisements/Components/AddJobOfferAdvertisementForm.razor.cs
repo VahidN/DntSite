@@ -13,11 +13,17 @@ public partial class AddJobOfferAdvertisementForm
     [Parameter] [EditorRequired] public EventCallback<WriteAdvertisementModel> OnValidSubmit { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(AddJobOfferAdvertisementForm))]
-    public AddGeneralAdvertisementModel Model { set; get; } = new();
+    public AddGeneralAdvertisementModel? Model { set; get; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Model ??= new AddGeneralAdvertisementModel();
+    }
 
     private async Task PerformAsync()
     {
-        if (!OnValidSubmit.HasDelegate)
+        if (!OnValidSubmit.HasDelegate || Model is null)
         {
             return;
         }
@@ -33,6 +39,11 @@ public partial class AddJobOfferAdvertisementForm
 
     private string GetArticleBody()
     {
+        if (Model is null)
+        {
+            return string.Empty;
+        }
+
         List<List<string>> rows =
         [
             ["نام شرکت", Model.OrganizationName.Trim()], ["آدرس شرکت", Model.Address.Trim()],

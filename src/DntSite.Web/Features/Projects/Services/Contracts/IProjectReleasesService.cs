@@ -8,54 +8,52 @@ namespace DntSite.Web.Features.Projects.Services.Contracts;
 
 public interface IProjectReleasesService : IScopedService
 {
-    public Task<ReleaseModel> ShowReleaseAsync(int projectId, int faqId, bool showDeletedItems = false);
+    Task<ReleaseModel> ShowReleaseAsync(int projectId, int faqId, bool showDeletedItems = false);
 
-    public ValueTask<ProjectRelease?> FindProjectReleaseAsync(int id);
+    ValueTask<ProjectRelease?> FindProjectReleaseAsync(int id);
 
-    public Task<ProjectRelease?> GetProjectReleaseAsync(int id, bool showDeletedItems = false);
+    Task<ProjectRelease?> GetProjectReleaseAsync(int id, bool showDeletedItems = false);
 
-    public Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
+    Task<bool> SaveRatingAsync(int fkId, ReactionType reactionType, int? fromUserId);
 
-    public ProjectRelease AddProjectRelease(int userId,
+    ProjectRelease AddProjectRelease(int userId,
         int projectId,
         string fileName,
         long fileSize,
         string path,
         string description);
 
-    public Task<PagedResultModel<ProjectRelease>> GetAllProjectsReleasesIncludeProjectsAsync(int pageNumber,
+    Task<PagedResultModel<ProjectRelease>> GetAllProjectsReleasesIncludeProjectsAsync(int pageNumber,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    public Task<PagedResultModel<ProjectRelease>> GetAllProjectReleasesAsync(int projectId,
+    Task<PagedResultModel<ProjectRelease>> GetAllProjectReleasesAsync(int projectId,
         int pageNumber,
         int recordsPerPage = 15,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    public Task<PagedResultModel<ProjectRelease>> GetLastPagedProjectReleasesOfUserAsync(string name,
+    Task<PagedResultModel<ProjectRelease>> GetLastPagedProjectReleasesOfUserAsync(string name,
         int pageNumber,
         int recordsPerPage = 8,
         bool showDeletedItems = false,
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false);
 
-    public Task MarkAsDeletedAsync(ProjectRelease? projectRelease);
+    Task MarkAsDeletedAsync(ProjectRelease? projectRelease);
 
-    public Task NotifyDeleteChangesAsync(ProjectRelease? projectRelease, User? currentUserUser);
+    Task NotifyDeleteChangesAsync(ProjectRelease? projectRelease, User? currentUserUser);
 
-    public Task UpdateProjectReleaseAsync(ProjectRelease? projectRelease, ProjectPostFileModel projectPostFileModel);
+    Task UpdateProjectReleaseAsync(ProjectRelease? projectRelease, ProjectPostFileModel? projectPostFileModel);
 
-    public Task<ProjectRelease?> AddProjectReleaseAsync(ProjectPostFileModel projectPostFileModel,
-        User? user,
-        int projectId);
+    Task<ProjectRelease?> AddProjectReleaseAsync(ProjectPostFileModel? projectPostFileModel, User? user, int projectId);
 
-    public Task NotifyAddOrUpdateChangesAsync(ProjectRelease? projectRelease,
-        ProjectPostFileModel projectPostFileModel,
+    Task NotifyAddOrUpdateChangesAsync(ProjectRelease? projectRelease,
+        ProjectPostFileModel? projectPostFileModel,
         User? user);
 
-    public Task IndexProjectReleasesAsync();
+    Task IndexProjectReleasesAsync();
 }

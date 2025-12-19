@@ -23,8 +23,10 @@ public class BlogPostDraftsService(
 {
     private readonly DbSet<BlogPostDraft> _blogPostDrafts = uow.DbSet<BlogPostDraft>();
 
-    public async Task<BlogPostDraft> AddBlogPostDraftAsync(WriteDraftModel model)
+    public async Task<BlogPostDraft> AddBlogPostDraftAsync(WriteDraftModel? model)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         var draft = mapper.Map<WriteDraftModel, BlogPostDraft>(model);
         _blogPostDrafts.Add(draft);
         await uow.SaveChangesAsync();
@@ -32,8 +34,10 @@ public class BlogPostDraftsService(
         return draft;
     }
 
-    public async Task UpdateBlogPostDraftAsync(WriteDraftModel model, BlogPostDraft draft)
+    public async Task UpdateBlogPostDraftAsync(WriteDraftModel? model, BlogPostDraft draft)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         mapper.Map(model, draft);
         await uow.SaveChangesAsync();
     }

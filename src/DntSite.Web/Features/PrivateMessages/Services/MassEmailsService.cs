@@ -10,7 +10,7 @@ public class MassEmailsService(IUnitOfWork uow, IAppAntiXssService antiXssServic
 {
     private readonly DbSet<MassEmail> _massEmails = uow.DbSet<MassEmail>();
 
-    public async Task<string> AddMassEmailAsync(MassEmailModel data, int userId)
+    public async Task<string> AddMassEmailAsync(MassEmailModel? data, int userId)
     {
         ArgumentNullException.ThrowIfNull(data);
 

@@ -25,12 +25,13 @@ public partial class WriteArticle
     public IList<string>? AutoCompleteDataList { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(WriteArticle))]
-    public WriteArticleModel WriteArticleModel { get; set; } = new();
+    public WriteArticleModel? WriteArticleModel { get; set; }
 
     [Inject] internal IMapper Mapper { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
+        WriteArticleModel ??= new WriteArticleModel();
         AutoCompleteDataList = await TagsService.GetTagNamesArrayAsync(count: 2000);
 
         await FillPossibleEditFormAsync();

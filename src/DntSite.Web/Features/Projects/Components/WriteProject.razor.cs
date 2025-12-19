@@ -17,7 +17,7 @@ public partial class WriteProject
     public IList<string>? AutoCompleteDataList { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(WriteProject))]
-    public ProjectModel WriteProjectModel { get; set; } = new();
+    public ProjectModel? WriteProjectModel { get; set; }
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
@@ -33,6 +33,8 @@ public partial class WriteProject
 
     protected override async Task OnInitializedAsync()
     {
+        WriteProjectModel ??= new ProjectModel();
+
         if (!ApplicationState.CanCurrentUserCreateANewProject())
         {
             Alert.ShowAlert(AlertType.Danger, title: "عدم دسترسی",

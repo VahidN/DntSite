@@ -26,7 +26,7 @@ public partial class Login
 
     [Inject] internal IAppFoldersService AppFoldersService { set; get; } = null!;
 
-    [SupplyParameterFromForm] public AccountModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public AccountModel? Model { get; set; }
 
     [SupplyParameterFromQuery] public string? ReturnUrl { get; set; }
 
@@ -34,6 +34,7 @@ public partial class Login
 
     protected override async Task OnInitializedAsync()
     {
+        Model ??= new AccountModel();
         ApplicationState.DoNotLogPageReferrer = true;
         await CurrentUserService.ClearExistingAuthenticationCookiesAsync(clearAdminCookies: true);
     }

@@ -4,11 +4,11 @@ namespace DntSite.Web.Features.Surveys.Services.Contracts;
 
 public interface IVotesEmailsService : IScopedService
 {
-    public Task VoteSendEmailAsync(Survey result);
+    Task VoteSendEmailAsync(Survey result);
 
-    public Task VoteCommentSendEmailToAdminsAsync(SurveyComment comment);
+    Task VoteCommentSendEmailToAdminsAsync(SurveyComment comment);
 
-    public Task VoteCommentSendEmailToWritersAsync(SurveyComment comment);
+    Task VoteCommentSendEmailToWritersAsync(SurveyComment comment);
 
-    public Task VoteCommentSendEmailToPersonAsync(SurveyComment comment);
+    Task VoteCommentSendEmailToPersonAsync(SurveyComment comment);
 }

@@ -46,7 +46,7 @@ public sealed class AppFoldersService : IAppFoldersService
 
     public string ExportsPath => _exportsPath ??= GetWebRootAppDataFolderPath("exports");
 
-    public string ExportsAssetsFolder => _exportsAssetsFolder ??= Path.Combine(ExportsPath, path2: "assets");
+    public string ExportsAssetsFolder => _exportsAssetsFolder ??= ExportsPath.SafePathCombine("assets");
 
     public string AvatarsFolderPath => _avatarsPath ??= GetWebRootAppDataFolderPath(UploadsFolder, "Avatars");
 
@@ -57,7 +57,7 @@ public sealed class AppFoldersService : IAppFoldersService
         => _thumbnailsServicePath ??= GetWebRootAppDataFolderPath(UploadsFolder, "ThumbnailsService");
 
     public string CustomFontWithPersianDigitsPath => _customFontWithPersianDigitsPath ??=
-        Path.Combine(WwwRootPath, path2: "fonts", path3: "Samim-FD.ttf");
+        WwwRootPath.SafePathCombine("fonts", "Samim-FD.ttf");
 
     public string LuceneIndexFolderPath => _luceneIndexFolderPath ??= GetWebRootAppDataFolderPath("LuceneIndex");
 
@@ -85,11 +85,11 @@ public sealed class AppFoldersService : IAppFoldersService
     {
         ArgumentNullException.ThrowIfNull(folders);
 
-        var path = Path.Combine(WwwRootPath, AppDataFolder);
+        var path = WwwRootPath.SafePathCombine(AppDataFolder);
 
         foreach (var folder in folders)
         {
-            path = Path.Combine(path, folder);
+            path = path.SafePathCombine(folder);
         }
 
         path.CheckDirExists();
@@ -111,7 +111,7 @@ public sealed class AppFoldersService : IAppFoldersService
         var contentRootPath = webRootPath.Split([$"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}"],
             StringSplitOptions.RemoveEmptyEntries)[0];
 
-        return Path.Combine(contentRootPath, WwwRoot);
+        return contentRootPath.SafePathCombine(WwwRoot);
     }
 
     private string GetDefaultConnectionString()

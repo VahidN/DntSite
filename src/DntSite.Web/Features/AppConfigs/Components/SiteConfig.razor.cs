@@ -10,7 +10,7 @@ public partial class SiteConfig
 {
     [InjectComponentScoped] internal IAppSettingsService AppSettingsService { set; get; } = null!;
 
-    [SupplyParameterFromForm] internal AppSettingModel Model { set; get; } = new();
+    [SupplyParameterFromForm] internal AppSettingModel? Model { set; get; }
 
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
@@ -18,6 +18,8 @@ public partial class SiteConfig
 
     protected override async Task OnInitializedAsync()
     {
+        Model ??= new AppSettingModel();
+
         if (ApplicationState.HttpContext.IsGetRequest())
         {
             Model = await AppSettingsService.GetAppSettingModelAsync();

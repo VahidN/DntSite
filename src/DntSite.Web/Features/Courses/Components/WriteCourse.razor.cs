@@ -17,7 +17,7 @@ public partial class WriteCourse
     public IList<string>? AutoCompleteDataList { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(WriteCourse))]
-    public CourseModel WriteCourseModel { get; set; } = new();
+    public CourseModel? WriteCourseModel { get; set; }
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
@@ -47,6 +47,8 @@ public partial class WriteCourse
 
     protected override async Task OnInitializedAsync()
     {
+        WriteCourseModel ??= new CourseModel();
+
         if (!ApplicationState.CanCurrentUserCreateANewCourse())
         {
             Alert.ShowAlert(AlertType.Danger, title: "عدم دسترسی",

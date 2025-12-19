@@ -146,7 +146,7 @@ public class ProjectFaqsService(
     public Task<int> GetAllProjectFaqsCountAsync(bool showDeletedItems = false)
         => _projectFaqs.AsNoTracking().CountAsync(x => x.IsDeleted == showDeletedItems);
 
-    public async Task UpdateProjectFaqAsync(ProjectFaq? projectFaq, ProjectFaqFormModel writeProjectFaqFormModel)
+    public async Task UpdateProjectFaqAsync(ProjectFaq? projectFaq, ProjectFaqFormModel? writeProjectFaqFormModel)
     {
         ArgumentNullException.ThrowIfNull(writeProjectFaqFormModel);
 
@@ -163,7 +163,7 @@ public class ProjectFaqsService(
             projectFaq.MapToProjectsFaqsWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
-    public async Task<ProjectFaq?> AddProjectFaqAsync(ProjectFaqFormModel writeProjectFaqFormModel,
+    public async Task<ProjectFaq?> AddProjectFaqAsync(ProjectFaqFormModel? writeProjectFaqFormModel,
         User? user,
         int projectId)
     {
@@ -182,7 +182,7 @@ public class ProjectFaqsService(
     }
 
     public async Task NotifyAddOrUpdateChangesAsync(ProjectFaq? projectFaq,
-        ProjectFaqFormModel writeProjectFaqFormModel,
+        ProjectFaqFormModel? writeProjectFaqFormModel,
         User? user)
     {
         if (projectFaq is null)

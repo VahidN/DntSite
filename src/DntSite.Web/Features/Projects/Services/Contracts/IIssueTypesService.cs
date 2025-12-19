@@ -5,13 +5,13 @@ namespace DntSite.Web.Features.Projects.Services.Contracts;
 
 public interface IIssueTypesService : IScopedService
 {
-    public ValueTask<ProjectIssueType?> FindIssueTypeAsync(int id);
+    ValueTask<ProjectIssueType?> FindIssueTypeAsync(int id);
 
-    public ProjectIssueType AddIssueType(ProjectIssueType data);
+    ProjectIssueType AddIssueType(ProjectIssueType data);
 
-    public Task<List<ProjectIssueType>> GetAllProjectIssueTypesListAsNoTrackingAsync(int count, bool isActive = true);
+    Task<List<ProjectIssueType>> GetAllProjectIssueTypesListAsNoTrackingAsync(int count, bool isActive = true);
 
-    public Task<List<SimpleItemModel>> GetProjectIssueTypesListAsync(int projectId, int count, bool isActive = true);
+    Task<List<SimpleItemModel>> GetProjectIssueTypesListAsync(int projectId, int count, bool isActive = true);
 
-    public Task<int> GetNewProjectIssueTypesCountAsync(int projectId, bool showDeletedItems = false);
+    Task<int> GetNewProjectIssueTypesCountAsync(int projectId, bool showDeletedItems = false);
 }

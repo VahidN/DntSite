@@ -147,7 +147,7 @@ public class ProjectReleasesService(
     }
 
     public async Task UpdateProjectReleaseAsync(ProjectRelease? projectRelease,
-        ProjectPostFileModel projectPostFileModel)
+        ProjectPostFileModel? projectPostFileModel)
     {
         ArgumentNullException.ThrowIfNull(projectPostFileModel);
 
@@ -165,7 +165,7 @@ public class ProjectReleasesService(
             projectRelease.MapToProjectsReleasesWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
-    public async Task<ProjectRelease?> AddProjectReleaseAsync(ProjectPostFileModel projectPostFileModel,
+    public async Task<ProjectRelease?> AddProjectReleaseAsync(ProjectPostFileModel? projectPostFileModel,
         User? user,
         int projectId)
     {
@@ -185,7 +185,7 @@ public class ProjectReleasesService(
     }
 
     public async Task NotifyAddOrUpdateChangesAsync(ProjectRelease? projectRelease,
-        ProjectPostFileModel projectPostFileModel,
+        ProjectPostFileModel? projectPostFileModel,
         User? user)
     {
         if (projectRelease is null)

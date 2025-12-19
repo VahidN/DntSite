@@ -307,7 +307,7 @@ public class VotesService(
         }
     }
 
-    public async Task UpdateSurveyAsync(Survey? surveyItem, VoteModel writeSurveyModel, User? user)
+    public async Task UpdateSurveyAsync(Survey? surveyItem, VoteModel? writeSurveyModel, User? user)
     {
         ArgumentNullException.ThrowIfNull(writeSurveyModel);
 
@@ -328,7 +328,7 @@ public class VotesService(
             surveyItem.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
     }
 
-    public async Task<Survey?> AddNewsSurveyAsync(VoteModel writeSurveyModel, User? user)
+    public async Task<Survey?> AddNewsSurveyAsync(VoteModel? writeSurveyModel, User? user)
     {
         ArgumentNullException.ThrowIfNull(writeSurveyModel);
 
@@ -341,7 +341,7 @@ public class VotesService(
         return result;
     }
 
-    public async Task NotifyAddOrUpdateChangesAsync(Survey? surveyItem, VoteModel writeSurveyModel, User? user)
+    public async Task NotifyAddOrUpdateChangesAsync(Survey? surveyItem, VoteModel? writeSurveyModel, User? user)
     {
         ArgumentNullException.ThrowIfNull(writeSurveyModel);
 

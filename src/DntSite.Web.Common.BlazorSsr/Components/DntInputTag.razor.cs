@@ -58,7 +58,7 @@ public partial class DntInputTag
     [Parameter]
     public int LabelColumnWidth { get; set; } = 2;
 
-    [SupplyParameterFromForm] public HashSet<string>? EnteredTags { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    [SupplyParameterFromForm] public HashSet<string>? EnteredTags { get; set; }
 
     /// <summary>
     ///     The tags list to display

@@ -4,9 +4,9 @@ namespace DntSite.Web.Features.AppConfigs.Services.Contracts;
 
 public interface IDatabaseInfoService : IScopedService
 {
-    public Task<DatabaseInfoModel> GetDatabaseInfoAsync();
+    Task<DatabaseInfoModel> GetDatabaseInfoAsync();
 
-    public Task<bool> NeedsShrinkDatabaseAsync();
+    Task<bool> NeedsShrinkDatabaseAsync();
 
-    public void ShrinkDatabase();
+    void ShrinkDatabase();
 }

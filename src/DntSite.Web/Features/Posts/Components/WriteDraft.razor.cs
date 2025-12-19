@@ -31,13 +31,13 @@ public partial class WriteDraft
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [SupplyParameterFromForm(FormName = nameof(WriteDraft))]
-    public WriteDraftModel WriteDraftModel { get; set; } = new();
+    public WriteDraftModel? WriteDraftModel { get; set; }
 
     [SupplyParameterFromForm(FormName = "ConvertToComment")]
-    public ConvertToCommentModel ConvertToCommentModel { get; set; } = new();
+    public ConvertToCommentModel? ConvertToCommentModel { get; set; }
 
     [SupplyParameterFromForm(FormName = "ConvertToLink")]
-    public ConvertToLinkModel ConvertToLinkModel { get; set; } = new();
+    public ConvertToLinkModel? ConvertToLinkModel { get; set; }
 
     public IList<string>? AutoCompleteDataList { get; set; }
 
@@ -53,6 +53,10 @@ public partial class WriteDraft
 
     protected override async Task OnInitializedAsync()
     {
+        WriteDraftModel ??= new WriteDraftModel();
+        ConvertToCommentModel ??= new ConvertToCommentModel();
+        ConvertToLinkModel ??= new ConvertToLinkModel();
+
         AutoCompleteDataList = await TagsService.GetTagNamesArrayAsync(count: 2000);
         AddBreadCrumbs();
 
@@ -175,7 +179,7 @@ public partial class WriteDraft
 
     private async Task PerformConvertToLinkAsync()
     {
-        if (string.IsNullOrWhiteSpace(EditId))
+        if (string.IsNullOrWhiteSpace(EditId) || ConvertToLinkModel is null)
         {
             ApplicationState.NavigateToNotFoundPage();
 
@@ -242,12 +246,17 @@ public partial class WriteDraft
             return;
         }
 
-        var blogPost = await BlogCommentsService.FindCommentPostAsync(ConvertToCommentModel.ReplyPostId);
+        var blogPost = await BlogCommentsService.FindCommentPostAsync(ConvertToCommentModel?.ReplyPostId);
 
         if (blogPost?.IsDeleted != false)
         {
             Alert.ShowAlert(AlertType.Danger, title: "خطا!", message: "شماره مطلب وارد شده وجود خارجی ندارد.");
 
+            return;
+        }
+
+        if (ConvertToCommentModel is null)
+        {
             return;
         }
 

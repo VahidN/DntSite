@@ -4,15 +4,15 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IAdminsEmailsService : IScopedService
 {
-    public Task UploadFileSendEmailAsync(string path, string actionUrl, string formattedFileSize);
+    Task UploadFileSendEmailAsync(string path, string actionUrl, string formattedFileSize);
 
-    public Task TagEditedSendEmailAsync<TLayout, TLayoutModel>(TLayoutModel data)
+    Task TagEditedSendEmailAsync<TLayout, TLayoutModel>(TLayoutModel data)
         where TLayout : IComponent
         where TLayoutModel : BaseEmailModel;
 
-    public Task CommonFileEditedSendEmailAsync(string name, string description);
+    Task CommonFileEditedSendEmailAsync(string name, string description);
 
-    public Task PostNewReferrersEmailAsync(Uri destUri, Uri sourceUri);
+    Task PostNewReferrersEmailAsync(Uri destUri, Uri sourceUri);
 
-    public Task SendRecycleEmailAsync(string id, string title, string body);
+    Task SendRecycleEmailAsync(string id, string title, string body);
 }

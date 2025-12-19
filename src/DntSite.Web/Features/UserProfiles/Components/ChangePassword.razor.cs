@@ -21,10 +21,11 @@ public partial class ChangePassword
 
     [InjectComponentScoped] internal IUsedPasswordsService UsedPasswordsService { set; get; } = null!;
 
-    [SupplyParameterFromForm] public ChangePasswordModel Model { get; set; } = new();
+    [SupplyParameterFromForm] public ChangePasswordModel? Model { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        Model ??= new ChangePasswordModel();
         var currentUser = ApplicationState.CurrentUser;
 
         if (currentUser is null)

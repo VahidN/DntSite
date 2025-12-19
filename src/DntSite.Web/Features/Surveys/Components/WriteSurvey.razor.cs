@@ -17,7 +17,7 @@ public partial class WriteSurvey
     public IList<string>? AutoCompleteDataList { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(WriteSurvey))]
-    public VoteModel WriteSurveyModel { get; set; } = new();
+    public VoteModel? WriteSurveyModel { get; set; }
 
     [InjectComponentScoped] internal ITagsService TagsService { set; get; } = null!;
 
@@ -33,6 +33,8 @@ public partial class WriteSurvey
 
     protected override async Task OnInitializedAsync()
     {
+        WriteSurveyModel ??= new VoteModel();
+
         if (!ApplicationState.CanCurrentUserCreateANewSurvey())
         {
             Alert.ShowAlert(AlertType.Danger, title: "عدم دسترسی",

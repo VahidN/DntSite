@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DntSite.Web.Common.BlazorSsr/DntSite.Web.Common.BlazorSsr.csproj" />
+    <Project Path="src/DntSite.Web/DntSite.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DntSite.Tests/DntSite.Tests.csproj" />
+  </Folder>
+</Solution>

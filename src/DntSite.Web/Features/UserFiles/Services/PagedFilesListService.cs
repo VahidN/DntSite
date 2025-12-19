@@ -57,7 +57,7 @@ public class PagedFilesListService(
         var root = "/images/filestypes/";
         var ext = Path.GetExtension(name).ToLowerInvariant().TrimStart(trimChar: '.');
         var iconName = $"{ext}.gif";
-        var iconPath = Path.Combine(appFoldersService.WwwRootPath, path2: "images", path3: "filestypes", iconName);
+        var iconPath = appFoldersService.WwwRootPath.SafePathCombine("images", "filestypes", iconName);
 
         return File.Exists(iconPath) ? $"{root}{iconName}" : $"{root}file.gif";
     }
@@ -70,7 +70,7 @@ public class PagedFilesListService(
         }
 
         var dir = appFoldersService.GetFolderPath(currentFileType);
-        var filePath = Path.Combine(dir, fileNameToDelete);
+        var filePath = dir.SafePathCombine(fileNameToDelete);
 
         if (filePath.TryDeleteFile(logger))
         {

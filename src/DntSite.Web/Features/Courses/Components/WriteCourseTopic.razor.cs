@@ -15,7 +15,7 @@ public partial class WriteCourseTopic
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [SupplyParameterFromForm(FormName = nameof(WriteCourseTopic))]
-    public CourseTopicItemModel WriteCourseItemModel { get; set; } = new();
+    public CourseTopicItemModel? WriteCourseItemModel { get; set; }
 
     [Parameter] public int? CourseId { set; get; }
 
@@ -34,6 +34,8 @@ public partial class WriteCourseTopic
 
     protected override async Task OnInitializedAsync()
     {
+        WriteCourseItemModel ??= new CourseTopicItemModel();
+
         if (!CourseId.HasValue ||
             !await CourseTopicsService.CanUserAddCourseTopicAsync(ApplicationState.CurrentUser, CourseId.Value))
         {

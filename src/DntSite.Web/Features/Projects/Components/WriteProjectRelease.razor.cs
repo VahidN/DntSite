@@ -16,7 +16,7 @@ public partial class WriteProjectRelease
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [SupplyParameterFromForm(FormName = nameof(WriteProjectRelease))]
-    public ProjectPostFileModel ProjectPostFileModel { get; set; } = new();
+    public ProjectPostFileModel? ProjectPostFileModel { get; set; }
 
     [Parameter] public string? EditId { set; get; }
 
@@ -30,6 +30,8 @@ public partial class WriteProjectRelease
 
     protected override async Task OnInitializedAsync()
     {
+        ProjectPostFileModel ??= new ProjectPostFileModel();
+
         if (!ProjectId.HasValue)
         {
             ApplicationState.NavigateToNotFoundPage();

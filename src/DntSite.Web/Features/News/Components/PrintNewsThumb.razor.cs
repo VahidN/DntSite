@@ -11,7 +11,7 @@ public partial class PrintNewsThumb
 
     [InjectComponentScoped] public IAppFoldersService AppFoldersService { set; get; } = null!;
 
-    private bool FileExists => File.Exists(Path.Combine(AppFoldersService.ThumbnailsServiceFolderPath, FileName));
+    private bool FileExists => File.Exists(AppFoldersService.ThumbnailsServiceFolderPath.SafePathCombine(FileName));
 
     private string ImageUrl
         => string.Create(CultureInfo.InvariantCulture, $"{NewsRoutingConstants.NewsRedirectBase}/{Id}");

@@ -10,7 +10,7 @@ public partial class AddAdvertisementForm
     [Parameter] [EditorRequired] public EventCallback<WriteAdvertisementModel> OnValidSubmit { get; set; }
 
     [SupplyParameterFromForm(FormName = nameof(AddAdvertisementForm))]
-    public WriteAdvertisementModel Model { set; get; } = new();
+    public WriteAdvertisementModel? Model { set; get; }
 
     [Parameter] public WriteAdvertisementModel? InitialModel { set; get; }
 
@@ -19,6 +19,7 @@ public partial class AddAdvertisementForm
     protected override void OnInitialized()
     {
         base.OnInitialized();
+ Model ??= new WriteAdvertisementModel();
 
         if (InitialModel is not null && ApplicationState.HttpContext.IsGetRequest())
         {
@@ -28,7 +29,7 @@ public partial class AddAdvertisementForm
 
     private async Task PerformAsync()
     {
-        if (!OnValidSubmit.HasDelegate)
+        if (!OnValidSubmit.HasDelegate || Model is null)
         {
             return;
         }

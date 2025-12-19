@@ -202,9 +202,9 @@ public class AuditableEntitiesInterceptor(
     {
         var memberInfo = propertyMetadata.PropertyInfo ?? propertyMetadata.FieldInfo as MemberInfo;
 
-        return memberInfo?.GetCustomAttribute<IgnoreAuditAttribute>() is not null;
+        return memberInfo is not null && Attribute.IsDefined(memberInfo, typeof(IgnoreAuditAttribute), inherit: true);
     }
 
     private static bool IgnoreSoftDelete(IReadOnlyTypeBase entryMetadata)
-        => entryMetadata.ClrType.GetCustomAttribute<IgnoreSoftDeleteAttribute>() is not null;
+        => Attribute.IsDefined(entryMetadata.ClrType, typeof(IgnoreSoftDeleteAttribute), inherit: true);
 }

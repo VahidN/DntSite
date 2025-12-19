@@ -14,71 +14,66 @@ namespace DntSite.Web.Features.Common.Services.Contracts;
 
 public interface ITagsService : IScopedService
 {
-    public Task<List<BacklogTag>> SaveNewBacklogTagsAsync(IList<string> tagsList);
+    Task<List<BacklogTag>> SaveNewBacklogTagsAsync(IList<string> tagsList);
 
-    public Task<List<TEntity>> SaveNewTagsAsync<TEntity, TAssociatedEntity>(IList<string>? inputTagsList)
+    Task<List<TEntity>> SaveNewTagsAsync<TEntity, TAssociatedEntity>(IList<string>? inputTagsList)
         where TEntity : BaseTagEntity<TAssociatedEntity>, new()
         where TAssociatedEntity : BaseAuditedEntity;
 
-    public Task<PagedResultModel<SurveyTag>> GetPagedAllSurveyTagsListAsNoTrackingAsync(int pageNumber,
+    Task<PagedResultModel<SurveyTag>> GetPagedAllSurveyTagsListAsNoTrackingAsync(int pageNumber, int recordsPerPage);
+
+    Task<PagedResultModel<BacklogTag>> GetPagedAllBacklogTagsListAsNoTrackingAsync(int pageNumber, int recordsPerPage);
+
+    Task<List<BlogPostTag>> GetAllPostTagsListAsNoTrackingAsync(int count);
+
+    Task<PagedResultModel<CourseTag>> GetPagedAllCoursesTagsListAsNoTrackingAsync(int pageNumber, int recordsPerPage);
+
+    Task<PagedResultModel<BlogPostTag>> GetPagedAllPostTagsListAsNoTrackingAsync(int pageNumber, int recordsPerPage);
+
+    Task<List<string>> GetTagNamesArrayAsync(int count);
+
+    Task<List<BlogPostTag>> SaveNewArticleTagsAsync(IList<string> tagsList);
+
+    Task<List<AdvertisementTag>> SaveNewAdvertisementTagsAsync(IList<string> tagsList);
+
+    Task<List<StackExchangeQuestionTag>> SaveNewStackExchangeQuestionsTagsAsync(IList<string>? inputTagsList);
+
+    Task<List<BlogPostTag>> GetThisPostTagsListAsync(int postId);
+
+    ValueTask<BlogPostTag?> FindArticleTagAsync(int tagId);
+
+    Task<string> AvailableTagsToJsonAsync(int count = 2000);
+
+    Task<List<DailyNewsItemTag>> SaveNewLinkItemTagsAsync(IList<string> tagsList);
+
+    Task<List<StackExchangeQuestionTag>> SaveNewQuestionTagsAsync(IList<string> tagsList);
+
+    Task<List<DailyNewsItemTag>> GetAllLinkTagsListAsNoTrackingAsync(int count);
+
+    Task<PagedResultModel<DailyNewsItemTag>> GetPagedAllLinkTagsListAsNoTrackingAsync(int pageNumber,
         int recordsPerPage);
 
-    public Task<PagedResultModel<BacklogTag>> GetPagedAllBacklogTagsListAsNoTrackingAsync(int pageNumber,
-        int recordsPerPage);
+    Task<PagedResultModel<ProjectTag>> GetPagedAllProjectTagsListAsNoTrackingAsync(int pageNumber, int recordsPerPage);
 
-    public Task<List<BlogPostTag>> GetAllPostTagsListAsNoTrackingAsync(int count);
-
-    public Task<PagedResultModel<CourseTag>> GetPagedAllCoursesTagsListAsNoTrackingAsync(int pageNumber,
-        int recordsPerPage);
-
-    public Task<PagedResultModel<BlogPostTag>> GetPagedAllPostTagsListAsNoTrackingAsync(int pageNumber,
-        int recordsPerPage);
-
-    public Task<List<string>> GetTagNamesArrayAsync(int count);
-
-    public Task<List<BlogPostTag>> SaveNewArticleTagsAsync(IList<string> tagsList);
-
-    public Task<List<AdvertisementTag>> SaveNewAdvertisementTagsAsync(IList<string> tagsList);
-
-    public Task<List<StackExchangeQuestionTag>> SaveNewStackExchangeQuestionsTagsAsync(IList<string>? inputTagsList);
-
-    public Task<List<BlogPostTag>> GetThisPostTagsListAsync(int postId);
-
-    public ValueTask<BlogPostTag?> FindArticleTagAsync(int tagId);
-
-    public Task<string> AvailableTagsToJsonAsync(int count = 2000);
-
-    public Task<List<DailyNewsItemTag>> SaveNewLinkItemTagsAsync(IList<string> tagsList);
-
-    public Task<List<StackExchangeQuestionTag>> SaveNewQuestionTagsAsync(IList<string> tagsList);
-
-    public Task<List<DailyNewsItemTag>> GetAllLinkTagsListAsNoTrackingAsync(int count);
-
-    public Task<PagedResultModel<DailyNewsItemTag>> GetPagedAllLinkTagsListAsNoTrackingAsync(int pageNumber,
-        int recordsPerPage);
-
-    public Task<PagedResultModel<ProjectTag>> GetPagedAllProjectTagsListAsNoTrackingAsync(int pageNumber,
-        int recordsPerPage);
-
-    public Task<PagedResultModel<StackExchangeQuestionTag>> GetPagedAllStackExchangeQuestionTagsListAsNoTrackingAsync(
+    Task<PagedResultModel<StackExchangeQuestionTag>> GetPagedAllStackExchangeQuestionTagsListAsNoTrackingAsync(
         int pageNumber,
         int recordsPerPage);
 
-    public Task<PagedResultModel<AdvertisementTag>> GetPagedAllAdvertisementTagsListAsNoTrackingAsync(int pageNumber,
+    Task<PagedResultModel<AdvertisementTag>> GetPagedAllAdvertisementTagsListAsNoTrackingAsync(int pageNumber,
         int recordsPerPage);
 
-    public Task<PagedResultModel<LearningPathTag>> GetPagedAllLearningPathTagsListAsNoTrackingAsync(int pageNumber,
+    Task<PagedResultModel<LearningPathTag>> GetPagedAllLearningPathTagsListAsNoTrackingAsync(int pageNumber,
         int recordsPerPage);
 
-    public ValueTask<DailyNewsItemTag?> FindLinkTagAsync(int tagId);
+    ValueTask<DailyNewsItemTag?> FindLinkTagAsync(int tagId);
 
-    public Task<List<ProjectTag>> SaveProjectItemTagsAsync(IList<string> tagsList);
+    Task<List<ProjectTag>> SaveProjectItemTagsAsync(IList<string> tagsList);
 
-    public Task<string> GetTagPdfFileNameAsync(string tagName, string fileName = "dot-net-tips-tag-");
+    Task<string> GetTagPdfFileNameAsync(string tagName, string fileName = "dot-net-tips-tag-");
 
-    public Task<List<SurveyTag>> SaveVoteTagsAsync(IList<string> tagsList);
+    Task<List<SurveyTag>> SaveVoteTagsAsync(IList<string> tagsList);
 
-    public Task<List<CourseTag>> SaveCourseItemTagsAsync(IList<string> tagsList);
+    Task<List<CourseTag>> SaveCourseItemTagsAsync(IList<string> tagsList);
 
-    public Task<List<LearningPathTag>> SaveNewLearningPathTagsAsync(IList<string> tags);
+    Task<List<LearningPathTag>> SaveNewLearningPathTagsAsync(IList<string> tags);
 }

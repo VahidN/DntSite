@@ -16,7 +16,7 @@ public partial class WriteProjectFaq
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
     [SupplyParameterFromForm(FormName = nameof(WriteProjectFaq))]
-    public ProjectFaqFormModel WriteProjectFaqFormModel { get; set; } = new();
+    public ProjectFaqFormModel? WriteProjectFaqFormModel { get; set; }
 
     [Parameter] public string? EditId { set; get; }
 
@@ -30,6 +30,8 @@ public partial class WriteProjectFaq
 
     protected override async Task OnInitializedAsync()
     {
+        WriteProjectFaqFormModel ??= new ProjectFaqFormModel();
+
         if (!ProjectId.HasValue)
         {
             ApplicationState.NavigateToNotFoundPage();
