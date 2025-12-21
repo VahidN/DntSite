@@ -141,6 +141,13 @@
                                 @filter
                             </div>
                         }
+
+                        @if (!_formMappingErrors.IsEmpty())
+                        {
+                            <div class="@GridifyFilterClass" dir="ltr">
+                                @_formMappingErrors.HtmlRaw()
+                            </div>
+                        }
                     }
                 }
                 else

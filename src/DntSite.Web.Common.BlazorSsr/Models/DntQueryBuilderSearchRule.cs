@@ -10,7 +10,7 @@ namespace DntSite.Web.Common.BlazorSsr.Models;
 public class DntQueryBuilderSearchRule<TRecord>
     where TRecord : class
 {
-    private readonly string _rowsName = $"DntQueryBuilder.{typeof(TRecord).Name}.SearchRuleRows";
+    private readonly string _rowsName = nameof(DntQueryBuilder<>.SearchRuleRows);
 
     public int RulePropertyIndex { set; get; }
 

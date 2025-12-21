@@ -1,5 +1,6 @@
 using DntSite.Web.Common.BlazorSsr.Extensions;
 using DntSite.Web.Common.BlazorSsr.Utils;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace DntSite.Web.Common.BlazorSsr.Components;
 
@@ -9,6 +10,10 @@ namespace DntSite.Web.Common.BlazorSsr.Components;
 public partial class DntQueryBuilder<TRecord>
     where TRecord : class
 {
+    private string? _formMappingErrors;
+
+    [CascadingParameter] private FormMappingContext? FormMappingContext { get; set; }
+
     private bool HasDefinedSearchRule => SearchRuleRows?.Count > 0;
 
     private static string FormName => $"QueryBuilder_{typeof(TRecord)}";
@@ -282,13 +287,34 @@ public partial class DntQueryBuilder<TRecord>
     [Parameter]
     public bool ShowGridifyFilter { set; get; } = true;
 
+    [SupplyParameterFromForm] public List<DntQueryBuilderSearchRule<TRecord>>? SearchRuleRows { set; get; }
+
     [SupplyParameterFromForm] public DntQueryBuilderAction QueryBuilderAction { set; get; }
 
     [SupplyParameterFromForm] public int AddRulePropertyIndex { set; get; }
 
-    [SupplyParameterFromForm] public List<DntQueryBuilderSearchRule<TRecord>>? SearchRuleRows { set; get; }
-
     [SupplyParameterFromForm] public int? DeleteRowIndex { set; get; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        SearchRuleRows ??= [];
+        SetFormMappingErrors();
+    }
+
+    private void SetFormMappingErrors()
+    {
+        var errors = FormMappingContext?.GetAllErrors().ToList();
+
+        if (errors is null || errors.Count == 0)
+        {
+            return;
+        }
+
+        _formMappingErrors = string.Join(separator: "<br>",
+            errors.Select(err => string.Join(separator: ' ', err.ErrorMessages)));
+    }
 
     /// <summary>
     ///     OnSearch Callback
