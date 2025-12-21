@@ -38,7 +38,15 @@ public partial class ApplicationState
 
     public void NavigateToUnauthorizedPage() => NavigateTo(uri: "/error/401");
 
+    /// <summary>
+    ///     Sends user to `/error/404` address
+    /// </summary>
     public void NavigateToNotFoundPage() => NavigateTo(uri: "/error/404");
+
+    /// <summary>
+    ///     Handles setting the NotFound state. It's new in .NET 10x.
+    /// </summary>
+    public void NavigateToNotFound() => NavigationManager.NotFound();
 
     public void NavigateTo([StringSyntax(syntax: "Uri")] string uri, bool forceLoad = false, bool replace = false)
         => NavigationManager.NavigateTo(uri, forceLoad, replace);
