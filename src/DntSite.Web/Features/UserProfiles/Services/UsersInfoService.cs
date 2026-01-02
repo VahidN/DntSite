@@ -1,4 +1,5 @@
 ﻿using DNTPersianUtils.Core.Normalizer;
+using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
@@ -6,13 +7,15 @@ using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Models;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
+using Microsoft.Extensions.Options;
 
 namespace DntSite.Web.Features.UserProfiles.Services;
 
 public class UsersInfoService(
     IUnitOfWork uow,
     ICachedAppSettingsProvider configsService,
-    IPasswordHasherService passwordHasherService) : IUsersInfoService
+    IPasswordHasherService passwordHasherService,
+    IOptionsSnapshot<StartupSettingsModel> siteSettingsRoot) : IUsersInfoService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<User, object?>>> CustomOrders = new()
     {
@@ -546,4 +549,8 @@ public class UsersInfoService(
             .ThenBy(x => x!.FriendlyName)
             .Take(count)
             .ToListAsync();
+
+    public Task<User?> GetNewsLinksAIUserAsync()
+        => _users.OrderBy(x => x.Id)
+            .FirstOrDefaultAsync(x => x.UserName == siteSettingsRoot.Value.NewsLinksAIUserSeed.Username);
 }

@@ -41,4 +41,6 @@ public class AppSetting : BaseAuditedEntity
     public required string SiteRootUri { get; set; }
 
     public MinimumRequiredPosts MinimumRequiredPosts { get; set; } = new();
+
+    public GeminiNewsFeeds GeminiNewsFeeds { get; set; } = new();
 }

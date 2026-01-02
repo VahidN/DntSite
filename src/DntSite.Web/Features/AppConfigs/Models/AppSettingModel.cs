@@ -45,4 +45,6 @@ public class AppSettingModel
     public string SiteRootUri { get; set; } = default!;
 
     public MinimumRequiredPosts MinimumRequiredPosts { get; set; } = new();
+
+    public GeminiNewsFeedsModel GeminiNewsFeedsInfo { get; set; } = new();
 }

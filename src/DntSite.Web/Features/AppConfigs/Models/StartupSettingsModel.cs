@@ -6,6 +6,8 @@ public class StartupSettingsModel
 
     public required AdminUserSeedModel AdminUserSeed { get; set; }
 
+    public required AIUserSeedModel NewsLinksAIUserSeed { get; set; }
+
     public required ConnectionStringsModel ConnectionStrings { get; set; }
 
     public required DataProtectionSettingsModel DataProtectionOptions { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace DntSite.Web.Features.DbSeeder.Services;
 
-public class UsersDataSeeder(
+public class AdminUserDataSeeder(
     IUnitOfWork uow,
     IPasswordHasherService passwordHasherService,
     IOptionsSnapshot<StartupSettingsModel> siteSettingsRoot) : IDataSeeder
@@ -45,11 +45,11 @@ public class UsersDataSeeder(
             IsActive = true,
             LastVisitDateTime = null,
             HashedPassword = _passwordHasherService.GetPbkdf2Hash(adminUserOptions.Password),
-            SerialNumber = Guid.NewGuid().ToString("N"),
+            SerialNumber = Guid.NewGuid().ToString(format: "N"),
             EMail = adminUserOptions.Email,
             EmailIsValidated = true,
             Description = "-",
-            RegistrationCode = Guid.NewGuid().ToString("N"),
+            RegistrationCode = Guid.NewGuid().ToString(format: "N"),
             ReceiveDailyEmails = true,
             Roles = roles
         };

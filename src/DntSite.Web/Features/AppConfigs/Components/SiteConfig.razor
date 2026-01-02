@@ -143,6 +143,18 @@
 
             <hr/>
 
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiKeyFill"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.GeminiNewsFeedsInfo.ApiKey"/>
+
+            <DntInputTextArea FieldIcon="@DntBootstrapIcons.BiRss"
+                              dir="ltr"
+                              @bind-Value="Model.GeminiNewsFeedsInfo.NewsFeeds"/>
+
+            <hr/>
+
             <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
         </EditForm>
     </FrameBody>

@@ -19,6 +19,8 @@ public partial class RecalculatePostsCount
 
     [InjectComponentScoped] internal IPdfExportService PdfExportService { set; get; } = null!;
 
+    [InjectComponentScoped] internal IAIDailyNewsService AIDailyNewsService { set; get; } = null!;
+
     [InjectComponentScoped] internal IDailyNewsScreenshotsService DailyNewsScreenshotsService { set; get; } = null!;
 
     [Inject] internal IFullTextSearchService FullTextSearchService { set; get; } = null!;
@@ -69,6 +71,11 @@ public partial class RecalculatePostsCount
 
             case RecalculatePostsCountAction.RebuildExports:
                 PdfExportService.RebuildExports();
+
+                break;
+
+            case RecalculatePostsCountAction.RunAIDailyNewsService:
+                await AIDailyNewsService.StartProcessingNewsFeedsAsync();
 
                 break;
         }

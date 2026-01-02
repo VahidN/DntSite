@@ -64,6 +64,14 @@
                         class="btn btn-sm btn-primary me-2">
                     بازسازی خروجی سایت
                 </button>
+
+                <button type="submit"
+                        data-cancel-confirm-message="دریافت اخبار توسط هوش مصنوعی؟"
+                        name="@nameof(RecalculateAction)"
+                        value="@RecalculatePostsCountAction.RunAIDailyNewsService"
+                        class="btn btn-sm btn-primary me-2">
+                    دریافت اخبار توسط هوش مصنوعی
+                </button>
             </div>
         </EditForm>
     </FrameBody>

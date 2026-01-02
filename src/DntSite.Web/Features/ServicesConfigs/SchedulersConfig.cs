@@ -95,6 +95,13 @@ public static class SchedulersConfig
 
             options.AddScheduledTask<EmptyPMsJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 1, Second: 1 });
+
+            options.AddScheduledTask<AIDailyNewsJob>(utcNow =>
+            {
+                var now = GetNowIranTime(utcNow);
+
+                return now.Hour % 2 == 0 && now is { Minute: 5, Second: 1 };
+            });
         });
 
     private static DateTime GetNowIranTime(DateTime utcNow) => utcNow.ToIranTimeZoneDateTime();

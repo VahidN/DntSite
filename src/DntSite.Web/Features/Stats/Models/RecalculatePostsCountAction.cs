@@ -8,5 +8,6 @@ public enum RecalculatePostsCountAction
     DeleteAllSiteReferrers,
     InvalidateAllYoutubeScreenshots,
     TryReDownloadFailedScreenshots,
-    RebuildExports
+    RebuildExports,
+    RunAIDailyNewsService
 }

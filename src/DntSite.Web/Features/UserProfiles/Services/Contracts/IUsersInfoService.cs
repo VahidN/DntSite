@@ -102,4 +102,6 @@ public interface IUsersInfoService : IScopedService
         bool showDeletedItems = false);
 
     Task<List<User>> GetAllActiveAdminsAsNoTrackingAsync();
+
+    Task<User?> GetNewsLinksAIUserAsync();
 }
