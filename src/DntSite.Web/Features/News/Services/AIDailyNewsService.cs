@@ -59,7 +59,7 @@ public class AIDailyNewsService(
           - News-style (neutral, informative)
 
         - Summary:
-          - A single, well-structured paragraph
+          - Three to five distinct paragraphs, focusing on the key points, main arguments, and conclusions.
 
         - Tags:
           - 3–5 items
@@ -162,7 +162,7 @@ public class AIDailyNewsService(
         {
             ApiVersion = GeminiApiVersions.V1Beta,
             ApiKey = apiKey,
-            ModelId = GeminiModels.Gemini25Flash,
+            ModelId = "gemma-3-12b-it",
             SystemInstruction = null,
             Chats = [new GeminiChatRequest(prompt)],
             ResponseMimeType = "application/json"
@@ -208,13 +208,16 @@ public class AIDailyNewsService(
             return true;
         }
 
-        await dailyNewsItemsService.AddNewsItemAsync(new DailyNewsItemModel
+        var dailyNewsItemModel = new DailyNewsItemModel
         {
             Title = outputInfo.Title ?? feedItem.Title,
             Url = feedItem.Url,
             DescriptionText = outputInfo.Summary ?? "",
             Tags = outputInfo.Tags ?? ["News"]
-        }, aiUser);
+        };
+
+        var newsItem = await dailyNewsItemsService.AddNewsItemAsync(dailyNewsItemModel, aiUser);
+        await dailyNewsItemsService.NotifyAddOrUpdateChangesAsync(newsItem, dailyNewsItemModel, aiUser);
 
         return true;
     }
