@@ -171,5 +171,5 @@ public class SiteUrlsService(
         return url.GetUrlDomain().Domain;
     }
 
-    public string GetUrlHash(string? url) => url.IsEmpty() ? "".GetSha1Hash() : url.NormalizeUrl().GetSha1Hash();
+    public static string GetUrlHash(string? url) => url.IsEmpty() ? "".GetSha1Hash() : url.NormalizeUrl().GetSha1Hash();
 }
