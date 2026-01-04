@@ -153,12 +153,12 @@ public class EmailsFactoryService(
             addIp: false);
     }
 
-    public Task SendTextToAllAdminsAsync(string text)
+    public Task SendTextToAllAdminsAsync(string text, string emailSubject = "جهت اطلاع")
         => SendEmailToAllAdminsAsync<SendTextToAdmins, SendTextToAdminsModel>(messageId: "Text", inReplyTo: "",
             references: "Text", new SendTextToAdminsModel
             {
                 Text = text
-            }, emailSubject: "جهت اطلاع");
+            }, emailSubject);
 
     public async Task SendEmailToAllUsersAsync<TLayout, TLayoutModel>(IList<string> emails,
         string messageId,

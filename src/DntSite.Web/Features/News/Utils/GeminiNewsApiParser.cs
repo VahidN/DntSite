@@ -24,12 +24,12 @@ public static partial class GeminiNewsApiParser
             return null;
         }
 
-        if (apiOutput.Contains(value: "--- START SUCCESS RECORD ---"))
+        if (apiOutput.Contains(value: "--- START SUCCESS RECORD ---", StringComparison.OrdinalIgnoreCase))
         {
             return ParseSuccessRecord(apiOutput);
         }
 
-        if (apiOutput.Contains(value: "--- START FALLBACK RECORD ---"))
+        if (apiOutput.Contains(value: "--- START FALLBACK RECORD ---", StringComparison.OrdinalIgnoreCase))
         {
             return ParseFallbackRecord(apiOutput);
         }

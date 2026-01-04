@@ -7,7 +7,7 @@ public interface IEmailsFactoryService : IScopedService
     Task InitEmailModelAsync<TLayoutModel>(TLayoutModel model)
         where TLayoutModel : BaseEmailModel;
 
-    Task SendTextToAllAdminsAsync(string text);
+    Task SendTextToAllAdminsAsync(string text, string emailSubject = "جهت اطلاع");
 
     Task SendNormalEmailAsync(string messageId,
         string inReplyTo,

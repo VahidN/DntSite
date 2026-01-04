@@ -1,5 +1,6 @@
 using System.Text;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.News.Utils;
@@ -15,8 +16,12 @@ public class AIDailyNewsService(
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IDailyNewsItemsService dailyNewsItemsService,
     BaseHttpClient baseHttpClient,
+    IEmailsFactoryService emailsFactoryService,
     ILogger<AIDailyNewsService> logger) : IAIDailyNewsService
 {
+    private const int QuotaLimit = 15000;
+    private const int MaxTextSize = 3800;
+
     private static readonly List<string> ProcessedItems = [];
 
     private static readonly CompositeFormat PromptTemplate = CompositeFormat.Parse(format: """
@@ -176,6 +181,10 @@ public class AIDailyNewsService(
                     feedItem.Url, responseResult.ErrorResponse?.Error?.Message ?? "",
                     responseResult.ResponseBody ?? "");
 
+                await emailsFactoryService.SendTextToAllAdminsAsync(
+                    responseResult.ResponseBody ?? "!IsSuccessfulResponse",
+                    emailSubject: "Gemini Client Service Error");
+
                 return false;
             }
 
@@ -226,8 +235,18 @@ public class AIDailyNewsService(
     {
         var page = await baseHttpClient.HttpClient.HtmlToTextAsync(feedItem.Url, logger, ct);
 
-        return page.Trim().IsEmpty()
-            ? null
-            : string.Format(CultureInfo.InvariantCulture, PromptTemplate, feedItem.Title, page);
+        if (page.Trim().IsEmpty())
+        {
+            return null;
+        }
+
+        var estimatedTokens = TokenEstimator.EstimateMaxOutputTokens(page);
+
+        if (estimatedTokens >= QuotaLimit || page.Length >= MaxTextSize)
+        {
+            page = page.GetBriefDescription(MaxTextSize);
+        }
+
+        return string.Format(CultureInfo.InvariantCulture, PromptTemplate, feedItem.Title, page);
     }
 }
