@@ -529,6 +529,25 @@ public class DailyNewsItemsService(
         }
     }
 
+    public async Task<IList<string>> GetNotProcessedLinksAsync(IEnumerable<string> urls, CancellationToken ct = default)
+    {
+        var itemsDictionary = new Dictionary<string, string>(StringComparer.Ordinal);
+
+        foreach (var url in urls)
+        {
+            var key = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(url.Trim()));
+            itemsDictionary[key] = url;
+        }
+
+        var processedItems = await _dailyNewsItem.Where(newsItem => itemsDictionary.Keys.Contains(newsItem.UrlHash))
+            .Select(newsItem => newsItem.UrlHash)
+            .ToListAsync(ct);
+
+        return itemsDictionary.Where(valuePair => !processedItems.Contains(valuePair.Key))
+            .Select(valuePair => valuePair.Value)
+            .ToList();
+    }
+
     private static bool TryChangeUrlScheme(DailyNewsItem item)
     {
         if (!item.IsDeleted || !item.Url.StartsWith(value: "http://", StringComparison.OrdinalIgnoreCase))

@@ -22,8 +22,6 @@ public class AIDailyNewsService(
     private const int QuotaLimit = 15000;
     private const int MaxTextSize = 3800;
 
-    private static readonly List<string> ProcessedItems = [];
-
     private static readonly CompositeFormat PromptTemplate = CompositeFormat.Parse(format: """
         You are RaviAI, a developer-focused AI that processes programming news content
         and converts the main content into a structured Persian news record.
@@ -122,8 +120,12 @@ public class AIDailyNewsService(
                     continue;
                 }
 
+                var newLinks =
+                    await dailyNewsItemsService.GetNotProcessedLinksAsync(
+                        feedChannel.RssItems.Select(feedItem => feedItem.Url).Distinct(), ct);
+
                 var newFeedItems = feedChannel.RssItems
-                    .Where(item => !ProcessedItems.Contains(item.Url, StringComparer.OrdinalIgnoreCase))
+                    .Where(item => newLinks.Contains(item.Url, StringComparer.OrdinalIgnoreCase))
                     .ToList();
 
                 foreach (var feedItem in newFeedItems)
@@ -134,8 +136,6 @@ public class AIDailyNewsService(
                     {
                         return;
                     }
-
-                    ProcessedItems.Add(feedItem.Url);
 
                     await Task.Delay(TimeSpan.FromSeconds(seconds: 30), ct);
                 }
