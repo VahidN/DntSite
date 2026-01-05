@@ -45,6 +45,7 @@
     <PackageReference Include="Lucene.Net.Analysis.Common"/>
     <PackageReference Include="Lucene.Net.QueryParser"/>
     <PackageReference Include="AutoMapper"/>
+	<PackageReference Include="YoutubeExplode" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DntSite.Web.Common.BlazorSsr\DntSite.Web.Common.BlazorSsr.csproj" />

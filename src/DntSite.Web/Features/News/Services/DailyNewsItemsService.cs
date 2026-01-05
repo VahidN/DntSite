@@ -531,6 +531,8 @@ public class DailyNewsItemsService(
 
     public async Task<IList<string>> GetNotProcessedLinksAsync(IEnumerable<string> urls, CancellationToken ct = default)
     {
+        ArgumentNullException.ThrowIfNull(urls);
+
         var itemsDictionary = new Dictionary<string, string>(StringComparer.Ordinal);
 
         foreach (var url in urls)

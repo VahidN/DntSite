@@ -17,6 +17,7 @@ public class AIDailyNewsService(
     IDailyNewsItemsService dailyNewsItemsService,
     BaseHttpClient baseHttpClient,
     IEmailsFactoryService emailsFactoryService,
+    IYoutubeScreenshotsService youtubeScreenshots,
     ILogger<AIDailyNewsService> logger) : IAIDailyNewsService
 {
     private const int QuotaLimit = 15000;
@@ -111,22 +112,7 @@ public class AIDailyNewsService(
         {
             try
             {
-                var feedChannel = await rssReaderService.ReadRssAsync(feedUrl, ct);
-
-                if (feedChannel.RssItems is null)
-                {
-                    logger.LogWarning(message: "`{FeedUrl}` feed is empty.", feedUrl);
-
-                    continue;
-                }
-
-                var newLinks =
-                    await dailyNewsItemsService.GetNotProcessedLinksAsync(
-                        feedChannel.RssItems.Select(feedItem => feedItem.Url).Distinct(), ct);
-
-                var newFeedItems = feedChannel.RssItems
-                    .Where(item => newLinks.Contains(item.Url, StringComparer.OrdinalIgnoreCase))
-                    .ToList();
+                var newFeedItems = await GetNewFeedItemsAsync(feedUrl, ct);
 
                 foreach (var feedItem in newFeedItems)
                 {
@@ -145,6 +131,24 @@ public class AIDailyNewsService(
                 logger.LogError(ex.Demystify(), message: "Error processing `{FeedUrl}`.", feedUrl);
             }
         }
+    }
+
+    private async Task<List<FeedItem>> GetNewFeedItemsAsync(string feedUrl, CancellationToken ct)
+    {
+        var feedChannel = await rssReaderService.ReadRssAsync(feedUrl, ct);
+
+        if (feedChannel.RssItems is null)
+        {
+            logger.LogWarning(message: "`{FeedUrl}` feed is empty.", feedUrl);
+
+            return [];
+        }
+
+        var newLinks =
+            await dailyNewsItemsService.GetNotProcessedLinksAsync(
+                feedChannel.RssItems.Select(feedItem => feedItem.Url).Distinct(), ct);
+
+        return [..feedChannel.RssItems.Where(item => newLinks.Contains(item.Url, StringComparer.OrdinalIgnoreCase))];
     }
 
     private async Task<bool> ProcessFeedItemAsync(string apiKey, FeedItem feedItem, User aiUser, CancellationToken ct)
@@ -233,20 +237,22 @@ public class AIDailyNewsService(
 
     private async Task<string?> CreatePromptAsync(FeedItem feedItem, CancellationToken ct)
     {
-        var page = await baseHttpClient.HttpClient.HtmlToTextAsync(feedItem.Url, logger, ct);
+        var description = youtubeScreenshots.IsYoutubeVideo(feedItem.Url).Success
+            ? await youtubeScreenshots.GetYoutubeVideoDescriptionAsync(feedItem.Url) ?? ""
+            : await baseHttpClient.HttpClient.HtmlToTextAsync(feedItem.Url, logger, ct);
 
-        if (page.Trim().IsEmpty())
+        if (description.Trim().IsEmpty())
         {
             return null;
         }
 
-        var estimatedTokens = TokenEstimator.EstimateMaxOutputTokens(page);
+        var estimatedTokens = TokenEstimator.EstimateMaxOutputTokens(description);
 
-        if (estimatedTokens >= QuotaLimit || page.Length >= MaxTextSize)
+        if (estimatedTokens >= QuotaLimit || description.Length >= MaxTextSize)
         {
-            page = page.GetBriefDescription(MaxTextSize);
+            description = description.GetBriefDescription(MaxTextSize);
         }
 
-        return string.Format(CultureInfo.InvariantCulture, PromptTemplate, feedItem.Title, page);
+        return string.Format(CultureInfo.InvariantCulture, PromptTemplate, feedItem.Title, description);
     }
 }

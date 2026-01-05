@@ -5,4 +5,6 @@ public interface IYoutubeScreenshotsService : ISingletonService
     Task<byte[]?> TryGetYoutubeVideoThumbnailDataAsync(string? videoId);
 
     (bool Success, string? VideoId) IsYoutubeVideo(string? url);
+
+    Task<string?> GetYoutubeVideoDescriptionAsync(string? url);
 }
