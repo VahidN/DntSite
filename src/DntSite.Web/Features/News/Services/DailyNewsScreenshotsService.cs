@@ -200,7 +200,8 @@ public class DailyNewsScreenshotsService(
         {
             SourceHtmlFileOrUri = currentUrl,
             OutputFilePath = path,
-            WaitForExit = TimeSpan.FromMinutes(minutes: 5)
+            WaitForExit = TimeSpan.FromMinutes(minutes: 2),
+            VirtualTimeBudget = TimeSpan.FromMinutes(minutes: 2)
         });
     }
 
