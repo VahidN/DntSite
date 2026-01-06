@@ -6,5 +6,5 @@ public interface IYoutubeScreenshotsService : ISingletonService
 
     (bool Success, string? VideoId) IsYoutubeVideo(string? url);
 
-    Task<string?> GetYoutubeVideoDescriptionAsync(string? url);
+    Task<string?> GetYoutubeVideoDescriptionAsync(string? url, CancellationToken ct);
 }

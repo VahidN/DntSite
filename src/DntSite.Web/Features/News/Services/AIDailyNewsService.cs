@@ -238,7 +238,7 @@ public class AIDailyNewsService(
     private async Task<string?> CreatePromptAsync(FeedItem feedItem, CancellationToken ct)
     {
         var description = youtubeScreenshots.IsYoutubeVideo(feedItem.Url).Success
-            ? await youtubeScreenshots.GetYoutubeVideoDescriptionAsync(feedItem.Url) ?? ""
+            ? await youtubeScreenshots.GetYoutubeVideoDescriptionAsync(feedItem.Url, ct) ?? ""
             : await baseHttpClient.HttpClient.HtmlToTextAsync(feedItem.Url, logger, ct);
 
         if (description.Trim().IsEmpty())
@@ -246,7 +246,7 @@ public class AIDailyNewsService(
             return null;
         }
 
-        var estimatedTokens = TokenEstimator.EstimateMaxOutputTokens(description);
+        var estimatedTokens = description.EstimateMaxOutputTokens();
 
         if (estimatedTokens >= QuotaLimit || description.Length >= MaxTextSize)
         {
