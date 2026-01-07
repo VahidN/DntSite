@@ -23,6 +23,11 @@ public class AIDailyNewsService(
     private const int QuotaLimit = 15000;
     private const int MaxTextSize = 3800;
 
+    private static readonly string[] Models =
+    [
+        "gemma-3-12b-it", "gemma-3-1b-it", "gemma-3-27b-it", "gemma-3-2b-it", "gemma-3-4b-it", "gemma-3n-e2b-it"
+    ];
+
     private static readonly CompositeFormat PromptTemplate = CompositeFormat.Parse(format: """
         You are RaviAI, a developer-focused AI that processes programming news content
         and converts the main content into a structured Persian news record.
@@ -87,6 +92,8 @@ public class AIDailyNewsService(
         {1}
         [ARTICLE CONTENT END]
         """);
+
+    private string? _workingModel;
 
     public async Task StartProcessingNewsFeedsAsync(CancellationToken ct = default)
     {
@@ -165,30 +172,15 @@ public class AIDailyNewsService(
 
             if (prompt.IsEmpty())
             {
-                logger.LogWarning(message: "Not a good source -> `{FeedItemUrl}`.", feedItem.Url);
+                logger.LogWarning(message: "Not a good source -> `{FeedItemUrl}`. Prompt is empty.", feedItem.Url);
 
                 return true;
             }
 
-            var responseResult = await geminiClientService.RunGenerateContentPromptsAsync(new GeminiClientOptions
+            var responseResult = await GetGeminiResponseResultAsync(apiKey, prompt, feedItem.Url, ct);
+
+            if (responseResult is null)
             {
-                ApiVersion = GeminiApiVersions.V1Beta,
-                ApiKey = apiKey,
-                ModelId = "gemma-3-12b-it",
-                Chats = [new GeminiChatRequest(prompt)]
-            }, ct);
-
-            if (responseResult.IsSuccessfulResponse is null or false)
-            {
-                logger.LogWarning(
-                    message: "!IsSuccessfulResponse -> `{FeedItemUrl}` -> {ErrorMessage} ->`{ResponseBody}`.",
-                    feedItem.Url, responseResult.ErrorResponse?.Error?.Message ?? "",
-                    responseResult.ResponseBody ?? "");
-
-                await emailsFactoryService.SendTextToAllAdminsAsync(
-                    responseResult.ResponseBody ?? "!IsSuccessfulResponse",
-                    emailSubject: "Gemini Client Service Error");
-
                 return false;
             }
 
@@ -233,6 +225,45 @@ public class AIDailyNewsService(
         }
 
         return true;
+    }
+
+    private async Task<GeminiResponseResult<GeminiGenerateContentResponse?>?> GetGeminiResponseResultAsync(
+        string apiKey,
+        string prompt,
+        string feedItemUrl,
+        CancellationToken ct)
+    {
+        var models = _workingModel is null
+            ? Models
+            : [_workingModel, ..Models.Except([_workingModel], StringComparer.Ordinal)];
+
+        foreach (var model in models)
+        {
+            var responseResult = await geminiClientService.RunGenerateContentPromptsAsync(new GeminiClientOptions
+            {
+                ApiVersion = GeminiApiVersions.V1Beta,
+                ApiKey = apiKey,
+                ModelId = model,
+                Chats = [new GeminiChatRequest(prompt)]
+            }, ct);
+
+            if (responseResult.IsSuccessfulResponse is not (null or false))
+            {
+                _workingModel = model;
+
+                return responseResult;
+            }
+
+            logger.LogWarning(message: "!IsSuccessfulResponse -> `{FeedItemUrl}` -> {ErrorMessage} ->`{ResponseBody}`.",
+                feedItemUrl, responseResult.ErrorResponse?.Error?.Message ?? "", responseResult.ResponseBody ?? "");
+
+            await emailsFactoryService.SendTextToAllAdminsAsync(responseResult.ResponseBody ?? "!IsSuccessfulResponse",
+                emailSubject: "Gemini Client Service Error");
+        }
+
+        _workingModel = null;
+
+        return null;
     }
 
     private async Task<string?> CreatePromptAsync(FeedItem feedItem, CancellationToken ct)
