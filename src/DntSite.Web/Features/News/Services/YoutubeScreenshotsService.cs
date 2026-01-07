@@ -4,12 +4,9 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace DntSite.Web.Features.News.Services;
 
-public class YoutubeScreenshotsService(BaseHttpClient baseHttpClient, ILogger<YoutubeScreenshotsService> logger)
+public partial class YoutubeScreenshotsService(BaseHttpClient baseHttpClient, ILogger<YoutubeScreenshotsService> logger)
     : IYoutubeScreenshotsService
 {
-    private static readonly Regex PlayerResponse = new(pattern: @"var ytInitialPlayerResponse = (\{.+?\});",
-        RegexOptions.Compiled | RegexOptions.Singleline, TimeSpan.FromSeconds(seconds: 3));
-
     public async Task<byte[]?> TryGetYoutubeVideoThumbnailDataAsync(string? videoId)
     {
         try
@@ -69,12 +66,21 @@ public class YoutubeScreenshotsService(BaseHttpClient baseHttpClient, ILogger<Yo
             return null;
         }
 
-        var htmlContent = await baseHttpClient.HttpClient.DownloadPageAsync(url, cancellationToken: ct);
+        var htmlContent = await baseHttpClient.HttpClient.GetStringAsync(url, ct);
 
-        var match = PlayerResponse.Match(htmlContent);
+        if (htmlContent.IsEmpty())
+        {
+            logger.LogWarning(message: "GetYoutubeVideoDescriptionAsync({URL}) Error -> htmlContent is empty.", url);
+
+            return null;
+        }
+
+        var match = PlayerResponse().Match(htmlContent);
 
         if (!match.Success || match.Groups.Count < 2)
         {
+            logger.LogWarning(message: "GetYoutubeVideoDescriptionAsync({URL}) Error -> Couldn't find a match.", url);
+
             return null;
         }
 
@@ -106,4 +112,8 @@ public class YoutubeScreenshotsService(BaseHttpClient baseHttpClient, ILogger<Yo
 
         return $"{title}\n{description}".Trim();
     }
+
+    [GeneratedRegex(pattern: @"var ytInitialPlayerResponse = (\{.+?\});",
+        RegexOptions.Compiled | RegexOptions.Singleline, matchTimeoutMilliseconds: 3000)]
+    private static partial Regex PlayerResponse();
 }
