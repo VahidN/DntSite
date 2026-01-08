@@ -36,6 +36,8 @@ public class DailyNewsItemsService(
     IFullTextSearchService fullTextSearchService,
     IPdfExportService pdfExportService) : IDailyNewsItemsService
 {
+    public const string DefaultTag = "News";
+
     private static readonly Dictionary<PagerSortBy, Expression<Func<DailyNewsItem, object?>>> CustomOrders = new()
     {
         [PagerSortBy.Date] = x => x.Id,
@@ -386,6 +388,29 @@ public class DailyNewsItemsService(
 
         UpdateLuceneIndex(result);
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.News, result.Id);
+
+        return result;
+    }
+
+    public async Task<DailyNewsItem> AddNewsItemAsDeletedAsync(string url, User? user)
+    {
+        ArgumentNullException.ThrowIfNull(url);
+
+        var listOfActualTags = await tagsService.SaveNewLinkItemTagsAsync([DefaultTag]);
+
+        var newsItem = mapper.Map<DailyNewsItemModel, DailyNewsItem>(new DailyNewsItemModel
+        {
+            Title = "deleted",
+            Url = url,
+            DescriptionText = "---",
+            Tags = [DefaultTag]
+        });
+
+        newsItem.Url = await GetRedirectUrlAsync(url) ?? url;
+        newsItem.Tags = listOfActualTags;
+        newsItem.UserId = user?.Id;
+        var result = AddDailyNewsItem(newsItem);
+        await uow.SaveChangesAsync();
 
         return result;
     }

@@ -48,12 +48,12 @@ public static partial class GeminiNewsApiParser
 
         var result = new GeminiSuccessResult
         {
-            Status = match.Groups[groupname: "status"].Value.Trim(),
-            Title = match.Groups[groupname: "title"].Value.Trim(),
-            Summary = match.Groups[groupname: "summary"].Value.Trim()
+            Status = WebUtility.HtmlDecode(match.Groups[groupname: "status"].Value.Trim()),
+            Title = WebUtility.HtmlDecode(match.Groups[groupname: "title"].Value.Trim()),
+            Summary = WebUtility.HtmlDecode(match.Groups[groupname: "summary"].Value.Trim())
         };
 
-        var tagsString = match.Groups[groupname: "tags"].Value.Trim();
+        var tagsString = WebUtility.HtmlDecode(match.Groups[groupname: "tags"].Value.Trim());
 
         if (!string.IsNullOrEmpty(tagsString))
         {

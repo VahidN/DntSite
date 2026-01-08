@@ -29,8 +29,8 @@ public class AIDailyNewsService(
     ];
 
     private static readonly CompositeFormat PromptTemplate = CompositeFormat.Parse(format: """
-        You are RaviAI, a developer-focused AI that processes programming news content
-        and converts the main content into a structured Persian news record.
+        You are RaviAI, a developer-focused AI that processes programming news content.
+        Your ONLY goal is to convert the main content into a structured Persian news record.
         You MUST output the record using a strict, delimited, and non-JSON text format.
 
         Input:
@@ -48,33 +48,37 @@ public class AIDailyNewsService(
         - Use UTF-8 Persian text with common English tech terms.
         - The output format MUST be consistent for all outputs.
 
+        Language and tone rules:
+        - EXTREMELY IMPORTANT: The 'Title' and 'Summary' fields MUST be generated in PERFECT, STANDARD PERSIAN (Farsi).
+        - You are NOT allowed to use English for the main body of the Title or Summary.
+        - All non-technical text must be in Persian.
+        - Use common English technical terms (e.g., React, Docker) ONLY within the Persian text.
+        - Be factual, neutral.
+
         Primary output format (For successful processing):
         --- START SUCCESS RECORD ---
         STATUS: ok
         TITLE: [Persian Title, Max 440 characters, neutral news-style]
-        SUMMARY: [Three to five distinct paragraphs, focusing on the key points, main arguments, and conclusions]
-        TAGS: [3-5 English technical terms, PascalCase/TitleCase, comma-separated]
+        SUMMARY: [Persian language is mandatory. Three to five distinct paragraphs, focusing on the key points, main arguments, and conclusions]
+        TAGS: [3-5 English technical terms, PascalCase/TitleCase, comma-separated (e.g., TypeScript, CloudComputing)]
         --- END SUCCESS RECORD ---
 
         Fallback output format (If processing fails):
         --- START FALLBACK RECORD ---
         STATUS: fallback
-        REASON: [Choose one: Unreadable | NotProgramming | InsufficientContent | LowSignalNews]
+        REASON: [Choose one: Unreadable | NotProgramming | InsufficientContent | LowSignalNews | LanguageFailure]
         TITLE: Null
         SUMMARY: Null
         TAGS: Null
         --- END FALLBACK RECORD ---
 
-        Language and tone rules:
-        - All non-technical text must be in Persian.
-        - Use common English technical terms (e.g., React, Docker).
-        - Be factual, neutral.
 
         Content rules:
-        - Title: Max 440 characters, news-style.
+        - Title: Persian language is mandatory. Max 440 characters, news-style(neutral, informative).
         - Tags: 3–5 items, technical and developer-oriented, English (e.g., TypeScript, CloudComputing).
 
         Additional constraints:
+        - IF you cannot generate the Title or Summary perfectly in Persian, you MUST output the Fallback record with Reason set to LanguageFailure.
         - Do NOT guess or infer missing facts.
         - Do NOT include opinions, emojis, or conversational text.
         - Do NOT translate code snippets.
@@ -199,18 +203,28 @@ public class AIDailyNewsService(
             switch (geminiApiResult)
             {
                 case GeminiFallbackResult fallbackResult:
+                    await dailyNewsItemsService.AddNewsItemAsDeletedAsync(feedItem.Url, aiUser);
+
                     logger.LogWarning(
                         message: "`GeminiFallbackResult -> {FeedItemUrl}` -> {Reason} -> `{ResponseBody}`.",
                         feedItem.Url, fallbackResult.Reason, responseResult.ResponseBody ?? "");
 
                     return true;
-                case GeminiSuccessResult success:
+                case GeminiSuccessResult successResult:
+
+                    if (!successResult.Title.ContainsFarsi() || !successResult.Summary.ContainsFarsi())
+                    {
+                        _workingModel = null;
+
+                        return false;
+                    }
+
                     var dailyNewsItemModel = new DailyNewsItemModel
                     {
-                        Title = success.Title ?? feedItem.Title,
+                        Title = successResult.Title ?? feedItem.Title,
                         Url = feedItem.Url,
-                        DescriptionText = success.Summary ?? "",
-                        Tags = success.Tags ?? ["News"]
+                        DescriptionText = successResult.Summary ?? "",
+                        Tags = successResult.Tags ?? [DailyNewsItemsService.DefaultTag]
                     };
 
                     var newsItem = await dailyNewsItemsService.AddNewsItemAsync(dailyNewsItemModel, aiUser);
