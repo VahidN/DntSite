@@ -409,6 +409,7 @@ public class DailyNewsItemsService(
         newsItem.Url = await GetRedirectUrlAsync(url) ?? url;
         newsItem.Tags = listOfActualTags;
         newsItem.UserId = user?.Id;
+        newsItem.IsDeleted = true;
         var result = AddDailyNewsItem(newsItem);
         await uow.SaveChangesAsync();
 
