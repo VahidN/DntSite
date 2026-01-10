@@ -86,7 +86,7 @@ public class AIDailyNewsService(
         Fallback rules:
         If any of the following occur:
         - Content is unreadable or too short
-        - Content is not related to software development
+        - EXTREMELY IMPORTANT: Content is not related to Microsoft .NET software development and its related technologies
 
         [ARTICLE CONTENT START]
         Title:
@@ -214,7 +214,7 @@ public class AIDailyNewsService(
 
                     if (!successResult.Title.ContainsFarsi() || !successResult.Summary.ContainsFarsi())
                     {
-                        _workingModel = null;
+                        ResetModel();
 
                         return false;
                     }
@@ -275,10 +275,13 @@ public class AIDailyNewsService(
                 emailSubject: "Gemini Client Service Error");
         }
 
-        _workingModel = null;
+        ResetModel();
 
         return null;
     }
+	
+    private void ResetModel => _workingModel = null;
+
 
     private async Task<string?> CreatePromptAsync(FeedItem feedItem, CancellationToken ct)
     {
