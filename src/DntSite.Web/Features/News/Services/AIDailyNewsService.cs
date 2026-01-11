@@ -203,16 +203,27 @@ public class AIDailyNewsService(
             switch (geminiApiResult)
             {
                 case GeminiFallbackResult fallbackResult:
-                    await dailyNewsItemsService.AddNewsItemAsDeletedAsync(feedItem.Url, aiUser);
+                    switch (fallbackResult.Reason)
+                    {
+                        case GeminiFallbackReason.Unreadable:
+                        case GeminiFallbackReason.NotProgramming:
+                        case GeminiFallbackReason.InsufficientContent:
+                        case GeminiFallbackReason.LowSignalNews:
+                            await dailyNewsItemsService.AddNewsItemAsDeletedAsync(feedItem.Url, aiUser);
 
-                    logger.LogWarning(
-                        message: "`GeminiFallbackResult -> {FeedItemUrl}` -> {Reason} -> `{ResponseBody}`.",
-                        feedItem.Url, fallbackResult.Reason, responseResult.ResponseBody ?? "");
+                            logger.LogWarning(
+                                message: "`GeminiFallbackResult -> {FeedItemUrl}` -> {Reason} -> `{ResponseBody}`.",
+                                feedItem.Url, fallbackResult.Reason, responseResult.ResponseBody ?? "");
 
-                    return true;
+                            return true;
+                        default:
+                            ResetModel();
+
+                            return false;
+                    }
                 case GeminiSuccessResult successResult:
 
-                    if (!successResult.Title.ContainsFarsi() || !successResult.Summary.ContainsFarsi())
+                    if (IsLanguageSupportFailure(successResult))
                     {
                         ResetModel();
 
@@ -240,6 +251,9 @@ public class AIDailyNewsService(
 
         return true;
     }
+
+    private static bool IsLanguageSupportFailure(GeminiSuccessResult successResult)
+        => !successResult.Title.ContainsFarsi() || !successResult.Summary.ContainsFarsi();
 
     private async Task<GeminiResponseResult<GeminiGenerateContentResponse?>?> GetGeminiResponseResultAsync(
         string apiKey,
@@ -279,9 +293,8 @@ public class AIDailyNewsService(
 
         return null;
     }
-	
-    private void ResetModel => _workingModel = null;
 
+    private void ResetModel() => _workingModel = null;
 
     private async Task<string?> CreatePromptAsync(FeedItem feedItem, CancellationToken ct)
     {

@@ -19,7 +19,7 @@ public static partial class GeminiNewsApiParser
 
     public static GeminiApiResult? ParseGeminiOutput(this string? apiOutput)
     {
-        if (string.IsNullOrWhiteSpace(apiOutput))
+        if (apiOutput.IsEmpty())
         {
             return null;
         }
@@ -41,41 +41,34 @@ public static partial class GeminiNewsApiParser
     {
         var match = SuccessRecordPattern().Match(apiOutput);
 
-        if (!match.Success)
+        return match.Success switch
         {
-            return null;
-        }
-
-        var result = new GeminiSuccessResult
-        {
-            Status = WebUtility.HtmlDecode(match.Groups[groupname: "status"].Value.Trim()),
-            Title = WebUtility.HtmlDecode(match.Groups[groupname: "title"].Value.Trim()),
-            Summary = WebUtility.HtmlDecode(match.Groups[groupname: "summary"].Value.Trim())
+            false => null,
+            _ => new GeminiSuccessResult
+            {
+                Status = WebUtility.HtmlDecode(match.Groups[groupname: "status"].Value.Trim()),
+                Title = WebUtility.HtmlDecode(match.Groups[groupname: "title"].Value.Trim()),
+                Summary = WebUtility.HtmlDecode(match.Groups[groupname: "summary"].Value.Trim()),
+                Tags = WebUtility.HtmlDecode(match.Groups[groupname: "tags"].Value.Trim())
+                    .Split([','], StringSplitOptions.RemoveEmptyEntries)
+                    .Select(tag => tag.Trim())
+                    .ToList()
+            }
         };
-
-        var tagsString = WebUtility.HtmlDecode(match.Groups[groupname: "tags"].Value.Trim());
-
-        if (!string.IsNullOrEmpty(tagsString))
-        {
-            result.Tags = tagsString.Split([','], StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToList();
-        }
-
-        return result;
     }
 
     private static GeminiFallbackResult? ParseFallbackRecord(string apiOutput)
     {
         var match = FallbackRecordPattern().Match(apiOutput);
 
-        if (!match.Success)
+        return match.Success switch
         {
-            return null;
-        }
-
-        return new GeminiFallbackResult
-        {
-            Status = match.Groups[groupname: "status"].Value.Trim(),
-            Reason = match.Groups[groupname: "reason"].Value.Trim()
+            false => null,
+            _ => new GeminiFallbackResult
+            {
+                Status = match.Groups[groupname: "status"].Value.Trim(),
+                Reason = match.Groups[groupname: "reason"].Value.Trim().ToEnum<GeminiFallbackReason>()
+            }
         };
     }
 }
