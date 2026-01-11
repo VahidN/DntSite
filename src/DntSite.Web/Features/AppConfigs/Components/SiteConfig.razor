@@ -143,6 +143,8 @@
 
             <hr/>
 
+            <DntInputCheckBox @bind-Value="Model.GeminiNewsFeedsInfo.IsActive"/>
+
             <DntInputText AutoCompleteType="AutoCompleteType.Off"
                           FieldIcon="@DntBootstrapIcons.BiKeyFill"
                           InputType="password"
@@ -152,6 +154,10 @@
             <DntInputTextArea FieldIcon="@DntBootstrapIcons.BiRss"
                               dir="ltr"
                               @bind-Value="Model.GeminiNewsFeedsInfo.NewsFeeds"/>
+
+            <hr/>
+            
+            <DntInputCheckBox @bind-Value="Model.ShowRssBriefDescription"/>
 
             <hr/>
 

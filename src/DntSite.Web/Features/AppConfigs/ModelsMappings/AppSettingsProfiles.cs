@@ -28,6 +28,8 @@ public class AppSettingsProfiles : Profile
                 opt => opt.MapFrom(model => model.BannedPasswords.ConvertMultiLineTextToList()))
             .ForPath(setting => setting.GeminiNewsFeeds.ApiKey,
                 opt => opt.MapFrom(model => model.GeminiNewsFeedsInfo.ApiKey))
+            .ForPath(setting => setting.GeminiNewsFeeds.IsActive,
+                opt => opt.MapFrom(model => model.GeminiNewsFeedsInfo.IsActive))
             .ForPath(setting => setting.GeminiNewsFeeds.NewsFeeds,
                 opt => opt.MapFrom(model => model.GeminiNewsFeedsInfo.NewsFeeds.ConvertMultiLineTextToList()));
 
@@ -47,6 +49,8 @@ public class AppSettingsProfiles : Profile
                 opt => opt.MapFrom(setting => setting.BannedPasswords.ConvertListToMultiLineText()))
             .ForPath(model => model.GeminiNewsFeedsInfo.ApiKey,
                 opt => opt.MapFrom(setting => setting.GeminiNewsFeeds.ApiKey))
+            .ForPath(model => model.GeminiNewsFeedsInfo.IsActive,
+                opt => opt.MapFrom(setting => setting.GeminiNewsFeeds.IsActive))
             .ForPath(model => model.GeminiNewsFeedsInfo.NewsFeeds,
                 opt => opt.MapFrom(setting => setting.GeminiNewsFeeds.NewsFeeds.ConvertListToMultiLineText()));
 }

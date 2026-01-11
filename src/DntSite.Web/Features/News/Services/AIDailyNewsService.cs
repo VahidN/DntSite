@@ -102,8 +102,15 @@ public class AIDailyNewsService(
     public async Task StartProcessingNewsFeedsAsync(CancellationToken ct = default)
     {
         var appSetting = await cachedAppSettingsProvider.GetAppSettingsAsync();
-        var apiKey = appSetting.GeminiNewsFeeds.ApiKey;
-        var feeds = appSetting.GeminiNewsFeeds.NewsFeeds;
+        var geminiNewsFeeds = appSetting.GeminiNewsFeeds;
+
+        if (!geminiNewsFeeds.IsActive)
+        {
+            return;
+        }
+
+        var apiKey = geminiNewsFeeds.ApiKey;
+        var feeds = geminiNewsFeeds.NewsFeeds;
 
         if (apiKey.IsEmpty() || feeds.Count == 0)
         {

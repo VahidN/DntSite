@@ -19,7 +19,7 @@ public static partial class GeminiNewsApiParser
 
     public static GeminiApiResult? ParseGeminiOutput(this string? apiOutput)
     {
-        if (apiOutput.IsEmpty())
+        if (string.IsNullOrWhiteSpace(apiOutput))
         {
             return null;
         }

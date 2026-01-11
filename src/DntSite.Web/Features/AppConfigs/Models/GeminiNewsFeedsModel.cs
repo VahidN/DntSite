@@ -2,6 +2,8 @@
 
 public class GeminiNewsFeedsModel
 {
+    [Display(Name = "جمینی فعال است؟")] public bool IsActive { set; get; }
+
     [Display(Name = "کلید ای‌پی‌آی جمینی")]
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
     [Required]

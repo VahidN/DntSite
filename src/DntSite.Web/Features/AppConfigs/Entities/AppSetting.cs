@@ -43,4 +43,7 @@ public class AppSetting : BaseAuditedEntity
     public MinimumRequiredPosts MinimumRequiredPosts { get; set; } = new();
 
     public GeminiNewsFeeds GeminiNewsFeeds { get; set; } = new();
+
+    [Display(Name = "فقط خلاصه توضیحات در فیدها نمایش داده شود")]
+    public bool ShowRssBriefDescription { set; get; }
 }

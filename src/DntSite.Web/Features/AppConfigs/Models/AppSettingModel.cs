@@ -47,4 +47,7 @@ public class AppSettingModel
     public MinimumRequiredPosts MinimumRequiredPosts { get; set; } = new();
 
     public GeminiNewsFeedsModel GeminiNewsFeedsInfo { get; set; } = new();
+
+    [Display(Name = "فقط خلاصه توضیحات در فیدها نمایش داده شود")]
+    public bool ShowRssBriefDescription { set; get; }
 }

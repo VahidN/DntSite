@@ -11,7 +11,7 @@ public class DailyNewsletter(IFeedsService feedsService) : IDailyNewsletter
     private const string GroupStyle =
         "style='background: lightslategray;color: white;border-radius: 4px;padding: 2px;margin-left: 5px;'";
 
-    // It runs in a http context less environment.
+    // It runs in an http context less environment.
     public async Task<string> GetEmailContentAsync(DateTime fromDateTime, bool showBriefDescription)
     {
         var posts = (await feedsService.GetLatestChangesAsync(showBriefDescription)).RssItems?.Where(x
