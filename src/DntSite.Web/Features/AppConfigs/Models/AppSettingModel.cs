@@ -50,4 +50,7 @@ public class AppSettingModel
 
     [Display(Name = "فقط خلاصه توضیحات در فیدها نمایش داده شود")]
     public bool ShowRssBriefDescription { set; get; }
+
+    [Display(Name = "برای مطالب خبری، اسکرین‌شات تهیه شود")]
+    public bool ShouldCreateNewsScreenshots { set; get; }
 }

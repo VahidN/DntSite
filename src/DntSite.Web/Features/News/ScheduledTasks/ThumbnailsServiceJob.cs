@@ -1,3 +1,4 @@
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.News.Services.Contracts;
 
 namespace DntSite.Web.Features.News.ScheduledTasks;
@@ -18,11 +19,17 @@ google-chrome --version
  */
 public class ThumbnailsServiceJob(
     IDailyNewsScreenshotsService dailyNewsScreenshots,
+    ICachedAppSettingsProvider cachedAppSettingsProvider,
     ILogger<ThumbnailsServiceJob> logger) : IScheduledTask
 {
     public async Task RunAsync(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
+        if (!(await cachedAppSettingsProvider.GetAppSettingsAsync()).ShouldCreateNewsScreenshots)
         {
             return;
         }
