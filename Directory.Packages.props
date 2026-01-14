@@ -1,12 +1,12 @@
 <Project>
   <ItemGroup>
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="10.0.2" />
     <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
   </ItemGroup>
   <ItemGroup>
@@ -39,10 +39,10 @@
     <PackageVersion Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.267" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.276" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="4.14.0" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.17.0.131074" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="10.0.1" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.18.0.131500" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="10.0.2" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
   </ItemGroup>
