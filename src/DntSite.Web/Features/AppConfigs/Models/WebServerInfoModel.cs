@@ -11,8 +11,4 @@ public class WebServerInfoModel
     public required List<IKey> KeysList { set; get; }
 
     public required IWebHostEnvironment WebHostEnvironment { set; get; }
-
-    public required string DotNetInfo { set; get; }
-
-    public required string SdkCheckInfo { set; get; }
 }
