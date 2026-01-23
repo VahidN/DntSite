@@ -5,6 +5,8 @@ namespace DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 public interface IUsersInfoService : IScopedService
 {
+    Task<bool> IsAnyActiveAdminPresentAsync(DateTime limit);
+
     Task<List<User>> GetNotLoggedInUsersToDisableAsync(DateTime limit);
 
     Task<bool> IsWriterAsync(int userId);

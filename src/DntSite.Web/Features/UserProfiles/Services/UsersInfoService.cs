@@ -494,6 +494,21 @@ public class UsersInfoService(
         return nonWriters.Union(allWriters).ToList();
     }
 
+    public Task<User?> GetNewsLinksAIUserAsync()
+        => _users.OrderBy(x => x.Id)
+            .FirstOrDefaultAsync(x => x.UserName == siteSettingsRoot.Value.NewsLinksAIUserSeed.Username);
+
+    public Task<bool> IsAnyActiveAdminPresentAsync(DateTime limit)
+    {
+        var activeAdminsQuery = from u in _users
+            where u.IsActive
+            from r in u.Roles
+            where r.Name == CustomRoles.Admin
+            select u;
+
+        return activeAdminsQuery.AnyAsync(u => u.LastVisitDateTime.HasValue && u.LastVisitDateTime >= limit);
+    }
+
     private Task<List<User?>> GetActiveLinksAuthorUsersFromToFromAsync(int count, DateTime fromDate, DateTime toDate)
         => _users.Where(x => x.IsActive)
             .SelectMany(x => x.DailyNewsItems)
@@ -549,8 +564,4 @@ public class UsersInfoService(
             .ThenBy(x => x!.FriendlyName)
             .Take(count)
             .ToListAsync();
-
-    public Task<User?> GetNewsLinksAIUserAsync()
-        => _users.OrderBy(x => x.Id)
-            .FirstOrDefaultAsync(x => x.UserName == siteSettingsRoot.Value.NewsLinksAIUserSeed.Username);
 }
