@@ -1,4 +1,5 @@
-﻿using DntSite.Web.Features.AppConfigs.Entities;
+﻿using DNTPersianUtils.Core.Normalizer;
+using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Models;
 using DntSite.Web.Features.Common.Services.Contracts;
@@ -71,7 +72,7 @@ public class EmailsFactoryService(
         string references,
         string htmlTemplateContent,
         string? toEmail,
-        string subject)
+        string? subject)
     {
         if (!toEmail.IsValidEmail())
         {
@@ -84,31 +85,37 @@ public class EmailsFactoryService(
         var smtpServerSetting = appSetting.SmtpServerSetting;
         var pickupFolder = GetPickupFolderPath(smtpServerSetting);
 
+        subject ??= DateTime.UtcNow.ToIranTimeZoneDateTime().ToLongPersianDateString();
+
+        var emailSubject = string.Create(CultureInfo.InvariantCulture, $"{appSetting.BlogName} - {subject.Trim()}")
+            .RemoveHexadecimalSymbols()
+            .SanitizeXmlString()
+            .ApplyCorrectYeKe()
+            .ApplyRle();
+
         webMailService.BackgroundQueueSendEmail(new SmtpConfig
+        {
+            Server = smtpServerSetting.Address,
+            Port = smtpServerSetting.Port,
+            Username = smtpServerSetting.Username,
+            Password = smtpServerSetting.Password,
+            FromAddress = appSetting.SiteFromEmail!,
+            FromName = appSetting.BlogName,
+            UsePickupFolder = smtpServerSetting.UsePickupFolder,
+            PickupFolder = pickupFolder
+        }, [
+            new MailAddress
             {
-                Server = smtpServerSetting.Address,
-                Port = smtpServerSetting.Port,
-                Username = smtpServerSetting.Username,
-                Password = smtpServerSetting.Password,
-                FromAddress = appSetting.SiteFromEmail!,
-                FromName = appSetting.BlogName,
-                UsePickupFolder = smtpServerSetting.UsePickupFolder,
-                PickupFolder = pickupFolder
-            }, [
-                new MailAddress
-                {
-                    ToAddress = toEmail
-                }
-            ], string.Create(CultureInfo.InvariantCulture, $"{appSetting.BlogName} - {subject}"), htmlTemplateContent,
-            headers: new MailHeaders
-            {
-                InReplyTo = inReplyTo,
-                MessageId = messageId,
-                References = references,
-                UnSubscribeUrl =
-                    appSetting.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.EditProfile,
-                        escapeRelativeUrl: false)
-            }, shouldValidateServerCertificate: smtpServerSetting.ShouldValidateServerCertificate);
+                ToAddress = toEmail
+            }
+        ], emailSubject, htmlTemplateContent, headers: new MailHeaders
+        {
+            InReplyTo = inReplyTo,
+            MessageId = messageId,
+            References = references,
+            UnSubscribeUrl =
+                appSetting.SiteRootUri.CombineUrl(UserProfilesRoutingConstants.EditProfile, escapeRelativeUrl: false)
+        }, shouldValidateServerCertificate: smtpServerSetting.ShouldValidateServerCertificate);
     }
 
     public async Task SendEmailToAllAdminsAsync<TLayout, TLayoutModel>(string messageId,

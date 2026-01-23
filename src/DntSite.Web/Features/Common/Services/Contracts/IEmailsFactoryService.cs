@@ -14,7 +14,7 @@ public interface IEmailsFactoryService : IScopedService
         string references,
         string htmlTemplateContent,
         string? toEmail,
-        string subject);
+        string? subject);
 
     Task SendEmailAsync<TLayout, TLayoutModel>(string messageId,
         string inReplyTo,
