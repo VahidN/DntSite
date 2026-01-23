@@ -19,4 +19,6 @@ public interface IDailyNewsScreenshotsService : IScopedService
     string GetNewsThumbImage(DailyNewsItem? item, string siteRootUri);
 
     Task InvalidateAllYoutubeScreenshotsAsync();
+
+    Task InvalidateAllScreenshotsAsync();
 }

@@ -4,6 +4,7 @@ using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
+using EFCoreSecondLevelCacheInterceptor;
 
 namespace DntSite.Web.Features.News.Services;
 
@@ -12,6 +13,7 @@ public class DailyNewsScreenshotsService(
     IAppFoldersService appFoldersService,
     IHtmlToPngGenerator htmlToPngGenerator,
     IYoutubeScreenshotsService youtubeScreenshotsService,
+    IEFCacheServiceProvider efCacheServiceProvider,
     ILogger<DailyNewsScreenshotsService> logger) : IDailyNewsScreenshotsService
 {
     private const int MaxFetchRetries = 3;
@@ -165,6 +167,22 @@ public class DailyNewsScreenshotsService(
         var path = appFoldersService.ThumbnailsServiceFolderPath.SafePathCombine(name);
 
         return (name, path);
+    }
+
+    public async Task InvalidateAllScreenshotsAsync()
+    {
+        foreach (var post in _dailyNewsItem.OrderBy(x => x.Id))
+        {
+            GetThumbnailImageInfo(post.Id).Path.TryDeleteFile(logger);
+        }
+
+        await _dailyNewsItem.ExecuteUpdateAsync(builder =>
+        {
+            builder.SetProperty(dailyNewsItem => dailyNewsItem.PageThumbnail, (string?)null);
+            builder.SetProperty(dailyNewsItem => dailyNewsItem.FetchRetries, valueExpression: 0);
+        });
+
+        efCacheServiceProvider.ClearAllCachedEntries();
     }
 
     private void InvalidateScreenshot(DailyNewsItem? post)

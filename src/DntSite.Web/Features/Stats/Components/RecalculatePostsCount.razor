@@ -50,6 +50,14 @@
                 </button>
 
                 <button type="submit"
+                        data-cancel-confirm-message="بازسازی اسکرین‌شات‌ها؟"
+                        name="@nameof(RecalculateAction)"
+                        value="@RecalculatePostsCountAction.InvalidateAllScreenshots"
+                        class="btn btn-sm btn-primary me-2">
+                    بازسازی اسکرین‌شات‌ها
+                </button>
+
+                <button type="submit"
                         data-cancel-confirm-message="دریافت مجدد اسکرین‌شات‌های خالی؟"
                         name="@nameof(RecalculateAction)"
                         value="@RecalculatePostsCountAction.TryReDownloadFailedScreenshots"
