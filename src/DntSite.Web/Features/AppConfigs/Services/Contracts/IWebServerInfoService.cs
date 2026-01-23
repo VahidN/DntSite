@@ -4,5 +4,5 @@ namespace DntSite.Web.Features.AppConfigs.Services.Contracts;
 
 public interface IWebServerInfoService : IScopedService
 {
-    Task<WebServerInfoModel> GetWebServerInfoAsync();
+    Task<WebServerInfoModel?> GetWebServerInfoAsync();
 }

@@ -5,6 +5,8 @@ namespace DntSite.Web.Features.AppConfigs.Services.Contracts;
 
 public interface IAppSettingsService : IScopedService
 {
+    Task ChangeSiteActiveStateAsync(bool siteIsActive);
+
     Task<AppSettingModel> GetAppSettingModelAsync();
 
     AppSetting AddAppSetting(AppSetting data);
