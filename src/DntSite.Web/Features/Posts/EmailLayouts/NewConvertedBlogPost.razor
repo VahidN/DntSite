@@ -6,7 +6,7 @@
     <br/><br/>
     <div dir="rtl" style="font-family: Tahoma; ">
         <strong>عنوان :</strong><br/>
-        @Model.Source
+		<a href="@PostUrl">@Model.Source</a>
         <br/><br/>
         <strong>مطلب :</strong><br/>
         @Model.Dest.HtmlRaw()
@@ -18,5 +18,5 @@
 @code {
 
     [Parameter] public NewConvertedBlogPostModel Model { set; get; } = null!;
-
+    private string PostUrl => Model.SiteRootUri.CombineUrl(PostsRoutingConstants.PostBase, escapeRelativeUrl: false).CombineUrl(Model.PostId, escapeRelativeUrl: true);
 }
