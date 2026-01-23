@@ -2,6 +2,7 @@ using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.RoutingConstants;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Models;
+using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.AppConfigs.Components;
@@ -13,6 +14,8 @@ public partial class ApplicationState
     public CurrentUserModel? CurrentUser { set; get; }
 
     public bool IsCurrentUserAdmin => CurrentUser?.IsAdmin == true;
+
+    public bool SiteIsActive => AppSetting?.SiteIsActive == true;
 
     public IList<BreadCrumb> BreadCrumbs { set; get; } = [AppConfigsBreadCrumbs.RootBreadCrumb];
 
@@ -34,9 +37,13 @@ public partial class ApplicationState
     {
         AppSetting = await AppSettingsService.GetAppSettingsAsync();
         CurrentUser = await CurrentUserService.GetCurrentUserAsync();
+
+        CheckSiteIsActive();
     }
 
     public void NavigateToUnauthorizedPage() => NavigateTo(uri: "/error/401");
+
+    public void NavigateToTemporarilyUnavailablePage() => NavigateTo(uri: "/error/503");
 
     /// <summary>
     ///     Sends user to `/error/404` address
@@ -50,4 +57,27 @@ public partial class ApplicationState
 
     public void NavigateTo([StringSyntax(syntax: "Uri")] string uri, bool forceLoad = false, bool replace = false)
         => NavigationManager.NavigateTo(uri, forceLoad, replace);
+
+    public bool IsCurrentPage(string route)
+    {
+        ArgumentNullException.ThrowIfNull(route);
+
+        var relative = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var path = relative.Split(separator: '?')[0];
+
+        return path.StartsWith(route.TrimStart(trimChar: '/'), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void CheckSiteIsActive()
+    {
+        if (IsCurrentUserAdmin || IsCurrentPage(UserProfilesRoutingConstants.Login))
+        {
+            return;
+        }
+
+        if (!SiteIsActive)
+        {
+            NavigateToTemporarilyUnavailablePage();
+        }
+    }
 }
