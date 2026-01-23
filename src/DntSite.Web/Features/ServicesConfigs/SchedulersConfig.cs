@@ -19,6 +19,13 @@ public static class SchedulersConfig
             options.AddScheduledTask<DotNetVersionCheckJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 5, Minute: 30, Second: 1 });
 
+            options.AddScheduledTask<CheckAdminsLastVisitJob>(utcNow =>
+            {
+                var now = GetNowIranTime(utcNow);
+
+                return now.Minute % 5 == 0 && now.Second == 1;
+            });
+
             options.AddScheduledTask<FreeSpaceCheckJob>(utcNow =>
             {
                 var now = GetNowIranTime(utcNow);
