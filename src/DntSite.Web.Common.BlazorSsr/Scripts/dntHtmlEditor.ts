@@ -424,6 +424,7 @@ namespace DntBlazorSsr {
                 {key: 'cs', label: 'C#'},
                 {key: 'css', label: 'CSS'},
                 {key: 'diff', label: 'Diff'},
+				{key: 'dockerfile', label: 'DockerFile'},				
                 {key: 'xml', label: 'HTML/XML'},
                 {key: 'java', label: 'Java'},
                 {key: 'javascript', label: 'JavaScript'},
