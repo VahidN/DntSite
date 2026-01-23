@@ -122,7 +122,7 @@ public partial class WriteDraft
     {
         if (!string.IsNullOrWhiteSpace(EditId))
         {
-            await UpdateDraftAsync();
+            await UpdateDraftAsync(redirectAfterUpdate: true);
         }
         else
         {
@@ -130,18 +130,18 @@ public partial class WriteDraft
         }
     }
 
-    private async Task UpdateDraftAsync()
+    private async Task<BlogPostDraft?> UpdateDraftAsync(bool redirectAfterUpdate)
     {
         if (string.IsNullOrWhiteSpace(EditId))
         {
-            return;
+            return null;
         }
 
         var draft = await GetUserDraftAsync(EditId.ToInt());
 
         if (draft is null)
         {
-            return;
+            return null;
         }
 
         await BlogPostDraftsService.UpdateBlogPostDraftAsync(WriteDraftModel, draft);
@@ -153,8 +153,13 @@ public partial class WriteDraft
             await StatService.UpdateNumberOfDraftsStatAsync(draft.UserId.Value);
         }
 
-        ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
-            $"{PostsRoutingConstants.ShowDraftBase}/{draft.Id}"));
+        if (redirectAfterUpdate)
+        {
+            ApplicationState.NavigateTo(string.Create(CultureInfo.InvariantCulture,
+                $"{PostsRoutingConstants.ShowDraftBase}/{draft.Id}"));
+        }
+
+        return draft;
     }
 
     private async Task AddDraftAsync()
@@ -193,7 +198,7 @@ public partial class WriteDraft
             return;
         }
 
-        var draft = await GetUserDraftAsync(EditId.ToInt());
+        var draft = await UpdateDraftAsync(redirectAfterUpdate: false);
 
         if (draft is null)
         {
@@ -239,9 +244,7 @@ public partial class WriteDraft
             return;
         }
 
-        var draft = await GetUserDraftAsync(EditId.ToInt());
-
-        if (draft is null)
+        var draft = await UpdateDraftAsync(redirectAfterUpdate: false);  if (draft is null)
         {
             return;
         }
