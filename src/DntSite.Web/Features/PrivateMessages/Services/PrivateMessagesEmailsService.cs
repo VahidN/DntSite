@@ -80,7 +80,7 @@ public class PrivateMessagesEmailsService(
             }, toUser.EMail, $"پیام خصوصی: {data.Title}", addIp: false);
 
         await emailsFactoryService.SendEmailToAllAdminsAsync<ContactUsEmail, ContactUsEmailModel>(
-            messageId: "ContactUs", inReplyTo: "", references: "ContactUs", new ContactUsEmailModel
+            $"ContactUs/Id/{idHash}", inReplyTo: "", $"ContactUs/Id/{idHash}", new ContactUsEmailModel
             {
                 FriendlyName = fromUser.FriendlyName,
                 Title = data.Title,
