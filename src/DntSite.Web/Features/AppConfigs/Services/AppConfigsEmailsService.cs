@@ -37,6 +37,11 @@ public sealed class AppConfigsEmailsService : IAppConfigsEmailsService
 
         var info = await _webServerInfoService.GetWebServerInfoAsync();
 
+        if (info is null)
+        {
+            return;
+        }
+
         var hasRemainingSpace = info.ServerInfo.DriveInfo.AvailableFreeSpaceToCurrentUserInBytes >=
                                 _siteSettings.MaxAvailableFreeSpaceInMegaBytes * 1024L * 1024L;
 
@@ -61,16 +66,9 @@ public sealed class AppConfigsEmailsService : IAppConfigsEmailsService
             return;
         }
 
-        var info = await _executeApplicationProcess.ExecuteProcessAsync(new ApplicationStartInfo
-        {
-            ProcessName = "dotnet",
-            Arguments = "sdk check",
-            AppPath = "dotnet",
-            WaitForExit = TimeSpan.FromSeconds(value: 3),
-            KillProcessOnStart = false
-        }, cancellationToken);
+        var (success, info) = DotNetInfoProvider.IsNewSdkVersionAvailable();
 
-        if (IsNewVersionAvailable(info))
+        if (success)
         {
             await _emailsFactoryService.SendEmailToAllAdminsAsync<NewDotNetVersionEmail, NewDotNetVersionEmailModel>(
                 messageId: "NewDotNetVersion", inReplyTo: "", references: "NewDotNetVersion",
@@ -82,11 +80,4 @@ public sealed class AppConfigsEmailsService : IAppConfigsEmailsService
     }
 
     public void Dispose() => _disposableSettings?.Dispose();
-
-    /// <summary>
-    ///     https://github.com/dotnet/sdk/blob/a34f1ca17979f6cb283ad74c53ca68f8575fceb9/src/Cli/dotnet/commands/dotnet-sdk/check/LocalizableStrings.resx
-    /// </summary>
-    private static bool IsNewVersionAvailable(string info)
-        => info.Contains(value: "is available", StringComparison.OrdinalIgnoreCase) || (!OperatingSystem.IsLinux() &&
-            info.Contains(value: "newest", StringComparison.OrdinalIgnoreCase));
 }
