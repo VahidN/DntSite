@@ -138,14 +138,11 @@
                         <span dir="ltr">@item.Value</span>
                     </div>
                 }
-                @if (OperatingSystem.IsLinux() && File.Exists(path: "/etc/os-release"))
+                @foreach (var line in _info.ServerInfo.LinuxInfo.EnvironmentVariables)
                 {
-                    foreach (var line in File.ReadLines(path: "/etc/os-release"))
-                    {
-                        <div dir="ltr">
-                            <span dir="ltr">@line</span>
-                        </div>
-                    }
+                    <div dir="ltr">
+                        <span dir="ltr"> @line </span>
+                    </div>
                 }
             </div>
         </FrameBody>
@@ -183,8 +180,16 @@
         <FrameBody>
             <div>
                 <pre dir="ltr">
-                    @_info!.DotNetInfo
+					@_info!.ServerInfo.Runtime.DotNetInfo
                 </pre>
+                @if (_info.ServerInfo.LinuxInfo.AvailableSdkVersions.Count > 0)
+                {
+                    <hr>
+                    <pre dir="ltr">
+				    <div>Available Sdk Versions:</div>
+					<span dir="ltr">@_info.ServerInfo.LinuxInfo.AvailableSdkVersions.Join(separator: "'")</span>
+				  </pre>
+                }
             </div>
         </FrameBody>
     </DntCardFrame>
@@ -196,7 +201,7 @@
         <FrameBody>
             <div>
                 <pre dir="ltr">
-                    @_info!.SdkCheckInfo
+					@_info!.ServerInfo.Runtime.SdkCheckInfo
                 </pre>
             </div>
         </FrameBody>
