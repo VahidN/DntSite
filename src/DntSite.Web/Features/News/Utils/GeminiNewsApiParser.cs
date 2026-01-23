@@ -5,15 +5,21 @@ namespace DntSite.Web.Features.News.Utils;
 
 public static partial class GeminiNewsApiParser
 {
+    private const string RaviAI = nameof(RaviAI);
+
+    private const string SuccessRecordBegin = "=== RAVI_AI_SUCCESS_RECORD_BEGIN ===";
+    private const string SuccessRecordEnd = "=== RAVI_AI_SUCCESS_RECORD_END ===";
+
+    private const string FallbackRecordBegin = "=== RAVI_AI_FALLBACK_RECORD_BEGIN ===";
+    private const string FallbackRecordEnd = "=== RAVI_AI_FALLBACK_RECORD_END ===";
+
     [GeneratedRegex(
-        pattern:
-        @"STATUS:\s*(?<status>.*?)\s*REASON:\s*(?<reason>.*?)\s*TITLE:\s*(?<title>.*?)\s*SUMMARY:\s*(?<summary>.*?)\s*TAGS:\s*(?<tags>.*?)\s*--- END FALLBACK RECORD ---",
+        $@"STATUS:\s*(?<status>.*?)\s*REASON:\s*(?<reason>.*?)\s*TITLE:\s*(?<title>.*?)\s*SUMMARY:\s*(?<summary>.*?)\s*TAGS:\s*(?<tags>.*?)\s*{FallbackRecordEnd}",
         RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase, matchTimeoutMilliseconds: 3000)]
     private static partial Regex FallbackRecordPattern();
 
     [GeneratedRegex(
-        pattern:
-        @"STATUS:\s*(?<status>.*?)\s*TITLE:\s*(?<title>.*?)\s*SUMMARY:\s*(?<summary>.*?)\s*TAGS:\s*(?<tags>.*?)\s*--- END SUCCESS RECORD ---",
+        $@"STATUS:\s*(?<status>.*?)\s*TITLE:\s*(?<title>.*?)\s*SUMMARY:\s*(?<summary>.*?)\s*TAGS:\s*(?<tags>.*?)\s*{SuccessRecordEnd}",
         RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase, matchTimeoutMilliseconds: 3000)]
     private static partial Regex SuccessRecordPattern();
 
@@ -24,12 +30,12 @@ public static partial class GeminiNewsApiParser
             return null;
         }
 
-        if (apiOutput.Contains(value: "--- START SUCCESS RECORD ---", StringComparison.OrdinalIgnoreCase))
+        if (apiOutput.Contains(SuccessRecordBegin, StringComparison.OrdinalIgnoreCase))
         {
             return ParseSuccessRecord(apiOutput);
         }
 
-        if (apiOutput.Contains(value: "--- START FALLBACK RECORD ---", StringComparison.OrdinalIgnoreCase))
+        if (apiOutput.Contains(FallbackRecordBegin, StringComparison.OrdinalIgnoreCase))
         {
             return ParseFallbackRecord(apiOutput);
         }
@@ -49,10 +55,13 @@ public static partial class GeminiNewsApiParser
                 Status = WebUtility.HtmlDecode(match.Groups[groupname: "status"].Value.Trim()),
                 Title = WebUtility.HtmlDecode(match.Groups[groupname: "title"].Value.Trim()),
                 Summary = WebUtility.HtmlDecode(match.Groups[groupname: "summary"].Value.Trim()),
-                Tags = WebUtility.HtmlDecode(match.Groups[groupname: "tags"].Value.Trim())
-                    .Split([','], StringSplitOptions.RemoveEmptyEntries)
-                    .Select(tag => tag.Trim())
-                    .ToList()
+                Tags =
+                [
+                    RaviAI,
+                    ..WebUtility.HtmlDecode(match.Groups[groupname: "tags"].Value.Trim())
+                        .Split([','], StringSplitOptions.RemoveEmptyEntries)
+                        .Select(tag => tag.Trim())
+                ]
             }
         };
     }

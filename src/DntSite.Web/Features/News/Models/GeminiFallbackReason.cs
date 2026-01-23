@@ -2,9 +2,9 @@ namespace DntSite.Web.Features.News.Models;
 
 public enum GeminiFallbackReason
 {
-	Unreadable,
-	NotProgramming,
-	InsufficientContent,
-	LowSignalNews,
-	LanguageFailure
+    Unreadable,
+    NotDotNetRelated,
+    InsufficientContent,
+    LowSignalNews,
+    LanguageFailure
 }
