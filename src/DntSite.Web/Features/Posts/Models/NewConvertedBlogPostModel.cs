@@ -7,4 +7,6 @@ public class NewConvertedBlogPostModel : BaseEmailModel
     public required string Source { get; set; }
 
     public required string Dest { get; set; }
+
+    public required string PostId { get; set; }
 }

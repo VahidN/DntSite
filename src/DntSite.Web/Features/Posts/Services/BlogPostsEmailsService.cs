@@ -22,14 +22,16 @@ public class BlogPostsEmailsService(ICommonService commonService, IEmailsFactory
             messageId: "DraftConverted", inReplyTo: "", references: "DraftConverted", new NewConvertedBlogPostModel
             {
                 Source = blogPost.Title,
-                Dest = blogPost.Body
+                Dest = blogPost.Body,
+				PostId = blogPost.Id.ToString(CultureInfo.InvariantCulture) 
             }, $"مطلب جدید تبدیل شده: {blogPost.Title}", addIp: false);
 
         await emailsFactoryService.SendEmailAsync<NewConvertedBlogPost, NewConvertedBlogPostModel>(
             messageId: "DraftConverted", inReplyTo: "", references: "DraftConverted", new NewConvertedBlogPostModel
             {
                 Source = blogPost.Title,
-                Dest = blogPost.Body
+                Dest = blogPost.Body,
+				PostId = blogPost.Id.ToString(CultureInfo.InvariantCulture)
             }, blogPost.User?.EMail, $"مطلب جدید تبدیل شده: {blogPost.Title}", addIp: false);
     }
 
