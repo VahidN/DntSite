@@ -129,4 +129,22 @@ public class AppSettingsService(
 
         return mapper.Map<AppSetting, AppSettingModel>(cfg);
     }
+
+    public async Task ChangeSiteActiveStateAsync(bool siteIsActive)
+    {
+        var cfg = await _blogConfigs.OrderBy(x => x.Id).FirstOrDefaultAsync();
+
+        if (cfg is null || cfg.Id == 0 || cfg.SiteIsActive == siteIsActive)
+        {
+            return;
+        }
+
+        cfg.SiteIsActive = siteIsActive;
+        await uow.SaveChangesAsync();
+        cachedAppSettingsProvider.InvalidateAppSettings();
+
+        await emailsFactoryService.SendTextToAllAdminsAsync(siteIsActive
+            ? "سایت مجددا فعال شد."
+            : "سایت به صورت موقت به علت عدم حضور مدیران غیرفعال شد. برای فعالسازی مجدد آن فقط کافی است به سایت لاگین کنید.");
+    }
 }
