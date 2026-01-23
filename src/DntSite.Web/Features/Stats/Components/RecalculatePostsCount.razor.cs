@@ -64,6 +64,11 @@ public partial class RecalculatePostsCount
 
                 break;
 
+            case RecalculatePostsCountAction.InvalidateAllScreenshots:
+                await DailyNewsScreenshotsService.InvalidateAllScreenshotsAsync();
+
+                break;
+
             case RecalculatePostsCountAction.TryReDownloadFailedScreenshots:
                 await DailyNewsScreenshotsService.TryReDownloadFailedScreenshotsAsync();
 

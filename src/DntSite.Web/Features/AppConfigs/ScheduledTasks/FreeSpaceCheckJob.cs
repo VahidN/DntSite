@@ -1,16 +1,13 @@
+using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.ScheduledTasks;
 
 namespace DntSite.Web.Features.AppConfigs.ScheduledTasks;
 
-public class FreeSpaceCheckJob(IAppConfigsEmailsService appConfigsEmailsService) : IScheduledTask
+public class FreeSpaceCheckJob(
+    IAppConfigsEmailsService appConfigsEmailsService,
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
 {
-    public async Task RunAsync(CancellationToken cancellationToken)
-    {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            return;
-        }
-
-        await appConfigsEmailsService.SendHasNotRemainingSpaceEmailToAdminsAsync(cancellationToken);
-    }
+    protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
+        => appConfigsEmailsService.SendHasNotRemainingSpaceEmailToAdminsAsync(cancellationToken);
 }

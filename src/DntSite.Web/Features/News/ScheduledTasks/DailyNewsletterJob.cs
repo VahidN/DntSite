@@ -1,5 +1,7 @@
-﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+﻿using DntSite.Web.Features.AppConfigs.Entities;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Models;
+using DntSite.Web.Features.Common.ScheduledTasks;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.PrivateMessages.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
@@ -10,19 +12,19 @@ public class DailyNewsletterJob(
     IUsersInfoService usersService,
     IDailyNewsletter dailyNewsletter,
     IJobsEmailsService jobsEmailsService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : IScheduledTask
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
 {
-    public async Task RunAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            return;
-        }
+       if(appSetting is null)
+       {
+          return;
+       }
 
         var users = await usersService.GetAllDailyEmailReceiversListAsync(SharedConstants.AYearAgo,
             sendToAllEachMonth: true);
 
-        var showBriefDescription = (await cachedAppSettingsProvider.GetAppSettingsAsync()).ShowRssBriefDescription;
+        var showBriefDescription = appSetting.ShowRssBriefDescription;
         var dateTime = DateTime.UtcNow.ToIranTimeZoneDateTime().AddDays(value: -1);
         var content = await dailyNewsletter.GetEmailContentAsync(dateTime, showBriefDescription);
 

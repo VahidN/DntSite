@@ -1,22 +1,25 @@
-﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+﻿using DntSite.Web.Features.AppConfigs.Entities;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.ScheduledTasks;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 public class DisableInactiveUsersJob(
     IUserProfilesManagerService userProfilesManagerService,
-    ICachedAppSettingsProvider appSettingsService) : IScheduledTask
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
 {
     private const int DefaultMinMonthToStayActive = 12;
 
-    public async Task RunAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            return;
-        }
+       if(appSetting is null)
+       {
+          return;
+       }
 
-        var minMonthToStayActive = await GetMinMonthToStayActiveAsync();
+		
+        var minMonthToStayActive = GetMinMonthToStayActive(appSetting);
         await userProfilesManagerService.DisableInactiveUsersAsync(minMonthToStayActive);
 
         await NotifyInactiveUsersOnFridaysAsync(minMonthToStayActive, cancellationToken);
@@ -30,11 +33,10 @@ public class DisableInactiveUsersJob(
         }
     }
 
-    private async Task<int> GetMinMonthToStayActiveAsync()
+    private static int GetMinMonthToStayActive(AppSetting appSetting)
     {
-        var appSettings = await appSettingsService.GetAppSettingsAsync();
-        var minMonthToStayActive = appSettings?.MinimumRequiredPosts.MinMonthToStayActive;
+        var minMonthToStayActive = appSetting.MinimumRequiredPosts.MinMonthToStayActive;
 
-        return minMonthToStayActive is null or 0 ? DefaultMinMonthToStayActive : (int)minMonthToStayActive;
+        return minMonthToStayActive == 0 ? DefaultMinMonthToStayActive : minMonthToStayActive;
     }
 }

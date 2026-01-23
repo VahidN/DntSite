@@ -1,3 +1,6 @@
+using DntSite.Web.Features.AppConfigs.Entities;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.ScheduledTasks;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Services.Contracts;
@@ -9,15 +12,11 @@ public class ExportToMergedPdfFilesJob(
     IBlogPostsPdfExportService blogPostsPdfExportService,
     ILearningPathPdfExportsService learningPathPdfExportsService,
     ICourseTopicsPdfExportService courseTopicsPdfExportService,
-    IDailyNewsPdfExportService dailyNewsPdfExportService) : IScheduledTask
+    IDailyNewsPdfExportService dailyNewsPdfExportService,
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
 {
-    public async Task RunAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            return;
-        }
-
         await learningPathPdfExportsService.CreateMergedPdfOfLearningPathsAsync(cancellationToken);
         await courseTopicsPdfExportService.CreateMergedPdfOfCoursesAsync(cancellationToken);
         await blogPostsPdfExportService.CreateMergedPdfOfPostsTagsAsync(cancellationToken);

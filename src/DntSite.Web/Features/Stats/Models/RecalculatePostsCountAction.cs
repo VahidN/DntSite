@@ -9,5 +9,6 @@ public enum RecalculatePostsCountAction
     InvalidateAllYoutubeScreenshots,
     TryReDownloadFailedScreenshots,
     RebuildExports,
-    RunAIDailyNewsService
+    RunAIDailyNewsService,
+    InvalidateAllScreenshots
 }

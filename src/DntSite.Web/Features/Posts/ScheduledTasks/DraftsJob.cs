@@ -1,11 +1,14 @@
-﻿using DntSite.Web.Features.Posts.Services.Contracts;
+﻿using DntSite.Web.Features.AppConfigs.Entities;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.ScheduledTasks;
+using DntSite.Web.Features.Posts.Services.Contracts;
 
 namespace DntSite.Web.Features.Posts.ScheduledTasks;
 
-public class DraftsJob(IBlogPostDraftsService blogPostDraftsService) : IScheduledTask
+public class DraftsJob(
+    IBlogPostDraftsService blogPostDraftsService,
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
 {
-    public Task RunAsync(CancellationToken cancellationToken)
-        => cancellationToken.IsCancellationRequested
-            ? Task.CompletedTask
-            : blogPostDraftsService.RunConvertDraftsToPostsJobAsync(cancellationToken);
+    protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
+        => blogPostDraftsService.RunConvertDraftsToPostsJobAsync(cancellationToken);
 }
