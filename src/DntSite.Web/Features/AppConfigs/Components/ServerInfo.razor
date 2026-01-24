@@ -185,10 +185,16 @@
                 @if (_info.ServerInfo.LinuxInfo.AvailableSdkVersions.Count > 0)
                 {
                     <hr>
-                    <pre dir="ltr">
-				    <div>Available Sdk Versions:</div>
-					<span dir="ltr">@_info.ServerInfo.LinuxInfo.AvailableSdkVersions.Join(separator: "'")</span>
-				  </pre>
+                    <div dir="ltr">
+                        <div>Available Sdk Versions:</div>
+                        @foreach (var version in _info.ServerInfo.LinuxInfo.AvailableSdkVersions)
+                        {
+                            <DntBadge BadgeValue="version"
+                                      Title="نگارش موجود"
+                                      BadgeValueBgColor="TextBgColor.Info"
+                            />
+                        }
+                    </div>
                 }
             </div>
         </FrameBody>
