@@ -66,16 +66,16 @@ public partial class YoutubeScreenshotsService(BaseHttpClient baseHttpClient, IL
             return null;
         }
 
-        var htmlContent = await baseHttpClient.HttpClient.GetStringAsync(url, ct);
+        var htmlContentResult = await baseHttpClient.HttpClient.SafeFetchAsync(url, ct);
 
-        if (htmlContent.IsEmpty())
+        if (htmlContentResult.Kind != FetchResultKind.Success || htmlContentResult.Content.IsEmpty())
         {
             logger.LogWarning(message: "GetYoutubeVideoDescriptionAsync({URL}) Error -> htmlContent is empty.", url);
 
             return null;
         }
 
-        var match = PlayerResponse().Match(htmlContent);
+        var match = PlayerResponse().Match(htmlContentResult.Content);
 
         if (!match.Success || match.Groups.Count < 2)
         {
