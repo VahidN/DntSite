@@ -26,7 +26,7 @@ public class DailyNewsItemsService(
     IStatService statService,
     IDailyNewsEmailsService dailyNewsEmailsService,
     IUrlNormalizationService urlNormalizationService,
-    BaseHttpClient baseHttpClient,
+    IHttpClientFactory httpClientFactory,
     IRedirectUrlFinderService redirectUrlFinderService,
     ILogger<DailyNewsItemsService> logger,
     IUserRatingsService userRatingsService,
@@ -525,9 +525,10 @@ public class DailyNewsItemsService(
                     var url = item.Url;
                     item.LastHttpStatusCodeCheckDateTime = DateTime.UtcNow;
 
+                    using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
+
                     item.LastHttpStatusCode =
-                        await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(url, throwOnException: true,
-                            cancellationToken);
+                        await client.GetHttpStatusCodeAsync(url, throwOnException: true, cancellationToken);
 
                     item.IsDeleted = item.LastHttpStatusCode == HttpStatusCode.NotFound;
                 }
@@ -639,9 +640,10 @@ public class DailyNewsItemsService(
         {
             item.LastHttpStatusCodeCheckDateTime = now;
 
-            item.LastHttpStatusCode =
-                await baseHttpClient.HttpClient.GetHttpStatusCodeAsync(item.Url, throwOnException: false) ??
-                HttpStatusCode.RequestTimeout;
+            using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
+
+            item.LastHttpStatusCode = await client.GetHttpStatusCodeAsync(item.Url, throwOnException: false) ??
+                                      HttpStatusCode.RequestTimeout;
 
             item.IsDeleted = item.LastHttpStatusCode == HttpStatusCode.NotFound;
         }

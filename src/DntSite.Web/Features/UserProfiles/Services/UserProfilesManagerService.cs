@@ -16,7 +16,7 @@ public class UserProfilesManagerService(
     IAppAntiXssService antiXssService,
     IUsersInfoService usersInfoService,
     ICurrentUserService currentUserService,
-    BaseHttpClient baseHttpClient,
+    IHttpClientFactory httpClientFactory,
     IUsedPasswordsService usedPasswordsService,
     IUsersManagerEmailsService usersManagerEmailsService,
     IAppFoldersService appFoldersService,
@@ -214,7 +214,8 @@ public class UserProfilesManagerService(
             var emailHash = user.EMail.ToLowerInvariant().Trim().Md5Hash().ToLowerInvariant();
             var imageUrl = $"https://www.gravatar.com/avatar/{emailHash}.jpg?s=100&d=identicon&r=PG";
 
-            var imageData = await baseHttpClient.HttpClient.GetByteArrayAsync(imageUrl);
+            using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
+            var imageData = await client.GetByteArrayAsync(imageUrl);
 
             if (imageData is null || imageData.Length == 0)
             {

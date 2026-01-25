@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace DntSite.Web.Features.News.Services;
 
-public partial class YoutubeScreenshotsService(BaseHttpClient baseHttpClient, ILogger<YoutubeScreenshotsService> logger)
-    : IYoutubeScreenshotsService
+public partial class YoutubeScreenshotsService(
+    IHttpClientFactory httpClientFactory,
+    ILogger<YoutubeScreenshotsService> logger) : IYoutubeScreenshotsService
 {
     public async Task<byte[]?> TryGetYoutubeVideoThumbnailDataAsync(string? videoId)
     {
@@ -18,7 +19,9 @@ public partial class YoutubeScreenshotsService(BaseHttpClient baseHttpClient, IL
 
             var thumbnailUrl = $"https://i.ytimg.com/vi/{videoId}/hqdefault.jpg";
 
-            return await baseHttpClient.HttpClient.DownloadDataAsync(thumbnailUrl);
+            using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
+
+            return await client.DownloadDataAsync(thumbnailUrl);
         }
         catch (Exception ex)
         {
@@ -66,7 +69,8 @@ public partial class YoutubeScreenshotsService(BaseHttpClient baseHttpClient, IL
             return null;
         }
 
-        var htmlContentResult = await baseHttpClient.HttpClient.SafeFetchAsync(url, ct);
+        using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
+        var htmlContentResult = await client.SafeFetchAsync(url, ct);
 
         if (htmlContentResult.Kind != FetchResultKind.Success || htmlContentResult.Content.IsEmpty())
         {

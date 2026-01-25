@@ -15,7 +15,7 @@ public class AIDailyNewsService(
     IGeminiClientService geminiClientService,
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IDailyNewsItemsService dailyNewsItemsService,
-    BaseHttpClient baseHttpClient,
+    IHttpClientFactory httpClientFactory,
     IEmailsFactoryService emailsFactoryService,
     IYoutubeScreenshotsService youtubeScreenshots,
     ILogger<AIDailyNewsService> logger) : IAIDailyNewsService
@@ -346,9 +346,11 @@ public class AIDailyNewsService(
 
     private async Task<string?> CreatePromptAsync(FeedItem feedItem, CancellationToken ct)
     {
+        using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
+
         var description = youtubeScreenshots.IsYoutubeVideo(feedItem.Url).Success
             ? await youtubeScreenshots.GetYoutubeVideoDescriptionAsync(feedItem.Url, ct) ?? ""
-            : await baseHttpClient.HttpClient.HtmlToTextAsync(feedItem.Url, logger, ct);
+            : await client.HtmlToTextAsync(feedItem.Url, logger, ct);
 
         if (description.Trim().IsEmpty())
         {
