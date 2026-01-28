@@ -53,4 +53,7 @@ public class AppSettingModel
 
     [Display(Name = "برای مطالب خبری، اسکرین‌شات تهیه شود")]
     public bool ShouldCreateNewsScreenshots { set; get; }
+
+    [Display(Name = "کلید ای‌پی‌آی YouTube")]
+    public string? YouTubeDataApikey { set; get; }
 }

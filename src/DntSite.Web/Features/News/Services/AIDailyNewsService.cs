@@ -1,4 +1,5 @@
 using System.Text;
+using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.News.Models;
@@ -17,7 +18,6 @@ public class AIDailyNewsService(
     IDailyNewsItemsService dailyNewsItemsService,
     IHttpClientFactory httpClientFactory,
     IEmailsFactoryService emailsFactoryService,
-    IYoutubeScreenshotsService youtubeScreenshots,
     ILogger<AIDailyNewsService> logger) : IAIDailyNewsService
 {
     private const int QuotaLimit = 15000;
@@ -171,7 +171,7 @@ public class AIDailyNewsService(
 
                 foreach (var feedItem in newFeedItems)
                 {
-                    var isSuccessfulResponse = await ProcessFeedItemAsync(apiKey, feedItem, aiUser, ct);
+                    var isSuccessfulResponse = await ProcessFeedItemAsync(appSetting, feedItem, aiUser, ct);
 
                     if (!isSuccessfulResponse)
                     {
@@ -206,7 +206,10 @@ public class AIDailyNewsService(
         return [..feedChannel.RssItems.Where(item => newLinks.Contains(item.Url, StringComparer.OrdinalIgnoreCase))];
     }
 
-    private async Task<bool> ProcessFeedItemAsync(string apiKey, FeedItem feedItem, User aiUser, CancellationToken ct)
+    private async Task<bool> ProcessFeedItemAsync(AppSetting appSetting,
+        FeedItem feedItem,
+        User aiUser,
+        CancellationToken ct)
     {
         try
         {
@@ -216,7 +219,7 @@ public class AIDailyNewsService(
                 return true;
             }
 
-            var prompt = await CreatePromptAsync(feedItem, ct);
+            var prompt = await CreatePromptAsync(appSetting, feedItem, ct);
 
             if (prompt.IsEmpty())
             {
@@ -225,7 +228,8 @@ public class AIDailyNewsService(
                 return true;
             }
 
-            var responseResult = await GetGeminiResponseResultAsync(apiKey, prompt, feedItem.Url, ct);
+            var responseResult =
+                await GetGeminiResponseResultAsync(appSetting.GeminiNewsFeeds.ApiKey!, prompt, feedItem.Url, ct);
 
             if (responseResult is null)
             {
@@ -344,13 +348,9 @@ public class AIDailyNewsService(
 
     private void ResetModel() => _workingModel = null;
 
-    private async Task<string?> CreatePromptAsync(FeedItem feedItem, CancellationToken ct)
+    private async Task<string?> CreatePromptAsync(AppSetting appSetting, FeedItem feedItem, CancellationToken ct)
     {
-        using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
-
-        var description = youtubeScreenshots.IsYoutubeVideo(feedItem.Url).Success
-            ? await youtubeScreenshots.GetYoutubeVideoDescriptionAsync(feedItem.Url, ct) ?? ""
-            : await client.HtmlToTextAsync(feedItem.Url, logger, ct);
+        var description = await GetDescriptionAsync(appSetting, feedItem, ct);
 
         if (description.Trim().IsEmpty())
         {
@@ -365,5 +365,37 @@ public class AIDailyNewsService(
         }
 
         return string.Format(CultureInfo.InvariantCulture, PromptTemplate, feedItem.Title, description);
+    }
+
+    private async Task<string> GetDescriptionAsync(AppSetting appSetting, FeedItem feedItem, CancellationToken ct)
+    {
+        using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
+
+        var description = string.Empty;
+
+        var (success, videoId) = feedItem.Url.IsYoutubeVideo();
+
+        if (success && !videoId.IsEmpty())
+        {
+            if (!appSetting.YouTubeDataApikey.IsEmpty())
+            {
+                var info = await client.GetYoutubeVideoInfoAsync(videoId, appSetting.YouTubeDataApikey, ct);
+
+                if (info is not null)
+                {
+                    description = $"{info.ChannelTitle}\n{info.Title}\n{info.Description}";
+                }
+            }
+            else
+            {
+                description = await client.GetYoutubeVideoDescriptionAsync(feedItem.Url, ct) ?? "";
+            }
+        }
+        else
+        {
+            description = await client.HtmlToTextAsync(feedItem.Url, logger, ct);
+        }
+
+        return description.Trim();
     }
 }

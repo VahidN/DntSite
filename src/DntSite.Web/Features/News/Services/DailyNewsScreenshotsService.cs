@@ -12,7 +12,7 @@ public class DailyNewsScreenshotsService(
     IUnitOfWork uow,
     IAppFoldersService appFoldersService,
     IHtmlToPngGenerator htmlToPngGenerator,
-    IYoutubeScreenshotsService youtubeScreenshotsService,
+    IHttpClientFactory httpClientFactory,
     IEFCacheServiceProvider efCacheServiceProvider,
     ILogger<DailyNewsScreenshotsService> logger) : IDailyNewsScreenshotsService
 {
@@ -137,7 +137,7 @@ public class DailyNewsScreenshotsService(
     {
         foreach (var item in _dailyNewsItem.OrderBy(x => x.Id))
         {
-            if (youtubeScreenshotsService.IsYoutubeVideo(item.Url).Success)
+            if (item.Url.IsYoutubeVideo().Success)
             {
                 InvalidateScreenshot(item);
             }
@@ -200,11 +200,12 @@ public class DailyNewsScreenshotsService(
 
     private async Task TryDownloadScreenshotAsync(string currentUrl, string path)
     {
-        var (success, videoId) = youtubeScreenshotsService.IsYoutubeVideo(currentUrl);
+        var (success, videoId) = currentUrl.IsYoutubeVideo();
 
         if (success)
         {
-            var imageData = await youtubeScreenshotsService.TryGetYoutubeVideoThumbnailDataAsync(videoId);
+            using var httpClient = httpClientFactory.CreateBaseHttpClient();
+            var imageData = await httpClient.GetYoutubeVideoThumbnailDataAsync(videoId);
 
             if (imageData is not null)
             {
