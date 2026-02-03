@@ -1,0 +1,108 @@
+﻿@using DntSite.Web.Features.News.Entities
+@using DntSite.Web.Features.News.Models
+@attribute [Route(NewsRoutingConstants.AddDailyNewsItemAIBacklogs)]
+
+<DntSitePageTitle Group="مدیریت برنامه" PageTitle="افزودن بک‌لاگ خبری" CurrentPage="@null"/>
+
+<EditForm Model="this" method="post" autocomplete="off"
+          OnValidSubmit="PerformAsync" FormName="@nameof(AddDailyNewsItemAIBacklogs)" Enhance>
+    <DataAnnotationsValidator/>
+
+    <DntCardFrame>
+        <FrameHeader>
+            افزودن بک‌لاگ خبری
+        </FrameHeader>
+        <FrameBody>
+            <DntInputTextArea FieldIcon="@DntBootstrapIcons.BiLink"
+                              LabelName="هر سطر یک آدرس"
+                              dir="ltr"
+                              rows="7"
+                              @bind-Value="Urls"/>
+            <hr/>
+
+            <div class="d-flex align-items-center justify-content-center">
+                <button class="btn btn-success btn-sm" type="submit" name="@nameof(BacklogActionValue)"
+                        value="@AIBacklogAction.AddUrls">
+                    ثبت آدرس‌ها
+                </button>
+            </div>
+        </FrameBody>
+    </DntCardFrame>
+
+    <DntLoading IsLoading="@(_backlogs is null)">
+        <DntCardFrame MarginTop="3">
+            <FrameHeader>
+                مدیریت وضعیت آدرس‌های پردازش نشده
+            </FrameHeader>
+            <FrameBody>
+                <DntSimpleTable TRecord="DailyNewsItemAIBacklog"
+                                Records="_backlogs!"
+                                TableClass="table table-striped table-hover caption-top"
+                                HeaderClass="table-secondary"
+                                FooterRowClass="table-warning"
+                                TableResponsiveClass="row table-responsive"
+                                RowClass='record => ""'>
+                    <CaptionTemplate>
+                        <strong>آدرس‌های جدید:</strong>
+                    </CaptionTemplate>
+                    <TableColumns>
+                        <DntSimpleTableColumn HeaderTitle="حذف شود"
+                                              HeaderCellClass="text-center"
+                                              RowCellClass='record => "text-center align-middle"'
+                                              FooterCellClass="text-center align-middle">
+                            <CellValueTemplate Context="record">
+                                <div class="form-check form-switch mb-3">
+                                    <input type="checkbox"
+                                           checked="@record.IsDeleted"
+                                           class="form-check-input"
+                                           name="@nameof(SelectedDeleteIds)"
+                                           value="@record.Id"/>
+                                </div>
+                            </CellValueTemplate>
+                        </DntSimpleTableColumn>
+                        <DntSimpleTableColumn HeaderTitle="تائید شود"
+                                              HeaderCellClass="text-center"
+                                              RowCellClass='record => "text-center align-middle"'
+                                              FooterCellClass="text-center align-middle">
+                            <CellValueTemplate Context="record">
+                                <div class="form-check form-switch mb-3">
+                                    <input type="checkbox"
+                                           checked="@record.IsApproved"
+                                           class="form-check-input"
+                                           name="@nameof(SelectedApproveIds)"
+                                           value="@record.Id"/>
+                                </div>
+                            </CellValueTemplate>
+                        </DntSimpleTableColumn>
+                        <DntSimpleTableColumn HeaderTitle="آدرس"
+                                              HeaderCellClass="text-center"
+                                              RowCellClass='record => "text-left align-middle"'
+                                              FooterCellClass="text-center align-middle">
+                            <CellValueTemplate Context="record">
+                                <span dir="ltr">@record.Title</span> <br/>
+                                <a dir="ltr" href="@record.Url">@record.Url</a>
+                            </CellValueTemplate>
+                        </DntSimpleTableColumn>
+                    </TableColumns>
+                    <DataSourceIsEmptyTemplate>
+                        <div class="alert alert-info">
+                            اطلاعاتی برای نمایش یافت نشد.
+                        </div>
+                    </DataSourceIsEmptyTemplate>
+                </DntSimpleTable>
+
+                @if (_backlogs!.Count > 0)
+                {
+                    <div class="d-flex align-items-center justify-content-center">
+                        <button class="btn btn-primary btn-sm mt-2" type="submit" name="@nameof(BacklogActionValue)"
+                                value="@AIBacklogAction.ApplyChanges">
+                            اعمال تغییرات
+                        </button>
+                    </div>
+                }
+            </FrameBody>
+        </DntCardFrame>
+    </DntLoading>
+</EditForm>
+
+

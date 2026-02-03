@@ -2,6 +2,7 @@ using System.Text;
 using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Services.Contracts;
+using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.News.Utils;
@@ -11,8 +12,8 @@ using DntSite.Web.Features.UserProfiles.Services.Contracts;
 namespace DntSite.Web.Features.News.Services;
 
 public class AIDailyNewsService(
+    IDailyNewsItemAIBacklogService dailyNewsItemAiBacklogService,
     IUsersInfoService usersInfoService,
-    IRssReaderService rssReaderService,
     IGeminiClientService geminiClientService,
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IDailyNewsItemsService dailyNewsItemsService,
@@ -147,9 +148,8 @@ public class AIDailyNewsService(
         }
 
         var apiKey = geminiNewsFeeds.ApiKey;
-        var feeds = geminiNewsFeeds.NewsFeeds;
 
-        if (apiKey.IsEmpty() || feeds.Count == 0)
+        if (apiKey.IsEmpty())
         {
             return;
         }
@@ -163,73 +163,48 @@ public class AIDailyNewsService(
             return;
         }
 
-        foreach (var feedUrl in feeds)
+        var dailyNewsItemAiBacklogs =
+            await dailyNewsItemAiBacklogService.GetApprovedNotProcessedDailyNewsItemAIBacklogsAsync(ct);
+
+        foreach (var backlog in dailyNewsItemAiBacklogs)
         {
-            try
+            var isSuccessfulResponse = await ProcessFeedItemAsync(appSetting, backlog, aiUser, ct);
+
+            if (!isSuccessfulResponse)
             {
-                var newFeedItems = await GetNewFeedItemsAsync(feedUrl, ct);
-
-                foreach (var feedItem in newFeedItems)
-                {
-                    var isSuccessfulResponse = await ProcessFeedItemAsync(appSetting, feedItem, aiUser, ct);
-
-                    if (!isSuccessfulResponse)
-                    {
-                        return;
-                    }
-
-                    await Task.Delay(TimeSpan.FromSeconds(seconds: 30), ct);
-                }
+                return;
             }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Demystify(), message: "Error processing `{FeedUrl}`.", feedUrl);
-            }
+
+            await Task.Delay(TimeSpan.FromSeconds(seconds: 30), ct);
         }
-    }
-
-    private async Task<List<FeedItem>> GetNewFeedItemsAsync(string feedUrl, CancellationToken ct)
-    {
-        var feedChannel = await rssReaderService.ReadRssAsync(feedUrl, ct);
-
-        if (feedChannel.RssItems is null)
-        {
-            logger.LogWarning(message: "`{FeedUrl}` feed is empty.", feedUrl);
-
-            return [];
-        }
-
-        var newLinks =
-            await dailyNewsItemsService.GetNotProcessedLinksAsync(
-                feedChannel.RssItems.Select(feedItem => feedItem.Url).Distinct(), ct);
-
-        return [..feedChannel.RssItems.Where(item => newLinks.Contains(item.Url, StringComparer.OrdinalIgnoreCase))];
     }
 
     private async Task<bool> ProcessFeedItemAsync(AppSetting appSetting,
-        FeedItem feedItem,
+        DailyNewsItemAIBacklog backlog,
         User aiUser,
         CancellationToken ct)
     {
         try
         {
-            if ((await dailyNewsItemsService.CheckUrlHashAsync(feedItem.Url, id: null, isAdmin: false)).Stat ==
+            if ((await dailyNewsItemsService.CheckUrlHashAsync(backlog.Url, id: null, isAdmin: false)).Stat ==
                 OperationStat.Failed)
             {
+                await dailyNewsItemAiBacklogService.MarkAsProcessedAsync(backlog.Id);
+
                 return true;
             }
 
-            var prompt = await CreatePromptAsync(appSetting, feedItem, ct);
+            var prompt = await CreatePromptAsync(appSetting, backlog, ct);
 
             if (prompt.IsEmpty())
             {
-                logger.LogWarning(message: "Not a good source -> `{FeedItemUrl}`. Prompt is empty.", feedItem.Url);
+                logger.LogWarning(message: "Not a good source -> `{FeedItemUrl}`. Prompt is empty.", backlog.Url);
 
                 return true;
             }
 
             var responseResult =
-                await GetGeminiResponseResultAsync(appSetting.GeminiNewsFeeds.ApiKey!, prompt, feedItem.Url, ct);
+                await GetGeminiResponseResultAsync(appSetting.GeminiNewsFeeds.ApiKey!, prompt, backlog.Url, ct);
 
             if (responseResult is null)
             {
@@ -242,7 +217,7 @@ public class AIDailyNewsService(
             {
                 logger.LogWarning(
                     message: "ApiResponse -> IsEmpty -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
-                    _workingModel, feedItem.Url, responseResult.ResponseBody ?? "");
+                    _workingModel, backlog.Url, responseResult.ResponseBody ?? "");
 
                 return true;
             }
@@ -258,12 +233,13 @@ public class AIDailyNewsService(
                         case GeminiFallbackReason.NotDotNetRelated:
                         case GeminiFallbackReason.InsufficientContent:
                         case GeminiFallbackReason.LowSignalNews:
-                            await dailyNewsItemsService.AddNewsItemAsDeletedAsync(feedItem.Url, aiUser);
+                            await dailyNewsItemsService.AddNewsItemAsDeletedAsync(backlog.Url, aiUser);
+                            await dailyNewsItemAiBacklogService.MarkAsProcessedAsync(backlog.Id);
 
                             logger.LogWarning(
                                 message:
                                 "`GeminiFallbackResult -> `{Model}` -> {FeedItemUrl}` -> {Reason} -> `{ResponseBody}`.",
-                                _workingModel, feedItem.Url, fallbackResult.Reason, responseResult.ResponseBody ?? "");
+                                _workingModel, backlog.Url, fallbackResult.Reason, responseResult.ResponseBody ?? "");
 
                             return true;
                         default:
@@ -282,8 +258,8 @@ public class AIDailyNewsService(
 
                     var dailyNewsItemModel = new DailyNewsItemModel
                     {
-                        Title = successResult.Title ?? feedItem.Title,
-                        Url = feedItem.Url,
+                        Title = successResult.Title ?? backlog.Title ?? backlog.Url,
+                        Url = backlog.Url,
                         DescriptionText = successResult.Summary ?? "",
                         Tags = successResult.Tags ?? [DailyNewsItemsService.DefaultTag]
                     };
@@ -291,12 +267,14 @@ public class AIDailyNewsService(
                     var newsItem = await dailyNewsItemsService.AddNewsItemAsync(dailyNewsItemModel, aiUser);
                     await dailyNewsItemsService.NotifyAddOrUpdateChangesAsync(newsItem, dailyNewsItemModel, aiUser);
 
+                    await dailyNewsItemAiBacklogService.MarkAsProcessedAsync(backlog.Id);
+
                     break;
             }
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Demystify(), message: "Error processing `{FeedUrl}`.", feedItem.Url);
+            logger.LogError(ex.Demystify(), message: "Error processing `{FeedUrl}`.", backlog.Url);
         }
 
         return true;
@@ -311,34 +289,38 @@ public class AIDailyNewsService(
         string feedItemUrl,
         CancellationToken ct)
     {
-        var models = _workingModel is null
-            ? Models
-            : [_workingModel, ..Models.Except([_workingModel], StringComparer.Ordinal)];
-
-        foreach (var model in models)
+        foreach (var model in GetModels())
         {
-            var responseResult = await geminiClientService.RunGenerateContentPromptsAsync(new GeminiClientOptions
-            {
-                ApiVersion = GeminiApiVersions.V1Beta,
-                ApiKey = apiKey,
-                ModelId = model,
-                Chats = [new GeminiChatRequest(prompt)]
-            }, ct);
+            SetModel(model);
 
-            if (responseResult.IsSuccessfulResponse is not (null or false))
+            try
             {
-                _workingModel = model;
+                var responseResult = await geminiClientService.RunGenerateContentPromptsAsync(new GeminiClientOptions
+                {
+                    ApiVersion = GeminiApiVersions.V1Beta,
+                    ApiKey = apiKey,
+                    ModelId = model,
+                    Chats = [new GeminiChatRequest(prompt)]
+                }, ct);
 
-                return responseResult;
+                if (responseResult.IsSuccessfulResponse is not (null or false))
+                {
+                    return responseResult;
+                }
+
+                logger.LogWarning(
+                    message:
+                    "!IsSuccessfulResponse -> `{Model}` -> `{FeedItemUrl}` -> {ErrorMessage} -> `{ResponseBody}`.",
+                    _workingModel, feedItemUrl, responseResult.ErrorResponse?.Error?.Message ?? "",
+                    responseResult.ResponseBody ?? "");
+
+                await emailsFactoryService.SendTextToAllAdminsAsync($"{_workingModel} -> {responseResult.ResponseBody}",
+                    emailSubject: "Gemini Client Service Error");
             }
-
-            logger.LogWarning(
-                message: "!IsSuccessfulResponse -> `{Model}` -> `{FeedItemUrl}` -> {ErrorMessage} -> `{ResponseBody}`.",
-                _workingModel, feedItemUrl, responseResult.ErrorResponse?.Error?.Message ?? "",
-                responseResult.ResponseBody ?? "");
-
-            await emailsFactoryService.SendTextToAllAdminsAsync($"{_workingModel} -> {responseResult.ResponseBody}",
-                emailSubject: "Gemini Client Service Error");
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Demystify(), message: "Error processing `{FeedUrl}`.", feedItemUrl);
+            }
         }
 
         ResetModel();
@@ -346,13 +328,20 @@ public class AIDailyNewsService(
         return null;
     }
 
+    private void SetModel(string model) => _workingModel = model;
+
+    private string[] GetModels()
+        => _workingModel is null ? Models : [_workingModel, ..Models.Except([_workingModel], StringComparer.Ordinal)];
+
     private void ResetModel() => _workingModel = null;
 
-    private async Task<string?> CreatePromptAsync(AppSetting appSetting, FeedItem feedItem, CancellationToken ct)
+    private async Task<string?> CreatePromptAsync(AppSetting appSetting,
+        DailyNewsItemAIBacklog backlog,
+        CancellationToken ct)
     {
-        var description = await GetDescriptionAsync(appSetting, feedItem, ct);
+        var description = (await GetDescriptionAsync(appSetting, backlog, ct))?.Trim();
 
-        if (description.Trim().IsEmpty())
+        if (description.IsEmpty())
         {
             return null;
         }
@@ -364,38 +353,47 @@ public class AIDailyNewsService(
             description = description.GetBriefDescription(MaxTextSize);
         }
 
-        return string.Format(CultureInfo.InvariantCulture, PromptTemplate, feedItem.Title, description);
+        return string.Format(CultureInfo.InvariantCulture, PromptTemplate, backlog.Title, description);
     }
 
-    private async Task<string> GetDescriptionAsync(AppSetting appSetting, FeedItem feedItem, CancellationToken ct)
+    private async Task<string?> GetDescriptionAsync(AppSetting appSetting,
+        DailyNewsItemAIBacklog backlog,
+        CancellationToken ct)
     {
-        using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
-
-        var description = string.Empty;
-
-        var (success, videoId) = feedItem.Url.IsYoutubeVideo();
-
-        if (success && !videoId.IsEmpty())
+        try
         {
-            if (!appSetting.YouTubeDataApikey.IsEmpty())
-            {
-                var info = await client.GetYoutubeVideoInfoAsync(videoId, appSetting.YouTubeDataApikey, ct);
+            using var client = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
 
-                if (info is not null)
+            var (success, videoId) = backlog.Url.IsYoutubeVideo();
+
+            if (success && !videoId.IsEmpty())
+            {
+                if (!appSetting.YouTubeDataApikey.IsEmpty())
                 {
-                    description = $"{info.ChannelTitle}\n{info.Title}\n{info.Description}";
+                    var info = await client.GetYoutubeVideoInfoAsync(videoId, appSetting.YouTubeDataApikey, ct);
+
+                    if (info is not null)
+                    {
+                        return $"{info.ChannelTitle}\n{info.Title}\n{info.Description}";
+                    }
+                }
+                else
+                {
+                    return await client.GetYoutubeVideoDescriptionAsync(backlog.Url, ct) ?? "";
                 }
             }
             else
             {
-                description = await client.GetYoutubeVideoDescriptionAsync(feedItem.Url, ct) ?? "";
+                return await client.HtmlToTextAsync(backlog.Url, logger, ct);
             }
         }
-        else
+        catch (Exception ex)
         {
-            description = await client.HtmlToTextAsync(feedItem.Url, logger, ct);
+            logger.LogError(ex.Demystify(), message: "Error processing `{FeedUrl}`.", backlog.Url);
         }
 
-        return description.Trim();
+        await dailyNewsItemAiBacklogService.UpdateFetchRetiresAsync(backlog.Id);
+
+        return null;
     }
 }

@@ -8,21 +8,26 @@ public class DailyNewsItemConfig : IEntityTypeConfiguration<DailyNewsItem>
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.Property(entity => entity.Url).HasMaxLength(1000).IsRequired();
+        builder.Property(entity => entity.Url).HasMaxLength(maxLength: 1000).IsRequired();
 
-        builder.Property(entity => entity.UrlHash).HasMaxLength(50).IsRequired();
+        builder.Property(entity => entity.UrlHash).HasMaxLength(maxLength: 50).IsRequired();
         builder.HasIndex(entity => entity.UrlHash).IsUnique();
 
-        builder.Property(entity => entity.Title).HasMaxLength(450).IsRequired();
+        builder.Property(entity => entity.Title).HasMaxLength(maxLength: 450).IsRequired();
 
         builder.HasOne(entity => entity.User)
             .WithMany(user => user.DailyNewsItems)
             .HasForeignKey(entity => entity.UserId)
-            .IsRequired(false);
+            .IsRequired(required: false);
 
         builder.HasMany(dailyNewsItem => dailyNewsItem.Reactions)
             .WithOne(dailyNewsItemReaction => dailyNewsItemReaction.Parent)
             .HasForeignKey(dailyNewsItemReaction => dailyNewsItemReaction.ParentId)
-            .IsRequired(false);
+            .IsRequired(required: false);
+
+        builder.HasOne(entity => entity.DailyNewsItemAIBacklog)
+            .WithOne(aiBacklog => aiBacklog.DailyNewsItem)
+            .HasForeignKey<DailyNewsItemAIBacklog>(aiBacklog => aiBacklog.DailyNewsItemId)
+            .IsRequired(required: false);
     }
 }

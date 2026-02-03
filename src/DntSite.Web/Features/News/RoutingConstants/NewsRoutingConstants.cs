@@ -60,4 +60,6 @@ public static class NewsRoutingConstants
 
     public const string EditPostUrlTemplate = $"{WriteNews}/edit/{{0}}";
     public const string DeletePostUrlTemplate = $"{WriteNews}/delete/{{0}}";
+
+    public const string AddDailyNewsItemAIBacklogs = "/add-ai-news-backlogs";
 }

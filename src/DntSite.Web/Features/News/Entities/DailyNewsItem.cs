@@ -24,4 +24,8 @@ public class DailyNewsItem : BaseInteractiveEntity<DailyNewsItem, DailyNewsItemV
     [IgnoreAudit] public HttpStatusCode? LastHttpStatusCode { set; get; }
 
     [IgnoreAudit] public DateTime? LastHttpStatusCodeCheckDateTime { set; get; }
+
+    public virtual DailyNewsItemAIBacklog? DailyNewsItemAIBacklog { set; get; }
+
+    public int? DailyNewsItemAIBacklogId { set; get; }
 }

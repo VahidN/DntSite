@@ -7,8 +7,12 @@ namespace DntSite.Web.Features.News.ScheduledTasks;
 
 public class AIDailyNewsJob(
     IAIDailyNewsService aiDailyNewsService,
+    IDailyNewsItemAIBacklogService dailyNewsItemAiBacklogService,
     ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
 {
-    protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
-        => aiDailyNewsService.StartProcessingNewsFeedsAsync(cancellationToken);
+    protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
+    {
+        await dailyNewsItemAiBacklogService.AddFeedItemsAsDailyNewsItemAIBacklogsAsync(cancellationToken);
+        await aiDailyNewsService.StartProcessingNewsFeedsAsync(cancellationToken);
+    }
 }

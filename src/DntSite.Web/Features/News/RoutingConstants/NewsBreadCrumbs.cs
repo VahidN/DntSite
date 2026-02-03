@@ -1,4 +1,4 @@
-using DntSite.Web.Common.BlazorSsr.Utils;
+﻿using DntSite.Web.Common.BlazorSsr.Utils;
 
 namespace DntSite.Web.Features.News.RoutingConstants;
 
@@ -38,6 +38,13 @@ public static class NewsBreadCrumbs
         Title = "اشتراک‌ها",
         Url = NewsRoutingConstants.News,
         GlyphIcon = DntBootstrapIcons.BiShare
+    };
+
+    public static readonly BreadCrumb AddAINewsBacklog = new()
+    {
+        Title = "افزودن بک‌لاگ خبری",
+        Url = NewsRoutingConstants.AddDailyNewsItemAIBacklogs,
+        GlyphIcon = DntBootstrapIcons.BiLink
     };
 
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs = [WriteNews, NewsTag, NewsWriters, NewsComments, News];
