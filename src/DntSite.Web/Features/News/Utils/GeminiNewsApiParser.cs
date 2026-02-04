@@ -52,13 +52,14 @@ public static partial class GeminiNewsApiParser
             false => null,
             _ => new GeminiSuccessResult
             {
-                Status = WebUtility.HtmlDecode(match.Groups[groupname: "status"].Value.Trim()),
-                Title = WebUtility.HtmlDecode(match.Groups[groupname: "title"].Value.Trim()),
-                Summary = WebUtility.HtmlDecode(match.Groups[groupname: "summary"].Value.Trim()),
+                Status = match.Groups[groupname: "status"].Value.GetNormalizedAIText(processCodes: false),
+                Title = match.Groups[groupname: "title"].Value.GetNormalizedAIText(processCodes: false),
+                Summary = match.Groups[groupname: "summary"].Value.GetNormalizedAIText(processCodes: true),
                 Tags =
                 [
                     RaviAI,
-                    ..WebUtility.HtmlDecode(match.Groups[groupname: "tags"].Value.Trim())
+                    ..match.Groups[groupname: "tags"]
+                        .Value.GetNormalizedAIText(processCodes: false)
                         .Split([','], StringSplitOptions.RemoveEmptyEntries)
                         .Select(tag => tag.Trim())
                 ]
