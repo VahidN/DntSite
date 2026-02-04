@@ -206,7 +206,7 @@ public class AIDailyNewsService(
 
             if (geminiApiResult is null)
             {
-                logger.LogWarning(message: "Bad ResponseResult from Gemini -> `{FeedItemUrl}`.", backlog.Url);
+                logger.LogWarning(message: "Failed to get a response from Gemini -> `{FeedItemUrl}`.", backlog.Url);
 
                 return false;
             }
@@ -298,18 +298,19 @@ public class AIDailyNewsService(
 
                     var geminiApiResult = apiResponse.ParseGeminiOutput();
 
-                    if (geminiApiResult is GeminiFallbackResult { Reason: GeminiFallbackReason.LanguageFailure } ||
-                        (geminiApiResult is GeminiSuccessResult successResult &&
-                         IsLanguageSupportFailure(successResult)))
+                    switch (geminiApiResult)
                     {
-                        logger.LogWarning(
-                            message: "Bad ResponseResult from Gemini -> `{FeedItemUrl}` -> `LanguageSupportFailure`.",
-                            feedItemUrl);
+                        case null:
+                        case GeminiFallbackResult { Reason: GeminiFallbackReason.LanguageFailure }:
+                        case GeminiSuccessResult successResult when IsLanguageSupportFailure(successResult):
+                            logger.LogWarning(
+                                message: "Bad ApiResponse -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
+                                _workingModel, feedItemUrl, responseResult.ResponseBody ?? "");
 
-                        continue;
+                            continue;
+                        default:
+                            return geminiApiResult;
                     }
-
-                    return geminiApiResult;
                 }
 
                 logger.LogWarning(
