@@ -14,7 +14,7 @@ public static partial class GeminiNewsApiNormalizer
 
     public static string GetNormalizedAIText(this string? text, bool processCodes)
     {
-        if (text.IsEmpty())
+        if (text is null)
         {
             return string.Empty;
         }
