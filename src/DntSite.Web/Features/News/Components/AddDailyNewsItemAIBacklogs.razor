@@ -1,5 +1,6 @@
 ﻿@using DntSite.Web.Features.News.Entities
 @using DntSite.Web.Features.News.Models
+@using DntSite.Web.Features.UserProfiles.Components
 @attribute [Route(NewsRoutingConstants.AddDailyNewsItemAIBacklogs)]
 
 <DntSitePageTitle Group="مدیریت برنامه" PageTitle="افزودن بک‌لاگ خبری" CurrentPage="@null"/>
@@ -47,6 +48,15 @@
                         <strong>آدرس‌های جدید:</strong>
                     </CaptionTemplate>
                     <TableColumns>
+                        <DntSimpleTableColumn HeaderTitle="شماره"
+                                              HeaderCellClass="text-center"
+                                              RowCellClass='record => "text-center align-middle"'
+                                              FooterCellClass="text-center align-middle">
+                            <CellValueTemplate Context="record">
+                                <input type="hidden" name="@nameof(AllIds)" value="@record.Id"/>
+                                @record.Id.ToPersianNumbers()
+                            </CellValueTemplate>
+                        </DntSimpleTableColumn>
                         <DntSimpleTableColumn HeaderTitle="حذف شود"
                                               HeaderCellClass="text-center"
                                               RowCellClass='record => "text-center align-middle"'
@@ -58,6 +68,9 @@
                                            class="form-check-input"
                                            name="@nameof(SelectedDeleteIds)"
                                            value="@record.Id"/>
+                                    <label class="form-check-label" for="@nameof(SelectedDeleteIds)">
+                                        <DntBooleanLabel Value="false" FalseValueLabel=""/>
+                                    </label>
                                 </div>
                             </CellValueTemplate>
                         </DntSimpleTableColumn>
@@ -72,7 +85,18 @@
                                            class="form-check-input"
                                            name="@nameof(SelectedApproveIds)"
                                            value="@record.Id"/>
+                                    <label class="form-check-label" for="@nameof(SelectedDeleteIds)">
+                                        <DntBooleanLabel Value="true" TrueValueLabel=""/>
+                                    </label>
                                 </div>
+                            </CellValueTemplate>
+                        </DntSimpleTableColumn>
+                        <DntSimpleTableColumn HeaderTitle="تاریخ ثبت"
+                                              HeaderCellClass="text-center"
+                                              RowCellClass='record => "text-center align-middle"'
+                                              FooterCellClass="text-center align-middle">
+                            <CellValueTemplate Context="record">
+                                @record.Audit.CreatedAtPersian.ToPersianNumbers()
                             </CellValueTemplate>
                         </DntSimpleTableColumn>
                         <DntSimpleTableColumn HeaderTitle="آدرس"
@@ -82,6 +106,14 @@
                             <CellValueTemplate Context="record">
                                 <span dir="ltr">@record.Title</span> <br/>
                                 <a dir="ltr" href="@record.Url">@record.Url</a>
+                            </CellValueTemplate>
+                        </DntSimpleTableColumn>
+                        <DntSimpleTableColumn HeaderTitle="توسط"
+                                              HeaderCellClass="text-center"
+                                              RowCellClass='record => "text-center align-middle"'
+                                              FooterCellClass="text-center align-middle">
+                            <CellValueTemplate Context="record">
+                                <PrintUser User="@record.User"/>
                             </CellValueTemplate>
                         </DntSimpleTableColumn>
                     </TableColumns>

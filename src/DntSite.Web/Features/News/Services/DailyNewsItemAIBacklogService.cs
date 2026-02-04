@@ -4,6 +4,7 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
+using DntSite.Web.Features.News.Utils;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
@@ -48,10 +49,15 @@ public class DailyNewsItemAIBacklogService(
             ? _dailyNewsItemAIBacklogs.FindAsync(id.Value)
             : ValueTask.FromResult<DailyNewsItemAIBacklog?>(result: null);
 
-    public async Task MarkAsDeletedOrApprovedAsync(IList<int> recordIds,
+    public async Task MarkAsDeletedOrApprovedAsync(IList<int>? allIds,
         IList<int>? selectedDeleteIds,
         IList<int>? selectedApproveIds)
     {
+        if (allIds is null)
+        {
+            return;
+        }
+
         selectedDeleteIds ??= [];
 
         if (selectedDeleteIds.Count > 0)
@@ -61,7 +67,7 @@ public class DailyNewsItemAIBacklogService(
                     => builder.SetProperty(aiBacklog => aiBacklog.IsDeleted, valueExpression: true));
         }
 
-        var notDeletedIds = recordIds.Except(selectedDeleteIds).ToList();
+        var notDeletedIds = allIds.Except(selectedDeleteIds).ToList();
 
         if (notDeletedIds.Count > 0)
         {
@@ -79,7 +85,7 @@ public class DailyNewsItemAIBacklogService(
                     => builder.SetProperty(aiBacklog => aiBacklog.IsApproved, valueExpression: true));
         }
 
-        var notApprovedIds = recordIds.Except(selectedApproveIds).ToList();
+        var notApprovedIds = allIds.Except(selectedApproveIds).ToList();
 
         if (notApprovedIds.Count > 0)
         {
@@ -168,7 +174,7 @@ public class DailyNewsItemAIBacklogService(
             {
                 Url = feedItem.Url.Trim(),
                 UrlHash = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(feedItem.Url.Trim())),
-                Title = feedItem.Title,
+                Title = feedItem.Title.GetNormalizedAIText(processCodes: false),
                 IsApproved = true,
                 IsProcessed = false,
                 UserId = user?.Id
@@ -178,11 +184,12 @@ public class DailyNewsItemAIBacklogService(
         await uow.SaveChangesAsync();
     }
 
-    public Task<List<DailyNewsItemAIBacklog>> GetApprovedNotProcessedDailyNewsItemAIBacklogsAsync(CancellationToken ct =
-        default)
+    public Task<List<DailyNewsItemAIBacklog>>
+        GetApprovedNotProcessedDailyNewsItemAIBacklogsAsync(CancellationToken ct = default)
         => _dailyNewsItemAIBacklogs.AsNoTracking()
             .Include(x => x.User)
             .Where(x => !x.IsDeleted && !x.IsProcessed && x.IsApproved)
+            .OrderBy(x => x.Id)
             .ToListAsync(ct);
 
     public Task<List<DailyNewsItemAIBacklog>> GetNotProcessedDailyNewsItemAIBacklogsAsync(CancellationToken ct =
@@ -190,6 +197,7 @@ public class DailyNewsItemAIBacklogService(
         => _dailyNewsItemAIBacklogs.AsNoTracking()
             .Include(x => x.User)
             .Where(x => !x.IsDeleted && !x.IsProcessed)
+            .OrderBy(x => x.Id)
             .ToListAsync(ct);
 
     public Task<List<int>> GetNotProcessedDailyNewsItemAIBacklogIdsAsync(CancellationToken ct = default)
@@ -281,7 +289,7 @@ public class DailyNewsItemAIBacklogService(
             {
                 Url = feedItem.Url.Trim(),
                 UrlHash = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(feedItem.Url.Trim())),
-                Title = feedItem.Title,
+                Title = feedItem.Title.GetNormalizedAIText(processCodes: false),
                 IsApproved = false,
                 IsProcessed = false,
                 UserId = aiUser?.Id
@@ -302,7 +310,7 @@ public class DailyNewsItemAIBacklogService(
             return [];
         }
 
-        return await GetDistinctNewFeedItemsAsync(rssItems.ToList(), ct);
+        return await GetDistinctNewFeedItemsAsync([.. rssItems], ct);
     }
 
     private async Task<List<FeedItem>> GetDistinctNewFeedItemsAsync(IList<FeedItem>? rssItems,

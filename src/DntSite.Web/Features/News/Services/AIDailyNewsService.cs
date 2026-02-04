@@ -1,7 +1,6 @@
 using System.Text;
 using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
-using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.News.Services.Contracts;
@@ -18,7 +17,6 @@ public class AIDailyNewsService(
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IDailyNewsItemsService dailyNewsItemsService,
     IHttpClientFactory httpClientFactory,
-    IEmailsFactoryService emailsFactoryService,
     ILogger<AIDailyNewsService> logger) : IAIDailyNewsService
 {
     private const int QuotaLimit = 15000;
@@ -203,26 +201,15 @@ public class AIDailyNewsService(
                 return true;
             }
 
-            var responseResult =
+            var geminiApiResult =
                 await GetGeminiResponseResultAsync(appSetting.GeminiNewsFeeds.ApiKey!, prompt, backlog.Url, ct);
 
-            if (responseResult is null)
+            if (geminiApiResult is null)
             {
+                logger.LogWarning(message: "Bad ResponseResult from Gemini -> `{FeedItemUrl}`.", backlog.Url);
+
                 return false;
             }
-
-            var apiResponse = responseResult.Result?.ResponseParts?.FirstOrDefault()?.Text;
-
-            if (apiResponse.IsEmpty())
-            {
-                logger.LogWarning(
-                    message: "ApiResponse -> IsEmpty -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
-                    _workingModel, backlog.Url, responseResult.ResponseBody ?? "");
-
-                return true;
-            }
-
-            var geminiApiResult = apiResponse.ParseGeminiOutput();
 
             switch (geminiApiResult)
             {
@@ -237,24 +224,14 @@ public class AIDailyNewsService(
                             await dailyNewsItemAiBacklogService.MarkAsProcessedAsync(backlog.Id);
 
                             logger.LogWarning(
-                                message:
-                                "`GeminiFallbackResult -> `{Model}` -> {FeedItemUrl}` -> {Reason} -> `{ResponseBody}`.",
-                                _workingModel, backlog.Url, fallbackResult.Reason, responseResult.ResponseBody ?? "");
+                                message: "`GeminiFallbackResult -> `{Model}` -> {FeedItemUrl}` -> {Reason}.",
+                                _workingModel, backlog.Url, fallbackResult.Reason);
 
                             return true;
-                        default:
-                            ResetModel();
-
-                            return false;
                     }
+
+                    break;
                 case GeminiSuccessResult successResult:
-
-                    if (IsLanguageSupportFailure(successResult))
-                    {
-                        ResetModel();
-
-                        return false;
-                    }
 
                     var dailyNewsItemModel = new DailyNewsItemModel
                     {
@@ -283,13 +260,16 @@ public class AIDailyNewsService(
     private static bool IsLanguageSupportFailure(GeminiSuccessResult successResult)
         => !successResult.Title.ContainsFarsi() || !successResult.Summary.ContainsFarsi();
 
-    private async Task<GeminiResponseResult<GeminiGenerateContentResponse?>?> GetGeminiResponseResultAsync(
-        string apiKey,
+    private async Task<GeminiApiResult?> GetGeminiResponseResultAsync(string apiKey,
         string prompt,
         string feedItemUrl,
         CancellationToken ct)
     {
-        foreach (var model in GetModels())
+        var models = _workingModel is null
+            ? Models
+            : [_workingModel, ..Models.Except([_workingModel], StringComparer.Ordinal)];
+
+        foreach (var model in models)
         {
             SetModel(model);
 
@@ -305,7 +285,31 @@ public class AIDailyNewsService(
 
                 if (responseResult.IsSuccessfulResponse is not (null or false))
                 {
-                    return responseResult;
+                    var apiResponse = responseResult.Result?.ResponseParts?.FirstOrDefault()?.Text;
+
+                    if (apiResponse.IsEmpty())
+                    {
+                        logger.LogWarning(
+                            message: "ApiResponse -> IsEmpty -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
+                            _workingModel, feedItemUrl, responseResult.ResponseBody ?? "");
+
+                        continue;
+                    }
+
+                    var geminiApiResult = apiResponse.ParseGeminiOutput();
+
+                    if (geminiApiResult is GeminiFallbackResult { Reason: GeminiFallbackReason.LanguageFailure } ||
+                        (geminiApiResult is GeminiSuccessResult successResult &&
+                         IsLanguageSupportFailure(successResult)))
+                    {
+                        logger.LogWarning(
+                            message: "Bad ResponseResult from Gemini -> `{FeedItemUrl}` -> `LanguageSupportFailure`.",
+                            feedItemUrl);
+
+                        continue;
+                    }
+
+                    return geminiApiResult;
                 }
 
                 logger.LogWarning(
@@ -313,9 +317,6 @@ public class AIDailyNewsService(
                     "!IsSuccessfulResponse -> `{Model}` -> `{FeedItemUrl}` -> {ErrorMessage} -> `{ResponseBody}`.",
                     _workingModel, feedItemUrl, responseResult.ErrorResponse?.Error?.Message ?? "",
                     responseResult.ResponseBody ?? "");
-
-                await emailsFactoryService.SendTextToAllAdminsAsync($"{_workingModel} -> {responseResult.ResponseBody}",
-                    emailSubject: "Gemini Client Service Error");
             }
             catch (Exception ex)
             {
@@ -329,9 +330,6 @@ public class AIDailyNewsService(
     }
 
     private void SetModel(string model) => _workingModel = model;
-
-    private string[] GetModels()
-        => _workingModel is null ? Models : [_workingModel, ..Models.Except([_workingModel], StringComparer.Ordinal)];
 
     private void ResetModel() => _workingModel = null;
 
@@ -390,9 +388,8 @@ public class AIDailyNewsService(
         catch (Exception ex)
         {
             logger.LogError(ex.Demystify(), message: "Error processing `{FeedUrl}`.", backlog.Url);
+            await dailyNewsItemAiBacklogService.UpdateFetchRetiresAsync(backlog.Id);
         }
-
-        await dailyNewsItemAiBacklogService.UpdateFetchRetiresAsync(backlog.Id);
 
         return null;
     }

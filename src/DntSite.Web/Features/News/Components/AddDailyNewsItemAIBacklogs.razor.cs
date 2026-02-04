@@ -23,6 +23,8 @@ public partial class AddDailyNewsItemAIBacklogs
 
     [SupplyParameterFromForm] public IList<int>? SelectedApproveIds { set; get; }
 
+    [SupplyParameterFromForm] public IList<int>? AllIds { set; get; }
+
     [InjectComponentScoped] internal IDailyNewsItemAIBacklogService DailyNewsItemAIBacklogService { set; get; } = null!;
 
     private async Task PerformAsync()
@@ -37,9 +39,7 @@ public partial class AddDailyNewsItemAIBacklogs
 
                 break;
             case AIBacklogAction.ApplyChanges:
-                var recordIds = await DailyNewsItemAIBacklogService.GetNotProcessedDailyNewsItemAIBacklogIdsAsync();
-
-                await DailyNewsItemAIBacklogService.MarkAsDeletedOrApprovedAsync(recordIds, SelectedDeleteIds,
+                await DailyNewsItemAIBacklogService.MarkAsDeletedOrApprovedAsync(AllIds, SelectedDeleteIds,
                     SelectedApproveIds);
 
                 break;
