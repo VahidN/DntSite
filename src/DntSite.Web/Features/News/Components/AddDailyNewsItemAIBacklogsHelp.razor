@@ -1,0 +1,18 @@
+<DntMessageBox Type="AlertType.Info" IsVisible="true" MarginBottom="0" MarginTop="3">
+    الگوی ارسال لینک در هر سطر
+    <ul>
+        <li dir="rtl">Url</li>
+        <li dir="rtl">Url@(NewsRoutingConstants.UrlTitleSeparator)Title</li>
+        <li dir="rtl">
+            جهت سهولت ارسال لینک‌ها تنها کافی است آدرس زیر را به نوار ابزار bookmarks مرورگر
+            خود اضافه کنید. از این پس با مراجعه به هر صفحه‌ای تنها کافی است بر روی این دکمه
+            جدید اضافه شده به نوار ابزار کلیک نمائید تا فیلدهای عنوان و آدرس فرم فوق به صورت
+            خودکار تکمیل شوند.
+            <br/>
+            <div class="row mt-2" dir="ltr">
+                <input name="send-to-dnt" value="@SendLinkUrl.HtmlRaw(wrapItWithDir: false)"
+                       class="form-control"/>
+            </div>
+        </li>
+    </ul>
+</DntMessageBox>

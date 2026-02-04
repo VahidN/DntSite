@@ -2,6 +2,7 @@ using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.News.Entities;
+using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.UserProfiles.Entities;
@@ -154,20 +155,20 @@ public class DailyNewsItemAIBacklogService(
             return;
         }
 
-        var urlsToAdd = await GetNewUrlsToAddAsync(urls);
+        var feedItems = await GetNewUrlsToAddAsync(urls);
 
-        if (urlsToAdd.Count == 0)
+        if (feedItems.Count == 0)
         {
             return;
         }
 
-        foreach (var url in urlsToAdd)
+        foreach (var feedItem in feedItems)
         {
             AddDailyNewsItemAIBacklog(new DailyNewsItemAIBacklog
             {
-                Url = url.Trim(),
-                UrlHash = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(url.Trim())),
-                Title = url,
+                Url = feedItem.Url.Trim(),
+                UrlHash = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(feedItem.Url.Trim())),
+                Title = feedItem.Title,
                 IsApproved = true,
                 IsProcessed = false,
                 UserId = user?.Id
@@ -228,13 +229,34 @@ public class DailyNewsItemAIBacklogService(
         }
     }
 
-    private async Task<IList<string>> GetNewUrlsToAddAsync(string urls)
+    private async Task<List<FeedItem>> GetNewUrlsToAddAsync(string urls)
     {
-        var validUrls = urls.ConvertMultiLineTextToList().Where(url => url.IsValidUrl()).ToList();
+        var feedItems = urls.ConvertMultiLineTextToList()
+            .Where(line => !line.IsEmpty())
+            .Select(line =>
+            {
+                if (!line.Contains(NewsRoutingConstants.UrlTitleSeparator, StringComparison.Ordinal))
+                {
+                    return new FeedItem
+                    {
+                        Url = line,
+                        Title = line
+                    };
+                }
 
-        var urlsToAdd = await dailyNewsItemsService.GetNotProcessedLinksAsync(validUrls);
+                var lineParts = line.Split(NewsRoutingConstants.UrlTitleSeparator,
+                    StringSplitOptions.RemoveEmptyEntries);
 
-        return await GetNewBacklogLinksAsync(urlsToAdd);
+                return new FeedItem
+                {
+                    Url = lineParts[0],
+                    Title = lineParts.Length == 2 ? lineParts[1] : lineParts[0]
+                };
+            })
+            .Where(item => item.Url.IsValidUrl())
+            .ToList();
+
+        return await GetDistinctNewFeedItemsAsync(feedItems);
     }
 
     private async Task AddFeedItemsAsDailyNewsItemAIBacklogsAsync(string? feedUrl,
@@ -271,22 +293,30 @@ public class DailyNewsItemAIBacklogService(
 
     private async Task<List<FeedItem>> GetNewFeedItemsAsync(string feedUrl, CancellationToken ct)
     {
-        var feedChannel = await rssReaderService.ReadRssAsync(feedUrl, ct);
+        var rssItems = (await rssReaderService.ReadRssAsync(feedUrl, ct)).RssItems;
 
-        if (feedChannel.RssItems is null)
+        if (rssItems is null)
         {
             logger.LogWarning(message: "`{FeedUrl}` feed is empty.", feedUrl);
 
             return [];
         }
 
+        return await GetDistinctNewFeedItemsAsync(rssItems.ToList(), ct);
+    }
+
+    private async Task<List<FeedItem>> GetDistinctNewFeedItemsAsync(IList<FeedItem>? rssItems,
+        CancellationToken ct = default)
+    {
+        rssItems ??= [];
+
         var newLinks =
-            await dailyNewsItemsService.GetNotProcessedLinksAsync(
-                feedChannel.RssItems.Select(feedItem => feedItem.Url).Distinct(), ct);
+            await dailyNewsItemsService.GetNotProcessedLinksAsync(rssItems.Select(feedItem => feedItem.Url).Distinct(),
+                ct);
 
         newLinks = await GetNewBacklogLinksAsync(newLinks, ct);
 
-        return [..feedChannel.RssItems.Where(item => newLinks.Contains(item.Url, StringComparer.OrdinalIgnoreCase))];
+        return [..rssItems.Where(item => newLinks.Contains(item.Url, StringComparer.OrdinalIgnoreCase))];
     }
 
     private async Task<List<string>> GetNewBacklogLinksAsync(IList<string> urls, CancellationToken ct = default)

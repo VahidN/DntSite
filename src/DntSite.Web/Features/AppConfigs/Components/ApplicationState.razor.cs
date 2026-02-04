@@ -21,6 +21,8 @@ public partial class ApplicationState
 
     public Uri CurrentAbsoluteUri => NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
 
+    public string RootUrl => AppSetting?.SiteRootUri ?? CurrentAbsoluteUri.ToString();
+
     public bool DoNotLogPageReferrer { set; get; }
 
     [CascadingParameter] public HttpContext HttpContext { set; get; } = null!;
