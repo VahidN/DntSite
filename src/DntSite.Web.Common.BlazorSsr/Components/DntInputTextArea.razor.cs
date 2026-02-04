@@ -21,6 +21,12 @@ public partial class DntInputTextArea
     public int InputRowMarginBottom { get; set; } = 3;
 
     /// <summary>
+    ///     The InputText's rows. Its default value is `3`.
+    /// </summary>
+    [Parameter]
+    public int Rows { get; set; } = 3;
+
+    /// <summary>
     ///     The InputText's column width. Its default value is `10`.
     /// </summary>
     [Parameter]
