@@ -3,82 +3,117 @@ using DntSite.Web.Features.News.Models;
 
 namespace DntSite.Web.Features.News.Utils;
 
-public static partial class GeminiNewsApiParser
+public static class GeminiNewsApiParser
 {
-    private const string RaviAI = nameof(RaviAI);
+    private const string SuccessBegin = "=== RAVI_AI_SUCCESS_RECORD_BEGIN ===";
+    private const string FallbackBegin = "=== RAVI_AI_FALLBACK_RECORD_BEGIN ===";
 
-    private const string SuccessRecordBegin = "=== RAVI_AI_SUCCESS_RECORD_BEGIN ===";
-    private const string SuccessRecordEnd = "=== RAVI_AI_SUCCESS_RECORD_END ===";
+    private static readonly string[] CommonFields = ["STATUS", "TITLE", "SUMMARY", "TAGS", "REASON"];
 
-    private const string FallbackRecordBegin = "=== RAVI_AI_FALLBACK_RECORD_BEGIN ===";
-    private const string FallbackRecordEnd = "=== RAVI_AI_FALLBACK_RECORD_END ===";
+    private static readonly TimeSpan MatchTimeout = TimeSpan.FromSeconds(value: 3);
 
-    [GeneratedRegex(
-        $@"STATUS:\s*(?<status>.*?)\s*REASON:\s*(?<reason>.*?)\s*TITLE:\s*(?<title>.*?)\s*SUMMARY:\s*(?<summary>.*?)\s*TAGS:\s*(?<tags>.*?)\s*{FallbackRecordEnd}",
-        RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase, matchTimeoutMilliseconds: 3000)]
-    private static partial Regex FallbackRecordPattern();
-
-    [GeneratedRegex(
-        $@"STATUS:\s*(?<status>.*?)\s*TITLE:\s*(?<title>.*?)\s*SUMMARY:\s*(?<summary>.*?)\s*TAGS:\s*(?<tags>.*?)\s*{SuccessRecordEnd}",
-        RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase, matchTimeoutMilliseconds: 3000)]
-    private static partial Regex SuccessRecordPattern();
-
-    public static GeminiApiResult? ParseGeminiOutput(this string? apiOutput)
+    public static GeminiApiResult? ParseGeminiOutput(this string apiOutput)
     {
-        if (string.IsNullOrWhiteSpace(apiOutput))
+        var input = Normalize(apiOutput);
+
+        if (input.Contains(SuccessBegin, StringComparison.OrdinalIgnoreCase))
         {
-            return null;
+            return ParseSuccess(input);
         }
 
-        if (apiOutput.Contains(SuccessRecordBegin, StringComparison.OrdinalIgnoreCase))
+        if (input.Contains(FallbackBegin, StringComparison.OrdinalIgnoreCase))
         {
-            return ParseSuccessRecord(apiOutput);
-        }
-
-        if (apiOutput.Contains(FallbackRecordBegin, StringComparison.OrdinalIgnoreCase))
-        {
-            return ParseFallbackRecord(apiOutput);
+            return ParseFallback(input);
         }
 
         return null;
     }
 
-    private static GeminiSuccessResult? ParseSuccessRecord(string apiOutput)
+    private static string BuildBoundaryRegex()
     {
-        var match = SuccessRecordPattern().Match(apiOutput);
+        var escaped = CommonFields.Select(Regex.Escape);
 
-        return match.Success switch
+        return $@"(?=\n(?:{string.Join(separator: '|', escaped)})\s*:|\n===|\z)";
+    }
+
+    private static string Normalize(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
         {
-            false => null,
-            _ => new GeminiSuccessResult
-            {
-                Status = match.Groups[groupname: "status"].Value.GetNormalizedAIText(processCodes: false),
-                Title = match.Groups[groupname: "title"].Value.GetNormalizedAIText(processCodes: false),
-                Summary = match.Groups[groupname: "summary"].Value.GetNormalizedAIText(processCodes: true),
-                Tags =
-                [
-                    RaviAI,
-                    ..match.Groups[groupname: "tags"]
-                        .Value.GetNormalizedAIText(processCodes: false)
-                        .Split([','], StringSplitOptions.RemoveEmptyEntries)
-                        .Select(tag => tag.Trim())
-                ]
-            }
+            return string.Empty;
+        }
+
+        var text = input.Replace(oldValue: "\r\n", newValue: "\n", StringComparison.Ordinal).Trim();
+
+        // STATUS ok / fallback بدون colon
+        text = Regex.Replace(text, pattern: @"\bSTATUS\s+(ok|fallback)\b", replacement: "STATUS: $1",
+            RegexOptions.IgnoreCase, MatchTimeout);
+
+        // Null variants
+        text = Regex.Replace(text, pattern: @"\bNULL\b", replacement: "Null", RegexOptions.IgnoreCase, MatchTimeout);
+
+        return text;
+    }
+
+    private static string? ExtractField(string input, string label)
+    {
+        var boundary = BuildBoundaryRegex();
+
+        var pattern = $"""
+                       {Regex.Escape(label)}\s*:\s*
+                       (?<value>.*?)
+                       {boundary}
+                       """;
+
+        var match = Regex.Match(input, pattern,
+            RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace, MatchTimeout);
+
+        if (!match.Success)
+        {
+            return null;
+        }
+
+        var value = match.Groups[groupname: "value"].Value.Trim();
+
+        return string.Equals(value, b: "Null", StringComparison.OrdinalIgnoreCase) ? null : value;
+    }
+
+    private static GeminiSuccessResult ParseSuccess(string input)
+    {
+        var title = ExtractField(input, label: "TITLE");
+        var summary = ExtractField(input, label: "SUMMARY");
+        var tagsRaw = ExtractField(input, label: "TAGS");
+
+        return new GeminiSuccessResult
+        {
+            Status = "ok",
+            Title = title.GetNormalizedAIText(processCodes: false),
+            Summary = summary.GetNormalizedAIText(processCodes: true),
+            Tags = ParseTags(tagsRaw.GetNormalizedAIText(processCodes: false))
         };
     }
 
-    private static GeminiFallbackResult? ParseFallbackRecord(string apiOutput)
+    private static GeminiFallbackResult ParseFallback(string input)
     {
-        var match = FallbackRecordPattern().Match(apiOutput);
+        var reasonRaw = ExtractField(input, label: "REASON");
 
-        return match.Success switch
+        return new GeminiFallbackResult
         {
-            false => null,
-            _ => new GeminiFallbackResult
-            {
-                Status = match.Groups[groupname: "status"].Value.Trim(),
-                Reason = match.Groups[groupname: "reason"].Value.Trim().ToEnum<GeminiFallbackReason>()
-            }
+            Status = "fallback",
+            Reason = reasonRaw?.Trim().ToEnum<GeminiFallbackReason>()
         };
+    }
+
+    private static List<string>? ParseTags(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return null;
+        }
+
+        return raw.Trim('[', ']')
+            .Split(separator: ',', StringSplitOptions.RemoveEmptyEntries)
+            .Select(t => t.Trim())
+            .ToList();
     }
 }

@@ -4,7 +4,6 @@ using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
-using DntSite.Web.Features.News.Utils;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
@@ -138,7 +137,7 @@ public class DailyNewsItemAIBacklogService(
         await uow.SaveChangesAsync();
     }
 
-    public async Task MarkAsProcessedAsync(int id)
+    public async Task MarkAsProcessedAsync(int id, int? dailyNewsItemId)
     {
         var item = await FindDailyNewsItemAIBacklogAsync(id);
 
@@ -148,6 +147,7 @@ public class DailyNewsItemAIBacklogService(
         }
 
         item.IsProcessed = true;
+        item.DailyNewsItemId = dailyNewsItemId;
         await uow.SaveChangesAsync();
     }
 

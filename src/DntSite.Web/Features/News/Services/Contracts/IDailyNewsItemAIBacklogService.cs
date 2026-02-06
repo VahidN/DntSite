@@ -27,7 +27,7 @@ public interface IDailyNewsItemAIBacklogService : IScopedService
         IList<int>? selectedDeleteIds,
         IList<int>? selectedApproveIds);
 
-    Task MarkAsProcessedAsync(int id);
+    Task MarkAsProcessedAsync(int id, int? dailyNewsItemId);
 
     Task UpdateFetchRetiresAsync(int id);
 

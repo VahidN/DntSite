@@ -2,5 +2,16 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DntSite.Web\DntSite.Web.csproj" />
+  </ItemGroup>
+  <Target Name="CopyConfig" AfterTargets="AfterBuild">
+    <Copy SourceFiles="..\..\src\DntSite.Web\appsettings.json" DestinationFolder="$(OutDir)" />    
+  </Target>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="MSTest.TestAdapter" />
+  </ItemGroup>
 </Project>
