@@ -192,17 +192,19 @@ public class DailyNewsItemAIBacklogService(
             .OrderBy(x => x.Id)
             .ToListAsync(ct);
 
-    public Task<List<DailyNewsItemAIBacklog>> GetNotProcessedDailyNewsItemAIBacklogsAsync(CancellationToken ct =
-        default)
+    public Task<List<DailyNewsItemAIBacklog>>
+        GetNotProcessedDailyNewsItemAIBacklogsAsync(CancellationToken ct = default)
         => _dailyNewsItemAIBacklogs.AsNoTracking()
             .Include(x => x.User)
             .Where(x => !x.IsDeleted && !x.IsProcessed)
             .OrderBy(x => x.Id)
+            .ThenBy(x => x.IsApproved)
             .ToListAsync(ct);
 
     public Task<List<int>> GetNotProcessedDailyNewsItemAIBacklogIdsAsync(CancellationToken ct = default)
         => _dailyNewsItemAIBacklogs.AsNoTracking()
             .Where(x => !x.IsDeleted && !x.IsProcessed)
+            .OrderBy(x => x.Id)
             .Select(x => x.Id)
             .ToListAsync(ct);
 

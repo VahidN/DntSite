@@ -51,7 +51,7 @@ public class AIDailyNewsService(
         - .NET, .NET Runtime, .NET SDK
         - C#, F#
         - ASP.NET, ASP.NET Core
-        - Blazor
+        - Blazor, JavaScript
         - Entity Framework / EF Core
         - .NET tooling, CLI, MSBuild
         - Azure services primarily used with .NET
@@ -427,7 +427,7 @@ public class AIDailyNewsService(
 
     private async Task<List<string>> GetAIModelNamesAsync(string apiKey, CancellationToken cancellationToken)
     {
-        List<string> initialModels =
+        List<string> models =
         [
             "gemma-3-12b-it", "gemma-3-1b-it", "gemma-3-27b-it", "gemma-3-2b-it", "gemma-3-4b-it", "gemma-3n-e2b-it"
         ];
@@ -439,10 +439,11 @@ public class AIDailyNewsService(
 
             if (_apiAIModels is not null)
             {
-                initialModels =
+                models =
                 [
-                    ..initialModels,
-                    .._apiAIModels.Select(info => info.Name).Distinct(StringComparer.OrdinalIgnoreCase)
+                    .. models.Concat(_apiAIModels.Select(info
+                            => info.Name.TrimStart(value: "models/", StringComparison.OrdinalIgnoreCase)!))
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
                 ];
             }
         }
@@ -452,7 +453,7 @@ public class AIDailyNewsService(
         }
 
         return _successfulAIModel is null
-            ? initialModels
-            : [_successfulAIModel, ..initialModels.Except([_successfulAIModel], StringComparer.Ordinal)];
+            ? models
+            : [_successfulAIModel, ..models.Except([_successfulAIModel], StringComparer.Ordinal)];
     }
 }
