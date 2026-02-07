@@ -107,7 +107,7 @@ public static class SchedulersConfig
             {
                 var now = GetNowIranTime(utcNow);
 
-                return now is { Minute: 7, Second: 1 };
+                return now.Minute % 15 == 0 && now.Second == 1;
             });
 
             options.AddScheduledTask<AIDailyNewsBacklogsJob>(utcNow =>

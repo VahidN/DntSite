@@ -146,40 +146,21 @@ public class AIDailyNewsService(
         - You cannot reliably produce a correct Persian Title or Summary
         """);
 
+    private IList<GeminiModelInfo>? _apiAIModels;
+    private string? _successfulAIModel;
+
     public async Task StartProcessingNewsFeedsAsync(CancellationToken ct = default)
     {
-        var appSetting = await cachedAppSettingsProvider.GetAppSettingsAsync();
-        var geminiNewsFeeds = appSetting.GeminiNewsFeeds;
+        var (appSetting, aiUser, dailyNewsItemAiBacklogs, proceed) = await GetInitInfoAsync(ct);
 
-        if (!geminiNewsFeeds.IsActive)
+        if (!proceed)
         {
             return;
         }
 
-        var apiKey = geminiNewsFeeds.ApiKey;
-
-        if (apiKey.IsEmpty())
+        foreach (var backlog in dailyNewsItemAiBacklogs!)
         {
-            return;
-        }
-
-        var aiUser = await usersInfoService.GetNewsLinksAIUserAsync();
-
-        if (aiUser is null)
-        {
-            logger.LogWarning(message: "NewsLinksAIUser is not registered.");
-
-            return;
-        }
-
-        var models = await GetModelNamesAsync(apiKey, ct);
-
-        var dailyNewsItemAiBacklogs =
-            await dailyNewsItemAiBacklogService.GetApprovedNotProcessedDailyNewsItemAIBacklogsAsync(ct);
-
-        foreach (var backlog in dailyNewsItemAiBacklogs)
-        {
-            var isSuccessfulResponse = await ProcessFeedItemAsync(appSetting, backlog, aiUser, models, ct);
+            var isSuccessfulResponse = await ProcessFeedItemAsync(appSetting, backlog, aiUser!, ct);
 
             if (!isSuccessfulResponse)
             {
@@ -190,10 +171,45 @@ public class AIDailyNewsService(
         }
     }
 
+    private async Task<GeminiInitInfoModel> GetInitInfoAsync(CancellationToken ct)
+    {
+        var appSetting = await cachedAppSettingsProvider.GetAppSettingsAsync();
+        var geminiNewsFeeds = appSetting.GeminiNewsFeeds;
+
+        if (!geminiNewsFeeds.IsActive)
+        {
+            return new GeminiInitInfoModel(appSetting, AiUser: null, DailyNewsItemAiBacklogs: null, Proceed: false);
+        }
+
+        var key = geminiNewsFeeds.ApiKey;
+
+        if (key.IsEmpty())
+        {
+            return new GeminiInitInfoModel(appSetting, AiUser: null, DailyNewsItemAiBacklogs: null, Proceed: false);
+        }
+
+        var user = await usersInfoService.GetNewsLinksAIUserAsync();
+
+        if (user is null)
+        {
+            logger.LogWarning(message: "NewsLinksAIUser is not registered.");
+
+            return new GeminiInitInfoModel(appSetting, user, DailyNewsItemAiBacklogs: null, Proceed: false);
+        }
+
+        var list = await dailyNewsItemAiBacklogService.GetApprovedNotProcessedDailyNewsItemAIBacklogsAsync(ct);
+
+        if (list.Count == 0)
+        {
+            return new GeminiInitInfoModel(appSetting, user, list, Proceed: false);
+        }
+
+        return new GeminiInitInfoModel(appSetting, user, list, Proceed: true);
+    }
+
     private async Task<bool> ProcessFeedItemAsync(AppSetting appSetting,
         DailyNewsItemAIBacklog backlog,
         User aiUser,
-        List<string> models,
         CancellationToken ct)
     {
         try
@@ -216,11 +232,14 @@ public class AIDailyNewsService(
             }
 
             var geminiApiResult =
-                await GetGeminiResponseResultAsync(appSetting.GeminiNewsFeeds.ApiKey!, models, prompt, backlog.Url, ct);
+                await GetGeminiResponseResultAsync(appSetting.GeminiNewsFeeds.ApiKey!, prompt, backlog.Url, ct);
 
             if (geminiApiResult is null)
             {
-                logger.LogWarning(message: "Failed to get a response from Gemini -> `{FeedItemUrl}`.", backlog.Url);
+                logger.LogWarning(message: "Failed to get a successful response from Gemini -> `{FeedItemUrl}`.",
+                    backlog.Url);
+
+                ResetSuccessfulAIModel();
 
                 return false;
             }
@@ -274,12 +293,13 @@ public class AIDailyNewsService(
         => !successResult.Title.ContainsFarsi() || !successResult.Summary.ContainsFarsi();
 
     private async Task<GeminiApiResult?> GetGeminiResponseResultAsync(string apiKey,
-        List<string> models,
         string prompt,
         string feedItemUrl,
         CancellationToken ct)
     {
-        foreach (var model in models)
+        var aiModelNames = await GetAIModelNamesAsync(apiKey, ct);
+
+        foreach (var aiModel in aiModelNames)
         {
             try
             {
@@ -287,7 +307,7 @@ public class AIDailyNewsService(
                 {
                     ApiVersion = GeminiApiVersions.V1Beta,
                     ApiKey = apiKey,
-                    ModelId = model,
+                    ModelId = aiModel,
                     Chats = [new GeminiChatRequest(prompt)]
                 }, ct);
 
@@ -299,7 +319,7 @@ public class AIDailyNewsService(
                     {
                         logger.LogWarning(
                             message: "ApiResponse -> IsEmpty -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
-                            model, feedItemUrl, responseResult.ResponseBody ?? "");
+                            aiModel, feedItemUrl, responseResult.ResponseBody ?? "");
 
                         continue;
                     }
@@ -312,11 +332,13 @@ public class AIDailyNewsService(
                         case GeminiFallbackResult { Reason: GeminiFallbackReason.LanguageFailure }:
                         case GeminiSuccessResult successResult when IsLanguageSupportFailure(successResult):
                             logger.LogWarning(
-                                message: "Bad ApiResponse -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.", model,
-                                feedItemUrl, responseResult.ResponseBody ?? "");
+                                message: "Bad ApiResponse -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
+                                aiModel, feedItemUrl, responseResult.ResponseBody ?? "");
 
                             continue;
                         default:
+                            SetSuccessfulAIModel(aiModel);
+
                             return geminiApiResult;
                     }
                 }
@@ -324,7 +346,7 @@ public class AIDailyNewsService(
                 logger.LogWarning(
                     message:
                     "!IsSuccessfulResponse -> `{Model}` -> `{FeedItemUrl}` -> {ErrorMessage} -> `{ResponseBody}`.",
-                    model, feedItemUrl, responseResult.ErrorResponse?.Error?.Message ?? "",
+                    aiModel, feedItemUrl, responseResult.ErrorResponse?.Error?.Message ?? "",
                     responseResult.ResponseBody ?? "");
             }
             catch (Exception ex)
@@ -333,8 +355,14 @@ public class AIDailyNewsService(
             }
         }
 
+        ResetSuccessfulAIModel();
+
         return null;
     }
+
+    private void SetSuccessfulAIModel(string aiModel) => _successfulAIModel = aiModel;
+
+    private void ResetSuccessfulAIModel() => _successfulAIModel = null;
 
     private async Task<string?> CreatePromptAsync(AppSetting appSetting,
         DailyNewsItemAIBacklog backlog,
@@ -397,26 +425,34 @@ public class AIDailyNewsService(
         return null;
     }
 
-    private async Task<List<string>> GetModelNamesAsync(string apiKey, CancellationToken cancellationToken)
+    private async Task<List<string>> GetAIModelNamesAsync(string apiKey, CancellationToken cancellationToken)
     {
-        List<string> fallbackModels =
+        List<string> initialModels =
         [
             "gemma-3-12b-it", "gemma-3-1b-it", "gemma-3-27b-it", "gemma-3-2b-it", "gemma-3-4b-it", "gemma-3n-e2b-it"
         ];
 
         try
         {
-            var models =
-                await geminiLanguageAnalysisService.GetGeminiModelsWithPersianLanguageSupportAsync(apiKey,
-                    minConfidenceRating: 7, cancellationToken);
+            _apiAIModels ??= await geminiLanguageAnalysisService.GetGeminiModelsWithPersianLanguageSupportAsync(apiKey,
+                minConfidenceRating: 7, cancellationToken);
 
-            return models?.Select(info => info.Name).ToList() ?? fallbackModels;
+            if (_apiAIModels is not null)
+            {
+                initialModels =
+                [
+                    ..initialModels,
+                    .._apiAIModels.Select(info => info.Name).Distinct(StringComparer.OrdinalIgnoreCase)
+                ];
+            }
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Demystify(), message: "Failed to get Gemini models info.");
-
-            return fallbackModels;
         }
+
+        return _successfulAIModel is null
+            ? initialModels
+            : [_successfulAIModel, ..initialModels.Except([_successfulAIModel], StringComparer.Ordinal)];
     }
 }
