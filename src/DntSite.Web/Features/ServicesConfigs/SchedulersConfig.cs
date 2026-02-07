@@ -37,10 +37,10 @@ public static class SchedulersConfig
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 30, Second: 1 });
 
             options.AddScheduledTask<UpdatePublicNewsHttpStatusCodeJob>(utcNow
-                => GetNowIranTime(utcNow) is { DayOfWeek: DayOfWeek.Friday, Hour: 1, Minute: 1, Second: 1 });
+                => GetNowIranTime(utcNow) is { Day: 1, Hour: 1, Minute: 1, Second: 1 });
 
             options.AddScheduledTask<UpdateDeletedNewsHttpStatusCodeJob>(utcNow
-                => GetNowIranTime(utcNow) is { DayOfWeek: DayOfWeek.Monday, Hour: 1, Minute: 1, Second: 1 });
+                => GetNowIranTime(utcNow) is { Day: 2, Hour: 1, Minute: 1, Second: 1 });
 
             options.AddScheduledTask<SendActivationEmailsJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 11, Minute: 1, Second: 1 });
