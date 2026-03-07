@@ -1,5 +1,7 @@
 using System.Text;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.RoadMaps.Entities;
+using DntSite.Web.Features.RoadMaps.Models;
 using DntSite.Web.Features.RoadMaps.RoutingConstants;
 using DntSite.Web.Features.RssFeeds.Models;
 
@@ -7,6 +9,8 @@ namespace DntSite.Web.Features.RoadMaps.ModelsMappings;
 
 public static class LearningPathsMappersExtensions
 {
+    public const string LearningPathTags = $"{nameof(LearningPath)}_Tags";
+
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(RoadMapsRoutingConstants.PostUrlTemplate);
 
@@ -35,6 +39,40 @@ public static class LearningPathsMappersExtensions
             Id = item.Id,
             UserId = item.UserId,
             EntityType = item.GetType()
+        };
+    }
+
+    public static LearningPath MapLearningPathModelToLearningPath(this LearningPathModel source,
+        IAppAntiXssService antiXssService,
+        LearningPath? destination = null)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(antiXssService);
+
+        var learningPath = new LearningPath
+        {
+            Title = source.Title,
+            Description = antiXssService.GetSanitizedHtml(source.Description)
+        };
+
+        if (destination is not null)
+        {
+            destination.Title = learningPath.Title;
+            destination.Description = learningPath.Description;
+        }
+
+        return destination ?? learningPath;
+    }
+
+    public static LearningPathModel MapLearningPathToLearningPathModel(this LearningPath source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return new LearningPathModel
+        {
+            Title = source.Title,
+            Description = source.Description,
+            Tags = source.Tags?.Select(tag => tag.Name).ToList() ?? []
         };
     }
 }

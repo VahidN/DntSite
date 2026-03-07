@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.Models;
+using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.RoutingConstants;
 using DntSite.Web.Features.Courses.Services.Contracts;
 
@@ -26,8 +26,6 @@ public partial class WriteCourse
     [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal ICoursesService CoursesService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
@@ -105,7 +103,7 @@ public partial class WriteCourse
             return;
         }
 
-        WriteCourseModel = Mapper.Map<Course, CourseModel>(item);
+        WriteCourseModel = item.MapCourseToCourseModel();
     }
 
     private async Task<Course?> GetCourseItemAsync(int id)

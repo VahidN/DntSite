@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
@@ -20,9 +20,9 @@ public class VotesService(
     IStatService statService,
     ITagsService tagsService,
     IVoteItemsService voteItemsService,
-    IMapper mapper,
     IEmailsFactoryService emailsFactoryService,
     IFullTextSearchService fullTextSearchService,
+    IAppAntiXssService antiXssService,
     ILogger<VotesService> logger) : IVotesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Survey, object?>>> CustomOrders = new()
@@ -179,7 +179,7 @@ public class VotesService(
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(Survey.Id), [
             .. GridifyMapings.GetDefaultMappings<Survey>(), new GridifyMap<Survey>
             {
-                From = SurveysProfiles.SurveyTags,
+                From = SurveysMappersExtensions.SurveyTags,
                 To = entity => entity.Tags.Select(tag => tag.Name)
             }
         ]);
@@ -318,7 +318,7 @@ public class VotesService(
 
         var listOfActualTags = await tagsService.SaveVoteTagsAsync(writeSurveyModel.Tags);
 
-        mapper.Map(writeSurveyModel, surveyItem);
+        writeSurveyModel.MapVoteModelToSurvey(antiXssService, surveyItem);
         surveyItem.Tags = listOfActualTags;
         await uow.SaveChangesAsync();
 
@@ -372,7 +372,7 @@ public class VotesService(
     {
         var listOfActualTags = await tagsService.SaveVoteTagsAsync(writeSurveyModel.Tags);
 
-        var survey = mapper.Map<VoteModel, Survey>(writeSurveyModel);
+        var survey = writeSurveyModel.MapVoteModelToSurvey(antiXssService);
         survey.Tags = listOfActualTags;
         survey.UserId = user?.Id;
         var result = AddVote(survey);

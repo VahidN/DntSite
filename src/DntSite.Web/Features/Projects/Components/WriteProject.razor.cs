@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.RoutingConstants;
 using DntSite.Web.Features.Projects.Services.Contracts;
 
@@ -26,8 +26,6 @@ public partial class WriteProject
     [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IProjectsService ProjectsService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
@@ -88,7 +86,7 @@ public partial class WriteProject
             return;
         }
 
-        WriteProjectModel = Mapper.Map<Project, ProjectModel>(item);
+        WriteProjectModel = item.MapProjectToProjectModel();
     }
 
     private async Task<Project?> GetProjectAsync(int id)

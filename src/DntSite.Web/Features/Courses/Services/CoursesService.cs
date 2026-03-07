@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
@@ -22,10 +22,10 @@ public class CoursesService(
     IUsersInfoService usersService,
     IUserRatingsService userRatingsService,
     ICoursesEmailsService emailsService,
-    IMapper mapper,
     ITagsService tagsService,
     IStatService statService,
     IFullTextSearchService fullTextSearchService,
+    IAppAntiXssService antiXssService,
     ILogger<CoursesService> logger) : ICoursesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Course, object?>>> CustomOrders = new()
@@ -368,7 +368,7 @@ public class CoursesService(
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(Course.Id), [
             .. GridifyMapings.GetDefaultMappings<Course>(), new GridifyMap<Course>
             {
-                From = CoursesProfiles.CourseTags,
+                From = CourseMappersExtensions.CourseTags,
                 To = entity => entity.Tags.Select(tag => tag.Name)
             }
         ]);
@@ -471,7 +471,7 @@ public class CoursesService(
 
         var listOfActualTags = await tagsService.SaveCourseItemTagsAsync(writeCourseModel.Tags);
 
-        mapper.Map(writeCourseModel, course);
+        writeCourseModel.MapCourseModelToCourse(antiXssService, course);
         course.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
@@ -486,7 +486,7 @@ public class CoursesService(
 
         var listOfActualTags = await tagsService.SaveCourseItemTagsAsync(writeCourseModel.Tags);
 
-        var item = mapper.Map<CourseModel, Course>(writeCourseModel);
+        var item = writeCourseModel.MapCourseModelToCourse(antiXssService);
         item.Tags = listOfActualTags;
         item.UserId = user?.Id;
 

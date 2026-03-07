@@ -1,18 +1,14 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Entities;
-using DntSite.Web.Features.AppConfigs.Models;
+﻿using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.UnitOfWork;
-using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace DntSite.Web.Features.AppConfigs.Services;
 
-public class AppLogItemsService(IUnitOfWork uow, IMapper mapper) : IAppLogItemsService
+public class AppLogItemsService(IUnitOfWork uow) : IAppLogItemsService
 {
     private readonly DbSet<AppLogItem> _appLogItems = uow.DbSet<AppLogItem>();
-    private readonly IConfigurationProvider _mapperConfiguration = mapper.ConfigurationProvider;
 
     private IQueryable<AppLogItem> BaseQuery => _appLogItems.Where(x => !x.IsDeleted);
 
@@ -66,8 +62,7 @@ public class AppLogItemsService(IUnitOfWork uow, IMapper mapper) : IAppLogItemsS
             ? BaseQuery.AsNoTracking().CountAsync()
             : BaseQuery.AsNoTracking().CountAsync(appLogItem => appLogItem.LogLevel == logLevel.Value.ToString());
 
-    public Task<PagedResultModel<AppLogItemModel>> GetPagedAppLogItemsAsync(DntQueryBuilderModel state,
-        LogLevel? logLevel)
+    public Task<PagedResultModel<AppLogItem>> GetPagedAppLogItemsAsync(DntQueryBuilderModel state, LogLevel? logLevel)
     {
         var query = BaseQuery.Include(appLogItem => appLogItem.User).AsNoTracking();
 
@@ -76,7 +71,6 @@ public class AppLogItemsService(IUnitOfWork uow, IMapper mapper) : IAppLogItemsS
             query = query.Where(appLogItem => appLogItem.LogLevel == logLevel.Value.ToString());
         }
 
-        return query.ApplyQueryableDntGridFilterAsync<AppLogItemModel, AppLogItem>(state, nameof(AppLogItem.Id),
-            _mapperConfiguration);
+        return query.ApplyQueryableDntGridFilterAsync(state, nameof(AppLogItem.Id));
     }
 }

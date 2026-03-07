@@ -1,9 +1,9 @@
-using AutoMapper;
 using DntSite.Web.Common.BlazorSsr.Utils;
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Courses.Entities;
 using DntSite.Web.Features.Courses.Models;
+using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.RoutingConstants;
 using DntSite.Web.Features.Courses.Services.Contracts;
 
@@ -26,8 +26,6 @@ public partial class WriteCourseTopic
     [InjectComponentScoped] internal ICourseTopicsService CourseTopicsService { set; get; } = null!;
 
     [InjectComponentScoped] internal ICoursesService CoursesService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     private async Task<string?> GetCourseTitleAsync()
         => CourseId.HasValue ? (await CoursesService.FindCourseAsync(CourseId.Value))?.Title : null;
@@ -105,7 +103,7 @@ public partial class WriteCourseTopic
             return;
         }
 
-        WriteCourseItemModel = Mapper.Map<CourseTopic, CourseTopicItemModel>(item);
+        WriteCourseItemModel = item.MapCourseTopicToCourseTopicItemModel();
     }
 
     private async Task<CourseTopic?> GetCourseTopicItemAsync(Guid displayId)

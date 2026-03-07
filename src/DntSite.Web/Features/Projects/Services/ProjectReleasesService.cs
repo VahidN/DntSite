@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Models;
+﻿using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
@@ -22,9 +21,9 @@ public class ProjectReleasesService(
     IUploadFileService uploadFileService,
     IStatService statService,
     IAppFoldersService appFoldersService,
-    IMapper mapper,
     IEmailsFactoryService emailsService,
     IFullTextSearchService fullTextSearchService,
+    IAppAntiXssService antiXssService,
     ILogger<ProjectReleasesService> logger) : IProjectReleasesService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<ProjectRelease, object?>>> CustomOrders = new()
@@ -156,7 +155,7 @@ public class ProjectReleasesService(
             return;
         }
 
-        mapper.Map(projectPostFileModel, projectRelease);
+        projectPostFileModel.MapProjectPostFileModelToProjectRelease(antiXssService, projectRelease);
         await SavePostedFileAsync(projectRelease, projectPostFileModel);
 
         await uow.SaveChangesAsync();
@@ -171,7 +170,7 @@ public class ProjectReleasesService(
     {
         ArgumentNullException.ThrowIfNull(projectPostFileModel);
 
-        var project = mapper.Map<ProjectPostFileModel, ProjectRelease>(projectPostFileModel);
+        var project = projectPostFileModel.MapProjectPostFileModelToProjectRelease(antiXssService);
         project.ProjectId = projectId;
         project.UserId = user?.Id;
         await SavePostedFileAsync(project, projectPostFileModel);

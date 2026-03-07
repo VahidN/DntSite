@@ -71,8 +71,11 @@ public class FullTextSearchWriterService(
             {
                 var action = actions[index];
 
-                logger.LogInformation(message: "Indexing[{Index}/{Total}] {Type}", index, actions.Length,
-                    action.Method.Name);
+                if (logger.IsEnabled(LogLevel.Information))
+                {
+                    logger.LogInformation(message: "Indexing[{Index}/{Total}] {Type}", index, actions.Length,
+                        action.Method.Name);
+                }
 
                 await action();
                 await Task.Delay(TimeSpan.FromSeconds(value: 7), stoppingToken);

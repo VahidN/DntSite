@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Backlogs.Entities;
 using DntSite.Web.Features.Backlogs.Models;
 using DntSite.Web.Features.Backlogs.ModelsMappings;
@@ -19,7 +19,6 @@ namespace DntSite.Web.Features.Backlogs.Services;
 
 public class BacklogsService(
     IUnitOfWork uow,
-    IMapper mapper,
     ITagsService tagsService,
     IStatService statService,
     IBlogPostsService blogPostsService,
@@ -27,6 +26,7 @@ public class BacklogsService(
     IBacklogEmailsService emailsService,
     IUserRatingsService userRatingsService,
     IFullTextSearchService fullTextSearchService,
+    IAppAntiXssService antiXssService,
     ILogger<BacklogsService> logger) : IBacklogsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Backlog, object?>>> CustomOrders = new()
@@ -232,7 +232,7 @@ public class BacklogsService(
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(Backlog.Id), [
             .. GridifyMapings.GetDefaultMappings<Backlog>(), new GridifyMap<Backlog>
             {
-                From = BacklogsMappingsProfiles.BacklogTags,
+                From = BacklogsMappersExtensions.BacklogTags,
                 To = entity => entity.Tags.Select(tag => tag.Name)
             }
         ]);
@@ -296,7 +296,7 @@ public class BacklogsService(
 
         var listOfActualTags = await tagsService.SaveNewBacklogTagsAsync(writeBacklogModel.Tags);
 
-        mapper.Map(writeBacklogModel, backlog);
+        writeBacklogModel.MapBacklogModelToBacklog(antiXssService, backlog);
         backlog.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
@@ -311,7 +311,7 @@ public class BacklogsService(
 
         var listOfActualTags = await tagsService.SaveNewBacklogTagsAsync(writeBacklogModel.Tags);
 
-        var item = mapper.Map<BacklogModel, Backlog>(writeBacklogModel);
+        var item = writeBacklogModel.MapBacklogModelToBacklog(antiXssService);
         item.Tags = listOfActualTags;
         item.UserId = user?.Id;
         item.IsDeleted = false;

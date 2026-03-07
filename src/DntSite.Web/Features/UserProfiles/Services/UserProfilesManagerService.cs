@@ -1,17 +1,16 @@
-using AutoMapper;
 using DNTPersianUtils.Core.Normalizer;
 using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Models;
+using DntSite.Web.Features.UserProfiles.ModelsMappings;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.UserProfiles.Services;
 
 public class UserProfilesManagerService(
     IUnitOfWork uow,
-    IMapper mapper,
     IUploadFileService uploadFileService,
     IAppAntiXssService antiXssService,
     IUsersInfoService usersInfoService,
@@ -509,7 +508,7 @@ public class UserProfilesManagerService(
             return ("اطلاعات این کاربر قابل ویرایش نیست.", OperationStat.Failed);
         }
 
-        mapper.Map(model, userSocialNetwork);
+        model.MapUserSocialNetworkModelToUserSocialNetwork(userSocialNetwork);
         await uow.SaveChangesAsync();
 
         await usersManagerEmailsService.UserProfileSendEmailAsync(new UserProfileEmailModel

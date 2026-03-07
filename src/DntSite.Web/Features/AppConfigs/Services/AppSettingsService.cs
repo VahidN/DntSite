@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Entities;
+﻿using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Models;
+using DntSite.Web.Features.AppConfigs.ModelsMappings;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
@@ -9,7 +9,6 @@ namespace DntSite.Web.Features.AppConfigs.Services;
 
 public class AppSettingsService(
     IUnitOfWork uow,
-    IMapper mapper,
     IEmailsFactoryService emailsFactoryService,
     ICachedAppSettingsProvider cachedAppSettingsProvider) : IAppSettingsService
 {
@@ -108,12 +107,12 @@ public class AppSettingsService(
 
         if (cfg is null || cfg.Id == 0)
         {
-            var newCfg = mapper.Map<AppSettingModel, AppSetting>(model);
+            var newCfg = model.MapAppSettingModelToAppSetting();
             AddAppSetting(newCfg);
         }
         else
         {
-            mapper.Map(model, cfg);
+            model.MapAppSettingModelToAppSetting(cfg);
         }
 
         await uow.SaveChangesAsync();
@@ -127,7 +126,7 @@ public class AppSettingsService(
     {
         var cfg = await cachedAppSettingsProvider.GetAppSettingsAsync();
 
-        return mapper.Map<AppSetting, AppSettingModel>(cfg);
+        return cfg.MapAppSettingToAppSettingModel();
     }
 
     public async Task ChangeSiteActiveStateAsync(bool siteIsActive)

@@ -16,8 +16,11 @@ public class StartupIndexingService(
         {
             await Task.Delay(TimeSpan.FromMinutes(value: 1), stoppingToken);
 
-            logger.LogInformation(message: "{DateTime} Started StartupIndexingService.",
-                DateTime.UtcNow.ToString(format: "HH:mm:ss.fff", CultureInfo.InvariantCulture));
+            if (logger.IsEnabled(LogLevel.Information))
+            {
+                logger.LogInformation(message: "{DateTime} Started StartupIndexingService.",
+                    DateTime.UtcNow.ToString(format: "HH:mm:ss.fff", CultureInfo.InvariantCulture));
+            }
 
             using var scope = serviceScopeFactory.CreateScope();
 
@@ -30,8 +33,11 @@ public class StartupIndexingService(
         }
         finally
         {
-            logger.LogInformation(message: "{DateTime} Finished StartupIndexingService.",
-                DateTime.UtcNow.ToString(format: "HH:mm:ss.fff", CultureInfo.InvariantCulture));
+            if (logger.IsEnabled(LogLevel.Information))
+            {
+                logger.LogInformation(message: "{DateTime} Finished StartupIndexingService.",
+                    DateTime.UtcNow.ToString(format: "HH:mm:ss.fff", CultureInfo.InvariantCulture));
+            }
         }
     }
 }

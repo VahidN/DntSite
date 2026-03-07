@@ -25,16 +25,12 @@ public static class ServicesRegistry
         var siteSettings = configuration.GetSiteSettings();
         services.AddConfiguredDbContext(siteSettings, environment);
         services.AddCustomizedDataProtection(siteSettings);
-        services.AddDNTCommonWeb();
-        services.AddAutoMapper();
+        services.AddDNTCommonWeb();        
         services.AddSchedulers();
         services.RunHostedServicesConcurrently();
         services.AddCustomizedControllers();
         services.AddCustomizedAuthentication(siteSettings, environment);
     }
-
-    private static void AddAutoMapper(this IServiceCollection services)
-        => services.AddAutoMapper(_ => { }, typeof(AutoMapperConfig).Assembly);
 
     private static void AddOptions(this IServiceCollection services, IConfiguration configuration)
     {

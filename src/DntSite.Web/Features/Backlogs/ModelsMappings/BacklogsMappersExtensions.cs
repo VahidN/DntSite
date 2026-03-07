@@ -1,5 +1,7 @@
 using System.Text;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Backlogs.Entities;
+using DntSite.Web.Features.Backlogs.Models;
 using DntSite.Web.Features.Backlogs.RoutingConstants;
 using DntSite.Web.Features.RssFeeds.Models;
 
@@ -7,6 +9,8 @@ namespace DntSite.Web.Features.Backlogs.ModelsMappings;
 
 public static class BacklogsMappersExtensions
 {
+    public const string BacklogTags = $"{nameof(Backlog)}_Tags";
+
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(BacklogsRoutingConstants.PostUrlTemplate);
 
@@ -35,6 +39,40 @@ public static class BacklogsMappersExtensions
             Id = item.Id,
             UserId = item.UserId,
             EntityType = item.GetType()
+        };
+    }
+
+    public static Backlog MapBacklogModelToBacklog(this BacklogModel source,
+        IAppAntiXssService antiXssService,
+        Backlog? destination = null)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(antiXssService);
+
+        var backlog = new Backlog
+        {
+            Title = source.Title,
+            Description = antiXssService.GetSanitizedHtml(source.Description)
+        };
+
+        if (destination is not null)
+        {
+            destination.Title = backlog.Title;
+            destination.Description = backlog.Description;
+        }
+
+        return destination ?? backlog;
+    }
+
+    public static BacklogModel MapBacklogToBacklogModel(this Backlog source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return new BacklogModel
+        {
+            Title = source.Title,
+            Description = source.Description,
+            Tags = source.Tags?.Select(tag => tag.Name).ToList() ?? []
         };
     }
 }

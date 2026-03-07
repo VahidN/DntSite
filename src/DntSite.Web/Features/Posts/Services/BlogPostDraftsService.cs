@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
@@ -6,9 +6,11 @@ using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
+using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
 using DntSite.Web.Features.UserProfiles.Entities;
+using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.Posts.Services;
 
@@ -18,8 +20,9 @@ public class BlogPostDraftsService(
     IBlogPostsService blogPostsService,
     IBlogPostsEmailsService blogPostsEmailsService,
     IStatService statService,
-    IDailyNewsItemsService dailyNewsItemsService,
-    IMapper mapper) : IBlogPostDraftsService
+    IAppAntiXssService antiXssService,
+    ICurrentUserService currentUserService,
+    IDailyNewsItemsService dailyNewsItemsService) : IBlogPostDraftsService
 {
     private readonly DbSet<BlogPostDraft> _blogPostDrafts = uow.DbSet<BlogPostDraft>();
 
@@ -27,7 +30,7 @@ public class BlogPostDraftsService(
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        var draft = mapper.Map<WriteDraftModel, BlogPostDraft>(model);
+        var draft = model.MapWriteDraftModelToBlogPostDraft(antiXssService, currentUserService);
         _blogPostDrafts.Add(draft);
         await uow.SaveChangesAsync();
 
@@ -38,7 +41,7 @@ public class BlogPostDraftsService(
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        mapper.Map(model, draft);
+        model.MapWriteDraftModelToBlogPostDraft(antiXssService, currentUserService, draft);
         await uow.SaveChangesAsync();
     }
 

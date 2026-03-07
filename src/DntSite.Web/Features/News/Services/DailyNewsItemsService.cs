@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Services.Contracts;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Models;
 using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
@@ -21,7 +20,6 @@ namespace DntSite.Web.Features.News.Services;
 
 public class DailyNewsItemsService(
     IUnitOfWork uow,
-    IMapper mapper,
     ITagsService tagsService,
     IStatService statService,
     IDailyNewsEmailsService dailyNewsEmailsService,
@@ -34,6 +32,7 @@ public class DailyNewsItemsService(
     IAppSettingsService appSettingsService,
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IFullTextSearchService fullTextSearchService,
+    IAppAntiXssService antiXssService,
     IPdfExportService pdfExportService) : IDailyNewsItemsService
 {
     public const string DefaultTag = "News";
@@ -379,7 +378,9 @@ public class DailyNewsItemsService(
 
         var listOfActualTags = await tagsService.SaveNewLinkItemTagsAsync(writeNewsModel.Tags);
 
-        var newsItem = mapper.Map<DailyNewsItemModel, DailyNewsItem>(writeNewsModel);
+        var newsItem = writeNewsModel.MapDailyNewsItemModelToDailyNewsItem(antiXssService,
+            urlNormalizationService, passwordHasherService);
+
         newsItem.Url = await GetRedirectUrlAsync(writeNewsModel.Url) ?? writeNewsModel.Url;
         newsItem.Tags = listOfActualTags;
         newsItem.UserId = user?.Id;
@@ -398,13 +399,13 @@ public class DailyNewsItemsService(
 
         var listOfActualTags = await tagsService.SaveNewLinkItemTagsAsync([DefaultTag]);
 
-        var newsItem = mapper.Map<DailyNewsItemModel, DailyNewsItem>(new DailyNewsItemModel
+        var newsItem = new DailyNewsItemModel
         {
             Title = "deleted",
             Url = url,
             DescriptionText = "---",
             Tags = [DefaultTag]
-        });
+        }.MapDailyNewsItemModelToDailyNewsItem(antiXssService, urlNormalizationService, passwordHasherService);
 
         newsItem.Url = await GetRedirectUrlAsync(url) ?? url;
         newsItem.Tags = listOfActualTags;
@@ -427,7 +428,9 @@ public class DailyNewsItemsService(
 
         var listOfActualTags = await tagsService.SaveNewLinkItemTagsAsync(writeNewsModel.Tags);
 
-        mapper.Map(writeNewsModel, newsItem);
+        writeNewsModel.MapDailyNewsItemModelToDailyNewsItem(antiXssService, urlNormalizationService,
+            passwordHasherService, newsItem);
+
         newsItem.Url = await GetRedirectUrlAsync(writeNewsModel.Url) ?? writeNewsModel.Url;
         newsItem.Tags = listOfActualTags;
 

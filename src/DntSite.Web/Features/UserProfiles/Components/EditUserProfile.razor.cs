@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using DntSite.Web.Common.BlazorSsr.Utils;
+﻿using DntSite.Web.Common.BlazorSsr.Utils;
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Models;
+using DntSite.Web.Features.UserProfiles.ModelsMappings;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
@@ -20,8 +20,6 @@ public partial class EditUserProfile
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
     [InjectComponentScoped] internal IUserProfilesManagerService UserProfilesManagerService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     [InjectComponentScoped] internal ICurrentUserService CurrentUserService { set; get; } = null!;
 
@@ -44,7 +42,7 @@ public partial class EditUserProfile
         if (ApplicationState.HttpContext.IsGetRequest())
         {
             await UserProfilesManagerService.UpdateUserImageFromGravatarAsync(currentUser);
-            Model = Mapper.Map<User, UserProfileModel>(currentUser);
+            Model = currentUser.MapUserToUserProfileModel();
         }
 
         _userFriendlyName = currentUser.FriendlyName;

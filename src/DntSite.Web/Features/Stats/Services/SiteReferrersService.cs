@@ -180,6 +180,11 @@ public class SiteReferrersService(
     }
 
     private void LogIgnoredReferrer(string? normalizedReferrerUrl, string? normalizedDestinationUrl, string reason)
-        => logger.LogInformation(message: "Ignored referrer: `{ReferrerUrl}` ❱ `{DestinationUrl}` ❱ {Reason}",
-            normalizedReferrerUrl, normalizedDestinationUrl, reason);
+    {
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation(message: "Ignored referrer: `{ReferrerUrl}` ❱ `{DestinationUrl}` ❱ {Reason}",
+                normalizedReferrerUrl, normalizedDestinationUrl, reason);
+        }
+    }
 }

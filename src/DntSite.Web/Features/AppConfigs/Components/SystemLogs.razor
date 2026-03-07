@@ -56,10 +56,10 @@
                     <Body>
                     <div dir="ltr">
                         <div class="badge bg-primary">@item.Url</div>
-                        <div class="badge bg-success">@item.UserFriendlyName</div>
-                        <div class="badge bg-success" dir="ltr">@item.UserAgent</div>
-                        <div class="badge bg-success" dir="ltr">@item.UserIp</div>
-                        <div class="badge bg-secondary">@item.CreatedAt.ToFriendlyPersianDateTextify()</div>
+                        <div class="badge bg-success">@item.User?.FriendlyName</div>
+                        <div class="badge bg-success" dir="ltr">@item.Audit.CreatedByUserAgent</div>
+                        <div class="badge bg-success" dir="ltr">@item.Audit.CreatedByUserIp</div>
+                        <div class="badge bg-secondary">@item.Audit.CreatedAt.ToFriendlyPersianDateTextify()</div>
                         <div class="mt-3">
                             @if (item.Message.ContainsHtmlTags())
                             {

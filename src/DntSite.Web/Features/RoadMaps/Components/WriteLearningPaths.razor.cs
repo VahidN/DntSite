@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.RoadMaps.Entities;
 using DntSite.Web.Features.RoadMaps.Models;
+using DntSite.Web.Features.RoadMaps.ModelsMappings;
 using DntSite.Web.Features.RoadMaps.RoutingConstants;
 using DntSite.Web.Features.RoadMaps.Services.Contracts;
 
@@ -26,8 +26,6 @@ public partial class WriteLearningPaths
     [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal ILearningPathService LearningPathService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
@@ -88,7 +86,7 @@ public partial class WriteLearningPaths
             return;
         }
 
-        WriteLearningPathModel = Mapper.Map<LearningPath, LearningPathModel>(item);
+        WriteLearningPathModel = item.MapLearningPathToLearningPathModel();
     }
 
     private async Task<LearningPath?> GetUserLearningPathItemAsync(int id)

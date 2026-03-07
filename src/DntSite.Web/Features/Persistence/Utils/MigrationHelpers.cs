@@ -12,11 +12,15 @@ public static class MigrationHelpers
         var scopedServiceProvider = scope.ServiceProvider;
         var logger = scopedServiceProvider.GetRequiredService<ILogger<TContext>>();
 
-        logger.LogInformation("Migrating the DB associated with the context {Name}", typeof(TContext).Name);
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation(message: "Migrating the DB associated with the context {Name}",
+                typeof(TContext).Name);
+        }
 
         var retry = Policy.Handle<Exception>()
             .WaitAndRetry([
-                TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(15)
+                TimeSpan.FromSeconds(seconds: 5), TimeSpan.FromSeconds(seconds: 10), TimeSpan.FromSeconds(seconds: 15)
             ]);
 
         retry.Execute(() =>
@@ -26,6 +30,9 @@ public static class MigrationHelpers
             postMigrationAction?.Invoke(scopedServiceProvider);
         });
 
-        logger.LogInformation("Migrated the DB associated with the context {Name}", typeof(TContext).Name);
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation(message: "Migrated the DB associated with the context {Name}", typeof(TContext).Name);
+        }
     }
 }

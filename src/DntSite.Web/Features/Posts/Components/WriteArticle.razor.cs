@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Services.Contracts;
-using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
+using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.RoutingConstants;
 using DntSite.Web.Features.Posts.Services.Contracts;
 
@@ -26,8 +25,6 @@ public partial class WriteArticle
 
     [SupplyParameterFromForm(FormName = nameof(WriteArticle))]
     public WriteArticleModel? WriteArticleModel { get; set; }
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,7 +60,7 @@ public partial class WriteArticle
             return;
         }
 
-        WriteArticleModel = Mapper.Map<BlogPost, WriteArticleModel>(post);
+        WriteArticleModel = post.MapBlogPostToWriteArticleModel();
     }
 
     private async Task PerformPossibleDeleteAsync()

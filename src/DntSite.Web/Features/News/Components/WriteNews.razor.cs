@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
+using DntSite.Web.Features.News.ModelsMappings;
 using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
 using Microsoft.AspNetCore.WebUtilities;
@@ -31,8 +31,6 @@ public partial class WriteNews
     [InjectComponentScoped] internal IDailyNewsItemsService DailyNewsItemsService { set; get; } = null!;
 
     [InjectComponentScoped] internal IDailyNewsScreenshotsService DailyNewsScreenshotsService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
@@ -116,7 +114,7 @@ public partial class WriteNews
             return;
         }
 
-        WriteNewsModel = Mapper.Map<DailyNewsItem, DailyNewsItemModel>(item);
+        WriteNewsModel = item.MapDailyNewsItemToDailyNewsItemModel();
     }
 
     private async Task<DailyNewsItem?> GetUserDailyNewsItemAsync(int id)

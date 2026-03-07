@@ -1,12 +1,17 @@
 using System.Text;
 using DntSite.Web.Features.Advertisements.Entities;
+using DntSite.Web.Features.Advertisements.Models;
 using DntSite.Web.Features.Advertisements.RoutingConstants;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.DateTimeToolkit;
 using DntSite.Web.Features.RssFeeds.Models;
 
 namespace DntSite.Web.Features.Advertisements.ModelsMappings;
 
 public static class AdvertisementsMappersExtensions
 {
+    public const string AdvertisementTags = $"{nameof(Advertisement)}_Tags";
+
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(AdvertisementsRoutingConstants.PostUrlTemplate);
 
@@ -65,6 +70,45 @@ public static class AdvertisementsMappersExtensions
             Id = item.Id,
             UserId = item.UserId,
             EntityType = item.GetType()
+        };
+    }
+
+    public static Advertisement MapWriteAdvertisementModelToAdvertisement(this WriteAdvertisementModel source,
+        IAppAntiXssService antiXssService,
+        Advertisement? destination = null)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(antiXssService);
+
+        var advertisement = new Advertisement
+        {
+            Title = source.Title,
+            Body = antiXssService.GetSanitizedHtml(source.Body),
+            DueDate = source.DueDate.CombineDateWithTime(source.Hour ?? 0, source.Minute ?? 0)
+        };
+
+        if (destination is not null)
+        {
+            destination.Title = advertisement.Title;
+            destination.Body = advertisement.Body;
+            destination.DueDate = advertisement.DueDate;
+        }
+
+        return destination ?? advertisement;
+    }
+
+    public static WriteAdvertisementModel MapAdvertisementToWriteAdvertisementModel(this Advertisement source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return new WriteAdvertisementModel
+        {
+            Title = source.Title,
+            Body = source.Body,
+            DueDate = source.DueDate ?? DateTime.UtcNow,
+            Tags = source.Tags?.Select(tag => tag.Name).ToList() ?? [],
+            Hour = source.DueDate.GetHour(),
+            Minute = source.DueDate.GetMinute()
         };
     }
 }

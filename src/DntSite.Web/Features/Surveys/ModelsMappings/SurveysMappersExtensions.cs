@@ -1,12 +1,17 @@
 using System.Text;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Utils.DateTimeToolkit;
 using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.Surveys.Entities;
+using DntSite.Web.Features.Surveys.Models;
 using DntSite.Web.Features.Surveys.RoutingConstants;
 
 namespace DntSite.Web.Features.Surveys.ModelsMappings;
 
 public static class SurveysMappersExtensions
 {
+    public const string SurveyTags = $"{nameof(Survey)}_Tags";
+
     private static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(SurveysRoutingConstants.PostUrlTemplate);
 
@@ -69,6 +74,54 @@ public static class SurveysMappersExtensions
             Id = item.Id,
             UserId = item.UserId,
             EntityType = item.GetType()
+        };
+    }
+
+    public static Survey MapVoteModelToSurvey(this VoteModel source,
+        IAppAntiXssService antiXssService,
+        Survey? destination = null)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(antiXssService);
+
+        var dueDate = source.ExpirationDate.CombineDateWithTime(source.Hour ?? 0, source.Minute ?? 0);
+
+        var survey = new Survey
+        {
+            Title = source.Title,
+            Description = antiXssService.GetSanitizedHtml(source.Description),
+            DueDate = dueDate
+        };
+
+        if (destination is not null)
+        {
+            destination.Title = survey.Title;
+            destination.Description = survey.Description;
+            destination.DueDate = survey.DueDate;
+        }
+
+        return destination ?? survey;
+    }
+
+    public static VoteModel MapSurveyToVoteModel(this Survey source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        var dueDate = source.DueDate?.ToIranTimeZoneDateTime();
+
+        return new VoteModel
+        {
+            Title = source.Title,
+            Description = source.Description,
+            ExpirationDate = dueDate,
+            Hour = dueDate?.Hour,
+            Minute = dueDate?.Minute,
+            VoteItems = source.SurveyItems.Where(x => !x.IsDeleted)
+                .OrderBy(x => x.Id)
+                .Select(x => x.Title)
+                .ToList()
+                .ConvertListToMultiLineText(),
+            Tags = source.Tags?.Select(tag => tag.Name).ToList() ?? []
         };
     }
 }

@@ -1,8 +1,8 @@
-using AutoMapper;
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.RoutingConstants;
 using DntSite.Web.Features.Projects.Services.Contracts;
 
@@ -32,8 +32,6 @@ public partial class WriteProjectFeedback
     [InjectComponentScoped] internal IIssuePrioritiesService IssuePrioritiesService { set; get; } = null!;
 
     [InjectComponentScoped] internal IIssueTypesService IssueTypesService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -120,7 +118,7 @@ public partial class WriteProjectFeedback
             return;
         }
 
-        IssueModel = Mapper.Map<ProjectIssue, IssueModel>(item);
+        IssueModel = item.MapProjectIssueToIssueModel();
     }
 
     private async Task<ProjectIssue?> GetProjectIssueAsync(int id)

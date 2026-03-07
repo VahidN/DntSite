@@ -1,12 +1,17 @@
 using System.Text;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Posts.Entities;
+using DntSite.Web.Features.Posts.Models;
 using DntSite.Web.Features.Posts.RoutingConstants;
 using DntSite.Web.Features.RssFeeds.Models;
+using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
 namespace DntSite.Web.Features.Posts.ModelsMappings;
 
 public static class PostsMappersExtensions
 {
+    public const string BlogPostTags = $"{nameof(BlogPost)}_Tags";
+
     public static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(PostsRoutingConstants.PostUrlTemplate);
 
@@ -147,6 +152,111 @@ public static class PostsMappersExtensions
             Id = item.Id,
             UserId = item.UserId,
             EntityType = item.GetType()
+        };
+    }
+
+    public static BlogPost MapWriteArticleModelToBlogPost(this WriteArticleModel source,
+        IAppAntiXssService antiXssService,
+        BlogPost? destination = null)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(antiXssService);
+
+        var body = source.ArticleBody;
+
+        var blogPost = new BlogPost
+        {
+            Title = source.Title,
+            Body = antiXssService.GetSanitizedHtml(body),
+            BriefDescription = body.GetBriefDescription(charLength: 450),
+            ReadingTimeMinutes = body.MinReadTime(wordsPerMinute: 180)
+        };
+
+        if (destination is not null)
+        {
+            destination.Title = blogPost.Title;
+            destination.Body = blogPost.Body;
+            destination.BriefDescription = blogPost.BriefDescription;
+            destination.ReadingTimeMinutes = blogPost.ReadingTimeMinutes;
+        }
+
+        return destination ?? blogPost;
+    }
+
+    public static WriteArticleModel MapBlogPostToWriteArticleModel(this BlogPost source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return new WriteArticleModel
+        {
+            Title = source.Title,
+            ArticleBody = source.Body,
+            ArticleTags = source.Tags?.Select(tag => tag.Name).ToList() ?? []
+        };
+    }
+
+    public static BlogPostDraft MapWriteDraftModelToBlogPostDraft(this WriteDraftModel source,
+        IAppAntiXssService antiXssService,
+        ICurrentUserService currentUserService,
+        BlogPostDraft? destination = null)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(antiXssService);
+        ArgumentNullException.ThrowIfNull(currentUserService);
+
+        var dateTimeToShow = new PersianDateTime(source.PersianDateYear, source.PersianDateMonth, source.PersianDateDay,
+            source.Hour, source.Minute, second: 0).DateTimeUtc;
+
+        var body = source.ArticleBody;
+
+        var draft = new BlogPostDraft
+        {
+            Title = source.Title,
+            Body = antiXssService.GetSanitizedHtml(body),
+            IsConverted = false,
+            ReadingTimeMinutes = body.MinReadTime(wordsPerMinute: 180),
+            DateTimeToShow = dateTimeToShow,
+            UserId = currentUserService.GetCurrentUserId(),
+            Tags = []
+        };
+
+        if (!currentUserService.IsCurrentUserAdmin())
+        {
+            draft.DateTimeToShow = null;
+        }
+
+        if (destination is not null)
+        {
+            destination.Title = draft.Title;
+            destination.Body = draft.Body;
+            destination.IsConverted = draft.IsConverted;
+            destination.ReadingTimeMinutes = draft.ReadingTimeMinutes;
+            destination.DateTimeToShow = draft.DateTimeToShow;
+            destination.UserId = draft.UserId;
+            destination.DateTimeToShow = draft.DateTimeToShow;
+        }
+
+        return destination ?? draft;
+    }
+
+    public static WriteDraftModel MapBlogPostDraftToWriteDraftModel(this BlogPostDraft source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        var dateTime = source.DateTimeToShow ?? DateTime.UtcNow;
+        var iranDate = dateTime.ToIranTimeZoneDateTime();
+        var persianDate = dateTime.ToPersianYearMonthDay();
+
+        return new WriteDraftModel
+        {
+            Title = source.Title,
+            ArticleBody = source.Body,
+            ReadingTimeMinutes = source.Body.MinReadTime(wordsPerMinute: 180),
+            Hour = source.DateTimeToShow == null ? 23 : iranDate.Hour,
+            Minute = source.DateTimeToShow == null ? 55 : iranDate.Minute,
+            PersianDateYear = persianDate?.Year ?? 0,
+            PersianDateMonth = persianDate?.Month ?? 1,
+            PersianDateDay = persianDate?.Day ?? 1
         };
     }
 }

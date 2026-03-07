@@ -1,8 +1,8 @@
-using AutoMapper;
 using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Projects.Entities;
 using DntSite.Web.Features.Projects.Models;
+using DntSite.Web.Features.Projects.ModelsMappings;
 using DntSite.Web.Features.Projects.RoutingConstants;
 using DntSite.Web.Features.Projects.Services.Contracts;
 
@@ -25,8 +25,6 @@ public partial class WriteProjectFaq
     [InjectComponentScoped] internal IProjectFaqsService ProjectFaqsService { set; get; } = null!;
 
     [InjectComponentScoped] internal IProjectsService ProjectsService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,7 +90,7 @@ public partial class WriteProjectFaq
             return;
         }
 
-        WriteProjectFaqFormModel = Mapper.Map<ProjectFaq, ProjectFaqFormModel>(item);
+        WriteProjectFaqFormModel = item.MapProjectFaqToProjectFaqFormModel();
     }
 
     private async Task<ProjectFaq?> GetProjectFaqAsync(int id)

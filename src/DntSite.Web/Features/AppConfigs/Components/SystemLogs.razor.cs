@@ -1,4 +1,4 @@
-using DntSite.Web.Features.AppConfigs.Models;
+using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.RoutingConstants;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
@@ -13,7 +13,7 @@ public partial class SystemLogs
 
     private const string MainTitle = "گزارش رخ‌دادهای سیستم";
 
-    private PagedResultModel<AppLogItemModel>? _pagedResults;
+    private PagedResultModel<AppLogItem>? _pagedResults;
 
     [Parameter] public int? CurrentPage { set; get; }
 

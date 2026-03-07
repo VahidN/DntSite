@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
@@ -17,13 +17,13 @@ namespace DntSite.Web.Features.RoadMaps.Services;
 
 public class LearningPathService(
     IUnitOfWork uow,
-    IMapper mapper,
     ITagsService tagsService,
     IStatService statService,
     IEmailsFactoryService emailsFactoryService,
     ILearningPathEmailsService emailsService,
     IUserRatingsService userRatingsService,
     IFullTextSearchService fullTextSearchService,
+    IAppAntiXssService antiXssService,
     ILogger<LearningPathService> logger) : ILearningPathService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<LearningPath, object?>>> CustomOrders = new()
@@ -93,7 +93,7 @@ public class LearningPathService(
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(LearningPath.Id), [
             .. GridifyMapings.GetDefaultMappings<LearningPath>(), new GridifyMap<LearningPath>
             {
-                From = LearningPathMappingsProfiles.LearningPathTags,
+                From = LearningPathsMappersExtensions.LearningPathTags,
                 To = entity => entity.Tags.Select(tag => tag.Name)
             }
         ]);
@@ -247,7 +247,7 @@ public class LearningPathService(
 
         var listOfActualTags = await tagsService.SaveNewLearningPathTagsAsync(writeLearningPathModel.Tags);
 
-        mapper.Map(writeLearningPathModel, learningPathItem);
+        writeLearningPathModel.MapLearningPathModelToLearningPath(antiXssService, learningPathItem);
         learningPathItem.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
@@ -264,7 +264,7 @@ public class LearningPathService(
 
         var listOfActualTags = await tagsService.SaveNewLearningPathTagsAsync(writeLearningPathModel.Tags);
 
-        var newsItem = mapper.Map<LearningPathModel, LearningPath>(writeLearningPathModel);
+        var newsItem = writeLearningPathModel.MapLearningPathModelToLearningPath(antiXssService);
         newsItem.Tags = listOfActualTags;
         newsItem.UserId = user?.Id;
         var result = AddLearningPath(newsItem);

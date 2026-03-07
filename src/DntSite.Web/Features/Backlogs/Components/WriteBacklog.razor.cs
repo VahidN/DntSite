@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Backlogs.Entities;
 using DntSite.Web.Features.Backlogs.Models;
+using DntSite.Web.Features.Backlogs.ModelsMappings;
 using DntSite.Web.Features.Backlogs.RoutingConstants;
 using DntSite.Web.Features.Backlogs.Services.Contracts;
 using DntSite.Web.Features.Common.Services.Contracts;
@@ -25,11 +25,7 @@ public partial class WriteBacklog
 
     [Parameter] public string? DeleteId { set; get; }
 
-    [InjectComponentScoped] internal IBacklogsService BacklogsService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
-
-    [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
+    [InjectComponentScoped] internal IBacklogsService BacklogsService { set; get; } = null!;  [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,7 +84,7 @@ public partial class WriteBacklog
             return;
         }
 
-        WriteBacklogModel = Mapper.Map<Backlog, BacklogModel>(item);
+        WriteBacklogModel = item.MapBacklogToBacklogModel();
     }
 
     private async Task<Backlog?> GetUserBacklogAsync(int id)

@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Surveys.Entities;
 using DntSite.Web.Features.Surveys.Models;
+using DntSite.Web.Features.Surveys.ModelsMappings;
 using DntSite.Web.Features.Surveys.RoutingConstants;
 using DntSite.Web.Features.Surveys.Services.Contracts;
 
@@ -26,8 +26,6 @@ public partial class WriteSurvey
     [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IVotesService SurveysService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
@@ -88,7 +86,7 @@ public partial class WriteSurvey
             return;
         }
 
-        WriteSurveyModel = Mapper.Map<Survey, VoteModel>(item);
+        WriteSurveyModel = item.MapSurveyToVoteModel();
     }
 
     private async Task<Survey?> GetUserSurveyAsync(int id)

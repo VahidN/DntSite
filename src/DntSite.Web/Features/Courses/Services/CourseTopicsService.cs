@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Courses.Entities;
@@ -18,13 +18,13 @@ namespace DntSite.Web.Features.Courses.Services;
 
 public class CourseTopicsService(
     IUnitOfWork uow,
-    IMapper mapper,
     IStatService statService,
     ICoursesEmailsService emailsService,
     IUserRatingsService userRatingsService,
     ICoursesService coursesService,
     IFullTextSearchService fullTextSearchService,
     IPdfExportService pdfExportService,
+    IAppAntiXssService antiXssService,
     ILogger<CourseTopicsService> logger) : ICourseTopicsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<CourseTopic, object?>>> CustomOrders = new()
@@ -241,7 +241,7 @@ public class CourseTopicsService(
             return;
         }
 
-        mapper.Map(writeCourseItemModel, courseTopic);
+        writeCourseItemModel.MapCourseTopicItemModelToCourseTopic(antiXssService, courseTopic);
 
         await uow.SaveChangesAsync();
 
@@ -257,7 +257,7 @@ public class CourseTopicsService(
     {
         ArgumentNullException.ThrowIfNull(writeCourseItemModel);
 
-        var item = mapper.Map<CourseTopicItemModel, CourseTopic>(writeCourseItemModel);
+        var item = writeCourseItemModel.MapCourseTopicItemModelToCourseTopic(antiXssService);
         item.UserId = user?.Id;
         item.CourseId = courseId;
         var courseTopic = AddCourseTopic(item);

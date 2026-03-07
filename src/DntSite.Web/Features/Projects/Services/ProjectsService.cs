@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Models;
+﻿using DntSite.Web.Features.AppConfigs.Models;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
@@ -22,11 +21,11 @@ public class ProjectsService(
     IUserRatingsService userRatingsService,
     IUploadFileService uploadFileService,
     IStatService statService,
-    IMapper mapper,
     ITagsService tagsService,
     IAppFoldersService appFoldersService,
     IProjectsEmailsService emailsService,
     IFullTextSearchService fullTextSearchService,
+    IAppAntiXssService antiXssService,
     ILogger<ProjectsService> logger) : IProjectsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Project, object?>>> CustomOrders = new()
@@ -129,7 +128,7 @@ public class ProjectsService(
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(Project.Id), [
             .. GridifyMapings.GetDefaultMappings<Project>(), new GridifyMap<Project>
             {
-                From = ProjectsMappingsProfiles.ProjectTags,
+                From = ProjectsMappersExtensions.ProjectTags,
                 To = entity => entity.Tags.Select(tag => tag.Name)
             }
         ]);
@@ -212,7 +211,7 @@ public class ProjectsService(
 
         var listOfActualTags = await tagsService.SaveProjectItemTagsAsync(writeProjectModel.Tags);
 
-        mapper.Map(writeProjectModel, project);
+        writeProjectModel.MapProjectModelToProject(antiXssService, project);
         await SavePostedPhotoAsync(project, writeProjectModel);
         project.Tags = listOfActualTags;
 
@@ -228,7 +227,7 @@ public class ProjectsService(
 
         var listOfActualTags = await tagsService.SaveProjectItemTagsAsync(writeProjectModel.Tags);
 
-        var project = mapper.Map<ProjectModel, Project>(writeProjectModel);
+        var project = writeProjectModel.MapProjectModelToProject(antiXssService);
         project.Tags = listOfActualTags;
         project.UserId = user?.Id;
         await SavePostedPhotoAsync(project, writeProjectModel);

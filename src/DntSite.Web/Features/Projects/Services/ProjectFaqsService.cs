@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
@@ -18,8 +18,8 @@ public class ProjectFaqsService(
     IUserRatingsService userRatingsService,
     IProjectsEmailsService emailsService,
     IStatService statService,
-    IMapper mapper,
     IFullTextSearchService fullTextSearchService,
+    IAppAntiXssService antiXssService,
     ILogger<ProjectFaqsService> logger) : IProjectFaqsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<ProjectFaq, object?>>> CustomOrders = new()
@@ -155,7 +155,7 @@ public class ProjectFaqsService(
             return;
         }
 
-        mapper.Map(writeProjectFaqFormModel, projectFaq);
+        writeProjectFaqFormModel.MapProjectFaqFormModelToProjectFaq(antiXssService, projectFaq);
 
         await uow.SaveChangesAsync();
 
@@ -169,7 +169,7 @@ public class ProjectFaqsService(
     {
         ArgumentNullException.ThrowIfNull(writeProjectFaqFormModel);
 
-        var projectFaq = mapper.Map<ProjectFaqFormModel, ProjectFaq>(writeProjectFaqFormModel);
+        var projectFaq = writeProjectFaqFormModel.MapProjectFaqFormModelToProjectFaq(antiXssService);
         projectFaq.UserId = user?.Id;
         projectFaq.ProjectId = projectId;
         var result = AddProjectFaq(projectFaq);

@@ -1,5 +1,7 @@
 using System.Text;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.News.Entities;
+using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.RssFeeds.Models;
 
@@ -102,6 +104,49 @@ public static class NewsMappersExtensions
             Id = item.Id,
             UserId = item.UserId,
             EntityType = item.GetType()
+        };
+    }
+
+    public static DailyNewsItem MapDailyNewsItemModelToDailyNewsItem(this DailyNewsItemModel source,
+        IAppAntiXssService antiXssService,
+        IUrlNormalizationService urlNormalizationService,
+        IPasswordHasherService passwordHasherService,
+        DailyNewsItem? destination = null)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(antiXssService);
+        ArgumentNullException.ThrowIfNull(urlNormalizationService);
+        ArgumentNullException.ThrowIfNull(passwordHasherService);
+
+        var dailyNewsItem = new DailyNewsItem
+        {
+            Title = source.Title,
+            BriefDescription = antiXssService.GetSanitizedHtml(source.DescriptionText),
+            UrlHash = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(source.Url.Trim())),
+            Url = source.Url
+        };
+
+        if (destination is not null)
+        {
+            destination.Title = dailyNewsItem.Title;
+            destination.BriefDescription = dailyNewsItem.BriefDescription;
+            destination.UrlHash = dailyNewsItem.UrlHash;
+            destination.Url = dailyNewsItem.Url;
+        }
+
+        return destination ?? dailyNewsItem;
+    }
+
+    public static DailyNewsItemModel MapDailyNewsItemToDailyNewsItemModel(this DailyNewsItem source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return new DailyNewsItemModel
+        {
+            Title = source.Title,
+            DescriptionText = source.BriefDescription ?? "",
+            Url = source.Url,
+            Tags = source.Tags?.Select(tag => tag.Name).ToList() ?? []
         };
     }
 }

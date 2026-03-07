@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using DntSite.Web.Common.BlazorSsr.Utils;
+﻿using DntSite.Web.Common.BlazorSsr.Utils;
 using DntSite.Web.Features.AppConfigs.Components;
-using DntSite.Web.Features.UserProfiles.Entities;
 using DntSite.Web.Features.UserProfiles.Models;
+using DntSite.Web.Features.UserProfiles.ModelsMappings;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
 
@@ -25,8 +24,6 @@ public partial class EditUserSocialNetworks
 
     [InjectComponentScoped] internal ICurrentUserService CurrentUserService { set; get; } = null!;
 
-    [Inject] internal IMapper Mapper { set; get; } = null!;
-
     [SupplyParameterFromForm] public UserSocialNetworkModel? Model { get; set; }
 
     private string PageTitle => $"تنظیمات کاربری من «{_userFriendlyName}» در شبکه‌های اجتماعی";
@@ -47,7 +44,7 @@ public partial class EditUserSocialNetworks
                 return;
             }
 
-            Model = Mapper.Map<UserSocialNetwork, UserSocialNetworkModel>(userSocialNetwork);
+            Model = userSocialNetwork.MapUserSocialNetworkToUserSocialNetworkModel();
         }
 
         _userFriendlyName = currentUser?.FriendlyName;

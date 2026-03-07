@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.News.Models;
@@ -7,6 +6,7 @@ using DntSite.Web.Features.News.RoutingConstants;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Posts.Models;
+using DntSite.Web.Features.Posts.ModelsMappings;
 using DntSite.Web.Features.Posts.RoutingConstants;
 using DntSite.Web.Features.Posts.Services.Contracts;
 using DntSite.Web.Features.Stats.Services.Contracts;
@@ -46,8 +46,6 @@ public partial class WriteDraft
     [Parameter] public string? DeleteId { set; get; }
 
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     [InjectComponentScoped] internal IDailyNewsEmailsService DailyNewsEmailsService { set; get; } = null!;
 
@@ -101,7 +99,7 @@ public partial class WriteDraft
             return;
         }
 
-        WriteDraftModel = Mapper.Map<BlogPostDraft, WriteDraftModel>(draft);
+        WriteDraftModel = draft.MapBlogPostDraftToWriteDraftModel();
     }
 
     private async Task<BlogPostDraft?> GetUserDraftAsync(int id)
@@ -244,7 +242,9 @@ public partial class WriteDraft
             return;
         }
 
-        var draft = await UpdateDraftAsync(redirectAfterUpdate: false);  if (draft is null)
+        var draft = await UpdateDraftAsync(redirectAfterUpdate: false);
+
+        if (draft is null)
         {
             return;
         }

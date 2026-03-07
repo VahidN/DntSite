@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.Advertisements.Entities;
+﻿using DntSite.Web.Features.Advertisements.Entities;
 using DntSite.Web.Features.Advertisements.Models;
 using DntSite.Web.Features.Advertisements.ModelsMappings;
 using DntSite.Web.Features.Advertisements.Services.Contracts;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
@@ -19,11 +19,11 @@ public class AdvertisementsService(
     IUnitOfWork uow,
     IUserRatingsService userRatingsService,
     IAdvertisementsEmailsService emailsService,
-    IMapper mapper,
     ITagsService tagsService,
     IStatService statService,
     IAdvertisementCommentsService advertisementCommentsService,
     IFullTextSearchService fullTextSearchService,
+    IAppAntiXssService antiXssService,
     ILogger<AdvertisementsService> logger) : IAdvertisementsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<Advertisement, object?>>> CustomOrders = new()
@@ -104,7 +104,7 @@ public class AdvertisementsService(
 
         var listOfActualTags = await tagsService.SaveNewAdvertisementTagsAsync(writeAdvertisementModel.Tags);
 
-        var newsItem = mapper.Map<WriteAdvertisementModel, Advertisement>(writeAdvertisementModel);
+        var newsItem = writeAdvertisementModel.MapWriteAdvertisementModelToAdvertisement(antiXssService);
         newsItem.Tags = listOfActualTags;
         newsItem.UserId = user?.Id;
         var result = _advertisements.Add(newsItem).Entity;
@@ -288,7 +288,7 @@ public class AdvertisementsService(
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(Advertisement.Id), [
             .. GridifyMapings.GetDefaultMappings<Advertisement>(), new GridifyMap<Advertisement>
             {
-                From = AdvertisementsMappingsProfiles.AdvertisementTags,
+                From = AdvertisementsMappersExtensions.AdvertisementTags,
                 To = entity => entity.Tags.Select(tag => tag.Name)
             }
         ]);
@@ -306,7 +306,7 @@ public class AdvertisementsService(
 
         var listOfActualTags = await tagsService.SaveNewAdvertisementTagsAsync(writeAdvertisementModel.Tags);
 
-        mapper.Map(writeAdvertisementModel, advertisement);
+        writeAdvertisementModel.MapWriteAdvertisementModelToAdvertisement(antiXssService, advertisement);
         advertisement.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();

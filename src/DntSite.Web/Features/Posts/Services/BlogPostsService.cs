@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.ModelsMappings;
@@ -28,11 +27,11 @@ public class BlogPostsService(
     ITagsService tagsService,
     IBlogPostsEmailsService emailsService,
     IStatService statService,
-    IMapper mapper,
     IBlogCommentsService blogCommentsService,
     IHtmlHelperService htmlHelperService,
     IFullTextSearchService fullTextSearchService,
     IPdfExportService pdfExportService,
+    IAppAntiXssService antiXssService,
     ILogger<BlogPostsService> logger) : IBlogPostsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<BlogPost, object?>>> CustomOrders = new()
@@ -466,7 +465,7 @@ public class BlogPostsService(
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(BlogPost.Id), [
             .. GridifyMapings.GetDefaultMappings<BlogPost>(), new GridifyMap<BlogPost>
             {
-                From = PostsMappingsProfiles.BlogPostTags,
+                From = PostsMappersExtensions.BlogPostTags,
                 To = entity => entity.Tags.Select(tag => tag.Name)
             }
         ]);
@@ -530,7 +529,7 @@ public class BlogPostsService(
         }
 
         var availableDbTags = await tagsService.SaveNewArticleTagsAsync(writeArticleModel.ArticleTags);
-        mapper.Map(writeArticleModel, post);
+        writeArticleModel.MapWriteArticleModelToBlogPost(antiXssService, post);
         await SaveBlogPostAsync(post, availableDbTags, isEditForm: true);
 
         await statService.RecalculateTagsInUseCountsAsync<BlogPostTag, BlogPost>();

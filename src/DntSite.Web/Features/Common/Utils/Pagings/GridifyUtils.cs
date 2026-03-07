@@ -1,7 +1,5 @@
-using AutoMapper.QueryableExtensions;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using Gridify;
-using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace DntSite.Web.Features.Common.Utils.Pagings;
 
@@ -14,58 +12,9 @@ public static class GridifyUtils
     {
         GridifyGlobalConfiguration.EnableEntityFrameworkCompatibilityLayer();
 
-        // If true, string comparison operations are case insensitive by default.
+        // If true, string comparison operations are case-insensitive by default.
         // https://alirezanet.github.io/Gridify/guide/gridifyMapper#caseinsensitivefiltering
         GridifyGlobalConfiguration.CaseInsensitiveFiltering = true;
-    }
-
-    public static async Task<PagedResultModel<TResult>> ApplyQueryableDntGridFilterAsync<TResult, TEntity>(
-        this IQueryable<TEntity> query,
-        DntQueryBuilderModel? state,
-        string defaultSortField,
-        IConfigurationProvider mapperConfiguration,
-        IList<GridifyMap<TEntity>>? customMappings = null)
-        where TEntity : class
-        where TResult : class
-    {
-        state ??= new DntQueryBuilderModel();
-
-        var mappings = new GridifyMapper<TEntity>().GenerateMappings();
-
-        if (customMappings is not null)
-        {
-            foreach (var map in customMappings)
-            {
-                mappings.AddMap(map.From, map.To, map.Convertor, map.OverrideIfExists);
-            }
-        }
-
-        var gridifyQuery = new GridifyQuery
-        {
-            Filter = state.GridifyFilter,
-            Page = state.Page,
-            PageSize = state.PageSize,
-            OrderBy = GetSortFilter(state, defaultSortField)
-        };
-
-        if (!gridifyQuery.IsValid(mappings))
-        {
-            return new PagedResultModel<TResult>
-            {
-                TotalItems = 0,
-                Data = []
-            };
-        }
-
-        var filteredQuery = query.AsNoTracking().ApplyFiltering(gridifyQuery, mappings);
-        var totalItems = await filteredQuery.CountAsync();
-        filteredQuery = filteredQuery.ApplyOrdering(gridifyQuery, mappings).ApplyPaging(gridifyQuery);
-
-        return new PagedResultModel<TResult>
-        {
-            TotalItems = totalItems,
-            Data = await filteredQuery.ProjectTo<TResult>(mapperConfiguration).ToListAsync()
-        };
     }
 
     public static async Task<PagedResultModel<TEntity>> ApplyQueryableDntGridFilterAsync<TEntity>(
@@ -124,7 +73,7 @@ public static class GridifyUtils
     {
         var query = sequence.AsQueryable();
 
-        return ApplyQueryableDntGridFilterAsync(query, state, defaultSortField, customMappings);
+        return query.ApplyQueryableDntGridFilterAsync(state, defaultSortField, customMappings);
     }
 
     public static string NormalizeGridifyFilter(this string? filter)

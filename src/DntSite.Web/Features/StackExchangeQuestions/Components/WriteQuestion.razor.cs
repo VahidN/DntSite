@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using DntSite.Web.Features.AppConfigs.Components;
+﻿using DntSite.Web.Features.AppConfigs.Components;
 using DntSite.Web.Features.AppConfigs.Services;
 using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.StackExchangeQuestions.Models;
+using DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 using DntSite.Web.Features.StackExchangeQuestions.RoutingConstants;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
 
@@ -26,8 +26,6 @@ public partial class WriteQuestion
     [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IQuestionsService QuestionsService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,7 +73,7 @@ public partial class WriteQuestion
             return;
         }
 
-        WriteQuestionModel = Mapper.Map<StackExchangeQuestion, QuestionModel>(item);
+        WriteQuestionModel = item.MapStackExchangeQuestionToQuestionModel();
     }
 
     private async Task<StackExchangeQuestion?> GetStackExchangeQuestionAsync(int id)

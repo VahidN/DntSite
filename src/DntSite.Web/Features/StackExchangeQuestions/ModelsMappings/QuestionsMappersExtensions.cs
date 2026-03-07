@@ -1,12 +1,16 @@
 using System.Text;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.RssFeeds.Models;
 using DntSite.Web.Features.StackExchangeQuestions.Entities;
+using DntSite.Web.Features.StackExchangeQuestions.Models;
 using DntSite.Web.Features.StackExchangeQuestions.RoutingConstants;
 
 namespace DntSite.Web.Features.StackExchangeQuestions.ModelsMappings;
 
 public static class QuestionsMappersExtensions
 {
+    public const string StackExchangeQuestionTags = $"{nameof(StackExchangeQuestion)}_Tags";
+
     public static readonly CompositeFormat ParsedPostUrlTemplate =
         CompositeFormat.Parse(QuestionsRoutingConstants.PostUrlTemplate);
 
@@ -65,6 +69,40 @@ public static class QuestionsMappersExtensions
             Id = item.Id,
             UserId = item.UserId,
             EntityType = item.GetType()
+        };
+    }
+
+    public static StackExchangeQuestion MapQuestionModelToStackExchangeQuestion(this QuestionModel source,
+        IAppAntiXssService antiXssService,
+        StackExchangeQuestion? destination = null)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(antiXssService);
+
+        var stackExchangeQuestion = new StackExchangeQuestion
+        {
+            Title = source.Title,
+            Description = antiXssService.GetSanitizedHtml(source.Description)
+        };
+
+        if (destination is not null)
+        {
+            destination.Title = stackExchangeQuestion.Title;
+            destination.Description = stackExchangeQuestion.Description;
+        }
+
+        return destination ?? stackExchangeQuestion;
+    }
+
+    public static QuestionModel MapStackExchangeQuestionToQuestionModel(this StackExchangeQuestion source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return new QuestionModel
+        {
+            Title = source.Title,
+            Description = source.Description,
+            Tags = source.Tags?.Select(tag => tag.Name).ToList() ?? []
         };
     }
 }

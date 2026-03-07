@@ -80,8 +80,7 @@ void ConfigureEndpoints(WebApplication app)
 }
 
 void InitApplication(IHost app)
-{
-    app.CompileAutoMapperConfig();
+{    
     app.InitializeDb();
 }
 

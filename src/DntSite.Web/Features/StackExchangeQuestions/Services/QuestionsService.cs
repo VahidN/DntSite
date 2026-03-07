@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.Models;
 using DntSite.Web.Features.Common.ModelsMappings;
 using DntSite.Web.Features.Common.Services.Contracts;
@@ -22,9 +22,9 @@ public class QuestionsService(
     ITagsService tagsService,
     IStatService statService,
     IQuestionsEmailsService questionsEmailsService,
-    IMapper mapper,
     IFullTextSearchService fullTextSearchService,
     IPdfExportService pdfExportService,
+    IAppAntiXssService antiXssService,
     ILogger<QuestionsService> logger) : IQuestionsService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<StackExchangeQuestion, object?>>> CustomOrders =
@@ -151,7 +151,7 @@ public class QuestionsService(
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(StackExchangeQuestion.Id), [
             .. GridifyMapings.GetDefaultMappings<StackExchangeQuestion>(), new GridifyMap<StackExchangeQuestion>
             {
-                From = QuestionMappingsProfiles.StackExchangeQuestionTags,
+                From = QuestionsMappersExtensions.StackExchangeQuestionTags,
                 To = entity => entity.Tags.Select(tag => tag.Name)
             }
         ]);
@@ -264,7 +264,7 @@ public class QuestionsService(
 
         var listOfActualTags = await tagsService.SaveNewQuestionTagsAsync(writeQuestionModel.Tags);
 
-        mapper.Map(writeQuestionModel, question);
+        writeQuestionModel.MapQuestionModelToStackExchangeQuestion(antiXssService, question);
         question.Tags = listOfActualTags;
 
         await uow.SaveChangesAsync();
@@ -282,7 +282,7 @@ public class QuestionsService(
 
         var listOfActualTags = await tagsService.SaveNewQuestionTagsAsync(writeQuestionModel.Tags);
 
-        var question = mapper.Map<QuestionModel, StackExchangeQuestion>(writeQuestionModel);
+        var question = writeQuestionModel.MapQuestionModelToStackExchangeQuestion(antiXssService);
         question.Tags = listOfActualTags;
         question.UserId = user?.Id;
         var result = AddStackExchangeQuestion(question);

@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using AutoMapper;
 using DntSite.Web.Features.Advertisements.Entities;
 using DntSite.Web.Features.Advertisements.Models;
+using DntSite.Web.Features.Advertisements.ModelsMappings;
 using DntSite.Web.Features.Advertisements.RoutingConstants;
 using DntSite.Web.Features.Advertisements.Services.Contracts;
 using DntSite.Web.Features.AppConfigs.Components;
@@ -32,8 +32,6 @@ public partial class WriteAdvertisement
     [Parameter] public string? DeleteId { set; get; }
 
     [InjectComponentScoped] internal IAdvertisementsService AdvertisementsService { set; get; } = null!;
-
-    [Inject] internal IMapper Mapper { set; get; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,7 +92,7 @@ public partial class WriteAdvertisement
             return;
         }
 
-        _initialModel = Mapper.Map<Advertisement, WriteAdvertisementModel>(item);
+        _initialModel = item.MapAdvertisementToWriteAdvertisementModel();
     }
 
     private async Task<Advertisement?> GetUserAdvertisementAsync(int id)
