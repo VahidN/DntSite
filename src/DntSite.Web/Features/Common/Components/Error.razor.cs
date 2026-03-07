@@ -1,4 +1,5 @@
 using DntSite.Web.Features.AppConfigs.Components;
+using DntSite.Web.Features.Common.RoutingConstants;
 using DntSite.Web.Features.Stats.Services.Contracts;
 
 namespace DntSite.Web.Features.Common.Components;
@@ -17,8 +18,8 @@ public partial class Error
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
-    private bool IsThisPageCalledDirectly => string.Equals(HttpContext?.GetCurrentUrl(), b: "/error/404",
-        StringComparison.OrdinalIgnoreCase);
+    private bool IsThisPageCalledDirectly => string.Equals(HttpContext?.GetCurrentUrl(),
+        CommonRoutingConstants.NotFoundPage, StringComparison.OrdinalIgnoreCase);
 
     protected override async Task OnInitializedAsync()
     {

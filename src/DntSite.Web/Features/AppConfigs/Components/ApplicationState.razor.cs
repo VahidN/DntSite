@@ -1,6 +1,7 @@
 using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.RoutingConstants;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Models;
 using DntSite.Web.Features.UserProfiles.RoutingConstants;
 using DntSite.Web.Features.UserProfiles.Services.Contracts;
@@ -43,14 +44,14 @@ public partial class ApplicationState
         CheckSiteIsActive();
     }
 
-    public void NavigateToUnauthorizedPage() => NavigateTo(uri: "/error/401");
+    public void NavigateToUnauthorizedPage() => NavigateTo(CommonRoutingConstants.UnauthorizedPage);
 
-    public void NavigateToTemporarilyUnavailablePage() => NavigateTo(uri: "/error/503");
+    public void NavigateToTemporarilyUnavailablePage() => NavigateTo(CommonRoutingConstants.TemporarilyUnavailablePage);
 
     /// <summary>
     ///     Sends user to `/error/404` address
     /// </summary>
-    public void NavigateToNotFoundPage() => NavigateTo(uri: "/error/404");
+    public void NavigateToNotFoundPage() => NavigateTo(CommonRoutingConstants.NotFoundPage);
 
     /// <summary>
     ///     Handles setting the NotFound state. It's new in .NET 10x.
@@ -72,7 +73,8 @@ public partial class ApplicationState
 
     private void CheckSiteIsActive()
     {
-        if (IsCurrentUserAdmin || IsCurrentPage(UserProfilesRoutingConstants.Login))
+        if (IsCurrentUserAdmin || IsCurrentPage(UserProfilesRoutingConstants.Login) ||
+            IsCurrentPage(CommonRoutingConstants.TemporarilyUnavailablePage))
         {
             return;
         }
