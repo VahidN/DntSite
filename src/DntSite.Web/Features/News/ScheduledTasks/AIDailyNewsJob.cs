@@ -8,8 +8,10 @@ namespace DntSite.Web.Features.News.ScheduledTasks;
 public class AIDailyNewsJob(
     IAIDailyNewsService aiDailyNewsService,
     ICachedAppSettingsProvider cachedAppSettingsProvider,
-    ILogger<AIDailyNewsJob> logger) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ILogger<AIDailyNewsJob> logger) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
         if (!NetworkExtensions.IsConnectedToInternet(TimeSpan.FromSeconds(seconds: 2)))

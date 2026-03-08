@@ -7,8 +7,10 @@ namespace DntSite.Web.Features.PrivateMessages.ScheduledTasks;
 
 public class EmptyPMsJob(
     IPrivateMessagesService privateMessagesService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
         => privateMessagesService.DeleteAllAsync(cancellationToken);
 }

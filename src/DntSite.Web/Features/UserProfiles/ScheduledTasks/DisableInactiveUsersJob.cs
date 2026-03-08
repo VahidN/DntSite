@@ -7,18 +7,16 @@ namespace DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 public class DisableInactiveUsersJob(
     IUserProfilesManagerService userProfilesManagerService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
     private const int DefaultMinMonthToStayActive = 12;
 
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
-       if(appSetting is null)
-       {
-          return;
-       }
+        ArgumentNullException.ThrowIfNull(appSetting);
 
-		
         var minMonthToStayActive = GetMinMonthToStayActive(appSetting);
         await userProfilesManagerService.DisableInactiveUsersAsync(minMonthToStayActive);
 

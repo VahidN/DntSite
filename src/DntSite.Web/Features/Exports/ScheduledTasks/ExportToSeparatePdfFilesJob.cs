@@ -13,8 +13,10 @@ public class ExportToSeparatePdfFilesJob(
     ICourseTopicsPdfExportService courseTopicsPdfExportService,
     IQuestionsPdfExportService questionsPdfExportService,
     IDailyNewsPdfExportService dailyNewsPdfExportService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
         await questionsPdfExportService.ExportNotProcessedQuestionsToSeparatePdfFilesAsync(cancellationToken);

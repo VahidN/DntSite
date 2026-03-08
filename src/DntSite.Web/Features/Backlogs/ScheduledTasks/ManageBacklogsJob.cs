@@ -6,8 +6,10 @@ using DntSite.Web.Features.Common.ScheduledTasks;
 namespace DntSite.Web.Features.Backlogs.ScheduledTasks;
 
 public class ManageBacklogsJob(IBacklogsService backlogsService, ICachedAppSettingsProvider cachedAppSettingsProvider)
-    : ScheduledTaskBase(cachedAppSettingsProvider)
+    : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
         => backlogsService.CancelOldOnesAsync(cancellationToken);
 }

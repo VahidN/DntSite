@@ -5,9 +5,13 @@ using DntSite.Web.Features.Common.ScheduledTasks;
 namespace DntSite.Web.Features.AppConfigs.ScheduledTasks;
 
 public class FreeSpaceCheckJob(
-    IAppConfigsEmailsService appConfigsEmailsService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider,
+    IAppConfigsEmailsService appConfigsEmailsService) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; }
+
     protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
-        => appConfigsEmailsService.SendHasNotRemainingSpaceEmailToAdminsAsync(cancellationToken);
+        => cancellationToken.IsCancellationRequested
+            ? Task.CompletedTask
+            : appConfigsEmailsService.SendHasNotRemainingSpaceEmailToAdminsAsync(cancellationToken);
 }

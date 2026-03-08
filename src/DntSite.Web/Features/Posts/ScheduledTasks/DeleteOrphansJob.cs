@@ -7,8 +7,10 @@ namespace DntSite.Web.Features.Posts.ScheduledTasks;
 
 public class DeleteOrphansJob(
     IBlogPostDraftsService blogPostDraftsService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
         => blogPostDraftsService.DeleteConvertedBlogPostDraftsAsync(cancellationToken);
 }

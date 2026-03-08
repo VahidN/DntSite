@@ -7,8 +7,10 @@ namespace DntSite.Web.Features.Searches.ScheduledTasks;
 
 public class FullTextSearchWriterJob(
     IFullTextSearchWriterService fullTextSearchWriterService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
         => fullTextSearchWriterService.IndexDatabaseAsync(forceStart: false, cancellationToken);
 }

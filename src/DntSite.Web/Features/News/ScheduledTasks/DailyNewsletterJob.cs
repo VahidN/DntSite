@@ -12,14 +12,13 @@ public class DailyNewsletterJob(
     IUsersInfoService usersService,
     IDailyNewsletter dailyNewsletter,
     IJobsEmailsService jobsEmailsService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
-       if(appSetting is null)
-       {
-          return;
-       }
+        ArgumentNullException.ThrowIfNull(appSetting);
 
         var users = await usersService.GetAllDailyEmailReceiversListAsync(SharedConstants.AYearAgo,
             sendToAllEachMonth: true);

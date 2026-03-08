@@ -22,15 +22,14 @@ google-chrome --version
 public class ThumbnailsServiceJob(
     IDailyNewsScreenshotsService dailyNewsScreenshots,
     ICachedAppSettingsProvider cachedAppSettingsProvider,
-    ILogger<ThumbnailsServiceJob> logger) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ILogger<ThumbnailsServiceJob> logger) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
-       if(appSetting is null)
-       {
-          return;
-       }
-		
+        ArgumentNullException.ThrowIfNull(appSetting);
+
         if (!appSetting.ShouldCreateNewsScreenshots)
         {
             return;

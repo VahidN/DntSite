@@ -8,8 +8,10 @@ namespace DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 public class SendActivationEmailsJob(
     IUsersManagerEmailsService emailsService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
         => emailsService.ResetNotActivatedUsersAndSendEmailAsync(SharedConstants.AYearAgo, cancellationToken);
 }

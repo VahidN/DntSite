@@ -6,9 +6,13 @@ using DntSite.Web.Features.PrivateMessages.Services.Contracts;
 namespace DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
 public class DailyBirthDatesEmailJob(
-    IJobsEmailsService jobsEmailsService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider,
+    IJobsEmailsService jobsEmailsService) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; }
+
     protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
-        => jobsEmailsService.SendDailyBirthDatesEmailAsync(cancellationToken);
+        => cancellationToken.IsCancellationRequested
+            ? Task.CompletedTask
+            : jobsEmailsService.SendDailyBirthDatesEmailAsync(cancellationToken);
 }

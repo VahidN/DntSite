@@ -8,10 +8,17 @@ namespace DntSite.Web.Features.News.ScheduledTasks;
 public class AIDailyNewsBacklogsJob(
     IDailyNewsItemAIBacklogService dailyNewsItemAiBacklogService,
     ICachedAppSettingsProvider cachedAppSettingsProvider,
-    ILogger<AIDailyNewsBacklogsJob> logger) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ILogger<AIDailyNewsBacklogsJob> logger) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; }
+
     protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
         if (!NetworkExtensions.IsConnectedToInternet(TimeSpan.FromSeconds(seconds: 2)))
         {
             logger.LogWarning(

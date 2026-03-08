@@ -3,8 +3,10 @@ using DntSite.Web.Features.AppConfigs.Services.Contracts;
 
 namespace DntSite.Web.Features.Common.ScheduledTasks;
 
-public abstract class ScheduledTaskBase(ICachedAppSettingsProvider appSettingsProvider) : IScheduledTask
+public abstract class AppSettingAwareScheduledTaskBase(ICachedAppSettingsProvider appSettingsProvider) : IScheduledTask
 {
+    protected abstract bool ShouldNotBeExecutedIfSiteIsNotActive { set; get; }
+
     public async Task RunAsync(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
@@ -14,7 +16,7 @@ public abstract class ScheduledTaskBase(ICachedAppSettingsProvider appSettingsPr
 
         var settings = await appSettingsProvider.GetAppSettingsAsync();
 
-        if (!settings.SiteIsActive)
+        if (!settings.SiteIsActive && ShouldNotBeExecutedIfSiteIsNotActive)
         {
             return;
         }

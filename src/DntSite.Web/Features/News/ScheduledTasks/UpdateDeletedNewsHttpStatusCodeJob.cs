@@ -8,8 +8,10 @@ namespace DntSite.Web.Features.News.ScheduledTasks;
 
 public class UpdateDeletedNewsHttpStatusCodeJob(
     IDailyNewsItemsService dailyNewsItemsService,
-    ICachedAppSettingsProvider cachedAppSettingsProvider) : ScheduledTaskBase(cachedAppSettingsProvider)
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
+
     protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
         => dailyNewsItemsService.UpdateAllNewsLastHttpStatusCodeAsync(UpdateNewsStatusAction.UpdateDeletesOnes,
             cancellationToken);
