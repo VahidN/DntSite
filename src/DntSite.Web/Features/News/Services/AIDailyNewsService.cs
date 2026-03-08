@@ -51,11 +51,15 @@ public class AIDailyNewsService(
         - .NET, .NET Runtime, .NET SDK
         - C#, F#
         - ASP.NET, ASP.NET Core
-        - Blazor, JavaScript
+        - Blazor, JavaScript, CSS, jQuery, JSON
         - Entity Framework / EF Core
         - .NET tooling, CLI, MSBuild
+        - Security
+        - Postgres, SQLite, MySQL, SQLServer
         - Azure services primarily used with .NET
-        - Visual Studio, Rider (when discussed in a .NET context)
+        - Visual Studio, Rider, VSCode
+        - AI driven development
+        - Git, DevOps
 
         If the content is NOT clearly related to Microsoft .NET development,
         you MUST output a FALLBACK RECORD.
