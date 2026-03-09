@@ -1,3 +1,4 @@
+using DntSite.Web.Features.Common.Utils.WebToolkit;
 using Microsoft.AspNetCore.Http.Timeouts;
 
 namespace DntSite.Web.Features.ServicesConfigs;
@@ -20,6 +21,10 @@ public static class MvcControllersConfig
             })
             .AddLargeFilesUploadSupport()
             .AddOutputCache(options => { options.AddPolicy(AlwaysCachePolicy.Name, AlwaysCachePolicy.Instance); })
-            .AddControllers(options => { options.Filters.Add<ApplyCorrectYeKeFilterAttribute>(); })
+            .AddControllers(options =>
+            {
+                options.Filters.Add<ApplyCorrectYeKeFilterAttribute>();
+                options.Filters.Add<CheckSiteIsActiveActionFilter>();
+            })
             .AddCustomJsonOptionsForWebApps();
 }
