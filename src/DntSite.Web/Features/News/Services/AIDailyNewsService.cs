@@ -51,7 +51,8 @@ public class AIDailyNewsService(
         - .NET, .NET Runtime, .NET SDK
         - C#, F#
         - ASP.NET, ASP.NET Core
-        - Blazor, JavaScript, CSS, jQuery, JSON
+        - Blazor, JavaScript, HTML, CSS, jQuery, JSON
+        - Browsers: Chrome, MS Edge, Firefox, etc
         - Entity Framework / EF Core
         - .NET tooling, CLI, MSBuild
         - Security
