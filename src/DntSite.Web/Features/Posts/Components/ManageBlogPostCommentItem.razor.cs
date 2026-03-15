@@ -18,6 +18,8 @@ public partial class ManageBlogPostCommentItem
 
     [Parameter] [EditorRequired] public User? RecordUser { set; get; }
 
+    [Parameter] [EditorRequired] public User? MainPostAuthor { set; get; }
+
     [Parameter] [EditorRequired] public bool IsReplyToPost { set; get; }
 
     [Parameter] [EditorRequired] public DateTime? CreatedAt { set; get; }

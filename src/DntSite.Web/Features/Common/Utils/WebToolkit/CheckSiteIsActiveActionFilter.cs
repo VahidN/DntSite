@@ -1,4 +1,4 @@
-using DntSite.Web.Features.AppConfigs.Services.Contracts;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace DntSite.Web.Features.Common.Utils.WebToolkit;
@@ -15,7 +15,7 @@ public class CheckSiteIsActiveActionFilter : IAsyncActionFilter
 
         if ((await cachedAppSettingsProvider.GetAppSettingsAsync()).SiteIsActive)
         {
-            await next(); // اکشن متد اجرا مي‌شود
+            await next(); // اکشن متد اجرا می‌شود
         }
         else
         {

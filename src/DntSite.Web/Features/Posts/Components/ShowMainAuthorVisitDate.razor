@@ -1,0 +1,8 @@
+﻿@if (MainPostAuthor?.LastVisitDateTime is not null)
+{
+    <DntMessageBox Type="@LastVisitAlertType" IsVisible="true">
+        <span class="@DntBootstrapIcons.BiInfoCircle me-2 ms-2" aria-hidden="true"></span>
+        <span>آخرین تاریخ حضور نویسنده مطلب (<strong>@MainPostAuthor.FriendlyName</strong>) در سایت: </span>
+        @MainPostAuthor.LastVisitDateTime.ToFriendlyPersianDateTextify().ToPersianNumbers()
+    </DntMessageBox>
+}
