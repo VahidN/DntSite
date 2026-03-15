@@ -25,7 +25,7 @@ public class DailyNewsletterJob(
 
         var showBriefDescription = appSetting.ShowRssBriefDescription;
         var dateTime = DateTime.UtcNow.ToIranTimeZoneDateTime().AddDays(value: -1);
-        var content = await dailyNewsletter.GetEmailContentAsync(dateTime, showBriefDescription);
+        var content = await dailyNewsletter.GetEmailContentAsync(dateTime, showBriefDescription, maxItems: 60);
 
         if (string.IsNullOrWhiteSpace(content))
         {

@@ -2,5 +2,5 @@
 
 public interface IDailyNewsletter : IScopedService
 {
-    Task<string> GetEmailContentAsync(DateTime fromDateTime, bool showBriefDescription);
+    Task<string> GetEmailContentAsync(DateTime fromDateTime, bool showBriefDescription, int maxItems);
 }
