@@ -1,0 +1,25 @@
+﻿@using DntSite.Web.Features.News.Models
+<LayoutView Layout="@typeof(EmailsLayout)">
+    با سلام
+    <br/>
+    لینک‌های بک‌لاگ هوش مصنوعی جدید
+    ذیل در سایت ارسال گردیده است:
+    <br/>
+    <br/>
+    <div align="left" dir="ltr" style="font-family: Tahoma; ">
+        <ul>
+            @foreach (var item in Model.Items)
+            {
+                <li>
+                    <a href="@item.Url">@item.Title</a>
+                </li>
+            }
+        </ul>
+    </div>
+</LayoutView>
+
+@code {
+
+    [Parameter] public LinkBacklogsToAdminsEmailModel Model { set; get; } = null!;
+
+}

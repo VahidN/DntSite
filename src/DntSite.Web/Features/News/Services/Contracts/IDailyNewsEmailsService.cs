@@ -13,4 +13,6 @@ public interface IDailyNewsEmailsService : IScopedService
     Task PostNewsReplySendEmailToWritersAsync(DailyNewsItemComment comment);
 
     Task PostNewsReplySendEmailToPersonAsync(DailyNewsItemComment comment);
+
+    Task LinkBacklogsToAdminsSendEmailAsync(IList<FeedItem> items);
 }

@@ -173,6 +173,17 @@ public class DailyNewsEmailsService(ICommonService commonService, IEmailsFactory
             }, post.UserId, $"پاسخ به : {post.Title}");
     }
 
+    public async Task LinkBacklogsToAdminsSendEmailAsync(IList<FeedItem> items)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        await emailsFactoryService.SendEmailToAllAdminsAsync<LinkBacklogsToAdminsEmail, LinkBacklogsToAdminsEmailModel>(
+            messageId: "LinkBacklogs", inReplyTo: "", references: "LinkBacklogs", new LinkBacklogsToAdminsEmailModel
+            {
+                Items = items
+            }, emailSubject: "لینک‌های بک‌لاگ هوش مصنوعی جدید");
+    }
+
     private static bool IsNewsAnonymousUser(DailyNewsItemComment replyToComment) => replyToComment.UserId is null;
 
     private static bool IsNewsCommentatorAuthorOfPost(DailyNewsItemComment comment, DailyNewsItem post)

@@ -1,4 +1,5 @@
-using DntSite.Web.Features.AppConfigs.Services.Contracts;
+﻿using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.Common.Utils.Pagings;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.News.Entities;
@@ -18,6 +19,8 @@ public class DailyNewsItemAIBacklogService(
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IUrlNormalizationService urlNormalizationService,
     IPasswordHasherService passwordHasherService,
+    IDailyNewsEmailsService dailyNewsEmailsService,
+    IEmailsFactoryService emailsFactoryService,
     ILogger<DailyNewsItemAIBacklogService> logger) : IDailyNewsItemAIBacklogService
 {
     private static readonly Dictionary<PagerSortBy, Expression<Func<DailyNewsItemAIBacklog, object?>>> CustomOrders =
@@ -92,6 +95,10 @@ public class DailyNewsItemAIBacklogService(
                 .ExecuteUpdateAsync(builder
                     => builder.SetProperty(aiBacklog => aiBacklog.IsApproved, valueExpression: false));
         }
+
+        await emailsFactoryService.SendEmailToAllAdminsNormalAsync(messageId: "AIBackLog", inReplyTo: "AIBackLog",
+            references: "AIBackLog", html: "عملیات پذیرش/لغو لینک‌های بک‌لاگ هوش مصنوعی جدید انجام شد.",
+            emailSubject: "پیشنهاد نهایی لینک‌های بک‌لاگ هوش مصنوعی");
     }
 
     public async Task MarkAsDeletedAsync(int id)
@@ -182,6 +189,8 @@ public class DailyNewsItemAIBacklogService(
         }
 
         await uow.SaveChangesAsync();
+
+        await dailyNewsEmailsService.LinkBacklogsToAdminsSendEmailAsync(feedItems);
     }
 
     public Task<List<DailyNewsItemAIBacklog>>
@@ -299,6 +308,8 @@ public class DailyNewsItemAIBacklogService(
         }
 
         await uow.SaveChangesAsync(ct);
+
+        await dailyNewsEmailsService.LinkBacklogsToAdminsSendEmailAsync(feedItems);
     }
 
     private async Task<List<FeedItem>> GetNewFeedItemsAsync(string feedUrl, CancellationToken ct)
