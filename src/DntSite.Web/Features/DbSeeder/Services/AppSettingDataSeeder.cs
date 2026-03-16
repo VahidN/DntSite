@@ -36,7 +36,8 @@ public class AppSettingDataSeeder(IUnitOfWork uow) : IDataSeeder
             {
                 ChangePasswordReminderDays = 120,
                 NotAllowedPreviouslyUsedPasswords = 3
-            }
+            },
+            DeactivateSiteAfterDaysOfInactivity = 4
         });
 
         _uow.SaveChanges();

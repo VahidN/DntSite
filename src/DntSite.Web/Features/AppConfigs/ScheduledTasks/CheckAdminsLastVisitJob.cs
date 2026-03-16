@@ -10,16 +10,27 @@ public class CheckAdminsLastVisitJob(
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IAppSettingsService appSettingsService) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
+    private const int DeactivateSiteAfterDaysOfInactivity = 4;
+
     protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; }
 
     protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(appSetting);
+		
         if (cancellationToken.IsCancellationRequested)
         {
             return;
         }
 
-        var limit = DateTime.UtcNow.AddDays(value: -2);
+        var days = appSetting.DeactivateSiteAfterDaysOfInactivity;
+
+        if (days <= 0)
+        {
+            days = DeactivateSiteAfterDaysOfInactivity;
+        }
+
+        var limit = DateTime.UtcNow.AddDays(-days);
         var siteIsActive = await usersInfoService.IsAnyActiveAdminPresentAsync(limit);
         await appSettingsService.ChangeSiteActiveStateAsync(siteIsActive);
     }

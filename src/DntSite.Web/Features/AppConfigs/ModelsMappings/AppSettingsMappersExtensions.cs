@@ -12,18 +12,29 @@ public static class AppSettingsMappersExtensions
         var appSetting = new AppSetting
         {
             SiteRootUri = $"{source.SiteRootUri.TrimEnd(trimChar: '/')}/",
+            MinimumRequiredPosts = source.MinimumRequiredPosts,
             BannedUrls = source.BannedUrls.ConvertMultiLineTextToList(),
             BannedSites = source.BannedSites.ConvertMultiLineTextToList(),
             BannedReferrers = source.BannedReferrers.ConvertMultiLineTextToList(),
             BannedEmails = source.BannedEmails.ConvertMultiLineTextToList(),
             BannedPasswords = source.BannedPasswords.ConvertMultiLineTextToList(),
+            UsedPasswords = source.UsedPasswords,
             GeminiNewsFeeds = new GeminiNewsFeeds
             {
                 ApiKey = source.GeminiNewsFeedsInfo.ApiKey,
                 IsActive = source.GeminiNewsFeedsInfo.IsActive,
                 NewsFeeds = source.GeminiNewsFeedsInfo.NewsFeeds.ConvertMultiLineTextToList()
             },
-            BlogName = source.BlogName
+            ShowRssBriefDescription = source.ShowRssBriefDescription,
+            ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,
+            YouTubeDataApikey = source.YouTubeDataApikey,
+            BlogName = source.BlogName,
+            SiteIsActive = source.SiteIsActive,
+            DeactivateSiteAfterDaysOfInactivity = source.DeactivateSiteAfterDaysOfInactivity,
+            SiteEmailsSig = source.SiteEmailsSig,
+            SmtpServerSetting = source.SmtpServerSetting,
+            SiteFromEmail = source.SiteFromEmail,
+            CanUsersRegister = source.CanUsersRegister
         };
 
         if (destination is not null)
@@ -46,18 +57,30 @@ public static class AppSettingsMappersExtensions
 
         return new AppSettingModel
         {
+            BlogName = source.BlogName,
+            SiteIsActive = source.SiteIsActive,
+            DeactivateSiteAfterDaysOfInactivity = source.DeactivateSiteAfterDaysOfInactivity,
+            SiteEmailsSig = source.SiteEmailsSig,
+            SmtpServerSetting = source.SmtpServerSetting,
+            SiteFromEmail = source.SiteFromEmail,
+            CanUsersRegister = source.CanUsersRegister,
             SiteRootUri = $"{source.SiteRootUri.TrimEnd(trimChar: '/')}/",
+            MinimumRequiredPosts = source.MinimumRequiredPosts,
             BannedUrls = source.BannedUrls.ConvertListToMultiLineText(),
             BannedSites = source.BannedSites.ConvertListToMultiLineText(),
             BannedReferrers = source.BannedReferrers.ConvertListToMultiLineText(),
             BannedEmails = source.BannedEmails.ConvertListToMultiLineText(),
             BannedPasswords = source.BannedPasswords.ConvertListToMultiLineText(),
+            UsedPasswords = source.UsedPasswords,
             GeminiNewsFeedsInfo = new GeminiNewsFeedsModel
             {
                 ApiKey = source.GeminiNewsFeeds.ApiKey,
                 IsActive = source.GeminiNewsFeeds.IsActive,
                 NewsFeeds = source.GeminiNewsFeeds.NewsFeeds.ConvertListToMultiLineText()
-            }
+            },
+            ShowRssBriefDescription = source.ShowRssBriefDescription,
+            ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,
+            YouTubeDataApikey = source.YouTubeDataApikey
         };
     }
 
@@ -71,6 +94,11 @@ public static class AppSettingsMappersExtensions
         {
             UserFriendlyName = userFriendlyName,
             CreatedAt = source.Audit.CreatedAt,
+            EventId = source.EventId,
+            Url = source.Url,
+            LogLevel = source.LogLevel,
+            Logger = source.Logger,
+            Message = source.Message,
             UserIp = source.Audit.CreatedByUserIp,
             UserAgent = source.Audit.CreatedByUserAgent
         };

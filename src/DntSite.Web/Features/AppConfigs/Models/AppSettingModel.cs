@@ -11,6 +11,9 @@ public class AppSettingModel
 
     [Display(Name = "سایت فعال است؟")] public bool SiteIsActive { set; get; }
 
+    [Display(Name = "سایت، پس از چند روز عدم سرزدن ادمین، غیرفعال شود؟")]
+    public int DeactivateSiteAfterDaysOfInactivity { set; get; }
+
     [Display(Name = "امضای ایمیل‌های برنامه")]
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
     public string? SiteEmailsSig { set; get; }

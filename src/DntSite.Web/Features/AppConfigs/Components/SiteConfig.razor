@@ -23,7 +23,10 @@
             <hr/>
 
             <DntInputCheckBox @bind-Value="Model.SiteIsActive"/>
-
+            <DntInputNumber AutoCompleteType="AutoCompleteType.Off"
+                            FieldIcon="@DntBootstrapIcons.BiCalendar2DayFill"
+                            dir="ltr"
+                            @bind-Value="Model.DeactivateSiteAfterDaysOfInactivity"/>
             <DntInputCheckBox @bind-Value="Model.CanUsersRegister"/>
 
             <hr/>
