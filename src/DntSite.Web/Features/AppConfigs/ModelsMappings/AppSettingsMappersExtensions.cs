@@ -39,13 +39,32 @@ public static class AppSettingsMappersExtensions
 
         if (destination is not null)
         {
-            destination.SiteRootUri = appSetting.SiteRootUri;
+            destination.SiteRootUri = $"{appSetting.SiteRootUri.TrimEnd(trimChar: '/')}/";
+            destination.BlogName = appSetting.BlogName;
+            destination.MinimumRequiredPosts = appSetting.MinimumRequiredPosts;
             destination.BannedUrls = appSetting.BannedUrls;
             destination.BannedSites = appSetting.BannedSites;
             destination.BannedReferrers = appSetting.BannedReferrers;
             destination.BannedEmails = appSetting.BannedEmails;
             destination.BannedPasswords = appSetting.BannedPasswords;
-            destination.GeminiNewsFeeds = appSetting.GeminiNewsFeeds;
+            destination.UsedPasswords = appSetting.UsedPasswords;
+
+            destination.GeminiNewsFeeds = new GeminiNewsFeeds
+            {
+                ApiKey = appSetting.GeminiNewsFeeds.ApiKey,
+                IsActive = appSetting.GeminiNewsFeeds.IsActive,
+                NewsFeeds = appSetting.GeminiNewsFeeds.NewsFeeds
+            };
+
+            destination.ShowRssBriefDescription = appSetting.ShowRssBriefDescription;
+            destination.ShouldCreateNewsScreenshots = appSetting.ShouldCreateNewsScreenshots;
+            destination.YouTubeDataApikey = appSetting.YouTubeDataApikey;
+            destination.SiteIsActive = appSetting.SiteIsActive;
+            destination.DeactivateSiteAfterDaysOfInactivity = appSetting.DeactivateSiteAfterDaysOfInactivity;
+            destination.SiteEmailsSig = appSetting.SiteEmailsSig;
+            destination.SmtpServerSetting = appSetting.SmtpServerSetting;
+            destination.SiteFromEmail = appSetting.SiteFromEmail;
+            destination.CanUsersRegister = appSetting.CanUsersRegister;
         }
 
         return destination ?? appSetting;
