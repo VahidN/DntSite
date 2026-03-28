@@ -32,6 +32,7 @@
 
     <ShowBlogPostItem TReactionEntity="StackExchangeQuestionReaction"
                       TForeignKeyEntity="StackExchangeQuestion"
+                      TBookmarkEntity="StackExchangeQuestionBookmark"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
                       CommentsUrlTemplate="@QuestionsRoutingConstants.CommentsUrlTemplate"
                       PostUrlTemplate="@QuestionsRoutingConstants.PostUrlTemplate"
@@ -42,6 +43,7 @@
                       Id="CurrentPost.Id"
                       Body="@CurrentPost.Description"
                       Reactions="CurrentPost.Reactions"
+                      Bookmarks="CurrentPost.Bookmarks"
                       Tags="@GetTags()"
                       Title="@CurrentPost.Title"
                       BriefDescription="@CurrentPost.Description"

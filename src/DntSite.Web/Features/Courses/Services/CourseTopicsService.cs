@@ -114,6 +114,7 @@ public class CourseTopicsService(
             .Include(x => x.Course)
             .ThenInclude(x => x.Tags)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(x => x.DisplayId == topicId);
 
@@ -177,6 +178,7 @@ public class CourseTopicsService(
                     .Include(x => x.Course)
                     .ThenInclude(x => x.Tags)
                     .Include(x => x.Reactions)
+                    .Include(x => x.Bookmarks)
                     .OrderBy(x => x.Id)
                     .FirstOrDefaultAsync(),
             NextTopic = await _courseTopics.AsNoTracking()
@@ -186,6 +188,7 @@ public class CourseTopicsService(
                 .Include(x => x.Course)
                 .ThenInclude(x => x.Tags)
                 .Include(x => x.Reactions)
+                .Include(x => x.Bookmarks)
                 .FirstOrDefaultAsync()
         };
     }

@@ -41,6 +41,7 @@ public class ProjectFaqsService(
             .Include(x => x.Project)
             .Include(x => x.User)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync();
 
@@ -57,6 +58,7 @@ public class ProjectFaqsService(
             .Include(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -73,6 +75,7 @@ public class ProjectFaqsService(
             .Include(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.IsDeleted == showDeletedItems && x.User!.FriendlyName == name);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -88,6 +91,7 @@ public class ProjectFaqsService(
             .Include(x => x.Project)
             .Include(x => x.User)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -104,6 +108,7 @@ public class ProjectFaqsService(
             .Include(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderByDescending(x => x.Id)
             .Skip(skipRecords)
             .Take(recordsPerPage)
@@ -124,6 +129,7 @@ public class ProjectFaqsService(
                     .Include(x => x.Project)
                     .Include(x => x.User)
                     .Include(x => x.Reactions)
+                    .Include(x => x.Bookmarks)
                     .OrderBy(x => x.Id)
                     .FirstOrDefaultAsync(),
             NextItem = await _projectFaqs.AsNoTracking()
@@ -132,6 +138,7 @@ public class ProjectFaqsService(
                 .Include(x => x.Project)
                 .Include(x => x.User)
                 .Include(x => x.Reactions)
+                .Include(x => x.Bookmarks)
                 .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync(),
             PreviousItem = await _projectFaqs.AsNoTracking()
@@ -139,6 +146,7 @@ public class ProjectFaqsService(
                 .OrderByDescending(x => x.Id)
                 .Include(x => x.Project)
                 .Include(x => x.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.User)
                 .FirstOrDefaultAsync()
         };

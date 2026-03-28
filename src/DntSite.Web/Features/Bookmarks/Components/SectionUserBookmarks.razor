@@ -1,0 +1,17 @@
+@typeparam TBookmarkEntity      where TBookmarkEntity : BaseBookmarkEntity<TForeignKeyEntity>, new()
+@typeparam TForeignKeyEntity    where TForeignKeyEntity : BaseAuditedInteractiveEntity
+
+
+<DntLoading IsLoading="@(_pagedResultModel is null)">
+    @if (ItemTemplate is not null)
+    {
+       @foreach (var bookmarkEntity in _pagedResultModel!.Data)
+       {
+          @ItemTemplate(bookmarkEntity)
+       }
+    }
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="_pagedResultModel!.TotalItems"
+                        BasePath="@BasePath"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

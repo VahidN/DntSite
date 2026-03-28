@@ -32,6 +32,7 @@
 
     <ShowBlogPostItem TReactionEntity="DailyNewsItemReaction"
                       TForeignKeyEntity="DailyNewsItem"
+                      TBookmarkEntity="DailyNewsItemBookmark"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
                       CommentsUrlTemplate="@NewsRoutingConstants.CommentsUrlTemplate"
                       PostUrlTemplate="@NewsRoutingConstants.PostUrlTemplate"
@@ -42,6 +43,7 @@
                       Id="CurrentPost.Id"
                       Body="@CurrentPost.BriefDescription"
                       Reactions="CurrentPost.Reactions"
+                      Bookmarks="CurrentPost.Bookmarks"
                       Tags="@GetTags()"
                       Title="@CurrentPost.Title"
                       BriefDescription="@CurrentPost.BriefDescription"

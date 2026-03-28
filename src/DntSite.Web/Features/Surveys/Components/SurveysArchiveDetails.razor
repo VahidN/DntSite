@@ -31,6 +31,7 @@
 
     <ShowBlogPostItem TReactionEntity="SurveyReaction"
                       TForeignKeyEntity="Survey"
+                      TBookmarkEntity="SurveyBookmark"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
                       CommentsUrlTemplate="@SurveysRoutingConstants.CommentsUrlTemplate"
                       PostUrlTemplate="@SurveysRoutingConstants.PostUrlTemplate"
@@ -41,6 +42,7 @@
                       Id="CurrentPost.Id"
                       Body="@CurrentPost.Description"
                       Reactions="CurrentPost.Reactions"
+                      Bookmarks="CurrentPost.Bookmarks"
                       Tags="@GetTags()"
                       Title="@CurrentPost.Title"
                       BriefDescription="@CurrentPost.Description"

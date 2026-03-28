@@ -47,6 +47,7 @@ public class ProjectsService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync();
 
@@ -63,6 +64,7 @@ public class ProjectsService(
             .Include(project => project.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(project => !project.IsDeleted && project.Audit.CreatedAt.Year == date.Year &&
                               project.Audit.CreatedAt.Month == date.Month && project.Audit.CreatedAt.Day == date.Day)
             .OrderBy(project => project.Id)
@@ -78,6 +80,7 @@ public class ProjectsService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -95,7 +98,8 @@ public class ProjectsService(
         query = query.Where(x => x.IsDeleted == showDeletedItems)
             .Include(x => x.User)
             .Include(blogPost => blogPost.Tags)
-            .Include(blogPost => blogPost.Reactions);
+            .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
     }
@@ -111,6 +115,7 @@ public class ProjectsService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.User!.FriendlyName == authorName && x.IsDeleted == showDeletedItems);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -123,6 +128,7 @@ public class ProjectsService(
             .Include(blogPost => blogPost.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(Project.Id), [
@@ -143,6 +149,7 @@ public class ProjectsService(
                 await _projects.Where(x => x.IsDeleted == showDeletedItems && x.Id == id)
                     .Include(x => x.User)
                     .Include(blogPost => blogPost.Reactions)
+                    .Include(x => x.Bookmarks)
                     .Include(x => x.Tags)
                     .OrderBy(x => x.Id)
                     .FirstOrDefaultAsync(),
@@ -151,6 +158,7 @@ public class ProjectsService(
                 .OrderBy(x => x.Id)
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.Tags)
                 .FirstOrDefaultAsync(),
             PreviousItem = await _projects.AsNoTracking()
@@ -158,6 +166,7 @@ public class ProjectsService(
                 .OrderByDescending(x => x.Id)
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.Tags)
                 .FirstOrDefaultAsync()
         };
@@ -260,6 +269,7 @@ public class ProjectsService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking()
             .ToListAsync();
 

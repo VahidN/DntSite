@@ -67,6 +67,38 @@ public static class ProjectsBreadCrumbs
         ProjectsComments, Projects
     ];
 
+    public static readonly BreadCrumb ProjectFaqsBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = ProjectsRoutingConstants.ProjectFaqsBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
+    public static readonly BreadCrumb ProjectIssuesBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = ProjectsRoutingConstants.ProjectIssuesBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
+    public static readonly BreadCrumb ProjectReleasesBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = ProjectsRoutingConstants.ProjectReleasesBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
+    public static readonly BreadCrumb ProjectsBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = ProjectsRoutingConstants.ProjectsBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
     public static BreadCrumb Project(string name, int? projectId)
         => new()
         {

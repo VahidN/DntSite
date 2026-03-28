@@ -73,7 +73,8 @@ public partial class ProjectsTag
                 Title = MainTitle,
                 Url = MainPageUrl,
                 GlyphIcon = DntBootstrapIcons.BiTag
-            }
+            },
+            ProjectsBreadCrumbs.ProjectsBookmarksBreadCrumb
         ]);
 
     private async Task ShowTagPostsAsync()
@@ -99,6 +100,7 @@ public partial class ProjectsTag
                 Title = MainTagPageTitle,
                 Url = MainTagPageUrl,
                 GlyphIcon = DntBootstrapIcons.BiTag
-            }
+            },
+            ProjectsBreadCrumbs.ProjectsBookmarksBreadCrumb
         ]);
 }

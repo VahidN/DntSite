@@ -60,6 +60,7 @@ public class LearningPathService(
             .Include(x => x.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.IsDeleted == showDeletedItems);
 
         if (!showAll)
@@ -83,6 +84,7 @@ public class LearningPathService(
             .Include(blogPost => blogPost.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         if (!showAll)
@@ -112,6 +114,7 @@ public class LearningPathService(
                     .Include(x => x.User)
                     .Include(blogPost => blogPost.Tags)
                     .Include(blogPost => blogPost.Reactions)
+                    .Include(x => x.Bookmarks)
                     .FirstOrDefaultAsync(),
             NextItem = await _learningPaths.AsNoTracking()
                 .Where(x => x.IsDeleted == showDeletedItems && x.Id > id)
@@ -119,6 +122,7 @@ public class LearningPathService(
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Tags)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .FirstOrDefaultAsync(),
             PreviousItem = await _learningPaths.AsNoTracking()
                 .Where(x => x.IsDeleted == showDeletedItems && x.Id < id)
@@ -126,6 +130,7 @@ public class LearningPathService(
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Tags)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .FirstOrDefaultAsync()
         };
 
@@ -175,6 +180,7 @@ public class LearningPathService(
         query = query.Include(x => x.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.IsDeleted == showDeletedItems);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -192,6 +198,7 @@ public class LearningPathService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.IsDeleted == showDeletedItems && x.User!.FriendlyName == name);
 
         if (!showAll)

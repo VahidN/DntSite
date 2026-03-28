@@ -137,6 +137,7 @@ public class BlogPostsService(
         var currentItem = await _blogPosts.Where(x => x.IsDeleted == showDeletedItems && x.Id == id)
             .Include(x => x.User)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(x => x.Tags)
             .Include(x => x.Backlogs)
             .OrderBy(x => x.Id)
@@ -152,6 +153,7 @@ public class BlogPostsService(
                 .OrderBy(x => x.Id)
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.Tags)
                 .Include(x => x.Backlogs)
                 .FirstOrDefaultAsync(),
@@ -160,6 +162,7 @@ public class BlogPostsService(
                 .OrderByDescending(x => x.Id)
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.Tags)
                 .Include(x => x.Backlogs)
                 .FirstOrDefaultAsync()
@@ -178,7 +181,8 @@ public class BlogPostsService(
         query = query.Where(blogPost => blogPost.IsDeleted == showDeletedItems)
             .Include(blogPost => blogPost.User)
             .Include(blogPost => blogPost.Tags)
-            .Include(blogPost => blogPost.Reactions);
+            .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
     }
@@ -226,6 +230,7 @@ public class BlogPostsService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.User!.FriendlyName == authorName && x.IsDeleted == showDeletedItems);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -448,6 +453,7 @@ public class BlogPostsService(
             .Include(blogPost => blogPost.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -460,6 +466,7 @@ public class BlogPostsService(
             .Include(blogPost => blogPost.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(BlogPost.Id), [

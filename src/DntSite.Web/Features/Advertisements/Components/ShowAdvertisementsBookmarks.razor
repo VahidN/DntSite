@@ -1,0 +1,59 @@
+﻿@using DntSite.Web.Features.Advertisements.Entities
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(AdvertisementsRoutingConstants.AdvertisementsBookmarks)]
+@attribute [Route(AdvertisementsRoutingConstants.AdvertisementsBookmarksPage)]
+
+<DntSitePageTitle Group="آگهی‌ها" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="Advertisement"
+    TBookmarkEntity="AdvertisementBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@AdvertisementsRoutingConstants.AdvertisementsBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var advertisement = bookmark.Parent;
+        }
+        <ShowBlogPostItem TReactionEntity="AdvertisementReaction"
+                          TForeignKeyEntity="Advertisement"
+                          TBookmarkEntity="AdvertisementBookmark"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate="@AdvertisementsRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@AdvertisementsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@AdvertisementsRoutingConstants.PostTagUrlTemplate"
+                          Id="@advertisement.Id"
+                          Body="@advertisement.Body"
+                          Reactions="@advertisement.Reactions"
+                          Bookmarks="@advertisement.Bookmarks"
+                          Tags="@GetTags(advertisement)"
+                          Title="@advertisement.Title"
+                          BriefDescription="@advertisement.Body"
+                          CreatedAt="@advertisement.Audit.CreatedAt"
+                          RecordUser="@advertisement.User"
+                          NumberOfComments="@advertisement.EntityStat.NumberOfComments"
+                          NumberOfViews="@advertisement.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@advertisement.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="@advertisement.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(advertisement)"
+                          EncryptEditDeleteIDs="true"
+                          EditPostUrlTemplate="@AdvertisementsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@AdvertisementsRoutingConstants.DeletePostUrlTemplate"
+                          ShowReactions="true"
+                          ShowSocialLinks="true"
+                          ShowNumberOfViews="true"
+                          ShowNumberOfComments="true">
+            <AdditionalHeaderContent>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+                <AdvertisementDueDate Advertisement="advertisement"/>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

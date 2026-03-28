@@ -7,6 +7,7 @@
 <DntLoading IsLoading="@(_privateMessageComments is null || _firstPrivateMessage is null)">
     <ShowBlogPostItem TReactionEntity="PrivateMessageReaction"
                       TForeignKeyEntity="PrivateMessage"
+                      TBookmarkEntity="PrivateMessageBookmark"
                       ShowBriefDescription="false"
                       ShowTags="false"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
@@ -18,6 +19,7 @@
                       Id="_firstPrivateMessage!.Id"
                       Body="@_firstPrivateMessage!.Body"
                       Reactions="null"
+                      Bookmarks="null"
                       Tags="null"
                       Title="@_firstPrivateMessage!.Title"
                       BriefDescription=""

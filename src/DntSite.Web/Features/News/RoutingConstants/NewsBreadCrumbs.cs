@@ -47,5 +47,16 @@ public static class NewsBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiLink
     };
 
-    public static readonly IList<BreadCrumb> DefaultBreadCrumbs = [WriteNews, NewsTag, NewsWriters, NewsComments, News];
+    public static readonly BreadCrumb NewsBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = NewsRoutingConstants.DailyNewsItemsBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
+    public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
+    [
+        NewsBookmarksBreadCrumb, WriteNews, NewsTag, NewsWriters, NewsComments, News
+    ];
 }

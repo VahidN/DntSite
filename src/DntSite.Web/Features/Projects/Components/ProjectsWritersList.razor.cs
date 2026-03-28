@@ -76,7 +76,8 @@ public partial class ProjectsWritersList
                 Title = MainTitle,
                 Url = MainPageUrl,
                 GlyphIcon = DntBootstrapIcons.BiPerson
-            }
+            },
+            ProjectsBreadCrumbs.ProjectsBookmarksBreadCrumb
         ]);
 
     private async Task ShowUserPostsAsync()
@@ -103,6 +104,7 @@ public partial class ProjectsWritersList
                 Title = MainUserPageTitle,
                 Url = MainUserPageUrl,
                 GlyphIcon = DntBootstrapIcons.BiPerson
-            }
+            },
+            ProjectsBreadCrumbs.ProjectsBookmarksBreadCrumb
         ]);
 }

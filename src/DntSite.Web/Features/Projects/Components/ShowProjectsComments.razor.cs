@@ -92,7 +92,10 @@ public partial class ShowProjectsComments
     }
 
     private void AddProjectBreadCrumbs(string name)
-        => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId)]);
+        => ApplicationState.BreadCrumbs.AddRange([
+            ..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId),
+            ProjectsBreadCrumbs.ProjectIssuesBookmarksBreadCrumb
+        ]);
 
     private async Task ShowAllCommentsListAsync()
     {
@@ -105,7 +108,9 @@ public partial class ShowProjectsComments
     }
 
     private void AddCommentsListBreadCrumbs()
-        => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultBreadCrumbs]);
+        => ApplicationState.BreadCrumbs.AddRange([
+            ..ProjectsBreadCrumbs.DefaultBreadCrumbs, ProjectsBreadCrumbs.ProjectIssuesBookmarksBreadCrumb
+        ]);
 
     private async Task ShowUserCommentsAsync()
     {
@@ -124,7 +129,8 @@ public partial class ShowProjectsComments
                 Title = _pageTitle,
                 Url = GetBasePath(),
                 GlyphIcon = DntBootstrapIcons.BiPerson
-            }
+            },
+            ProjectsBreadCrumbs.ProjectIssuesBookmarksBreadCrumb
         ]);
 
     private static string GetPostAbsoluteUrl(ProjectIssueComment issueComment)

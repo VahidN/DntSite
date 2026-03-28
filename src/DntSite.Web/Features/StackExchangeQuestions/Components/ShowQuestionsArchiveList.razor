@@ -8,6 +8,7 @@
     {
         <ShowBlogPostItem TReactionEntity="StackExchangeQuestionReaction"
                           TForeignKeyEntity="StackExchangeQuestion"
+                          TBookmarkEntity="StackExchangeQuestionBookmark"
                           ShowBriefDescription="true"
                           ShowTags="true"
                           SiteName="@ApplicationState.AppSetting?.BlogName"
@@ -18,6 +19,7 @@
                           Id="post.Id"
                           Body="@post.Description"
                           Reactions="post.Reactions"
+                          Bookmarks="post.Bookmarks"
                           Tags="@GetTags(post)"
                           Title="@post.Title"
                           BriefDescription="@post.Description"

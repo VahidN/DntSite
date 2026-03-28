@@ -1,3 +1,5 @@
+using DntSite.Web.Features.Projects.Entities;
+
 namespace DntSite.Web.Features.Projects.RoutingConstants;
 
 public static class ProjectsRoutingConstants
@@ -157,4 +159,39 @@ public static class ProjectsRoutingConstants
 
     public const string ProjectReleasesProjectIdReleaseId =
         $"{ProjectReleasesBase}/{{ProjectId:int}}/{{ReleaseId:int}}";
+
+    public const string ProjectFaqsBookmarks = "/project-faqs-bookmarks";
+    public const string ProjectFaqsBookmarksPage = $"{ProjectFaqsBookmarks}/page/{{CurrentPage:int}}";
+
+    public const string ProjectIssuesBookmarks = "/project-issues-bookmarks";
+    public const string ProjectIssuesBookmarksPage = $"{ProjectIssuesBookmarks}/page/{{CurrentPage:int}}";
+
+    public const string ProjectReleasesBookmarks = "/project-releases-bookmarks";
+    public const string ProjectReleasesBookmarksPage = $"{ProjectReleasesBookmarks}/page/{{CurrentPage:int}}";
+
+    public const string ProjectsBookmarks = "/projects-bookmarks";
+    public const string ProjectsBookmarksPage = $"{ProjectsBookmarks}/page/{{CurrentPage:int}}";
+
+    public static string GetPostAbsoluteUrl(this ProjectRelease projectRelease)
+    {
+        ArgumentNullException.ThrowIfNull(projectRelease);
+
+        return string.Create(CultureInfo.InvariantCulture,
+            $"{ProjectReleasesBase}/{projectRelease.ProjectId}/{projectRelease.Id}");
+    }
+
+    public static string GetPostAbsoluteUrl(this ProjectIssue projectIssue)
+    {
+        ArgumentNullException.ThrowIfNull(projectIssue);
+
+        return string.Create(CultureInfo.InvariantCulture,
+            $"{ProjectFeedbacksBase}/{projectIssue.ProjectId}/{projectIssue.Id}");
+    }
+
+    public static string GetPostAbsoluteUrl(this ProjectFaq faq)
+    {
+        ArgumentNullException.ThrowIfNull(faq);
+
+        return string.Create(CultureInfo.InvariantCulture, $"{ProjectFaqsBase}/{faq.ProjectId}/{faq.Id}");
+    }
 }

@@ -54,4 +54,7 @@ public static class SurveysRoutingConstants
     public const string PostTagUrlTemplate = $"{SurveysTag}/{{0}}";
     public const string EditPostUrlTemplate = $"{WriteSurveyEditBase}/{{0}}";
     public const string DeletePostUrlTemplate = $"{WriteSurveyDeleteBase}/{{0}}";
+
+    public const string SurveysBookmarks = "/surveys-bookmarks";
+    public const string SurveysBookmarksPage = $"{SurveysBookmarks}/page/{{CurrentPage:int?}}";	
 }

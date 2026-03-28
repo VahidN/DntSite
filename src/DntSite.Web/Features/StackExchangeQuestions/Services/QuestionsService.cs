@@ -87,6 +87,7 @@ public class QuestionsService(
                 await _stackExchangeQuestions.Where(x => x.IsDeleted == showDeletedItems && x.Id == id)
                     .Include(x => x.User)
                     .Include(blogPost => blogPost.Reactions)
+                    .Include(x => x.Bookmarks)
                     .Include(x => x.Tags)
                     .OrderBy(x => x.Id)
                     .FirstOrDefaultAsync(),
@@ -95,6 +96,7 @@ public class QuestionsService(
                 .OrderBy(x => x.Id)
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.Tags)
                 .FirstOrDefaultAsync(),
             PreviousItem = await _stackExchangeQuestions.AsNoTracking()
@@ -102,6 +104,7 @@ public class QuestionsService(
                 .OrderByDescending(x => x.Id)
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.Tags)
                 .FirstOrDefaultAsync()
         };
@@ -146,6 +149,7 @@ public class QuestionsService(
             .Include(blogPost => blogPost.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(StackExchangeQuestion.Id), [
@@ -169,6 +173,7 @@ public class QuestionsService(
         query = query.Include(x => x.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.IsDeleted == showDeletedItems);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -185,6 +190,7 @@ public class QuestionsService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.IsDeleted == showDeletedItems && x.User!.FriendlyName == name);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);

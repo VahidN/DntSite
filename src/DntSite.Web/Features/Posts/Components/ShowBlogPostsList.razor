@@ -10,6 +10,7 @@
         {
             <ShowBlogPostItem TReactionEntity="BlogPostReaction"
                               TForeignKeyEntity="BlogPost"
+                              TBookmarkEntity="BlogPostBookmark"
                               ShowBriefDescription="true"
                               ShowTags="true"
                               SiteName="@ApplicationState.AppSetting?.BlogName"
@@ -20,6 +21,7 @@
                               Id="blogPost.Id"
                               Body="@blogPost.Body"
                               Reactions="blogPost.Reactions"
+                              Bookmarks="blogPost.Bookmarks"
                               Tags="@GetTags(blogPost)"
                               Title="@blogPost.Title"
                               BriefDescription="@blogPost.BriefDescription"

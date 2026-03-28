@@ -63,8 +63,16 @@ public static class PostsBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiPerson
     };
 
+    public static readonly BreadCrumb PostsBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = PostsRoutingConstants.PostsBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
     [
-        WriteDraft, MyDrafts, ComingSoon, PostsWriters, Tags, PostsComments, Posts
+        PostsBookmarksBreadCrumb, WriteDraft, MyDrafts, ComingSoon, PostsWriters, Tags, PostsComments, Posts
     ];
 }

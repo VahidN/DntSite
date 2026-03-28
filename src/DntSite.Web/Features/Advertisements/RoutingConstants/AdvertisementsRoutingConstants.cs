@@ -57,4 +57,7 @@ public static class AdvertisementsRoutingConstants
         $"{WriteAdvertisementDeleteBase}/{{DeleteId:{EncryptedRouteConstraint.Name}}}";
 
     public const string DeletePostUrlTemplate = $"{WriteAdvertisementDeleteBase}/{{0}}";
+
+    public const string AdvertisementsBookmarks = "/advertisements-bookmarks";
+    public const string AdvertisementsBookmarksPage = $"{AdvertisementsBookmarks}/page/{{CurrentPage:int}}";
 }

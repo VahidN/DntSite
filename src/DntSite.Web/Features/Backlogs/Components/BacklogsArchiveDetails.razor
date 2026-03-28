@@ -30,6 +30,7 @@
 
     <ShowBlogPostItem TReactionEntity="BacklogReaction"
                       TForeignKeyEntity="Backlog"
+                      TBookmarkEntity="BacklogBookmark"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
                       CommentsUrlTemplate="@BacklogsRoutingConstants.CommentsUrlTemplate"
                       PostUrlTemplate="@BacklogsRoutingConstants.PostUrlTemplate"
@@ -41,6 +42,7 @@
                       Id="CurrentPost.Id"
                       Body="@CurrentPost.Description"
                       Reactions="CurrentPost.Reactions"
+                      Bookmarks="CurrentPost.Bookmarks"
                       Tags="@GetTags()"
                       Title="@CurrentPost.Title"
                       BriefDescription="@CurrentPost.Description"

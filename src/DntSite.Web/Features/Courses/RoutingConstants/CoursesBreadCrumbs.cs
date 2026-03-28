@@ -1,4 +1,4 @@
-using DntSite.Web.Common.BlazorSsr.Utils;
+﻿using DntSite.Web.Common.BlazorSsr.Utils;
 
 namespace DntSite.Web.Features.Courses.RoutingConstants;
 
@@ -39,6 +39,25 @@ public static class CoursesBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiPencil
     };
 
-    public static readonly IList<BreadCrumb>
-        DefaultBreadCrumbs = [CoursesTag, CoursesWriters, CoursesComments, Courses];
+    public static readonly BreadCrumb CoursesBookmarksBreadCrumb = new()
+    {
+        Title = "دوره‌های مورد علاقه",
+        Url = CoursesRoutingConstants.CoursesBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
+    public static readonly BreadCrumb CoursesTopicsBookmarksBreadCrumb = new()
+    {
+        Title = "مطالب مورد علاقه",
+        Url = CoursesRoutingConstants.CourseTopicsBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
+    public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
+    [
+        CoursesBookmarksBreadCrumb, CoursesTopicsBookmarksBreadCrumb, CoursesTag, CoursesWriters, CoursesComments,
+        Courses
+    ];
 }

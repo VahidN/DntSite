@@ -102,7 +102,10 @@ public partial class WriteProjectFeedback
     }
 
     private void AddBreadCrumbs(string name)
-        => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId)]);
+        => ApplicationState.BreadCrumbs.AddRange([
+            ..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId),
+            ProjectsBreadCrumbs.ProjectIssuesBookmarksBreadCrumb
+        ]);
 
     private async Task FillPossibleEditFormAsync()
     {

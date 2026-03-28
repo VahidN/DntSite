@@ -71,4 +71,7 @@ public static class UserProfilesRoutingConstants
 
     public const string JobSeekers = "/job-seekers";
     public const string JobSeekersOld = "/jobseekers";
+
+    public const string UsersBookmarks = "/users-bookmarks";
+    public const string UsersBookmarksPage = $"{UsersBookmarks}/page/{{CurrentPage:int}}";
 }

@@ -40,9 +40,17 @@ public static class AdvertisementsBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiPeopleFill
     };
 
+    public static readonly BreadCrumb AdvertisementsBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = AdvertisementsRoutingConstants.AdvertisementsBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
     [
-        JobOfferBreadCrumb, AdvertisementsWritersBreadCrumb, AdvertisementsTagBreadCrumb,
-        AdvertisementsCommentsBreadCrumb, AdvertisementsBreadCrumb
+        AdvertisementsBookmarksBreadCrumb, JobOfferBreadCrumb, AdvertisementsWritersBreadCrumb,
+        AdvertisementsTagBreadCrumb, AdvertisementsCommentsBreadCrumb, AdvertisementsBreadCrumb
     ];
 }

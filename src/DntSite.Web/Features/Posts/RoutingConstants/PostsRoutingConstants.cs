@@ -83,4 +83,7 @@ public static class PostsRoutingConstants
 
     public const string EditPostUrlTemplate = $"{WriteArticleEditBase}/{{0}}";
     public const string DeletePostUrlTemplate = $"{WriteArticleDeleteBase}/{{0}}";
+
+    public const string PostsBookmarks = "/posts-bookmarks";
+    public const string PostsBookmarksPage = $"{PostsBookmarks}/page/{{CurrentPage:int}}";
 }

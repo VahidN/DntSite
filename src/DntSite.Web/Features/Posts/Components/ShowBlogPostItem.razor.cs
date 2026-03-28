@@ -3,8 +3,9 @@ using DntSite.Web.Features.UserProfiles.Entities;
 
 namespace DntSite.Web.Features.Posts.Components;
 
-public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
+public partial class ShowBlogPostItem<TReactionEntity, TBookmarkEntity, TForeignKeyEntity>
     where TReactionEntity : BaseReactionEntity<TForeignKeyEntity>, new()
+    where TBookmarkEntity : BaseBookmarkEntity<TForeignKeyEntity>, new()
     where TForeignKeyEntity : BaseAuditedInteractiveEntity
 {
     [Parameter] public bool ShowReactions { set; get; } = true;
@@ -16,6 +17,8 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
     [Parameter] public bool ShowNumberOfComments { set; get; } = true;
 
     [Parameter] [EditorRequired] public required ICollection<TReactionEntity> Reactions { get; set; }
+
+    [Parameter] [EditorRequired] public ICollection<TBookmarkEntity>? Bookmarks { get; set; }
 
     [Parameter] [EditorRequired] public bool ShowBriefDescription { set; get; }
 
@@ -72,11 +75,6 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
 
     [Parameter] [EditorRequired] public bool EncryptEditDeleteIDs { set; get; }
 
-    private string DeletePostUrl => !EncryptEditDeleteIDs
-        ? string.Format(CultureInfo.InvariantCulture, DeletePostUrlTemplate, Id)
-        : string.Format(CultureInfo.InvariantCulture, DeletePostUrlTemplate,
-            Uri.EscapeDataString(ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)) ?? ""));
-
     [Parameter] [EditorRequired] public required string EditPostUrlTemplate { set; get; }
 
     [Parameter] public RenderFragment? AdditionalBodyContent { set; get; }
@@ -95,12 +93,33 @@ public partial class ShowBlogPostItem<TReactionEntity, TForeignKeyEntity>
 
     [Inject] public IProtectionProviderService ProtectionProvider { set; get; } = null!;
 
-    private string EditPostUrl => !EncryptEditDeleteIDs
-        ? string.Format(CultureInfo.InvariantCulture, EditPostUrlTemplate, Id)
-        : string.Format(CultureInfo.InvariantCulture, EditPostUrlTemplate,
-            Uri.EscapeDataString(ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)) ?? ""));
-
     private string TextToShow => !ShowBriefDescription ? Body : BriefDescription ?? "";
+
+    private string GetDeletePostUrl()
+    {
+        if (DeletePostUrlTemplate.IsEmpty())
+        {
+            return "";
+        }
+
+        return !EncryptEditDeleteIDs
+            ? string.Format(CultureInfo.InvariantCulture, DeletePostUrlTemplate, Id)
+            : string.Format(CultureInfo.InvariantCulture, DeletePostUrlTemplate,
+                Uri.EscapeDataString(ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)) ?? ""));
+    }
+
+    private string GetEditPostUrl()
+    {
+        if (EditPostUrlTemplate.IsEmpty())
+        {
+            return "";
+        }
+
+        return !EncryptEditDeleteIDs
+            ? string.Format(CultureInfo.InvariantCulture, EditPostUrlTemplate, Id)
+            : string.Format(CultureInfo.InvariantCulture, EditPostUrlTemplate,
+                Uri.EscapeDataString(ProtectionProvider.Encrypt(Id.ToString(CultureInfo.InvariantCulture)) ?? ""));
+    }
 
     private string GetTagUrl(string tagName)
         => string.Format(CultureInfo.InvariantCulture, PostTagUrlTemplate, Uri.EscapeDataString(tagName));

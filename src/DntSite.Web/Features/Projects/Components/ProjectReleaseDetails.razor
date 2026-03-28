@@ -29,6 +29,7 @@
 
     <ShowBlogPostItem TReactionEntity="ProjectReleaseReaction"
                       TForeignKeyEntity="ProjectRelease"
+                      TBookmarkEntity="ProjectReleaseBookmark"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
                       CommentsUrlTemplate=""
                       PostUrlTemplate="@PostUrlTemplate"
@@ -40,6 +41,7 @@
                       Id="CurrentPost.Id"
                       Body="@CurrentPost.FileDescription"
                       Reactions="CurrentPost.Reactions"
+                      Bookmarks="CurrentPost.Bookmarks"
                       Tags="@GetTags()"
                       Title="@CurrentPost.FileName"
                       BriefDescription="@CurrentPost.FileDescription"

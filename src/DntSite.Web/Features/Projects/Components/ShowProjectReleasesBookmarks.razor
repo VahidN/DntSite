@@ -1,0 +1,42 @@
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Projects.Entities
+@attribute [Route(ProjectsRoutingConstants.ProjectReleasesBookmarks)]
+@attribute [Route(ProjectsRoutingConstants.ProjectReleasesBookmarksPage)]
+
+<DntSitePageTitle Group="پروژه‌ها" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="ProjectRelease"
+    TBookmarkEntity="ProjectReleaseBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@ProjectsRoutingConstants.ProjectReleasesBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var release = bookmark.Parent;
+        }
+        <ShowBlogPostCommentItem
+            PostId="@release.Id"
+            CommentId="@release.Id"
+            Body="@release.FileDescription"
+            Reactions="@release.Reactions"
+            RecordUser="@release.User"
+            CreatedAt="@release.Audit.CreatedAt"
+            CreatedByUserAgent="@release.Audit.CreatedByUserAgent"
+            TReactionEntity="ProjectReleaseReaction"
+            TForeignKeyEntity="ProjectRelease"
+            ShowManageBlogPostCommentItem="false"
+            ShowPleaseVoteMessage="false"
+            PostAbsoluteUrl="@release.GetPostAbsoluteUrl()"
+            ShowPostTitle="true"
+            PostTitle="@release.Project.Title">
+            <AdditionalBodyContent>
+                <ProjectReleaseFileUrl ProjectRelease="release"/>
+            </AdditionalBodyContent>
+            <AdditionalInfoContent>
+                <ProjectUrl Project="release.Project"/>
+            </AdditionalInfoContent>
+        </ShowBlogPostCommentItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

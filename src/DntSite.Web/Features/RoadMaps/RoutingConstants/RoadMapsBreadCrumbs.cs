@@ -33,8 +33,16 @@ public static class RoadMapsBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiSignMergeRight
     };
 
+    public static readonly BreadCrumb LearningPathsBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = RoadMapsRoutingConstants.LearningPathsBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
     [
-        WriteLearningPath, LearningPathsTag, LearningPathsWriters, LearningPaths
+        LearningPathsBookmarksBreadCrumb, WriteLearningPath, LearningPathsTag, LearningPathsWriters, LearningPaths
     ];
 }

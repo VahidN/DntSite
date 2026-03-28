@@ -24,7 +24,7 @@
             TForeignKeyEntity="ProjectRelease"
             ShowManageBlogPostCommentItem="false"
             ShowPleaseVoteMessage="false"
-            PostAbsoluteUrl="@GetPostAbsoluteUrl(release)"
+            PostAbsoluteUrl="@release.GetPostAbsoluteUrl()"
             ShowPostTitle="true"
             PostTitle="@release.Project.Title">
             <AdditionalBodyContent>

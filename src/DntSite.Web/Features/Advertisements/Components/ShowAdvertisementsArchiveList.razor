@@ -7,6 +7,7 @@
     {
         <ShowBlogPostItem TReactionEntity="AdvertisementReaction"
                           TForeignKeyEntity="Advertisement"
+                          TBookmarkEntity="AdvertisementBookmark"
                           ShowBriefDescription="true"
                           ShowTags="true"
                           SiteName="@ApplicationState.AppSetting?.BlogName"
@@ -17,6 +18,7 @@
                           Id="post.Id"
                           Body="@post.Body"
                           Reactions="post.Reactions"
+                          Bookmarks="post.Bookmarks"
                           Tags="@GetTags(post)"
                           Title="@post.Title"
                           BriefDescription="@post.Body"

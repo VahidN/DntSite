@@ -54,5 +54,8 @@ public partial class ProjectsArchiveDetails
     }
 
     private void AddBreadCrumbs(string name)
-        => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId)]);
+        => ApplicationState.BreadCrumbs.AddRange([
+            ..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId),
+            ProjectsBreadCrumbs.ProjectsBookmarksBreadCrumb
+        ]);
 }

@@ -31,6 +31,7 @@
 
     <ShowBlogPostItem TReactionEntity="AdvertisementReaction"
                       TForeignKeyEntity="Advertisement"
+                      TBookmarkEntity="AdvertisementBookmark"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
                       CommentsUrlTemplate="@AdvertisementsRoutingConstants.CommentsUrlTemplate"
                       PostUrlTemplate="@AdvertisementsRoutingConstants.PostUrlTemplate"
@@ -41,6 +42,7 @@
                       Id="CurrentPost.Id"
                       Body="@CurrentPost.Body"
                       Reactions="CurrentPost.Reactions"
+                      Bookmarks="CurrentPost.Bookmarks"
                       Tags="@GetTags()"
                       Title="@CurrentPost.Title"
                       BriefDescription="@CurrentPost.Body"

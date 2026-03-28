@@ -1,0 +1,39 @@
+﻿@typeparam TBookmarkEntity      where TBookmarkEntity : BaseBookmarkEntity<TForeignKeyEntity>, new()
+@using DntSite.Web.Features.Bookmarks.Models    
+@typeparam TForeignKeyEntity    where TForeignKeyEntity : BaseAuditedInteractiveEntity
+
+@if (ShowBookmarksForm)
+{
+    <div class="d-flex flex-column" @attributes="AdditionalAttributes">
+        <div>
+            <EditForm Model="this" method="post"
+                      OnValidSubmit="OnValidSubmitAsync"
+                      FormName="@FormName"
+                      Enhance>
+                <input type="hidden" name="@nameof(FormId)" value="@Id"/>
+
+                @if (ShowAddBookmarkButton)
+                {
+                    <button type="submit" name="@nameof(ActionType)"
+                            value="@BookmarkActionType.Add"
+                            class="btn btn-outline-success btn-sm me-2" title="ثبت به صورت بوکمارک">
+                        <i class="@DntBootstrapIcons.BiBookmarkPlus"></i>
+                        @if (BookmarksUsersCount > 0)
+                        {
+                            <span class="ms-1">@BookmarksUsersCount.ToPersianNumbers()</span>
+                        }
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" name="@nameof(ActionType)"
+                            value="@BookmarkActionType.Cancel"
+                            class="btn btn-outline-secondary btn-sm me-2" title="لغو بوکمارک">
+                        <i class="@DntBootstrapIcons.BiBookmarkDash"></i>
+                        لغو بوکمارک
+                    </button>
+                }
+            </EditForm>
+        </div>
+    </div>
+}

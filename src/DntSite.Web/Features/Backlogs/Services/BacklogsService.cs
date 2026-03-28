@@ -47,6 +47,7 @@ public class BacklogsService(
         => _backlogs.Include(x => x.User)
             .Include(x => x.DoneByUser)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(x => x.Tags)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(x => x.IsDeleted == showDeletedItems && x.Id == id);
@@ -67,6 +68,7 @@ public class BacklogsService(
             .Include(x => x.User)
             .Include(x => x.DoneByUser)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(x => x.Tags)
             .Where(x => x.IsDeleted == showDeletedItems);
 
@@ -120,6 +122,7 @@ public class BacklogsService(
                     .Include(x => x.User)
                     .Include(x => x.DoneByUser)
                     .Include(x => x.Reactions)
+                    .Include(x => x.Bookmarks)
                     .Include(x => x.Tags)
                     .OrderBy(x => x.Id)
                     .FirstOrDefaultAsync(),
@@ -129,6 +132,7 @@ public class BacklogsService(
                 .Include(x => x.User)
                 .Include(x => x.DoneByUser)
                 .Include(x => x.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.Tags)
                 .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync(),
@@ -138,6 +142,7 @@ public class BacklogsService(
                 .Include(x => x.User)
                 .Include(x => x.DoneByUser)
                 .Include(x => x.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.Tags)
                 .FirstOrDefaultAsync()
         };
@@ -185,6 +190,7 @@ public class BacklogsService(
             .Include(x => x.User)
             .Include(x => x.DoneByUser)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(x => x.Tags)
             .Where(x => !x.IsDeleted && x.Audit.CreatedAt.Year == date.Year && x.Audit.CreatedAt.Month == date.Month &&
                         x.Audit.CreatedAt.Day == date.Day)
@@ -196,6 +202,7 @@ public class BacklogsService(
             .Include(backlog => backlog.User)
             .Include(x => x.DoneByUser)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(x => x.Tags)
             .OrderBy(_ => Guid.NewGuid())
             .FirstOrDefaultAsync(backlog
@@ -214,6 +221,7 @@ public class BacklogsService(
             .Include(x => x.DoneByUser)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.IsDeleted == showDeletedItems);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -227,6 +235,7 @@ public class BacklogsService(
             .Include(x => x.DoneByUser)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(Backlog.Id), [
@@ -250,6 +259,7 @@ public class BacklogsService(
             .Include(x => x.DoneByUser)
             .Include(x => x.Tags)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.IsDeleted == showDeletedItems && x.User!.FriendlyName == name);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);

@@ -63,4 +63,7 @@ public static class NewsRoutingConstants
 
     public const string AddDailyNewsItemAIBacklogs = "/add-ai-news-backlogs";
     public const string UrlTitleSeparator = "::";
+
+    public const string DailyNewsItemsBookmarks = "/news-bookmarks";
+    public const string DailyNewsItemsBookmarksPage = $"{DailyNewsItemsBookmarks}/page/{{CurrentPage:int}}";
 }

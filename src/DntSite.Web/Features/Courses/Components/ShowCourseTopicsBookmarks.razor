@@ -1,0 +1,59 @@
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Courses.Entities
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
+@attribute [Route(CoursesRoutingConstants.CourseTopicsBookmarks)]
+@attribute [Route(CoursesRoutingConstants.CourseTopicsBookmarksPage)]
+
+<DntSitePageTitle Group="دوره‌ها" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="CourseTopic"
+    TBookmarkEntity="CourseTopicBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@CoursesRoutingConstants.CourseTopicsBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var topic = bookmark.Parent;
+        }
+        <ShowBlogPostItem TReactionEntity="CourseTopicReaction"
+                          TForeignKeyEntity="CourseTopic"
+                          TBookmarkEntity="CourseTopicBookmark"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          CommentsUrlTemplate="@topic.GetCommentsUrlTemplate()"
+                          PostUrlTemplate="@topic.GetPostUrlTemplate()"
+                          PostTagUrlTemplate="@CoursesRoutingConstants.PostTagUrlTemplate"
+                          ShowBriefDescription="false"
+                          ShowTags="true"
+                          ShowCommentsButton="true"
+                          Id="topic.Id"
+                          Body="@topic.Body"
+                          Reactions="topic.Reactions"
+                          Bookmarks="topic.Bookmarks"
+                          Tags="@GetTags(topic)"
+                          Title="@topic.Title"
+                          BriefDescription="@topic.Body"
+                          CreatedAt="topic.Audit.CreatedAt"
+                          RecordUser="topic.User"
+                          NumberOfComments="topic.EntityStat.NumberOfComments"
+                          NumberOfViews="topic.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@topic.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="topic.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(topic)"
+                          EncryptEditDeleteIDs="true"
+                          EditPostUrlTemplate=""
+                          DeletePostUrlTemplate="">
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@topic.Id"
+                                                                          ItemType="@WhatsNewItemType.AllCoursesTopics"/>
+            </AdditionalInfoContent>
+            <AdditionalHeaderContent>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

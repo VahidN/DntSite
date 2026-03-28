@@ -8,4 +8,7 @@ public static class UserFilesRoutingConstants
 
     public const string FilesManagerFilesUrl = $"{FilesManagerBase}/users-files";
     public const string FilesManagerImagesUrl = $"{FilesManagerBase}/users-images";
+
+    public const string FilesManagerBookmarks = "/files-manager-bookmarks";
+    public const string FilesManagerBookmarksPage = $"{FilesManagerBookmarks}/page/{{CurrentPage:int}}";
 }

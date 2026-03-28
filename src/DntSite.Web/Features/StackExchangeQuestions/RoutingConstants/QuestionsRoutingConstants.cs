@@ -52,4 +52,7 @@ public static class QuestionsRoutingConstants
     public const string PostTagUrlTemplate = $"{QuestionsTag}/{{0}}";
     public const string EditPostUrlTemplate = $"{WriteQuestionEditBase}/{{0}}";
     public const string DeletePostUrlTemplate = $"{WriteQuestionDeleteBase}/{{0}}";
+
+    public const string QuestionsBookmarks = "/questions-bookmarks";
+    public const string QuestionsBookmarksPage = $"{QuestionsBookmarks}/page/{{CurrentPage:int}}";
 }

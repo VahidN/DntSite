@@ -30,6 +30,7 @@
 
     <ShowBlogPostItem TReactionEntity="ProjectIssueReaction"
                       TForeignKeyEntity="ProjectIssue"
+                      TBookmarkEntity="ProjectIssueBookmark"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
                       CommentsUrlTemplate="@CommentsUrlTemplate"
                       PostUrlTemplate="@PostUrlTemplate"
@@ -41,6 +42,7 @@
                       Id="CurrentPost.Id"
                       Body="@CurrentPost.Description"
                       Reactions="CurrentPost.Reactions"
+                      Bookmarks="CurrentPost.Bookmarks"
                       Tags="@GetTags()"
                       Title="@CurrentPost.Title"
                       BriefDescription="@CurrentPost.Description"

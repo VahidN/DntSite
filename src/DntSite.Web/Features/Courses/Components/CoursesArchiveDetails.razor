@@ -33,6 +33,7 @@
 
     <ShowBlogPostItem TReactionEntity="CourseReaction"
                       TForeignKeyEntity="Course"
+                      TBookmarkEntity="CourseBookmark"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
                       CommentsUrlTemplate="@CoursesRoutingConstants.CommentsUrlTemplate"
                       PostUrlTemplate="@CoursesRoutingConstants.PostUrlTemplate"
@@ -43,6 +44,7 @@
                       Id="CurrentPost.Id"
                       Body="@CurrentPost.Description"
                       Reactions="CurrentPost.Reactions"
+                      Bookmarks="CurrentPost.Bookmarks"
                       Tags="@GetTags()"
                       Title="@CurrentPost.Title"
                       BriefDescription="@CurrentPost.Description"

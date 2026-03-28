@@ -48,12 +48,6 @@ public partial class CourseTopicDetails
     private bool CanUserEditThisPost
         => ApplicationState.CanCurrentUserEditThisItem(CurrentPost?.UserId, CurrentPost?.Audit.CreatedAt);
 
-    private string CommentsUrlTemplate => string.Create(CultureInfo.InvariantCulture,
-        $"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{DisplayId:D}#comments");
-
-    private string PostUrlTemplate => string.Create(CultureInfo.InvariantCulture,
-        $"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{DisplayId:D}");
-
     private string LastPostUrl => string.Create(CultureInfo.InvariantCulture,
         $"{CoursesRoutingConstants.CoursesTopicBase}/{CourseId}/{_courseTopic!.PreviousTopic?.DisplayId:D}");
 
@@ -113,7 +107,9 @@ public partial class CourseTopicDetails
     }
 
     private void SetSimilarPostsId()
-        => _documentTypeIdHash = _courseTopic?.ThisTopic?.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false).DocumentTypeIdHash;
+        => _documentTypeIdHash = _courseTopic?.ThisTopic
+            ?.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+            .DocumentTypeIdHash;
 
     private void AddBreadCrumbs()
         => ApplicationState.BreadCrumbs.AddRange([

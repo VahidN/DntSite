@@ -18,5 +18,13 @@ public static class UserFilesBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiFileImage
     };
 
+    public static readonly BreadCrumb UserFilesBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = UserFilesRoutingConstants.FilesManagerBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs = [Files, Images];
 }

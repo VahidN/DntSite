@@ -32,6 +32,7 @@
 
     <ShowBlogPostItem TReactionEntity="LearningPathReaction"
                       TForeignKeyEntity="LearningPath"
+                      TBookmarkEntity="LearningPathBookmark"
                       SiteName="@ApplicationState.AppSetting?.BlogName"
                       CommentsUrlTemplate="@RoadMapsRoutingConstants.CommentsUrlTemplate"
                       PostUrlTemplate="@RoadMapsRoutingConstants.PostUrlTemplate"
@@ -42,6 +43,7 @@
                       Id="CurrentPost.Id"
                       Body="@CurrentPost.Description"
                       Reactions="CurrentPost.Reactions"
+                      Bookmarks="CurrentPost.Bookmarks"
                       Tags="@GetTags()"
                       Title="@CurrentPost.Title"
                       BriefDescription="@CurrentPost.Description"

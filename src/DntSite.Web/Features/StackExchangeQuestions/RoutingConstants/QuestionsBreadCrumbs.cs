@@ -40,8 +40,16 @@ public static class QuestionsBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiQuestion
     };
 
+    public static readonly BreadCrumb QuestionsBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = QuestionsRoutingConstants.QuestionsBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
     [
-        WriteQuestion, QuestionsTag, QuestionsWriters, QuestionsComments, Questions
+        QuestionsBookmarksBreadCrumb, WriteQuestion, QuestionsTag, QuestionsWriters, QuestionsComments, Questions
     ];
 }

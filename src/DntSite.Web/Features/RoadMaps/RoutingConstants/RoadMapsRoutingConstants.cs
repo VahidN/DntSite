@@ -51,4 +51,7 @@ public static class RoadMapsRoutingConstants
     public const string PostTagUrlTemplate = $"{LearningPathsTag}/{{0}}";
     public const string EditPostUrlTemplate = $"{WriteLearningPathEditBase}/{{0}}";
     public const string DeletePostUrlTemplate = $"{WriteLearningPathDeleteBase}/{{0}}";
+
+    public const string LearningPathsBookmarks = "/learning-paths-bookmarks";
+    public const string LearningPathsBookmarksPage = $"{LearningPathsBookmarks}/page/{{CurrentPage:int}}";
 }

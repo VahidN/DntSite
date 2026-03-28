@@ -1,0 +1,55 @@
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RoadMaps.Entities
+@using DntSite.Web.Features.RssFeeds.Models
+@attribute [Route(RoadMapsRoutingConstants.LearningPathsBookmarks)]
+@attribute [Route(RoadMapsRoutingConstants.LearningPathsBookmarksPage)]
+
+<DntSitePageTitle Group="مسیرهای راه" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="LearningPath"
+    TBookmarkEntity="LearningPathBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@RoadMapsRoutingConstants.LearningPathsBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var learningPath = bookmark.Parent;
+        }
+        <ShowBlogPostItem TReactionEntity="LearningPathReaction"
+                          TForeignKeyEntity="LearningPath"
+                          TBookmarkEntity="LearningPathBookmark"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          CommentsUrlTemplate="@RoadMapsRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@RoadMapsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@RoadMapsRoutingConstants.PostTagUrlTemplate"
+                          ShowBriefDescription="false"
+                          ShowTags="true"
+                          ShowCommentsButton="false"
+                          Id="learningPath.Id"
+                          Body="@learningPath.Description"
+                          Reactions="learningPath.Reactions"
+                          Bookmarks="learningPath.Bookmarks"
+                          Tags="@GetTags(learningPath)"
+                          Title="@learningPath.Title"
+                          BriefDescription="@learningPath.Description"
+                          CreatedAt="learningPath.Audit.CreatedAt"
+                          RecordUser="learningPath.User"
+                          NumberOfComments="learningPath.EntityStat.NumberOfComments"
+                          NumberOfViews="learningPath.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@learningPath.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="learningPath.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(learningPath)"
+                          EncryptEditDeleteIDs="true"
+                          EditPostUrlTemplate="@RoadMapsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@RoadMapsRoutingConstants.DeletePostUrlTemplate">
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@learningPath.Id"
+                                                                          ItemType="@WhatsNewItemType.LearningPaths"/>
+            </AdditionalInfoContent>
+        </ShowBlogPostItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

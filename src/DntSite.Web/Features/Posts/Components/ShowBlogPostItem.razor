@@ -1,4 +1,5 @@
 ﻿@typeparam TReactionEntity where TReactionEntity : BaseReactionEntity<TForeignKeyEntity>, new()
+    @typeparam TBookmarkEntity      where TBookmarkEntity : BaseBookmarkEntity<TForeignKeyEntity>, new()
     @typeparam TForeignKeyEntity where TForeignKeyEntity : BaseAuditedInteractiveEntity
 
 <DntCard>
@@ -93,20 +94,29 @@
 
         @if (ShowReactions)
         {
-            <DntSite.Web.Features.Stats.Components.DntReactions
-                Id="@Id"
-                TReactionEntity="TReactionEntity"
-                TForeignKeyEntity="TForeignKeyEntity"
-                Reactions="Reactions"/>
+            <div class="d-flex align-items-center justify-content-start flex-wrap">
+                <DntSite.Web.Features.Stats.Components.DntReactions
+                    Id="@Id"
+                    TReactionEntity="TReactionEntity"
+                    TForeignKeyEntity="TForeignKeyEntity"
+                    Reactions="Reactions"/>
+
+                <DntSite.Web.Features.Bookmarks.Components.DntBookmark
+                    TBookmarkEntity="TBookmarkEntity"
+                    TForeignKeyEntity="TForeignKeyEntity"
+                    Id="@Id"
+                    Bookmarks="Bookmarks"
+                />
+            </div>
         }
 
         @if (CanUserEditThisPost)
         {
             <div class="mb-2 mt-2">
-                <a href="@EditPostUrl" class="btn btn-success btn-sm">ویرایش</a>
+                <a href="@GetEditPostUrl()" class="btn btn-success btn-sm">ویرایش</a>
                 @if (CanUserDeleteThisPost)
                 {
-                    <a href="@DeletePostUrl"
+                    <a href="@GetDeletePostUrl()"
                        data-cancel-confirm-message="آیا می‌خواهید این عنوان را حذف کنید؟"
                        class="btn btn-danger ms-2 btn-sm">
                         حذف

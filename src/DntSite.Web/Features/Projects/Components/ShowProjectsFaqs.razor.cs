@@ -91,7 +91,10 @@ public partial class ShowProjectsFaqs
     }
 
     private void AddProjectBreadCrumbs(string name)
-        => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId)]);
+        => ApplicationState.BreadCrumbs.AddRange([
+            ..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId),
+            ProjectsBreadCrumbs.ProjectFaqsBookmarksBreadCrumb
+        ]);
 
     private async Task ShowAllFaqsListAsync()
     {
@@ -104,7 +107,9 @@ public partial class ShowProjectsFaqs
     }
 
     private void AddCommentsListBreadCrumbs()
-        => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultBreadCrumbs]);
+        => ApplicationState.BreadCrumbs.AddRange([
+            ..ProjectsBreadCrumbs.DefaultBreadCrumbs, ProjectsBreadCrumbs.ProjectFaqsBookmarksBreadCrumb
+        ]);
 
     private async Task ShowUserFaqsAsync()
     {
@@ -123,10 +128,7 @@ public partial class ShowProjectsFaqs
                 Title = _pageTitle,
                 Url = GetBasePath(),
                 GlyphIcon = DntBootstrapIcons.BiPerson
-            }
+            },
+            ProjectsBreadCrumbs.ProjectFaqsBookmarksBreadCrumb
         ]);
-
-    private static string GetPostAbsoluteUrl(ProjectFaq faq)
-        => string.Create(CultureInfo.InvariantCulture,
-            $"{ProjectsRoutingConstants.ProjectFaqsBase}/{faq.ProjectId}/{faq.Id}");
 }

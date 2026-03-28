@@ -1,3 +1,5 @@
+using DntSite.Web.Features.Courses.Entities;
+
 namespace DntSite.Web.Features.Courses.RoutingConstants;
 
 public static class CoursesRoutingConstants
@@ -69,4 +71,26 @@ public static class CoursesRoutingConstants
     public const string CommentsUrlTemplate = $"{CourseCommentsBase}/{{0}}";
     public const string PostUrlTemplate = $"{CoursesDetailsBase}/{{0}}";
     public const string PostTagUrlTemplate = $"{CoursesTag}/{{0}}";
+
+    public const string CoursesBookmarks = "/courses-bookmarks";
+    public const string CoursesBookmarksPage = $"{CoursesBookmarks}/page/{{CurrentPage:int}}";
+
+    public const string CourseTopicsBookmarks = "/course-topics-bookmarks";
+    public const string CourseTopicsBookmarksPage = $"{CourseTopicsBookmarks}/page/{{CurrentPage:int}}";
+
+    public static string GetCommentsUrlTemplate(this CourseTopic courseTopic)
+    {
+        ArgumentNullException.ThrowIfNull(courseTopic);
+
+        return string.Create(CultureInfo.InvariantCulture,
+            $"{CoursesTopicBase}/{courseTopic.CourseId}/{courseTopic.DisplayId:D}#comments");
+    }
+
+    public static string GetPostUrlTemplate(this CourseTopic courseTopic)
+    {
+        ArgumentNullException.ThrowIfNull(courseTopic);
+
+        return string.Create(CultureInfo.InvariantCulture,
+            $"{CoursesTopicBase}/{courseTopic.CourseId}/{courseTopic.DisplayId:D}");
+    }
 }

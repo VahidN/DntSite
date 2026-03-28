@@ -1,0 +1,60 @@
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
+@using DntSite.Web.Features.StackExchangeQuestions.Entities
+@attribute [Route(QuestionsRoutingConstants.QuestionsBookmarks)]
+@attribute [Route(QuestionsRoutingConstants.QuestionsBookmarksPage)]
+
+<DntSitePageTitle Group="پرسش‌ها" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="StackExchangeQuestion"
+    TBookmarkEntity="StackExchangeQuestionBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@QuestionsRoutingConstants.QuestionsBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var question = bookmark.Parent;
+        }
+        <ShowBlogPostItem TReactionEntity="StackExchangeQuestionReaction"
+                          TForeignKeyEntity="StackExchangeQuestion"
+                          TBookmarkEntity="StackExchangeQuestionBookmark"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          CommentsUrlTemplate="@QuestionsRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@QuestionsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@QuestionsRoutingConstants.PostTagUrlTemplate"
+                          ShowBriefDescription="false"
+                          ShowTags="true"
+                          ShowCommentsButton="true"
+                          Id="question.Id"
+                          Body="@question.Description"
+                          Reactions="question.Reactions"
+                          Bookmarks="question.Bookmarks"
+                          Tags="@GetTags(question)"
+                          Title="@question.Title"
+                          BriefDescription="@question.Description"
+                          CreatedAt="question.Audit.CreatedAt"
+                          RecordUser="question.User"
+                          NumberOfComments="question.EntityStat.NumberOfComments"
+                          NumberOfViews="question.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@question.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="question.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(question)"
+                          EncryptEditDeleteIDs="true"
+                          EditPostUrlTemplate="@QuestionsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@QuestionsRoutingConstants.DeletePostUrlTemplate">
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@question.Id"
+                                                                          ItemType="@WhatsNewItemType.Questions"/>
+            </AdditionalInfoContent>
+            <AdditionalHeaderContent>
+                <QuestionAnswerStat IsQuestionAnswered="question.IsAnswered"/>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

@@ -1,0 +1,64 @@
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.News.Entities
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.RssFeeds.Models
+@attribute [Route(NewsRoutingConstants.DailyNewsItemsBookmarks)]
+@attribute [Route(NewsRoutingConstants.DailyNewsItemsBookmarksPage)]
+
+<DntSitePageTitle Group="اشتراک‌ها" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="DailyNewsItem"
+    TBookmarkEntity="DailyNewsItemBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@NewsRoutingConstants.DailyNewsItemsBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var newsItem = bookmark.Parent;
+        }
+        <ShowBlogPostItem TReactionEntity="DailyNewsItemReaction"
+                          TForeignKeyEntity="DailyNewsItem"
+                          TBookmarkEntity="DailyNewsItemBookmark"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          CommentsUrlTemplate="@NewsRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@NewsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@NewsRoutingConstants.PostTagUrlTemplate"
+                          ShowBriefDescription="false"
+                          ShowTags="true"
+                          ShowCommentsButton="true"
+                          Id="newsItem.Id"
+                          Body="@newsItem.BriefDescription"
+                          Reactions="newsItem.Reactions"
+                          Bookmarks="newsItem.Bookmarks"
+                          Tags="@GetTags(newsItem)"
+                          Title="@newsItem.Title"
+                          BriefDescription="@newsItem.BriefDescription"
+                          CreatedAt="newsItem.Audit.CreatedAt"
+                          RecordUser="newsItem.User"
+                          NumberOfComments="newsItem.EntityStat.NumberOfComments"
+                          NumberOfViews="newsItem.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@newsItem.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="newsItem.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(newsItem)"
+                          EncryptEditDeleteIDs="true"
+                          EditPostUrlTemplate="@NewsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@NewsRoutingConstants.DeletePostUrlTemplate">
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@newsItem.Id"
+                                                                          ItemType="@WhatsNewItemType.News"/>
+            </AdditionalInfoContent>
+            <AdditionalHeaderContent>
+                <PrintNewsRedirect Id="@newsItem.Id"
+                                   Url="@newsItem.Url"
+                                   LastHttpStatusCode="@newsItem.LastHttpStatusCode"
+                                   LastHttpStatusCodeCheckDateTime="@newsItem.LastHttpStatusCodeCheckDateTime"/>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+                <PrintNewsThumb Id="@newsItem.Id" Title="@newsItem.Title"/>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

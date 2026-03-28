@@ -42,6 +42,7 @@ public class ProjectIssuesService(
         => _projectIssue.Where(x => x.IsDeleted == showDeletedItems && x.Id == id)
             .Include(x => x.User)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync();
 
@@ -66,6 +67,7 @@ public class ProjectIssuesService(
                     .Include(x => x.IssueStatus)
                     .Include(x => x.IssueType)
                     .Include(x => x.Reactions)
+                    .Include(x => x.Bookmarks)
                     .OrderBy(x => x.Id)
                     .FirstOrDefaultAsync(),
             NextItem =
@@ -78,6 +80,7 @@ public class ProjectIssuesService(
                     .Include(x => x.IssueStatus)
                     .Include(x => x.IssueType)
                     .Include(x => x.Reactions)
+                    .Include(x => x.Bookmarks)
                     .FirstOrDefaultAsync(),
             PreviousItem = await _projectIssue.AsNoTracking()
                 .Where(x => x.IsDeleted == showDeletedItems && x.ProjectId == projectId && x.Id < issueId)
@@ -88,6 +91,7 @@ public class ProjectIssuesService(
                 .Include(x => x.IssueStatus)
                 .Include(x => x.IssueType)
                 .Include(x => x.Reactions)
+                .Include(x => x.Bookmarks)
                 .FirstOrDefaultAsync(),
             CommentsList = []
         };
@@ -127,6 +131,7 @@ public class ProjectIssuesService(
             .Include(x => x.IssueStatus)
             .Include(x => x.IssueType)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -146,6 +151,7 @@ public class ProjectIssuesService(
             .Include(x => x.IssueStatus)
             .Include(x => x.IssueType)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -174,6 +180,7 @@ public class ProjectIssuesService(
             .Include(x => x.IssueStatus)
             .Include(x => x.IssueType)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -200,6 +207,7 @@ public class ProjectIssuesService(
             .Include(x => x.IssueStatus)
             .Include(x => x.IssueType)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -226,6 +234,7 @@ public class ProjectIssuesService(
             .Include(x => x.IssueStatus)
             .Include(x => x.IssueType)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -242,6 +251,7 @@ public class ProjectIssuesService(
             .Include(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.IsDeleted == showDeletedItems && x.User!.FriendlyName == name);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);

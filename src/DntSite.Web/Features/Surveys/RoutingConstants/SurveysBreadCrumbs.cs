@@ -40,8 +40,16 @@ public static class SurveysBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiCardChecklist
     };
 
+    public static readonly BreadCrumb SurveysBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = SurveysRoutingConstants.SurveysBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
     [
-        WriteSurvey, SurveysTag, SurveysWriters, SurveysComments, SurveysArchive
+        SurveysBookmarksBreadCrumb, WriteSurvey, SurveysTag, SurveysWriters, SurveysComments, SurveysArchive
     ];
 }

@@ -50,6 +50,7 @@ public class CoursesService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
@@ -58,6 +59,7 @@ public class CoursesService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 
@@ -66,6 +68,7 @@ public class CoursesService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync();
 
@@ -85,6 +88,7 @@ public class CoursesService(
         query = query.Include(x => x.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(blogPost => blogPost.CourseTopics)
             .Where(x => x.IsDeleted != onlyActive);
 
@@ -300,6 +304,7 @@ public class CoursesService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         if (showOnlyFinished)
@@ -321,6 +326,7 @@ public class CoursesService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -338,6 +344,7 @@ public class CoursesService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(blogPost => blogPost.CourseTopics)
             .AsNoTracking();
 
@@ -357,6 +364,7 @@ public class CoursesService(
             .Include(blogPost => blogPost.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(x => x.CourseTopics)
             .AsNoTracking();
 
@@ -391,6 +399,7 @@ public class CoursesService(
                 await query.Where(x => x.IsDeleted != onlyActive && x.Id == id)
                     .Include(x => x.User)
                     .Include(blogPost => blogPost.Reactions)
+                    .Include(x => x.Bookmarks)
                     .Include(x => x.Tags)
                     .Include(x => x.CourseTopics)
                     .OrderBy(x => x.Id)
@@ -400,12 +409,14 @@ public class CoursesService(
                     .OrderBy(x => x.Id)
                     .Include(x => x.User)
                     .Include(blogPost => blogPost.Reactions)
+                    .Include(x => x.Bookmarks)
                     .Include(x => x.Tags)
                     .FirstOrDefaultAsync(),
             PreviousCourse = await query.Where(x => x.IsDeleted != onlyActive && x.Id < id)
                 .OrderByDescending(x => x.Id)
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .Include(x => x.Tags)
                 .FirstOrDefaultAsync()
         };
@@ -421,6 +432,7 @@ public class CoursesService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -520,6 +532,7 @@ public class CoursesService(
             .Include(x => x.User)
             .Include(x => x.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderByDescending(x => x.Id)
             .ToListAsync();
 

@@ -1,0 +1,58 @@
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Posts.Entities
+@using DntSite.Web.Features.RssFeeds.Models
+@attribute [Route(PostsRoutingConstants.PostsBookmarks)]
+@attribute [Route(PostsRoutingConstants.PostsBookmarksPage)]
+
+<DntSitePageTitle Group="مقالات" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="BlogPost"
+    TBookmarkEntity="BlogPostBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@PostsRoutingConstants.PostsBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var blogPost = bookmark.Parent;
+        }
+        <ShowBlogPostItem TReactionEntity="BlogPostReaction"
+                          TForeignKeyEntity="BlogPost"
+                          TBookmarkEntity="BlogPostBookmark"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate="@PostsRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@PostsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@PostsRoutingConstants.PostTagUrlTemplate"
+                          Id="blogPost.Id"
+                          Body="@blogPost.Body"
+                          Reactions="blogPost.Reactions"
+                          Bookmarks="blogPost.Bookmarks"
+                          Tags="@GetTags(blogPost)"
+                          Title="@blogPost.Title"
+                          BriefDescription="@blogPost.BriefDescription"
+                          CreatedAt="blogPost.Audit.CreatedAt"
+                          RecordUser="blogPost.User"
+                          NumberOfComments="blogPost.EntityStat.NumberOfComments"
+                          NumberOfViews="blogPost.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="blogPost.ReadingTimeMinutes"
+                          CreatedByUserAgent="@blogPost.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="blogPost.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(blogPost)"
+                          EncryptEditDeleteIDs="true"
+                          EditPostUrlTemplate="@PostsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@PostsRoutingConstants.DeletePostUrlTemplate"
+                          ShowReactions="true"
+                          ShowSocialLinks="true"
+                          ShowNumberOfViews="true"
+                          ShowNumberOfComments="true">
+            <AdditionalInfoContent>
+                <DntSite.Web.Features.Exports.Components.ShowExportedFile Id="@blogPost.Id"
+                                                                          ItemType="@WhatsNewItemType.Posts"/>
+            </AdditionalInfoContent>
+        </ShowBlogPostItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

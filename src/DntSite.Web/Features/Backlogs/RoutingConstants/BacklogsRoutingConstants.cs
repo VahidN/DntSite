@@ -36,4 +36,7 @@ public static class BacklogsRoutingConstants
     public const string PostTagUrlTemplate = $"{BacklogsTag}/{{0}}";
     public const string EditPostUrlTemplate = $"{WriteBacklog}/edit/{{0}}";
     public const string DeletePostUrlTemplate = $"{WriteBacklog}/delete/{{0}}";
+
+    public const string BacklogsBookmarks = "/backlogs-bookmarks";
+    public const string BacklogsBookmarksPage = $"{BacklogsBookmarks}/page/{{CurrentPage:int}}";
 }

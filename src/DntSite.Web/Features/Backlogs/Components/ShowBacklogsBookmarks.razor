@@ -1,0 +1,53 @@
+@using DntSite.Web.Features.Backlogs.Entities
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Posts.Components
+@attribute [Route(BacklogsRoutingConstants.BacklogsBookmarks)]
+@attribute [Route(BacklogsRoutingConstants.BacklogsBookmarksPage)]
+
+<DntSitePageTitle Group="پیشنهادها" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="Backlog"
+    TBookmarkEntity="BacklogBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@BacklogsRoutingConstants.BacklogsBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var backlog = bookmark.Parent;
+        }
+        <ShowBlogPostItem TReactionEntity="BacklogReaction"
+                          TForeignKeyEntity="Backlog"
+                          TBookmarkEntity="BacklogBookmark"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          CommentsUrlTemplate="@BacklogsRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@BacklogsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@BacklogsRoutingConstants.PostTagUrlTemplate"
+                          ShowBriefDescription="false"
+                          ShowTags="true"
+                          ShowCommentsButton="false"
+                          ShowNumberOfComments="false"
+                          Id="backlog.Id"
+                          Body="@backlog.Description"
+                          Reactions="backlog.Reactions"
+                          Bookmarks="backlog.Bookmarks"
+                          Tags="@GetTags(backlog)"
+                          Title="@backlog.Title"
+                          BriefDescription="@backlog.Description"
+                          CreatedAt="backlog.Audit.CreatedAt"
+                          RecordUser="backlog.User"
+                          NumberOfComments="backlog.EntityStat.NumberOfComments"
+                          NumberOfViews="backlog.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@backlog.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="backlog.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(backlog)"
+                          EncryptEditDeleteIDs="true"
+                          EditPostUrlTemplate="@BacklogsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@BacklogsRoutingConstants.DeletePostUrlTemplate">
+            <AdditionalHeaderContent>
+            </AdditionalHeaderContent>
+        </ShowBlogPostItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

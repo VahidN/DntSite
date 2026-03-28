@@ -57,6 +57,14 @@ public static class UserProfilesBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiPersonWorkspace
     };
 
+    public static readonly BreadCrumb UsersBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = UserProfilesRoutingConstants.UsersBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
     [
         UsersBirthdays, StatsBreadCrumbs.TodayVisitedUsers, Users

@@ -46,6 +46,7 @@ public class VotesService(
             .Include(x => x.Tags)
             .Include(x => x.User)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(x => x.SurveyItems)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync();
@@ -63,6 +64,7 @@ public class VotesService(
                         .Include(x => x.User)
                         .Include(x => x.SurveyItems)
                         .Include(x => x.Reactions)
+                        .Include(x => x.Bookmarks)
                         .OrderBy(x => x.Id)
                         .FirstOrDefaultAsync(),
                 NextItem = await _votes.AsNoTracking()
@@ -72,6 +74,7 @@ public class VotesService(
                     .Include(x => x.User)
                     .Include(x => x.SurveyItems)
                     .Include(x => x.Reactions)
+                    .Include(x => x.Bookmarks)
                     .FirstOrDefaultAsync(),
                 PreviousItem = await _votes.AsNoTracking()
                     .Where(x => x.IsDeleted == showDeletedItems && x.Id < id)
@@ -80,6 +83,7 @@ public class VotesService(
                     .Include(x => x.User)
                     .Include(x => x.SurveyItems)
                     .Include(x => x.Reactions)
+                    .Include(x => x.Bookmarks)
                     .FirstOrDefaultAsync()
             };
 
@@ -145,6 +149,7 @@ public class VotesService(
             .Include(x => x.Tags)
             .Include(x => x.SurveyItems)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .Where(x => x.User!.FriendlyName == userName && x.IsDeleted == showDeletedItems);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -161,6 +166,7 @@ public class VotesService(
             .Include(x => x.SurveyItems)
             .Include(x => x.User)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -173,6 +179,7 @@ public class VotesService(
             .Include(blogPost => blogPost.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(x => x.SurveyItems)
             .AsNoTracking();
 
@@ -197,6 +204,7 @@ public class VotesService(
             .Include(x => x.SurveyItems)
             .Include(x => x.User)
             .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -215,7 +223,8 @@ public class VotesService(
             .Include(x => x.User)
             .Include(x => x.SurveyItems)
             .Include(blogPost => blogPost.Tags)
-            .Include(blogPost => blogPost.Reactions);
+            .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
     }
@@ -224,6 +233,7 @@ public class VotesService(
         => _votes.Include(x => x.Tags)
             .Include(x => x.User)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(blogPost => blogPost.SurveyItems)
             .Where(x => x.IsDeleted == showDeletedItems && x.Id == id)
             .OrderBy(x => x.Id)

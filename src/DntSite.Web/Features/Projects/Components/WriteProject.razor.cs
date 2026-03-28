@@ -70,7 +70,10 @@ public partial class WriteProject
         ApplicationState.NavigateTo(ProjectsRoutingConstants.Projects);
     }
 
-    private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultBreadCrumbs]);
+    private void AddBreadCrumbs()
+        => ApplicationState.BreadCrumbs.AddRange([
+            ..ProjectsBreadCrumbs.DefaultBreadCrumbs, ProjectsBreadCrumbs.ProjectsBookmarksBreadCrumb
+        ]);
 
     private async Task FillPossibleEditFormAsync()
     {

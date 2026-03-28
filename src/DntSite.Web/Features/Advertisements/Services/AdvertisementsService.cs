@@ -49,7 +49,8 @@ public class AdvertisementsService(
             .Where(x => x.IsDeleted || x.DueDate!.Value <= now)
             .Include(x => x.Tags)
             .Include(x => x.User)
-            .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Reactions)
+            .Include(x => x.Bookmarks)
             .OrderByDescending(x => x.Id)
             .Skip(skipRecords)
             .Take(recordsPerPage)
@@ -93,6 +94,7 @@ public class AdvertisementsService(
             .Include(x => x.Tags)
             .Include(x => x.User)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -198,6 +200,7 @@ public class AdvertisementsService(
                     .Include(x => x.Tags)
                     .Include(x => x.User)
                     .Include(blogPost => blogPost.Reactions)
+                    .Include(x => x.Bookmarks)
                     .OrderBy(x => x.Id)
                     .FirstOrDefaultAsync(),
             NextItem = await _advertisements.AsNoTracking()
@@ -207,6 +210,7 @@ public class AdvertisementsService(
                 .Include(x => x.Tags)
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync(),
             PreviousItem = await _advertisements.AsNoTracking()
@@ -216,6 +220,7 @@ public class AdvertisementsService(
                 .Include(x => x.Tags)
                 .Include(x => x.User)
                 .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
                 .FirstOrDefaultAsync()
         };
     }
@@ -234,6 +239,7 @@ public class AdvertisementsService(
         query = query.Where(x => x.IsDeleted == showDeletedItems && (!x.DueDate.HasValue || x.DueDate.Value >= now))
             .Include(x => x.User)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(blogPost => blogPost.Tags);
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -248,6 +254,7 @@ public class AdvertisementsService(
         var query = _advertisements.AsNoTracking()
             .Include(x => x.User)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .Include(blogPost => blogPost.Tags)
             .Where(x => x.User!.FriendlyName == userName);
 
@@ -267,6 +274,7 @@ public class AdvertisementsService(
             .Include(x => x.Tags)
             .Include(x => x.User)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryablePagingAsync(pageNumber, recordsPerPage, pagerSortBy, isAscending, CustomOrders);
@@ -283,6 +291,7 @@ public class AdvertisementsService(
             .Include(blogPost => blogPost.User)
             .Include(blogPost => blogPost.Tags)
             .Include(blogPost => blogPost.Reactions)
+            .Include(x => x.Bookmarks)
             .AsNoTracking();
 
         return query.ApplyQueryableDntGridFilterAsync(state, nameof(Advertisement.Id), [

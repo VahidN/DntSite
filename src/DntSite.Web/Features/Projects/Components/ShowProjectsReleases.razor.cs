@@ -92,7 +92,10 @@ public partial class ShowProjectsReleases
     }
 
     private void AddProjectBreadCrumbs(string name)
-        => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId)]);
+        => ApplicationState.BreadCrumbs.AddRange([
+            ..ProjectsBreadCrumbs.DefaultProjectBreadCrumbs(name, ProjectId),
+            ProjectsBreadCrumbs.ProjectReleasesBookmarksBreadCrumb
+        ]);
 
     private async Task ShowAllProjectReleasesListAsync()
     {
@@ -105,7 +108,9 @@ public partial class ShowProjectsReleases
     }
 
     private void AddCommentsListBreadCrumbs()
-        => ApplicationState.BreadCrumbs.AddRange([..ProjectsBreadCrumbs.DefaultBreadCrumbs]);
+        => ApplicationState.BreadCrumbs.AddRange([
+            ..ProjectsBreadCrumbs.DefaultBreadCrumbs, ProjectsBreadCrumbs.ProjectReleasesBookmarksBreadCrumb
+        ]);
 
     private async Task ShowUserProjectReleasesAsync()
     {
@@ -124,10 +129,7 @@ public partial class ShowProjectsReleases
                 Title = _pageTitle,
                 Url = GetBasePath(),
                 GlyphIcon = DntBootstrapIcons.BiPerson
-            }
+            },
+            ProjectsBreadCrumbs.ProjectReleasesBookmarksBreadCrumb
         ]);
-
-    private static string GetPostAbsoluteUrl(ProjectRelease projectRelease)
-        => string.Create(CultureInfo.InvariantCulture,
-            $"{ProjectsRoutingConstants.ProjectReleasesBase}/{projectRelease.ProjectId}/{projectRelease.Id}");
 }

@@ -5,7 +5,7 @@
 {
     <nav style="--bs-breadcrumb-divider: '@BreadCrumbDivider';" aria-label="breadcrumb" @attributes="@AdditionalAttributes"
          class="mt-@Margin card shadow-sm">
-        <ol class="breadcrumb pt-@Margin ps-@Margin">
+        <ol class="breadcrumb mt-@Margin mx-@Margin">
             @foreach (var item in visibleBreadCrumbs)
             {
                 <li class='breadcrumb-item @item.ActiveClass'>

@@ -1,3 +1,4 @@
+using DntSite.Web.Features.Bookmarks.Models;
 using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.Persistence.BaseDomainEntities.Entities;
 using DntSite.Web.Features.UserProfiles.Entities;
@@ -6,7 +7,9 @@ namespace DntSite.Web.Features.Bookmarks.Services.Contracts;
 
 public interface IBookmarksService : IScopedService
 {
-    Task<bool> SavePostBookmarkAsync<TBookmarkEntity, TForeignKeyEntity>(int fkId, int? fromUserId)
+    Task<bool> SavePostBookmarkAsync<TBookmarkEntity, TForeignKeyEntity>(int fkId,
+        BookmarkActionType actionType,
+        int? fromUserId)
         where TBookmarkEntity : BaseBookmarkEntity<TForeignKeyEntity>, new()
         where TForeignKeyEntity : BaseAuditedInteractiveEntity;
 
@@ -18,11 +21,7 @@ public interface IBookmarksService : IScopedService
         where TBookmarkEntity : BaseBookmarkEntity<TForeignKeyEntity>
         where TForeignKeyEntity : BaseAuditedInteractiveEntity;
 
-    Task<bool> DeletePostBookmarkAsync<TBookmarkEntity, TForeignKeyEntity>(int bookmarkId)
-        where TBookmarkEntity : BaseBookmarkEntity<TForeignKeyEntity>
-        where TForeignKeyEntity : BaseAuditedInteractiveEntity;
-
-    Task<PagedResultModel<TBookmarkEntity>> GetUserBookmarksAsync<TBookmarkEntity, TForeignKeyEntity>(int userId,
+    Task<PagedResultModel<TBookmarkEntity>> GetUserBookmarksAsync<TBookmarkEntity, TForeignKeyEntity>(int? userId,
         int pageNumber,
         int recordsPerPage = 8,
         bool isAscending = false)

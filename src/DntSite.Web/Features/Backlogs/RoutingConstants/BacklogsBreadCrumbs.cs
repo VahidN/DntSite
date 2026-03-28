@@ -33,8 +33,17 @@ public static class BacklogsBreadCrumbs
         GlyphIcon = DntBootstrapIcons.BiListTask
     };
 
+    public static readonly BreadCrumb BacklogsBookmarksBreadCrumb = new()
+    {
+        Title = "علاقمندی‌های شخصی",
+        Url = BacklogsRoutingConstants.BacklogsBookmarks,
+        GlyphIcon = DntBootstrapIcons.BiBookmarkHeart,
+        AllowAnonymous = false
+    };
+
     public static readonly IList<BreadCrumb> DefaultBreadCrumbs =
     [
-        WriteBacklogBreadCrumb, BacklogsTagBreadCrumb, BacklogsWritersBreadCrumb, BacklogsBreadCrumb
+        BacklogsBookmarksBreadCrumb, WriteBacklogBreadCrumb, BacklogsTagBreadCrumb, BacklogsWritersBreadCrumb,
+        BacklogsBreadCrumb
     ];
 }

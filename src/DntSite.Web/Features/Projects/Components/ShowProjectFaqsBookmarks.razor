@@ -1,0 +1,39 @@
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Projects.Entities
+@attribute [Route(ProjectsRoutingConstants.ProjectFaqsBookmarks)]
+@attribute [Route(ProjectsRoutingConstants.ProjectFaqsBookmarksPage)]
+
+<DntSitePageTitle Group="پروژه‌ها" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="ProjectFaq"
+    TBookmarkEntity="ProjectFaqBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@ProjectsRoutingConstants.ProjectFaqsBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var faq = bookmark.Parent;
+        }
+        <ShowBlogPostCommentItem
+            PostId="@faq.Id"
+            CommentId="@faq.Id"
+            Body="@faq.Description"
+            Reactions="@faq.Reactions"
+            RecordUser="@faq.User"
+            CreatedAt="@faq.Audit.CreatedAt"
+            CreatedByUserAgent="@faq.Audit.CreatedByUserAgent"
+            TReactionEntity="ProjectFaqReaction"
+            TForeignKeyEntity="ProjectFaq"
+            ShowManageBlogPostCommentItem="false"
+            ShowPleaseVoteMessage="false"
+            PostAbsoluteUrl="@faq.GetPostAbsoluteUrl()"
+            ShowPostTitle="true"
+            PostTitle="@faq.Title">
+            <AdditionalInfoContent>
+                <ProjectUrl Project="faq.Project"/>
+            </AdditionalInfoContent>
+        </ShowBlogPostCommentItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

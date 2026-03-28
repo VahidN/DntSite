@@ -8,6 +8,7 @@
 
         <ShowBlogPostItem TReactionEntity="DailyNewsItemReaction"
                           TForeignKeyEntity="DailyNewsItem"
+                          TBookmarkEntity="DailyNewsItemBookmark"
                           ShowBriefDescription="true"
                           ShowTags="true"
                           SiteName=""
@@ -18,6 +19,7 @@
                           Id="0"
                           Body="@post.Content"
                           Reactions="null"
+                          Bookmarks="null"
                           Tags="null"
                           Title="@post.OriginalTitle"
                           BriefDescription="@post.Content"

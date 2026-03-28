@@ -1,0 +1,59 @@
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Projects.Entities
+@attribute [Route(ProjectsRoutingConstants.ProjectsBookmarks)]
+@attribute [Route(ProjectsRoutingConstants.ProjectsBookmarksPage)]
+
+<DntSitePageTitle Group="پروژه‌ها" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="Project"
+    TBookmarkEntity="ProjectBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@ProjectsRoutingConstants.ProjectsBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var project = bookmark.Parent;
+        }
+        <ShowBlogPostItem TReactionEntity="ProjectReaction"
+                          TForeignKeyEntity="Project"
+                          TBookmarkEntity="ProjectBookmark"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          ShowNumberOfViews="false"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate="@ProjectsRoutingConstants.FeedbacksUrlTemplate"
+                          PostUrlTemplate="@ProjectsRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@ProjectsRoutingConstants.PostTagUrlTemplate"
+                          Id="project.Id"
+                          Body="@project.Description"
+                          Reactions="project.Reactions"
+                          Bookmarks="project.Bookmarks"
+                          Tags="@GetTags(project)"
+                          Title="@project.Title"
+                          BriefDescription="@project.Description"
+                          CreatedAt="project.Audit.CreatedAt"
+                          RecordUser="project.User"
+                          NumberOfComments="project.NumberOfIssues"
+                          NumberOfViews="project.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@project.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="project.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(project)"
+                          EncryptEditDeleteIDs="true"
+                          EditPostUrlTemplate="@ProjectsRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@ProjectsRoutingConstants.DeletePostUrlTemplate"
+                          ShowReactions="true"
+                          ShowSocialLinks="true"
+                          ShowNumberOfComments="true">
+            <AdditionalHeaderContent>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+                <ProjectDetails Project="project"/>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    </ItemTemplate>
+</SectionUserBookmarks>

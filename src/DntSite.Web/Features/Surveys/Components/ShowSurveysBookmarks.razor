@@ -1,0 +1,60 @@
+@using DntSite.Web.Features.Bookmarks.Components
+@using DntSite.Web.Features.Posts.Components
+@using DntSite.Web.Features.Surveys.Entities
+@attribute [Route(SurveysRoutingConstants.SurveysBookmarks)]
+@attribute [Route(SurveysRoutingConstants.SurveysBookmarksPage)]
+
+<DntSitePageTitle Group="نظرسنجی‌ها" PageTitle="علاقمندی‌های شخصی" CurrentPage="@CurrentPage"/>
+
+<SectionUserBookmarks
+    TForeignKeyEntity="Survey"
+    TBookmarkEntity="SurveyBookmark"
+    ItemsPerPage="ItemsPerPage"
+    CurrentPage="@CurrentPage"
+    BasePath="@SurveysRoutingConstants.SurveysBookmarks">
+    <ItemTemplate Context="bookmark">
+        @{
+            var survey = bookmark.Parent;
+        }
+
+        <ShowBlogPostItem TReactionEntity="SurveyReaction"
+                          TForeignKeyEntity="Survey"
+                          TBookmarkEntity="SurveyBookmark"
+                          ShowBriefDescription="true"
+                          ShowTags="true"
+                          SiteName="@ApplicationState.AppSetting?.BlogName"
+                          ShowCommentsButton="false"
+                          CommentsUrlTemplate="@SurveysRoutingConstants.CommentsUrlTemplate"
+                          PostUrlTemplate="@SurveysRoutingConstants.PostUrlTemplate"
+                          PostTagUrlTemplate="@SurveysRoutingConstants.PostTagUrlTemplate"
+                          Id="survey.Id"
+                          Body="@survey.Description"
+                          Reactions="survey.Reactions"
+                          Bookmarks="survey.Bookmarks"
+                          Tags="@GetTags(survey)"
+                          Title="@survey.Title"
+                          BriefDescription="@survey.Description"
+                          CreatedAt="survey.Audit.CreatedAt"
+                          RecordUser="survey.User"
+                          NumberOfComments="survey.EntityStat.NumberOfComments"
+                          NumberOfViews="survey.EntityStat.NumberOfViews"
+                          ReadingTimeMinutes="0"
+                          CreatedByUserAgent="@survey.Audit.CreatedByUserAgent"
+                          NumberOfViewsFromFeed="survey.EntityStat.NumberOfViewsFromFeed"
+                          CanUserDeleteThisPost="@CanUserDeleteThisPost"
+                          CanUserEditThisPost="@CanUserEditThisPost(survey)"
+                          EncryptEditDeleteIDs="true"
+                          EditPostUrlTemplate="@SurveysRoutingConstants.EditPostUrlTemplate"
+                          DeletePostUrlTemplate="@SurveysRoutingConstants.DeletePostUrlTemplate"
+                          ShowReactions="true"
+                          ShowSocialLinks="true"
+                          ShowNumberOfViews="false"
+                          ShowNumberOfComments="true">
+            <AdditionalHeaderContent>
+            </AdditionalHeaderContent>
+            <AdditionalBodyContent>
+                <SurveyResults Survey="survey"/>
+            </AdditionalBodyContent>
+        </ShowBlogPostItem>
+    </ItemTemplate>
+</SectionUserBookmarks>
