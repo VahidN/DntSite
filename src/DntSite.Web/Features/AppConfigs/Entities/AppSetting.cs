@@ -47,6 +47,8 @@ public class AppSetting : BaseAuditedEntity
 
     public GeminiNewsFeeds GeminiNewsFeeds { get; set; } = new();
 
+    public TelegramBackupGroup TelegramBackupGroup { get; set; } = new();
+
     [Display(Name = "فقط خلاصه توضیحات در فیدها نمایش داده شود")]
     public bool ShowRssBriefDescription { set; get; }
 

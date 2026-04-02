@@ -3,6 +3,7 @@ using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.Searches.Services.Contracts;
+using DntSite.Web.Features.SiteBackup.Services.Contracts;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.RoutingConstants;
 using DntSite.Web.Features.Stats.Services.Contracts;
@@ -22,6 +23,8 @@ public partial class RecalculatePostsCount
     [InjectComponentScoped] internal IAIDailyNewsService AIDailyNewsService { set; get; } = null!;
 
     [InjectComponentScoped] internal IDailyNewsScreenshotsService DailyNewsScreenshotsService { set; get; } = null!;
+
+    [InjectComponentScoped] internal IWebSiteBackupService WebSiteBackupService { set; get; } = null!;
 
     [Inject] internal IFullTextSearchService FullTextSearchService { set; get; } = null!;
 
@@ -81,6 +84,11 @@ public partial class RecalculatePostsCount
 
             case RecalculatePostsCountAction.RunAIDailyNewsService:
                 await AIDailyNewsService.StartProcessingNewsFeedsAsync();
+
+                break;
+
+            case RecalculatePostsCountAction.RunBackup:
+                await WebSiteBackupService.CreateBackupAsync();
 
                 break;
         }

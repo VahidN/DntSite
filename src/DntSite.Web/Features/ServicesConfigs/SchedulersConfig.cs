@@ -6,6 +6,7 @@ using DntSite.Web.Features.Posts.ScheduledTasks;
 using DntSite.Web.Features.PrivateMessages.ScheduledTasks;
 using DntSite.Web.Features.Searches.ScheduledTasks;
 using DntSite.Web.Features.Seo.ScheduledTasks;
+using DntSite.Web.Features.SiteBackup.ScheduledTasks;
 using DntSite.Web.Features.Stats.ScheduledTasks;
 using DntSite.Web.Features.UserProfiles.ScheduledTasks;
 
@@ -56,6 +57,9 @@ public static class SchedulersConfig
 
                 return now.Hour % 2 == 0 && now is { Minute: 10, Second: 1 };
             });
+
+            options.AddScheduledTask<ManageBackupsJob>(utcNow
+                => GetNowIranTime(utcNow) is { Hour: 4, Minute: 1, Second: 1 });
 
             options.AddScheduledTask<HumansTxtJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 1, Second: 1 });

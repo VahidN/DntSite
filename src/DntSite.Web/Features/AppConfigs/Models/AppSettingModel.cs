@@ -51,6 +51,8 @@ public class AppSettingModel
 
     public GeminiNewsFeedsModel GeminiNewsFeedsInfo { get; set; } = new();
 
+    public TelegramBackupGroup TelegramBackupGroupInfo { get; set; } = new();
+
     [Display(Name = "فقط خلاصه توضیحات در فیدها نمایش داده شود")]
     public bool ShowRssBriefDescription { set; get; }
 

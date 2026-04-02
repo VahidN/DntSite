@@ -176,6 +176,22 @@
 
             <hr/>
 
+            <DntInputCheckBox @bind-Value="Model.TelegramBackupGroupInfo.IsActive"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiUniversalAccess"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.TelegramBackupGroupInfo.AccessToken"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiChatFill"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.TelegramBackupGroupInfo.ChatId"/>
+
+            <hr/>
+
             <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
         </EditForm>
     </FrameBody>

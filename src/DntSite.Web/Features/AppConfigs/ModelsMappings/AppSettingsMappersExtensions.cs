@@ -25,6 +25,12 @@ public static class AppSettingsMappersExtensions
                 IsActive = source.GeminiNewsFeedsInfo.IsActive,
                 NewsFeeds = source.GeminiNewsFeedsInfo.NewsFeeds.ConvertMultiLineTextToList()
             },
+            TelegramBackupGroup = new TelegramBackupGroup
+            {
+                IsActive = source.TelegramBackupGroupInfo.IsActive,
+                AccessToken = source.TelegramBackupGroupInfo.AccessToken,
+                ChatId = source.TelegramBackupGroupInfo.ChatId
+            },
             ShowRssBriefDescription = source.ShowRssBriefDescription,
             ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,
             YouTubeDataApikey = source.YouTubeDataApikey,
@@ -54,6 +60,13 @@ public static class AppSettingsMappersExtensions
                 ApiKey = appSetting.GeminiNewsFeeds.ApiKey,
                 IsActive = appSetting.GeminiNewsFeeds.IsActive,
                 NewsFeeds = appSetting.GeminiNewsFeeds.NewsFeeds
+            };
+
+            destination.TelegramBackupGroup = new TelegramBackupGroup
+            {
+                IsActive = appSetting.TelegramBackupGroup.IsActive,
+                AccessToken = appSetting.TelegramBackupGroup.AccessToken,
+                ChatId = appSetting.TelegramBackupGroup.ChatId
             };
 
             destination.ShowRssBriefDescription = appSetting.ShowRssBriefDescription;
@@ -96,6 +109,12 @@ public static class AppSettingsMappersExtensions
                 ApiKey = source.GeminiNewsFeeds.ApiKey,
                 IsActive = source.GeminiNewsFeeds.IsActive,
                 NewsFeeds = source.GeminiNewsFeeds.NewsFeeds.ConvertListToMultiLineText()
+            },
+            TelegramBackupGroupInfo = new TelegramBackupGroup
+            {
+                IsActive = source.TelegramBackupGroup.IsActive,
+                AccessToken = source.TelegramBackupGroup.AccessToken,
+                ChatId = source.TelegramBackupGroup.ChatId
             },
             ShowRssBriefDescription = source.ShowRssBriefDescription,
             ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,

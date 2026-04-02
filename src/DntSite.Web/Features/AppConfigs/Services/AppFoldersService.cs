@@ -12,20 +12,19 @@ public sealed class AppFoldersService : IAppFoldersService
     private readonly IDisposable? _disposableSettings;
 
     private readonly IWebHostEnvironment _webHostEnvironment;
+
     private string? _articleImagesPath;
     private string? _avatarsPath;
-
+    private string? _backupPath;
     private string? _customFontWithPersianDigitsPath;
-
     private string? _databaseFolderPath;
     private string? _defaultConnectionString;
-
     private string? _exportsAssetsFolder;
-
     private string? _exportsPath;
     private string? _luceneIndexFolderPath;
     private StartupSettingsModel _siteSettings;
     private string? _thumbnailsServicePath;
+    private string? _uploadsPath;
     private string? _wwwRootPath;
 
     public AppFoldersService(IWebHostEnvironment webHostEnvironment, IOptionsMonitor<StartupSettingsModel> siteSettings)
@@ -49,6 +48,10 @@ public sealed class AppFoldersService : IAppFoldersService
     public string ExportsAssetsFolder => _exportsAssetsFolder ??= ExportsPath.SafePathCombine("assets");
 
     public string AvatarsFolderPath => _avatarsPath ??= GetWebRootAppDataFolderPath(UploadsFolder, "Avatars");
+
+    public string UploadsFolderPath => _uploadsPath ??= GetWebRootAppDataFolderPath(UploadsFolder);
+
+    public string BackupFolderPath => _backupPath ??= GetWebRootAppDataFolderPath("Backup");
 
     public string ArticleImagesFolderPath
         => _articleImagesPath ??= GetWebRootAppDataFolderPath(UploadsFolder, "ArticleImages");

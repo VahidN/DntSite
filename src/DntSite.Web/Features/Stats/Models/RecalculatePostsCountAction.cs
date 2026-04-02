@@ -10,5 +10,6 @@ public enum RecalculatePostsCountAction
     TryReDownloadFailedScreenshots,
     RebuildExports,
     RunAIDailyNewsService,
-    InvalidateAllScreenshots
+    InvalidateAllScreenshots,
+    RunBackup
 }
