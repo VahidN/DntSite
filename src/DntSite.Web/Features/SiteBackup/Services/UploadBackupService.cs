@@ -25,18 +25,8 @@ public class UploadBackupService(
             return;
         }
 
-        var telegramBotClient = new TelegramBotClient(telegramBackupGroup.AccessToken);
-
-        var totalParts = (int)Math.Ceiling((double)new FileInfo(filePath).Length / MaxPartSize);
-
-        var tempDirectory = GetTempDirectory();
-
-        await UploadBackupPartsAsync(telegramBotClient, telegramBackupGroup.ChatId, filePath, totalParts, tempDirectory,
+        await UploadBackupPartsAsync(telegramBackupGroup.AccessToken, telegramBackupGroup.ChatId, filePath,
             cancellationToken);
-
-        await Task.Delay(_delay, cancellationToken);
-
-        await SendInstructionMessageAsync(telegramBotClient, telegramBackupGroup.ChatId, totalParts, cancellationToken);
     }
 
     private async Task<TelegramBackupGroup?> ValidateAndGetTelegramBackupGroupAsync(string? filePath)
@@ -77,127 +67,70 @@ public class UploadBackupService(
         return null;
     }
 
-    private async Task UploadBackupPartsAsync(TelegramBotClient telegramBotClient,
+    private async Task UploadBackupPartsAsync(string accessToken,
         string chatId,
         string filePath,
-        int totalParts,
-        string tempDirectory,
         CancellationToken cancellationToken)
     {
         var originalFileName = filePath.GetFileName();
-        await using var sourceStream = File.OpenRead(filePath);
+        var tempDirectory = GetTempDirectory();
 
-        for (var i = 0; i < totalParts; i++)
+        var parts = await filePath.SplitFileToMultiplePartsAsync(tempDirectory,
+            partNumber => string.Create(CultureInfo.InvariantCulture,
+                $"backup_{originalFileName}_{partNumber:00}.part"), MaxPartSize, cancellationToken);
+
+        var totalParts = parts.Count;
+        var partNumber = 1;
+
+        var telegramBotClient = new TelegramBotClient(accessToken);
+
+        foreach (var partPath in parts)
         {
-            var partNumber = i + 1;
+            var uploadedSize = new FileInfo(partPath).Length;
 
-            var outputPath = tempDirectory.SafePathCombine(string.Create(CultureInfo.InvariantCulture,
-                $"backup_{originalFileName}_{partNumber:00}.part"));
+            await using var content = File.OpenRead(partPath);
 
-            await SplitAndUploadAsync(telegramBotClient, chatId, sourceStream, outputPath, partNumber, totalParts,
-                originalFileName, cancellationToken);
+            await telegramBotClient.SendDocumentAsync(chatId, new InputOnlineFile(content, partPath.GetFileName()),
+                caption:
+                $"🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()}\n📁 فایل: {originalFileName}\n📏 حجم بخش: {uploadedSize.ToFormattedFileSize()}",
+                disableContentTypeDetection: false, disableNotification: false, cancellationToken: cancellationToken);
+
+            partNumber++;
 
             await Task.Delay(_delay, cancellationToken);
-
-            outputPath.TryDeleteFile();
+            partPath.TryDeleteFile(logger);
         }
+
+        await Task.Delay(_delay, cancellationToken);
+
+        await telegramBotClient.SendTextMessageAsync(chatId, $"""
+                                                              📦 **راهنمای دریافت فایل بک‌آپ تاریخ {DateTime.IranNowUtc.Persian.Text.LongDateTime} **
+
+                                                              ✅ فایل بک‌آپ به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
+
+                                                              🔹 **برای دریافت کل فایل:**
+                                                              1. روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
+                                                              2. آن‌ها را در یک پوشه قرار دهید
+                                                              3. نام فایل‌ها باید به ترتیب باشند: backup_1.part، backup_2.part، و غیره
+                                                              4. با ابزار ترکیب، فایل‌ها را به هم بچسبانید:
+
+                                                              **با خط فرمان (ویندوز):**
+                                                              type backup_*.part > backup_combined.zip
+
+                                                              **با خط فرمان (لینوکس/مک):**
+                                                              cat backup_*.part > backup_combined.zip
+
+                                                              ⚠️ **نکته:** حتماً ابتدا همه‌ی بخش‌ها را دانلود کنید!
+                                                              """.Trim(), ParseMode.Markdown,
+            cancellationToken: cancellationToken);
     }
 
     private string GetTempDirectory()
     {
         var tempDirectory = appFoldersService.BackupFolderPath.SafePathCombine("Temp");
-
-        if (Directory.Exists(tempDirectory))
-        {
-            Directory.Delete(tempDirectory, recursive: true);
-        }
-
+        tempDirectory.TryDeleteDirectory(logger);
         tempDirectory.TryCreateDirectory();
 
-        return tempDirectory;
-    }
-
-    private static async Task SplitAndUploadAsync(TelegramBotClient botClient,
-        string chatId,
-        FileStream sourceStream,
-        string outputPath,
-        int partNumber,
-        int totalParts,
-        string originalFileName,
-        CancellationToken cancellationToken)
-    {
-        var uploadedSize = await SplitStreamAsync(sourceStream, outputPath, cancellationToken);
-
-        await using var content = File.OpenRead(outputPath);
-
-        await botClient.SendDocumentAsync(chatId, new InputOnlineFile(content, outputPath.GetFileName()),
-            caption:
-            $"🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()}\n📁 فایل: {originalFileName}\n📏 حجم بخش: {uploadedSize.ToFormattedFileSize()}",
-            disableContentTypeDetection: false, disableNotification: false, cancellationToken: cancellationToken);
-    }
-
-    private static async Task<long> SplitStreamAsync(FileStream sourceStream,
-        string outputPath,
-        CancellationToken cancellationToken)
-    {
-        await using var outputFileStream = outputPath.CreateAsyncFileStream(FileMode.Create, FileAccess.Write);
-
-        long bytesCopied = 0;
-        long bytesToCopy = MaxPartSize;
-
-        var memoryBuffer = new byte[81920];
-
-        while (bytesToCopy > 0)
-        {
-            var availableBytes = (int)Math.Min(memoryBuffer.Length, bytesToCopy);
-
-            var bytesRead = await sourceStream.ReadAsync(new Memory<byte>(memoryBuffer, start: 0, availableBytes),
-                cancellationToken);
-
-            if (bytesRead == 0)
-            {
-                break;
-            }
-
-            await outputFileStream.WriteAsync(new ReadOnlyMemory<byte>(memoryBuffer, start: 0, bytesRead),
-                cancellationToken);
-
-            bytesCopied += bytesRead;
-            bytesToCopy -= bytesRead;
-        }
-
-        outputFileStream.Close();
-        sourceStream.Seek(sourceStream.Position - bytesCopied, SeekOrigin.Current);
-
-        return bytesCopied;
-    }
-
-    private static async Task SendInstructionMessageAsync(TelegramBotClient botClient,
-        string chatId,
-        int totalParts,
-        CancellationToken cancellationToken)
-    {
-        var instruction = $"""
-                           📦 **راهنمای دریافت فایل بک‌آپ تاریخ {DateTime.IranNowUtc.Persian.Text.LongDateTime} **
-
-                           ✅ فایل بک‌آپ به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
-
-                           🔹 **برای دریافت کل فایل:**
-                           1. روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
-                           2. آن‌ها را در یک پوشه قرار دهید
-                           3. نام فایل‌ها باید به ترتیب باشند: backup_1.part، backup_2.part، و غیره
-                           4. با ابزار ترکیب، فایل‌ها را به هم بچسبانید:
-
-                           **با خط فرمان (ویندوز):**
-                           type backup_*.part > backup_combined.zip
-
-                           **با خط فرمان (لینوکس/مک):**
-                           cat backup_*.part > backup_combined.zip
-
-                           ⚠️ **نکته:** حتماً ابتدا همه‌ی بخش‌ها را دانلود کنید!
-                           """;
-
-        await botClient.SendTextMessageAsync(chatId, instruction.Trim(), ParseMode.Markdown,
-            cancellationToken: cancellationToken);
+        return tempDirectory!;
     }
 }
