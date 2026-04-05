@@ -181,7 +181,7 @@ public class DailyNewsItemAIBacklogService(
             {
                 Url = feedItem.Url.Trim(),
                 UrlHash = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(feedItem.Url.Trim())),
-                Title = feedItem.Title.GetNormalizedAIText(processCodes: false),
+                Title = feedItem.Title.GetNormalizedAIText(),
                 IsApproved = true,
                 IsProcessed = false,
                 UserId = user?.Id
@@ -300,7 +300,7 @@ public class DailyNewsItemAIBacklogService(
             {
                 Url = feedItem.Url.Trim(),
                 UrlHash = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(feedItem.Url.Trim())),
-                Title = feedItem.Title.GetNormalizedAIText(processCodes: false),
+                Title = feedItem.Title.GetNormalizedAIText(),
                 IsApproved = false,
                 IsProcessed = false,
                 UserId = aiUser?.Id

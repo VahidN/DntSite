@@ -57,12 +57,13 @@ public partial class DntSitePageTitle
         var title = isProtectedPage ? "" : _localTitle;
         var lastVisitorStat = await SiteUrlsService.GetLastSiteUrlVisitorStatAsync(context);
 
-        BackgroundQueueService.QueueBackgroundWorkItem(async (_, serviceProvider) =>
-        {
-            UpdateOnlineVisitorsInfo(serviceProvider);
-            await UpdateSiteUrlAsync(serviceProvider);
-            await UpdateReferrerAsync(serviceProvider);
-        });
+        await BackgroundQueueService.QueueBackgroundWorkItemAsync(group: "SiteUrlsBackgroundQueue",
+            async (_, serviceProvider) =>
+            {
+                UpdateOnlineVisitorsInfo(serviceProvider);
+                await UpdateSiteUrlAsync(serviceProvider);
+                await UpdateReferrerAsync(serviceProvider);
+            });
 
         void UpdateOnlineVisitorsInfo(IServiceProvider serviceProvider)
             => serviceProvider.GetRequiredService<IOnlineVisitorsService>().ProcessNewVisitor(lastVisitorStat);

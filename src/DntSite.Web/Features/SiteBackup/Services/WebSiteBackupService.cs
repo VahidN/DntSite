@@ -34,8 +34,8 @@ public class WebSiteBackupService(
         var dbBackupFileName = string.Create(CultureInfo.InvariantCulture,
             $"db.backup.{DateTime.UtcNow:yyyyMMdd_HHmmss}.{Guid.CryptographicallySecureGuid:N}.sqlite");
 
-        return appFoldersService.BackupFolderPath.SafePathCombine(dbBackupFileName)
-            .Replace(oldValue: "'", newValue: "''", StringComparison.Ordinal);
+        return appFoldersService.BackupFolderPath.SafePathCombine(dbBackupFileName)!.Replace(oldValue: "'",
+            newValue: "''", StringComparison.Ordinal);
     }
 
     private async Task CompressAndUploadDataBackupFileAsync(CancellationToken cancellationToken)
@@ -45,7 +45,7 @@ public class WebSiteBackupService(
             var dataBackupFileName = string.Create(CultureInfo.InvariantCulture,
                 $"uploads.{DateTime.UtcNow:yyyyMMdd_HHmmss}.{Guid.CryptographicallySecureGuid:N}.zip");
 
-            var dataBackupFilePath = appFoldersService.BackupFolderPath.SafePathCombine(dataBackupFileName);
+            var dataBackupFilePath = appFoldersService.BackupFolderPath.SafePathCombine(dataBackupFileName)!;
 
             appFoldersService.UploadsFolderPath.CompressFolderToZipFile(dataBackupFilePath);
             await Task.Delay(_delay, cancellationToken);

@@ -43,21 +43,22 @@ public class EfDbLoggerProvider : ILoggerProvider
     }
 
     internal void AddLogItem(EfDbLoggerItem appLogItem)
-        => _backgroundQueueService.QueueBackgroundWorkItem(async (cancellationToken, serviceProvider) =>
-        {
-            try
-            {
-                // We need a separate context for the logger to call its SaveChanges several times,
-                // without using the current request's context and changing its internal state.
-                using var uow = serviceProvider.GetRequiredService<IUnitOfWork>();
-                uow.DbSet<AppLogItem>().Add(appLogItem.AppLogItem);
-                await uow.SaveChangesAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                // don't throw exceptions from logger
-                WriteLine(appLogItem.AppLogItem.Message);
-                WriteLine(ex);
-            }
-        });
+        => _backgroundQueueService.TryQueueBackgroundWorkItem(nameof(EfDbLoggerProvider),
+                async (cancellationToken, serviceProvider) =>
+                {
+                    try
+                    {
+                        // We need a separate context for the logger to call its SaveChanges several times,
+                        // without using the current request's context and changing its internal state.
+                        using var uow = serviceProvider.GetRequiredService<IUnitOfWork>();
+                        uow.DbSet<AppLogItem>().Add(appLogItem.AppLogItem);
+                        await uow.SaveChangesAsync(cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        // don't throw exceptions from logger
+                        WriteLine(appLogItem.AppLogItem.Message);
+                        WriteLine(ex);
+                    }
+                });
 }

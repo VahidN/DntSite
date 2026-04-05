@@ -93,7 +93,7 @@ public class EmailsFactoryService(
             .ApplyCorrectYeKe()
             .ApplyRle();
 
-        webMailService.BackgroundQueueSendEmail(new SmtpConfig
+        await webMailService.BackgroundQueueSendEmailAsync(new SmtpConfig
         {
             Server = smtpServerSetting.Address,
             Port = smtpServerSetting.Port,

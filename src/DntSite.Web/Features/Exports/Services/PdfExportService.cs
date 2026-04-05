@@ -40,7 +40,7 @@ public class PdfExportService(
                 .ToLowerInvariant();
 
             var outputFolder = GetExportsOutputFolder(itemType);
-            var outputPdfFilePath = outputFolder.SafePathCombine(outputPdfFileName);
+            var outputPdfFilePath = outputFolder.SafePathCombine(outputPdfFileName)!;
             var fileExists = outputPdfFilePath.FileExists();
 
             return new ExportFileLocation
@@ -63,7 +63,7 @@ public class PdfExportService(
     {
         ArgumentNullException.ThrowIfNull(itemType);
 
-        var path = appFoldersService.ExportsPath.SafePathCombine(itemType.Name.ToLowerInvariant());
+        var path = appFoldersService.ExportsPath.SafePathCombine(itemType.Name.ToLowerInvariant())!;
 
         if (!Directory.Exists(path))
         {
@@ -80,7 +80,7 @@ public class PdfExportService(
             return null;
         }
 
-        var outputFolder = appFoldersService.ExportsPath.SafePathCombine(itemType.ToLowerInvariant());
+        var outputFolder = appFoldersService.ExportsPath.SafePathCombine(itemType.ToLowerInvariant())!;
         var safeFile = fileNameSanitizerService.IsSafeToDownload(outputFolder, $"{name.ToLowerInvariant()}.pdf");
 
         return !safeFile.IsSafeToDownload ? null : safeFile.SafeFilePath;
@@ -235,7 +235,7 @@ public class PdfExportService(
             appFoldersService.GetFolderPath(FileType.CourseImage), appFoldersService.GetFolderPath(FileType.NewsThumb));
 
         var tempHtmlDocFilePath =
-            appFoldersService.ExportsAssetsFolder.SafePathCombine($"temp-{Guid.NewGuid():N}.html");
+            appFoldersService.ExportsAssetsFolder.SafePathCombine($"temp-{Guid.NewGuid():N}.html")!;
 
         await File.WriteAllTextAsync(tempHtmlDocFilePath, htmlDoc);
 
@@ -276,7 +276,7 @@ public class PdfExportService(
     private async Task<string> GetPageTemplateContentAsync()
     {
         var exportsAssetsFolder = appFoldersService.ExportsAssetsFolder;
-        var pageTemplatePath = exportsAssetsFolder.SafePathCombine(PdfPageTemplateFileName);
+        var pageTemplatePath = exportsAssetsFolder.SafePathCombine(PdfPageTemplateFileName)!;
         var pageTemplateContent = await File.ReadAllTextAsync(pageTemplatePath);
 
         return pageTemplateContent;

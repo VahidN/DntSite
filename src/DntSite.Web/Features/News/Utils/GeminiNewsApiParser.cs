@@ -87,9 +87,9 @@ public static class GeminiNewsApiParser
         return new GeminiSuccessResult
         {
             Status = "ok",
-            Title = title.GetNormalizedAIText(processCodes: false),
-            Summary = summary.GetNormalizedAIText(processCodes: true),
-            Tags = ParseTags(tagsRaw.GetNormalizedAIText(processCodes: false))
+            Title = title.GetNormalizedAIText(),
+            Summary = summary.GetNormalizedAIText(),
+            Tags = ParseTags(tagsRaw.GetNormalizedAIText())
         };
     }
 
