@@ -8,10 +8,10 @@ using File = System.IO.File;
 
 namespace DntSite.Web.Features.SiteBackup.Services;
 
-public class UploadBackupService(
+public class TelegramUploadBackupStrategyService(
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IAppFoldersService appFoldersService,
-    ILogger<UploadBackupService> logger) : IUploadBackupService
+    ILogger<TelegramUploadBackupStrategyService> logger) : IUploadBackupService
 {
     private const int MaxPartSize = 49 * 1024 * 1024; // 49 مگابایت
     private readonly TimeSpan _delay = TimeSpan.FromSeconds(seconds: 15);
@@ -75,25 +75,29 @@ public class UploadBackupService(
         var originalFileName = filePath.GetFileName();
         var tempDirectory = GetTempDirectory();
 
-        var parts = await filePath.SplitFileToMultiplePartsAsync(tempDirectory,
+        var partPaths = await filePath.SplitFileToMultiplePartsAsync(tempDirectory,
             partNumber => string.Create(CultureInfo.InvariantCulture,
                 $"backup_{originalFileName}_{partNumber:00}.part"), MaxPartSize, cancellationToken);
 
-        var totalParts = parts.Count;
+        var totalParts = partPaths.Count;
         var partNumber = 1;
 
         var telegramBotClient = new TelegramBotClient(accessToken);
 
-        foreach (var partPath in parts)
+        foreach (var partPath in partPaths)
         {
             var uploadedSize = new FileInfo(partPath).Length;
 
-            await using var content = File.OpenRead(partPath);
-
-            await telegramBotClient.SendDocumentAsync(chatId, new InputOnlineFile(content, partPath.GetFileName()),
-                caption:
-                $"🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()}\n📁 فایل: {originalFileName}\n📏 حجم بخش: {uploadedSize.ToFormattedFileSize()}",
-                disableContentTypeDetection: false, disableNotification: false, cancellationToken: cancellationToken);
+            await using (var content = File.OpenRead(partPath))
+            {
+                await telegramBotClient.SendDocumentAsync(chatId, new InputOnlineFile(content, partPath.GetFileName()),
+                    caption: $"""
+                              🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()}
+                              📁 فایل: {originalFileName}
+                              📏 حجم بخش: {uploadedSize.ToFormattedFileSize()}
+                              """, disableContentTypeDetection: false, disableNotification: false,
+                    cancellationToken: cancellationToken);
+            }
 
             partNumber++;
 
