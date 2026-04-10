@@ -5,7 +5,7 @@ using Microsoft.Data.Sqlite;
 namespace DntSite.Web.Features.SiteBackup.Services;
 
 public class WebSiteBackupService(
-    IUploadBackupService uploadBackupService,
+    ITelegramUploadBackupService uploadBackupService,
     IAppFoldersService appFoldersService,
     ILogger<WebSiteBackupService> logger) : IWebSiteBackupService
 {
@@ -50,7 +50,7 @@ public class WebSiteBackupService(
             appFoldersService.UploadsFolderPath.CompressFolderToZipFile(dataBackupFilePath);
             await Task.Delay(_delay, cancellationToken);
 
-            await uploadBackupService.UploadToHostAsync(dataBackupFilePath, cancellationToken);
+            await uploadBackupService.UploadSiteBackupFileToTelegramAsync(dataBackupFilePath, cancellationToken);
             await Task.Delay(_delay, cancellationToken);
         }
         catch (Exception ex)
@@ -68,7 +68,7 @@ public class WebSiteBackupService(
             await Task.Delay(_delay, cancellationToken);
             dbBackupFilePath.TryDeleteFile(logger);
 
-            await uploadBackupService.UploadToHostAsync(backupZipFilePath, cancellationToken);
+            await uploadBackupService.UploadSiteBackupFileToTelegramAsync(backupZipFilePath, cancellationToken);
             await Task.Delay(_delay, cancellationToken);
         }
         catch (Exception ex)
