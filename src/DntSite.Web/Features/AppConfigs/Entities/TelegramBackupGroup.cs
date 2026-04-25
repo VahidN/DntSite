@@ -3,7 +3,7 @@
 [ComplexType]
 public class TelegramBackupGroup
 {
-    [Display(Name = "ارسال بک‌آپ به تلگرام فعال است؟")]
+    [Display(Name = "ارسال به تلگرام فعال است؟")]
     public bool IsActive { set; get; }
 
     [Display(Name = "توکن دسترسی")]

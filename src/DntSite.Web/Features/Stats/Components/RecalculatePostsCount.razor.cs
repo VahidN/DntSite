@@ -1,9 +1,13 @@
 ﻿using DntSite.Web.Features.AppConfigs.Components;
+using DntSite.Web.Features.Courses.Services.Contracts;
+using DntSite.Web.Features.Exports.Models;
 using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Entities;
+using DntSite.Web.Features.Posts.Services.Contracts;
 using DntSite.Web.Features.Searches.Services.Contracts;
 using DntSite.Web.Features.SiteBackup.Services.Contracts;
+using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
 using DntSite.Web.Features.Stats.Models;
 using DntSite.Web.Features.Stats.RoutingConstants;
 using DntSite.Web.Features.Stats.Services.Contracts;
@@ -35,6 +39,16 @@ public partial class RecalculatePostsCount
     [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
+
+    [InjectComponentScoped] internal IBlogPostsPdfExportService BlogPostsPdfExportService { set; get; } = null!;
+
+    [InjectComponentScoped] internal ICourseTopicsPdfExportService CourseTopicsPdfExportService { set; get; } = null!;
+
+    [InjectComponentScoped] internal IQuestionsPdfExportService QuestionsPdfExportService { set; get; } = null!;
+
+    [InjectComponentScoped] internal IDailyNewsPdfExportService DailyNewsPdfExportService { set; get; } = null!;
+
+    [InjectComponentScoped] internal IEPubExportService EPubExportService { set; get; } = null!;
 
     private async Task OnValidSubmitAsync()
     {
@@ -89,6 +103,20 @@ public partial class RecalculatePostsCount
 
             case RecalculatePostsCountAction.RunBackup:
                 await WebSiteBackupService.CreateBackupAsync();
+
+                break;
+
+            case RecalculatePostsCountAction.CreateEPub:
+                await QuestionsPdfExportService.ExportNotProcessedQuestionsToSeparatePdfFilesAsync(ExportType.HtmlFile);
+
+                await CourseTopicsPdfExportService.ExportNotProcessedCourseTopicsToSeparatePdfFilesAsync(ExportType
+                    .HtmlFile);
+
+                await BlogPostsPdfExportService.ExportNotProcessedBlogPostsToSeparatePdfFilesAsync(ExportType.HtmlFile);
+
+                await DailyNewsPdfExportService.ExportNotProcessedDailyNewsToSeparatePdfFilesAsync(ExportType.HtmlFile);
+
+                await EPubExportService.StartAsync();
 
                 break;
         }

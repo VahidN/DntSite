@@ -17,21 +17,6 @@ public class QuestionsPdfExportService(
 {
     private readonly DbSet<StackExchangeQuestion> _questions = uow.DbSet<StackExchangeQuestion>();
 
-    public async Task ExportNotProcessedQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken)
-    {
-        var availableIds = pdfExportService.GetAvailableExportedFiles(WhatsNewItemType.Questions)
-            .Select(x => x.Id)
-            .ToList();
-
-        var query = _questions.NotCacheable().AsNoTracking().Where(x => !x.IsDeleted);
-
-        var idsNeedUpdate = availableIds.Count == 0
-            ? await query.Select(x => x.Id).ToListAsync(cancellationToken)
-            : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync(cancellationToken);
-
-        await ExportQuestionsToSeparatePdfFilesAsync(cancellationToken, idsNeedUpdate);
-    }
-
     public async Task<IList<ExportDocument>> MapQuestionsToExportDocumentsAsync(params IList<int>? postIds)
     {
         if (postIds is null || postIds.Count == 0)
@@ -52,28 +37,6 @@ public class QuestionsPdfExportService(
             .ToListAsync();
 
         return posts.Select(x => MapQuestionToExportDocument(x, siteRootUri)!).ToList();
-    }
-
-    public async Task ExportQuestionsToSeparatePdfFilesAsync(CancellationToken cancellationToken,
-        params IList<int>? postIds)
-    {
-        if (postIds is null || postIds.Count == 0)
-        {
-            return;
-        }
-
-        var docs = await MapQuestionsToExportDocumentsAsync(postIds);
-
-        foreach (var doc in docs)
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-
-            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.Questions, doc.Id, doc.Title, doc);
-            await Task.Delay(TimeSpan.FromSeconds(value: 15), cancellationToken);
-        }
     }
 
     public async Task<ExportDocument?> MapQuestionToExportDocumentAsync(int postId, string siteRootUri)
@@ -107,6 +70,57 @@ public class QuestionsPdfExportService(
                 Tags = post.Tags.Select(y => y.Name).ToList(),
                 Comments = MapCommentsToExportComment(post)
             };
+
+    public async Task<List<int>> FindIdsNeedUpdateAsync(CancellationToken cancellationToken)
+    {
+        var availableIds = pdfExportService.GetAvailableExportedFiles(WhatsNewItemType.Questions)
+            .Select(x => x.Id)
+            .ToList();
+
+        var query = _questions.NotCacheable().AsNoTracking().Where(x => !x.IsDeleted);
+
+        var idsNeedUpdate = availableIds.Count == 0
+            ? await query.Select(x => x.Id).ToListAsync(cancellationToken)
+            : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync(cancellationToken);
+
+        return idsNeedUpdate;
+    }
+
+    public async Task ExportNotProcessedQuestionsToSeparatePdfFilesAsync(ExportType exportType,
+        CancellationToken cancellationToken = default)
+    {
+        var idsNeedUpdate = await FindIdsNeedUpdateAsync(cancellationToken);
+
+        await ExportQuestionsToSeparatePdfFilesAsync(exportType, cancellationToken, idsNeedUpdate);
+    }
+
+    public async Task ExportQuestionsToSeparatePdfFilesAsync(ExportType exportType,
+        CancellationToken cancellationToken,
+        params IList<int>? postIds)
+    {
+        if (postIds is null || postIds.Count == 0)
+        {
+            return;
+        }
+
+        var docs = await MapQuestionsToExportDocumentsAsync(postIds);
+
+        foreach (var doc in docs)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.Questions, doc.Id, doc.Title,
+                doc);
+
+            if (exportType == ExportType.PdfFile)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(value: 15), cancellationToken);
+            }
+        }
+    }
 
     private static List<ExportComment> MapCommentsToExportComment(StackExchangeQuestion post)
     {

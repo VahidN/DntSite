@@ -21,6 +21,7 @@ public sealed class AppFoldersService : IAppFoldersService
     private string? _defaultConnectionString;
     private string? _exportsAssetsFolder;
     private string? _exportsPath;
+    private string? _fontsFolderPath;
     private string? _luceneIndexFolderPath;
     private StartupSettingsModel _siteSettings;
     private string? _thumbnailsServicePath;
@@ -61,6 +62,8 @@ public sealed class AppFoldersService : IAppFoldersService
 
     public string CustomFontWithPersianDigitsPath => _customFontWithPersianDigitsPath ??=
         WwwRootPath.SafePathCombine("fonts", "Samim-FD.ttf")!;
+
+    public string FontsFolderPath => _fontsFolderPath ??= WwwRootPath.SafePathCombine("fonts")!;
 
     public string LuceneIndexFolderPath => _luceneIndexFolderPath ??= GetWebRootAppDataFolderPath("LuceneIndex");
 

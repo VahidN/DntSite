@@ -60,7 +60,7 @@ public static class ExportsMappersExtensions
             return string.Empty;
         }
 
-        return html.ReplaceImageUrlsWithNewImageUrls(imageUrl =>
+        return html.ReplaceImageUrlsWithEmbeddedDataImages(imageUrl =>
         {
             if (!imageUrl.IsValidUrl())
             {
@@ -74,54 +74,43 @@ public static class ExportsMappersExtensions
                 return null;
             }
 
-            var relativePath =
-                GetImageRelativePath(pattern: "file/image?name=", imageUrl, articleImagesFolderPath, fileName);
+            List<(string Pattern, string ImagesFolderPath)> folders =
+            [
+                ("file/image?name=", articleImagesFolderPath), ("file/courseimages?name=", courseImagesFolderPath),
+                ("file/NewsThumb?name=", newsImagesFolderPath)
+            ];
 
-            if (!relativePath.IsEmpty())
-            {
-                return relativePath;
-            }
-
-            relativePath = GetImageRelativePath(pattern: "file/courseimages?name=", imageUrl, courseImagesFolderPath,
-                fileName);
-
-            if (!relativePath.IsEmpty())
-            {
-                return relativePath;
-            }
-
-            relativePath = GetImageRelativePath(pattern: "file/NewsThumb?name=", imageUrl, newsImagesFolderPath,
-                fileName);
-
-            if (!relativePath.IsEmpty())
-            {
-                return relativePath;
-            }
-
-            return null;
+            return folders
+                .Where(folder => !imageUrl.IsEmpty() && !folder.ImagesFolderPath.IsEmpty() &&
+                                 imageUrl.Contains(folder.Pattern, StringComparison.OrdinalIgnoreCase))
+                .Select(folder => folder.ImagesFolderPath.SafePathCombine(fileName))
+                .Where(fullPath => fullPath.FileExists())
+                .Select(File.ReadAllBytes!)
+                .FirstOrDefault();
         });
     }
 
-    private static string? GetImageRelativePath(string pattern,
-        string imageUrl,
-        string imagesFolderPath,
+    public static (string? RelativePath, string? FullPath) GetImagePath(string pattern,
+        string? imageUrl,
+        string? imagesFolderPath,
         string fileName)
     {
-        if (!imageUrl.Contains(pattern, StringComparison.OrdinalIgnoreCase))
+        if (imageUrl?.IsEmpty() != false || imagesFolderPath?.IsEmpty() != false ||
+            !imageUrl.Contains(pattern, StringComparison.OrdinalIgnoreCase))
         {
-            return null;
+            return (null, null);
         }
 
-        var path = imagesFolderPath.SafePathCombine(fileName);
+        var fullPath = imagesFolderPath.SafePathCombine(fileName);
 
-        if (!path.FileExists())
+        if (!fullPath.FileExists())
         {
-            return null;
+            return (null, null);
         }
 
         var pathParts = imagesFolderPath.Split(Path.DirectorySeparatorChar);
 
-        return $"../../{pathParts[^2]}/{pathParts[^1]}/{fileName}";
+        return ($"../../{pathParts[^2]}/{pathParts[^1]}/{fileName}", fullPath);
     }
 
     private static string ToPostBody(this ExportDocument doc)

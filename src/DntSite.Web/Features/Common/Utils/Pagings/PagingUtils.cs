@@ -8,12 +8,13 @@ public static class PagingUtils
     public static async Task<PagedResultModel<TEntity>> ApplyQueryablePagingAsync<TEntity>(
         this IOrderedQueryable<TEntity> query,
         int pageNumber,
-        int recordsPerPage)
-        where TEntity : BaseEntity
+        int recordsPerPage,
+        CancellationToken cancellationToken = default)
+        where TEntity : class
         => new()
         {
-            TotalItems = await query.CountAsync(),
-            Data = await query.ApplyPaging(pageNumber, recordsPerPage).ToListAsync()
+            TotalItems = await query.CountAsync(cancellationToken),
+            Data = await query.ApplyPaging(pageNumber, recordsPerPage).ToListAsync(cancellationToken)
         };
 
     public static async Task<PagedResultModel<TEntity>> ApplyQueryablePagingAsync<TEntity>(
@@ -22,19 +23,32 @@ public static class PagingUtils
         int recordsPerPage,
         PagerSortBy sortBy,
         bool isAscending,
-        IDictionary<PagerSortBy, Expression<Func<TEntity, object?>>> customOrders)
+        IDictionary<PagerSortBy, Expression<Func<TEntity, object?>>> customOrders,
+        CancellationToken cancellationToken = default)
         where TEntity : BaseEntity
     {
         ArgumentNullException.ThrowIfNull(customOrders);
 
         return new PagedResultModel<TEntity>
         {
-            TotalItems = await query.CountAsync(),
+            TotalItems = await query.CountAsync(cancellationToken),
             Data = await query.ApplyOrdering(sortBy, isAscending, customOrders)
                 .ApplyPaging(pageNumber, recordsPerPage)
-                .ToListAsync()
+                .ToListAsync(cancellationToken)
         };
     }
+
+    public static async Task<PagedResultModel<TEntity>> ApplyQueryablePagingAsync<TEntity>(
+        this IQueryable<TEntity> query,
+        int pageNumber,
+        int recordsPerPage,
+        CancellationToken cancellationToken = default)
+        where TEntity : class
+        => new()
+        {
+            TotalItems = await query.CountAsync(cancellationToken),
+            Data = await query.ApplyPaging(pageNumber, recordsPerPage).ToListAsync(cancellationToken)
+        };
 
     private static IQueryable<TEntity> ApplyOrdering<TEntity>(this IQueryable<TEntity> query,
         PagerSortBy sortBy,
@@ -57,7 +71,7 @@ public static class PagingUtils
     private static IQueryable<TEntity> ApplyPaging<TEntity>(this IQueryable<TEntity> query,
         int pageNumber,
         int recordsPerPage)
-        where TEntity : BaseEntity
+        where TEntity : class
     {
         var skipRecords = pageNumber * recordsPerPage;
         query = query.Skip(skipRecords).Take(recordsPerPage);

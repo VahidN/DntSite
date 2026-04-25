@@ -53,6 +53,8 @@ public class AppSettingModel
 
     public TelegramBackupGroup TelegramBackupGroupInfo { get; set; } = new();
 
+    public TelegramBackupGroup TelegramEPubGroupInfo { get; set; } = new();
+
     [Display(Name = "فقط خلاصه توضیحات در فیدها نمایش داده شود")]
     public bool ShowRssBriefDescription { set; get; }
 

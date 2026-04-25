@@ -49,6 +49,8 @@ public class AppSetting : BaseAuditedEntity
 
     public TelegramBackupGroup TelegramBackupGroup { get; set; } = new();
 
+    public TelegramBackupGroup TelegramEPubGroup { get; set; } = new();
+
     [Display(Name = "فقط خلاصه توضیحات در فیدها نمایش داده شود")]
     public bool ShowRssBriefDescription { set; get; }
 

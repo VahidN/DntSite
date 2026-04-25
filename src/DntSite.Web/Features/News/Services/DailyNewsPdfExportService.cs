@@ -19,7 +19,7 @@ public class DailyNewsPdfExportService(
     private readonly DbSet<DailyNewsItem> _dailyNews = uow.DbSet<DailyNewsItem>();
     private readonly DbSet<DailyNewsItemTag> _dailyNewsTags = uow.DbSet<DailyNewsItemTag>();
 
-    public async Task ExportNotProcessedDailyNewsToSeparatePdfFilesAsync(CancellationToken cancellationToken)
+    public async Task<List<int>> FindIdsNeedUpdateAsync(CancellationToken cancellationToken)
     {
         var availableIds = pdfExportService.GetAvailableExportedFiles(WhatsNewItemType.News).Select(x => x.Id).ToList();
 
@@ -29,29 +29,7 @@ public class DailyNewsPdfExportService(
             ? await query.Select(x => x.Id).ToListAsync(cancellationToken)
             : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync(cancellationToken);
 
-        await ExportDailyNewsToSeparatePdfFilesAsync(cancellationToken, idsNeedUpdate);
-    }
-
-    public async Task ExportDailyNewsToSeparatePdfFilesAsync(CancellationToken cancellationToken,
-        params IList<int>? dailyNewsItemIds)
-    {
-        if (dailyNewsItemIds is null || dailyNewsItemIds.Count == 0)
-        {
-            return;
-        }
-
-        var docs = await MapDailyNewsToExportDocumentsAsync(dailyNewsItemIds);
-
-        foreach (var doc in docs)
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-
-            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.News, doc.Id, doc.Title, doc);
-            await Task.Delay(TimeSpan.FromSeconds(value: 15), cancellationToken);
-        }
+        return idsNeedUpdate;
     }
 
     public async Task<IList<ExportDocument>> MapDailyNewsToExportDocumentsAsync(params IList<int>? dailyNewsItemIds)
@@ -109,7 +87,42 @@ public class DailyNewsPdfExportService(
                 Comments = MapCommentsToExportComment(post)
             };
 
-    public async Task CreateMergedPdfOfNewsTagsAsync(CancellationToken cancellationToken)
+    public async Task ExportNotProcessedDailyNewsToSeparatePdfFilesAsync(ExportType exportType,
+        CancellationToken cancellationToken = default)
+    {
+        var idsNeedUpdate = await FindIdsNeedUpdateAsync(cancellationToken);
+
+        await ExportDailyNewsToSeparatePdfFilesAsync(exportType, cancellationToken, idsNeedUpdate);
+    }
+
+    public async Task ExportDailyNewsToSeparatePdfFilesAsync(ExportType exportType,
+        CancellationToken cancellationToken,
+        params IList<int>? dailyNewsItemIds)
+    {
+        if (dailyNewsItemIds is null || dailyNewsItemIds.Count == 0)
+        {
+            return;
+        }
+
+        var docs = await MapDailyNewsToExportDocumentsAsync(dailyNewsItemIds);
+
+        foreach (var doc in docs)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.News, doc.Id, doc.Title, doc);
+
+            if (exportType == ExportType.PdfFile)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(value: 15), cancellationToken);
+            }
+        }
+    }
+
+    public async Task CreateMergedPdfOfNewsTagsAsync(ExportType exportType, CancellationToken cancellationToken)
     {
         var tags = await _dailyNewsTags.NotCacheable().AsNoTracking().OrderBy(x => x.Id).ToListAsync(cancellationToken);
 
@@ -132,8 +145,8 @@ public class DailyNewsPdfExportService(
 
             var dailyNewsItemDocs = await MapDailyNewsToExportDocumentsAsync(tagPostsIds);
 
-            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.NewsTag, tag.Id, $"مطالب گروه {tag.Name}",
-                dailyNewsItemDocs);
+            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.NewsTag, tag.Id,
+                $"مطالب گروه {tag.Name}", dailyNewsItemDocs);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }

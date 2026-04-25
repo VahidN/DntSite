@@ -35,6 +35,25 @@ public class TelegramUploadBackupService(
             cancellationToken);
     }
 
+    public async Task UploadSiteEPubFileToTelegramAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        var telegramEPubGroup = (await cachedAppSettingsProvider.GetAppSettingsAsync()).TelegramEPubGroup;
+
+        if (!telegramEPubGroup.IsActive || telegramEPubGroup.AccessToken.IsEmpty() ||
+            telegramEPubGroup.ChatId.IsEmpty())
+        {
+            if (logger.IsEnabled(LogLevel.Critical))
+            {
+                logger.LogCritical(message: "`TelegramEPubGroup` is not active or set.");
+            }
+
+            return;
+        }
+
+        await UploadFileToTelegramAsync(filePath, telegramEPubGroup.AccessToken, telegramEPubGroup.ChatId,
+            cancellationToken);
+    }
+
     public async Task UploadFileToTelegramAsync(string filePath,
         string accessToken,
         string chatId,

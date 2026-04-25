@@ -10,6 +10,8 @@ public interface IAppFoldersService : ISingletonService, IDisposable
 
     string WwwRootPath { get; }
 
+    string FontsFolderPath { get; }
+
     string UploadsFolderPath { get; }
 
     string BackupFolderPath { get; }

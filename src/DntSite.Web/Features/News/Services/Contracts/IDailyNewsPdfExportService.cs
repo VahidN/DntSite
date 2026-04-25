@@ -5,9 +5,12 @@ namespace DntSite.Web.Features.News.Services.Contracts;
 
 public interface IDailyNewsPdfExportService : IScopedService
 {
-    Task CreateMergedPdfOfNewsTagsAsync(CancellationToken cancellationToken);
+    Task<List<int>> FindIdsNeedUpdateAsync(CancellationToken cancellationToken);
 
-    Task ExportNotProcessedDailyNewsToSeparatePdfFilesAsync(CancellationToken cancellationToken);
+    Task CreateMergedPdfOfNewsTagsAsync(ExportType exportType, CancellationToken cancellationToken);
+
+    Task ExportNotProcessedDailyNewsToSeparatePdfFilesAsync(ExportType exportType,
+        CancellationToken cancellationToken = default);
 
     ExportDocument? MapDailyNewsItemToExportDocument(DailyNewsItem? post, string siteRootUri);
 
@@ -15,6 +18,7 @@ public interface IDailyNewsPdfExportService : IScopedService
 
     Task<IList<ExportDocument>> MapDailyNewsToExportDocumentsAsync(params IList<int>? dailyNewsItemIds);
 
-    Task ExportDailyNewsToSeparatePdfFilesAsync(CancellationToken cancellationToken,
+    Task ExportDailyNewsToSeparatePdfFilesAsync(ExportType exportType,
+        CancellationToken cancellationToken,
         params IList<int>? dailyNewsItemIds);
 }

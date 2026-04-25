@@ -175,7 +175,7 @@
                           @bind-Value="Model.YouTubeDataApikey"/>
 
             <hr/>
-
+            <div>ارسال بک‌آپ اطلاعات و بانک اطلاعاتی سایت به تلگرام:</div>
             <DntInputCheckBox @bind-Value="Model.TelegramBackupGroupInfo.IsActive"/>
 
             <DntInputText AutoCompleteType="AutoCompleteType.Off"
@@ -189,6 +189,23 @@
                           InputType="password"
                           dir="ltr"
                           @bind-Value="Model.TelegramBackupGroupInfo.ChatId"/>
+
+            <hr/>
+
+            <div>ارسال بک‌آپ فایل ای‌پاب سایت به تلگرام:</div>
+            <DntInputCheckBox @bind-Value="Model.TelegramEPubGroupInfo.IsActive"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiUniversalAccess"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.TelegramEPubGroupInfo.AccessToken"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiChatFill"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.TelegramEPubGroupInfo.ChatId"/>
 
             <hr/>
 

@@ -27,7 +27,60 @@ public class LearningPathPdfExportsService(
 {
     private readonly DbSet<LearningPath> _learningPaths = uow.DbSet<LearningPath>();
 
-    public async Task CreateMergedPdfOfLearningPathsAsync(CancellationToken cancellationToken)
+    public IList<int> GetNewsIds(IList<string> links)
+    {
+        if (links.IsNullOrEmpty())
+        {
+            return [];
+        }
+
+        return
+        [
+            ..GetItemPostIds(contains: "/news/details/", links, segmentNumber: 3)
+                .TryConvertToListOfT<int>(ignoreParsingFailures: true),
+            ..GetItemPostIds(contains: "/newsarchive/details/", links, segmentNumber: 3)
+                .TryConvertToListOfT<int>(ignoreParsingFailures: true)
+        ];
+    }
+
+    public IList<int> GetPostIds(IList<string> links)
+    {
+        if (links.IsNullOrEmpty())
+        {
+            return [];
+        }
+
+        return GetItemPostIds(contains: "/post/", links, segmentNumber: 2)
+            .TryConvertToListOfT<int>(ignoreParsingFailures: true);
+    }
+
+    public async Task<IList<Guid>> GetCourseTopicIdsAsync(IList<string> links)
+    {
+        if (links.IsNullOrEmpty())
+        {
+            return [];
+        }
+
+        var ids = new HashSet<Guid>();
+
+        var directIds = GetItemPostIds(contains: "/courses/topic/", links, segmentNumber: 4)
+            .TryConvertToListOfT<Guid>(ignoreParsingFailures: true);
+
+        ids.AddRange(directIds);
+
+        var courseIds = GetItemPostIds(contains: "/courses/details/", links, segmentNumber: 3)
+            .TryConvertToListOfT<int>(ignoreParsingFailures: true);
+
+        foreach (var courseId in courseIds)
+        {
+            var topics = await courseTopicsService.GetAllCourseTopicsAsync(courseId);
+            ids.AddRange(topics.Select(topic => topic.DisplayId));
+        }
+
+        return ids.ToList();
+    }
+
+    public async Task CreateMergedPdfOfLearningPathsAsync(ExportType exportType, CancellationToken cancellationToken)
     {
         var items = await GetLinkIdsAsync();
 
@@ -50,8 +103,8 @@ public class LearningPathPdfExportsService(
             var newsDocs = await dailyNewsPdfExportService.MapDailyNewsToExportDocumentsAsync(item.NewsIds);
             var blogPostDocs = await blogPostsPdfExportService.MapBlogPostsToExportDocumentsAsync(item.PostIds);
 
-            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.LearningPaths, item.Id, item.Title,
-                [..blogPostDocs, ..courseTopicDocs, ..questionDocs, ..newsDocs]);
+            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.LearningPaths, item.Id,
+                item.Title, [..blogPostDocs, ..courseTopicDocs, ..questionDocs, ..newsDocs]);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }
@@ -107,50 +160,16 @@ public class LearningPathPdfExportsService(
         return results;
     }
 
-    private static IList<int> GetNewsIds(List<string> links)
-        =>
-        [
-            ..GetItemPostIds(contains: "/news/details/", links, segmentNumber: 3)
-                .TryConvertToListOfT<int>(ignoreParsingFailures: true),
-            ..GetItemPostIds(contains: "/newsarchive/details/", links, segmentNumber: 3)
-                .TryConvertToListOfT<int>(ignoreParsingFailures: true)
-        ];
-
     private static IList<int> GetQuestionIds(List<string> links)
         => GetItemPostIds(contains: "/questions/details/", links, segmentNumber: 3)
             .TryConvertToListOfT<int>(ignoreParsingFailures: true);
-
-    private static IList<int> GetPostIds(List<string> links)
-        => GetItemPostIds(contains: "/post/", links, segmentNumber: 2)
-            .TryConvertToListOfT<int>(ignoreParsingFailures: true);
-
-    private async Task<IList<Guid>> GetCourseTopicIdsAsync(List<string> links)
-    {
-        var ids = new HashSet<Guid>();
-
-        var directIds = GetItemPostIds(contains: "/courses/topic/", links, segmentNumber: 4)
-            .TryConvertToListOfT<Guid>(ignoreParsingFailures: true);
-
-        ids.AddRange(directIds);
-
-        var courseIds = GetItemPostIds(contains: "/courses/details/", links, segmentNumber: 3)
-            .TryConvertToListOfT<int>(ignoreParsingFailures: true);
-
-        foreach (var courseId in courseIds)
-        {
-            var topics = await courseTopicsService.GetAllCourseTopicsAsync(courseId);
-            ids.AddRange(topics.Select(topic => topic.DisplayId));
-        }
-
-        return ids.ToList();
-    }
 
     private List<string> GetLearningPathLinks(LearningPath item, string siteRootUri)
         => htmlHelperService.ExtractLinks(item.Description)
             .Where(link => link.IsValidUrl() && link.HaveTheSameDomain(siteRootUri))
             .ToList();
 
-    private static List<string> GetItemPostIds(string contains, List<string> links, int segmentNumber)
+    private static List<string> GetItemPostIds(string contains, IList<string> links, int segmentNumber)
     {
         var postIds = new List<string>();
 

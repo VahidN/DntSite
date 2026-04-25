@@ -6,5 +6,7 @@ public interface ICachedAppSettingsProvider : ISingletonService
 {
     Task<AppSetting> GetAppSettingsAsync();
 
+    Task<(string? SiteRootUri, string? Domain)> GetSiteRootDomainAsync();
+
     void InvalidateAppSettings();
 }

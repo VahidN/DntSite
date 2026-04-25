@@ -5,6 +5,10 @@ namespace DntSite.Web.Features.Exports.Services.Contracts;
 
 public interface IPdfExportService : IScopedService
 {
+    string GetPageTemplateContent();
+
+    Task<string> GetHtmlDocFilePathAsync(WhatsNewItemType itemType, int id);
+
     void RebuildExports();
 
     string? GetPhysicalFilePath(string? itemType, string? name);
@@ -19,7 +23,8 @@ public interface IPdfExportService : IScopedService
 
     Task<ExportFileLocation?> GetExportFileLocationAsync(WhatsNewItemType? itemType, int id);
 
-    Task<string?> CreateSinglePdfFileAsync(WhatsNewItemType itemType,
+    Task<string?> CreateSinglePdfFileAsync(ExportType exportType,
+        WhatsNewItemType itemType,
         int id,
         string title,
         params IList<ExportDocument> docs);

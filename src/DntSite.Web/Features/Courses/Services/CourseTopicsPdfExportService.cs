@@ -18,37 +18,7 @@ public class CourseTopicsPdfExportService(
     private readonly DbSet<Course> _courses = uow.DbSet<Course>();
     private readonly DbSet<CourseTopic> _courseTopics = uow.DbSet<CourseTopic>();
 
-    public async Task CreateMergedPdfOfCoursesAsync(CancellationToken cancellationToken)
-    {
-        var courses = await _courses.NotCacheable()
-            .AsNoTracking()
-            .Include(x => x.CourseTopics)
-            .Where(x => !x.IsDeleted)
-            .ToListAsync(cancellationToken);
-
-        foreach (var course in courses)
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-
-            var topicIds = course.CourseTopics.Where(x => !x.IsDeleted).Select(x => x.Id).ToList();
-
-            if (await ShouldNotMergeItemsAsync(course, topicIds))
-            {
-                continue;
-            }
-
-            var docs = await MapCourseTopicsToExportDocumentsAsync(topicIds);
-
-            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.AllCourses, course.Id, course.Title, docs);
-
-            await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
-        }
-    }
-
-    public async Task ExportNotProcessedCourseTopicsToSeparatePdfFilesAsync(CancellationToken cancellationToken)
+    public async Task<List<int>> FindIdsNeedUpdateAsync(CancellationToken cancellationToken)
     {
         var availableIds = pdfExportService.GetAvailableExportedFiles(WhatsNewItemType.AllCoursesTopics)
             .Select(x => x.Id)
@@ -60,7 +30,7 @@ public class CourseTopicsPdfExportService(
             ? await query.Select(x => x.Id).ToListAsync(cancellationToken)
             : await query.Where(x => !availableIds.Contains(x.Id)).Select(x => x.Id).ToListAsync(cancellationToken);
 
-        await ExportCourseTopicsToSeparatePdfFilesAsync(cancellationToken, idsNeedUpdate);
+        return idsNeedUpdate;
     }
 
     public async Task<IList<ExportDocument>> MapCourseTopicsToExportDocumentsAsync(params IList<int>? postIds)
@@ -109,28 +79,6 @@ public class CourseTopicsPdfExportService(
         return posts.Select(x => MapCourseTopicToExportDocument(x, siteRootUri)!).ToList();
     }
 
-    public async Task ExportCourseTopicsToSeparatePdfFilesAsync(CancellationToken cancellationToken,
-        params IList<int>? postIds)
-    {
-        if (postIds is null || postIds.Count == 0)
-        {
-            return;
-        }
-
-        var docs = await MapCourseTopicsToExportDocumentsAsync(postIds);
-
-        foreach (var doc in docs)
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-
-            await pdfExportService.CreateSinglePdfFileAsync(WhatsNewItemType.AllCoursesTopics, doc.Id, doc.Title, doc);
-            await Task.Delay(TimeSpan.FromSeconds(value: 15), cancellationToken);
-        }
-    }
-
     public async Task<ExportDocument?> MapCoursePostToExportDocumentAsync(int postId, string siteRootUri)
     {
         var post = await _courseTopics.NotCacheable()
@@ -164,6 +112,73 @@ public class CourseTopicsPdfExportService(
                 Tags = post.Course.Tags.Select(y => y.Name).ToList(),
                 Comments = MapCommentsToExportComment(post)
             };
+
+    public async Task CreateMergedPdfOfCoursesAsync(ExportType exportType, CancellationToken cancellationToken)
+    {
+        var courses = await _courses.NotCacheable()
+            .AsNoTracking()
+            .Include(x => x.CourseTopics)
+            .Where(x => !x.IsDeleted)
+            .ToListAsync(cancellationToken);
+
+        foreach (var course in courses)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            var topicIds = course.CourseTopics.Where(x => !x.IsDeleted).Select(x => x.Id).ToList();
+
+            if (await ShouldNotMergeItemsAsync(course, topicIds))
+            {
+                continue;
+            }
+
+            var docs = await MapCourseTopicsToExportDocumentsAsync(topicIds);
+
+            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.AllCourses, course.Id,
+                course.Title, docs);
+
+            await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
+        }
+    }
+
+    public async Task ExportNotProcessedCourseTopicsToSeparatePdfFilesAsync(ExportType exportType,
+        CancellationToken cancellationToken = default)
+    {
+        var idsNeedUpdate = await FindIdsNeedUpdateAsync(cancellationToken);
+
+        await ExportCourseTopicsToSeparatePdfFilesAsync(exportType, cancellationToken, idsNeedUpdate);
+    }
+
+    public async Task ExportCourseTopicsToSeparatePdfFilesAsync(ExportType exportType,
+        CancellationToken cancellationToken,
+        params IList<int>? postIds)
+    {
+        if (postIds is null || postIds.Count == 0)
+        {
+            return;
+        }
+
+        var docs = await MapCourseTopicsToExportDocumentsAsync(postIds);
+
+        foreach (var doc in docs)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.AllCoursesTopics, doc.Id,
+                doc.Title, doc);
+
+            if (exportType == ExportType.PdfFile)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(value: 15), cancellationToken);
+            }
+        }
+    }
 
     private async Task<bool> ShouldNotMergeItemsAsync(Course course, List<int> topicIds)
         => (await pdfExportService.GetExportFileLocationAsync(WhatsNewItemType.AllCourses, course.Id))?.IsReady ==

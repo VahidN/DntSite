@@ -31,5 +31,12 @@ public class CachedAppSettingsProvider(IServiceProvider serviceProvider, ILocker
         return _appSetting;
     }
 
+    public async Task<(string? SiteRootUri, string? Domain)> GetSiteRootDomainAsync()
+    {
+        var siteRootUri = (await GetAppSettingsAsync()).SiteRootUri;
+
+        return siteRootUri.IsValidUrl() ? (siteRootUri, new Uri(siteRootUri).Host) : (null, null);
+    }
+
     public void InvalidateAppSettings() => _appSetting = null;
 }
