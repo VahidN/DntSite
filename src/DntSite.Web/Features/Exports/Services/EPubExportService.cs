@@ -10,8 +10,9 @@ using DntSite.Web.Features.SiteBackup.Services.Contracts;
 namespace DntSite.Web.Features.Exports.Services;
 
 public class EPubExportService(
+    IEPubExportDocsInfoService docsInfoService,
+    IEPubExportHtmlProviderService htmlProviderService,
     IEPubExportDataProviderService ePubExportDataProviderService,
-    IPdfExportService pdfExportService,
     IAppFoldersService appFoldersService,
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     ILearningPathPdfExportsService learningPathPdfExportsService,
@@ -56,7 +57,7 @@ public class EPubExportService(
         string domain,
         CancellationToken cancellationToken)
     {
-        var ebookFilePath = GetEbookFilePath();
+        var ebookFilePath = docsInfoService.GetEbookFilePath();
         using var epub = new EPubDocument(ebookFilePath);
         AddMetaData(epub, domain);
         AddStaticAssets(epub);
@@ -80,46 +81,46 @@ public class EPubExportService(
         string sideBar,
         CancellationToken cancellationToken)
     {
-        await CreateItemsListContentAsync(epub, title: "مطالب", page => GetArticlesTocPath(domain, page),
-            itemsPerPage: 100,
+        await CreateItemsListContentAsync(epub, title: "مطالب",
+            page => docsInfoService.GetArticlesTocPath(domain, page), itemsPerPage: 100,
             (page, itemsPerPage)
                 => ePubExportDataProviderService.GetArticlesAsync(page, itemsPerPage, cancellationToken),
-            pagerPage => GetArticlesTocPath(domain, pagerPage), WhatsNewItemType.Posts, fixLocalUrls: false, domain,
-            sideBar, cancellationToken);
+            pagerPage => docsInfoService.GetArticlesTocPath(domain, pagerPage), WhatsNewItemType.Posts,
+            fixLocalUrls: false, domain, sideBar, cancellationToken);
 
-        await CreateItemsListContentAsync(epub, title: "دوره‌ها", page => GetCoursesTocPath(domain, page),
-            itemsPerPage: 10,
+        await CreateItemsListContentAsync(epub, title: "دوره‌ها",
+            page => docsInfoService.GetCoursesTocPath(domain, page), itemsPerPage: 10,
             (page, itemsPerPage)
                 => ePubExportDataProviderService.GetCoursesAsync(page, itemsPerPage, cancellationToken),
-            pagerPage => GetCoursesTocPath(domain, pagerPage), WhatsNewItemType.AllCoursesTopics, fixLocalUrls: false,
-            domain, sideBar, cancellationToken);
+            pagerPage => docsInfoService.GetCoursesTocPath(domain, pagerPage), WhatsNewItemType.AllCoursesTopics,
+            fixLocalUrls: false, domain, sideBar, cancellationToken);
 
-        await CreateItemsListContentAsync(epub, title: "نویسندگان", page => GetAuthorsTocPath(domain, page),
-            itemsPerPage: 10,
+        await CreateItemsListContentAsync(epub, title: "نویسندگان",
+            page => docsInfoService.GetAuthorsTocPath(domain, page), itemsPerPage: 10,
             (page, itemsPerPage)
                 => ePubExportDataProviderService.GetAuthorsAsync(page, itemsPerPage, cancellationToken),
-            pagerPage => GetAuthorsTocPath(domain, pagerPage), WhatsNewItemType.Posts, fixLocalUrls: false, domain,
-            sideBar, cancellationToken);
+            pagerPage => docsInfoService.GetAuthorsTocPath(domain, pagerPage), WhatsNewItemType.Posts,
+            fixLocalUrls: false, domain, sideBar, cancellationToken);
 
-        await CreateItemsListContentAsync(epub, title: "گروه‌ها", page => GetTagsTocPath(domain, page),
+        await CreateItemsListContentAsync(epub, title: "گروه‌ها", page => docsInfoService.GetTagsTocPath(domain, page),
             itemsPerPage: 10,
             (page, itemsPerPage)
                 => ePubExportDataProviderService.GetArticleGroupsAsync(page, itemsPerPage, cancellationToken),
-            pagerPage => GetTagsTocPath(domain, pagerPage), WhatsNewItemType.Posts, fixLocalUrls: false, domain,
-            sideBar, cancellationToken);
-
-        await CreateItemsListContentAsync(epub, title: "نقشه‌های راه", page => GetLearningPathsTocPath(domain, page),
-            itemsPerPage: 10,
-            (page, itemsPerPage)
-                => ePubExportDataProviderService.GetLearningPathsAsync(page, itemsPerPage, cancellationToken),
-            pagerPage => GetLearningPathsTocPath(domain, pagerPage), WhatsNewItemType.LearningPaths, fixLocalUrls: true,
+            pagerPage => docsInfoService.GetTagsTocPath(domain, pagerPage), WhatsNewItemType.Posts, fixLocalUrls: false,
             domain, sideBar, cancellationToken);
 
-        await CreateItemsListContentAsync(epub, title: "اشتراک‌ها", page => GetNewsTocPath(domain, page),
-            itemsPerPage: 100,
+        await CreateItemsListContentAsync(epub, title: "نقشه‌های راه",
+            page => docsInfoService.GetLearningPathsTocPath(domain, page), itemsPerPage: 10,
+            (page, itemsPerPage)
+                => ePubExportDataProviderService.GetLearningPathsAsync(page, itemsPerPage, cancellationToken),
+            pagerPage => docsInfoService.GetLearningPathsTocPath(domain, pagerPage), WhatsNewItemType.LearningPaths,
+            fixLocalUrls: true, domain, sideBar, cancellationToken);
+
+        await CreateItemsListContentAsync(epub, title: "اشتراک‌ها",
+            page => docsInfoService.GetNewsTocPath(domain, page), itemsPerPage: 100,
             (page, itemsPerPage) => ePubExportDataProviderService.GetNewsAsync(page, itemsPerPage, cancellationToken),
-            pagerPage => GetNewsTocPath(domain, pagerPage), WhatsNewItemType.News, fixLocalUrls: false, domain, sideBar,
-            cancellationToken);
+            pagerPage => docsInfoService.GetNewsTocPath(domain, pagerPage), WhatsNewItemType.News, fixLocalUrls: false,
+            domain, sideBar, cancellationToken);
     }
 
     private void AddStaticAssets(EPubDocument epub)
@@ -151,16 +152,6 @@ public class EPubExportService(
         epub.AddData(epubPath: "highlight.min.js",
             File.ReadAllBytes(appFoldersService.ExportsAssetsFolder.SafePathCombine("highlight.min.js")!),
             mediaType: "text/javascript");
-    }
-
-    private string GetEbookFilePath()
-    {
-        var epubExportDir = appFoldersService.ExportsAssetsFolder;
-
-        epubExportDir.DeleteFiles(SearchOption.AllDirectories, "*.epub");
-
-        return epubExportDir.SafePathCombine(
-            $"dnt-{DateTime.IranNowUtc.Persian.Text.ShortDate.Replace(oldChar: '/', newChar: '-')}.epub")!;
     }
 
     private async Task AddContentsAsync(EPubDocument epub,
@@ -219,34 +210,20 @@ public class EPubExportService(
         string sideBar,
         CancellationToken cancellationToken)
     {
-        var (htmlDocFilePath, fileName) = await GetDocPathAsync(type, item.Id);
-
-        if (htmlDocFilePath.IsEmpty() || fileName.IsEmpty())
-        {
-            return;
-        }
-
-        var content = await File.ReadAllTextAsync(htmlDocFilePath, cancellationToken);
-        var title = content.GetHtmlPageTitle();
+        var (content, title, fileName) = await docsInfoService.GetDocInfoAsync(type, item.Id, cancellationToken);
         var bodyNode = content.GetHtmlNodesByName(nodeName: "body").FirstOrDefault();
 
-        if (bodyNode is null)
+        if (bodyNode is null || title is null || fileName is null)
         {
             return;
         }
 
-        var bodyHtml = bodyNode.InnerHtml;
-        content = ApplyHtmlPageTemplate(title, bodyHtml, sideBar);
+        var bodyHtml = await htmlProviderService.GetLastAndNextLinksHtmlAsync(type, item, cancellationToken) +
+                       bodyNode.InnerHtml;
+
+        content = htmlProviderService.ApplyHtmlPageTemplate(title, bodyHtml, sideBar);
         content = await FixEPubLocalUrlsAsync(content, domain, cancellationToken);
         epub.AddXhtmlData(fileName, content);
-    }
-
-    private async Task<(string? DocPath, string? FileName)> GetDocPathAsync(WhatsNewItemType type, int id)
-    {
-        var path = await pdfExportService.GetHtmlDocFilePathAsync(type, id);
-        var name = path.GetFileName();
-
-        return path.FileExists() ? (path, name) : (null, null);
     }
 
     private async Task<string> FixEPubLocalUrlsAsync(string content, string domain, CancellationToken cancellationToken)
@@ -271,7 +248,7 @@ public class EPubExportService(
 
             if (postIds.Count > 0)
             {
-                return (await GetDocPathAsync(WhatsNewItemType.Posts, postIds[index: 0])).FileName;
+                return (await docsInfoService.GetDocPathAsync(WhatsNewItemType.Posts, postIds[index: 0])).FileName;
             }
 
             var courseTopicIds = await learningPathPdfExportsService.GetCourseTopicIdsAsync([pageUrl]);
@@ -284,14 +261,14 @@ public class EPubExportService(
 
                 return topic is null
                     ? null
-                    : (await GetDocPathAsync(WhatsNewItemType.AllCoursesTopics, topic.Id)).FileName;
+                    : (await docsInfoService.GetDocPathAsync(WhatsNewItemType.AllCoursesTopics, topic.Id)).FileName;
             }
 
             var newsIds = learningPathPdfExportsService.GetNewsIds([pageUrl]);
 
             if (newsIds.Count > 0)
             {
-                return (await GetDocPathAsync(WhatsNewItemType.News, newsIds[index: 0])).FileName;
+                return (await docsInfoService.GetDocPathAsync(WhatsNewItemType.News, newsIds[index: 0])).FileName;
             }
 
             return null;
@@ -307,59 +284,36 @@ public class EPubExportService(
             [],
             [
                 [
-                    $"<a href='{GetArticlesTocPath(domain, page: 1)}'>مطالب</a>",
-                    WrapInBadge(items.ArticlesCount.ToPersianNumbers())
+                    $"<a href='{docsInfoService.GetArticlesTocPath(domain, page: 1)}'>مطالب</a>",
+                    htmlProviderService.WrapInBadge(items.ArticlesCount.ToPersianNumbers())
                 ],
                 [
-                    $"<a href='{GetAuthorsTocPath(domain, page: 1)}'>نویسندگان</a>",
-                    WrapInBadge(items.AuthorsCount.ToPersianNumbers())
+                    $"<a href='{docsInfoService.GetAuthorsTocPath(domain, page: 1)}'>نویسندگان</a>",
+                    htmlProviderService.WrapInBadge(items.AuthorsCount.ToPersianNumbers())
                 ],
                 [
-                    $"<a href='{GetTagsTocPath(domain, page: 1)}'>گروه‌های مطالب</a>",
-                    WrapInBadge(items.ArticleGroupsCount.ToPersianNumbers())
+                    $"<a href='{docsInfoService.GetTagsTocPath(domain, page: 1)}'>گروه‌های مطالب</a>",
+                    htmlProviderService.WrapInBadge(items.ArticleGroupsCount.ToPersianNumbers())
                 ],
                 [
-                    $"<a href='{GetLearningPathsTocPath(domain, page: 1)}'>نقشه‌های راه</a>",
-                    WrapInBadge(items.LearningPathsCount.ToPersianNumbers())
+                    $"<a href='{docsInfoService.GetLearningPathsTocPath(domain, page: 1)}'>نقشه‌های راه</a>",
+                    htmlProviderService.WrapInBadge(items.LearningPathsCount.ToPersianNumbers())
                 ],
                 [
-                    $"<a href='{GetCoursesTocPath(domain, page: 1)}'>دوره‌ها</a>",
-                    WrapInBadge(items.CoursesCount.ToPersianNumbers())
+                    $"<a href='{docsInfoService.GetCoursesTocPath(domain, page: 1)}'>دوره‌ها</a>",
+                    htmlProviderService.WrapInBadge(items.CoursesCount.ToPersianNumbers())
                 ],
                 [
-                    $"<a href='{GetNewsTocPath(domain, page: 1)}'>اشتراک‌ها</a>",
-                    WrapInBadge(items.NewsCount.ToPersianNumbers())
+                    $"<a href='{docsInfoService.GetNewsTocPath(domain, page: 1)}'>اشتراک‌ها</a>",
+                    htmlProviderService.WrapInBadge(items.NewsCount.ToPersianNumbers())
                 ]
             ], tableClass: "table shadow-sm rounded table-hover mx-auto w-auto caption-top"));
 
-        var content = ApplyHtmlPageTemplate(domain, html.ToString(), sideBar: null);
-        epub.AddXhtmlData(GetEPubTocPath(domain, page: 1), content);
-        epub.AddNavPoint(domain, GetEPubTocPath(domain, page: 1), playOrder: 0);
+        var content = htmlProviderService.ApplyHtmlPageTemplate(domain, html.ToString(), sideBar: null);
+        epub.AddXhtmlData(docsInfoService.GetEPubTocPath(domain, page: 1), content);
+        epub.AddNavPoint(domain, docsInfoService.GetEPubTocPath(domain, page: 1), playOrder: 0);
 
         return content;
-    }
-
-    private string ApplyHtmlPageTemplate(string title, string body, string? sideBar)
-    {
-        var content = string.Format(CultureInfo.InvariantCulture, pdfExportService.GetPageTemplateContent(),
-            title.ApplyRle(), body);
-
-        return sideBar is null
-            ? content
-            : $"""
-               <div class='container-fluid min-vh-100 d-flex flex-column'>
-                   <div class='row flex-grow-1'>
-                       <div class='col-md-2'>
-                        {sideBar}
-                       </div>
-                       <div class='col-md-10'>
-                           <div class='mt-4 mb-3 container-fluid'>
-                             {content}
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               """;
     }
 
     private async Task CreateItemsListContentAsync(EPubDocument epub,
@@ -392,7 +346,7 @@ public class EPubExportService(
 
             var html = new StringBuilder();
             var listTitle = numberOfPages > 1 ? $"{title}، صفحه {currentPage.ToPersianNumbers()}" : title;
-            AddHeader(html, listTitle);
+            htmlProviderService.AddHeader(html, listTitle);
 
             html.AppendLine(value: "<div class='mb-3'>");
             html.AppendLine(value: "<ul class='list-group'>");
@@ -401,11 +355,11 @@ public class EPubExportService(
             {
                 if (!listItem.SubItems.IsNullOrEmpty())
                 {
-                    AddHeader(html, listItem.Item.Title);
+                    htmlProviderService.AddHeader(html, listItem.Item.Title);
 
                     foreach (var subItem in listItem.SubItems.OrderBy(ePubContentItem => ePubContentItem.Id))
                     {
-                        html.Append(await GetEPubContentItemLinkAsync(type, subItem));
+                        html.Append(await htmlProviderService.GetEPubContentItemLinkAsync(type, subItem));
                     }
                 }
                 else if (fixLocalUrls)
@@ -418,7 +372,7 @@ public class EPubExportService(
                 }
                 else
                 {
-                    html.Append(await GetEPubContentItemLinkAsync(type, listItem.Item));
+                    html.Append(await htmlProviderService.GetEPubContentItemLinkAsync(type, listItem.Item));
                 }
             }
 
@@ -432,7 +386,9 @@ public class EPubExportService(
             }
 
             var pointPath = navPointPath(currentPage);
-            epub.AddXhtmlData(pointPath, ApplyHtmlPageTemplate(listTitle, html.ToString(), sideBar));
+
+            epub.AddXhtmlData(pointPath,
+                htmlProviderService.ApplyHtmlPageTemplate(listTitle, html.ToString(), sideBar));
 
             currentPage++;
 
@@ -444,53 +400,6 @@ public class EPubExportService(
 
         await Task.Delay(TimeSpan.FromMilliseconds(value: 100), cancellationToken);
     }
-
-    private async Task<string> GetEPubContentItemLinkAsync(WhatsNewItemType type, EPubContentItem subItem)
-    {
-        var dateBadge = subItem.PublishDate.HasValue
-            ? string.Format(CultureInfo.InvariantCulture,
-                format: "<span class='ms-2 badge bg-secondary rounded-pill' dir='ltr'>{0}</span>",
-                subItem.PublishDate.ToShortPersianDateString().ToPersianNumbers())
-            : "";
-
-        var authorBadge = !subItem.Author.IsEmpty()
-            ? string.Format(CultureInfo.InvariantCulture,
-                format: "<span class='ms-2 badge bg-primary rounded-pill' dir='rtl'>{0}</span>", subItem.Author)
-            : "";
-
-        var urlBadge = !subItem.Url.IsEmpty()
-            ? string.Format(CultureInfo.InvariantCulture,
-                format:
-                "<a class='ms-2 badge border-sm bg-light rounded-pill' dir='rtl' target='_blank' href='{0}'>مشاهده</a>",
-                subItem.Url)
-            : "";
-
-        return string.Format(CultureInfo.InvariantCulture,
-            format:
-            "<li class='list-group-item list-group-item-action'><a dir='rtl' href='{0}'>{1}</a> {2} {3} {4}</li>",
-            (await GetDocPathAsync(type, subItem.Id)).FileName, subItem.Title, authorBadge, dateBadge, urlBadge);
-    }
-
-    private static string GetEPubTocPath(string domain, int page)
-        => string.Create(CultureInfo.InvariantCulture, $"{domain}-toc-page-{page}.html");
-
-    private static string GetArticlesTocPath(string domain, int page)
-        => string.Create(CultureInfo.InvariantCulture, $"{domain}-articles-toc-page-{page}.html");
-
-    private static string GetAuthorsTocPath(string domain, int page)
-        => string.Create(CultureInfo.InvariantCulture, $"{domain}-authors-toc-page-{page}.html");
-
-    private static string GetTagsTocPath(string domain, int page)
-        => string.Create(CultureInfo.InvariantCulture, $"{domain}-articles-tags-toc-page-{page}.html");
-
-    private static string GetLearningPathsTocPath(string domain, int page)
-        => string.Create(CultureInfo.InvariantCulture, $"{domain}-learning-paths-toc-page-{page}.html");
-
-    private static string GetCoursesTocPath(string domain, int page)
-        => string.Create(CultureInfo.InvariantCulture, $"{domain}-courses-toc-page-{page}.html");
-
-    private static string GetNewsTocPath(string domain, int page)
-        => string.Create(CultureInfo.InvariantCulture, $"{domain}-news-toc-page-{page}.html");
 
     private static void AddMetaData(EPubDocument epub, string domain)
     {
@@ -505,17 +414,4 @@ public class EPubExportService(
         epub.AddDCItem(name: "date",
             DateTimeOffset.UtcNow.ToString(format: "yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture));
     }
-
-    private static void AddHeader(StringBuilder html, string title)
-    {
-        html.AppendLine(value: "<div class='card mt-2 mb-2' align='center'>");
-
-        html.AppendLine(title.ContainsFarsi()
-            ? $"<h2 class='card-header shadow-sm align-items-center'>{title}</h2>"
-            : $"<h2 class='card-header shadow-sm align-items-center' dir='ltr'>{title}</h2>");
-
-        html.AppendLine(value: "</div>");
-    }
-    private static string WrapInBadge(string title)
-        => string.Create(CultureInfo.InvariantCulture, $"<span class='badge bg-secondary rounded-pill'>{title}</span>");
 }
