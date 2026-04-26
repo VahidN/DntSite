@@ -56,7 +56,7 @@ public class EPubExportHtmlProviderService(
 
         return string.Format(CultureInfo.InvariantCulture,
             format:
-            "<li class='list-group-item list-group-item-action'><a dir='rtl' href='{0}'>{1}</a> {2} {3} {4}</li>",
+            "<li class='list-group-item list-group-item-action d-flex align-items-center'><a dir='rtl' href='{0}'>{1}</a> <span class='ms-auto'>{2} {3} {4}</span></li>",
             (await docsInfoService.GetDocPathAsync(type, subItem.Id)).FileName, subItem.Title, authorBadge, dateBadge,
             urlBadge);
     }
