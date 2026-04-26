@@ -125,6 +125,8 @@ public class EPubExportHtmlProviderService(
             html.Append(value: "<div></div>");
         }
 
+        html.Append(value: "</nav>");
+
         return html.ToString();
     }
 }

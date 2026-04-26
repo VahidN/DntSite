@@ -364,6 +364,8 @@ public class EPubExportService(
                 }
                 else if (fixLocalUrls)
                 {
+                    htmlProviderService.AddHeader(html, listItem.Item.Title);
+
                     var itemContent =
                         await FixEPubLocalUrlsAsync(listItem.Item.Content ?? "", domain, cancellationToken);
 
