@@ -7,7 +7,10 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "target": "ES2020",
-    "outFile": "wwwroot/scripts/app.js"
+    "outFile": "wwwroot/scripts/app.js",
+    "rootDir": "./Scripts",
+    "ignoreDeprecations": "6.0",
+    "module": "AMD"
   },
   "include": [
     "Scripts/**/*.ts"
