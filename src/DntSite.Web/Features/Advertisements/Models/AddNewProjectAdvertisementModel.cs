@@ -4,21 +4,21 @@ public class AddNewProjectAdvertisementModel
 {
     [Display(Name = "نام شما جهت تماس")]
     [Required(ErrorMessage = "(*)")]
-    public string Name { set; get; } = default!;
+    public string Name { set; get; } = null!;
 
     [Display(Name = "شماره تماس")]
     [Required(ErrorMessage = "(*)")]
-    public string Tel { set; get; } = default!;
+    public string Tel { set; get; } = null!;
 
     [Display(Name = "توضیحات عمومی پروژه")]
     [Required(ErrorMessage = "(*)")]
     [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
-    public string GeneralConditions { set; get; } = default!;
+    public string GeneralConditions { set; get; } = null!;
 
     [Display(Name = "فناوری‌های مدنظر جهت انجام پروژه")]
     [Required(ErrorMessage = "(*)")]
     [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
-    public string SpecialConditions { set; get; } = default!;
+    public string SpecialConditions { set; get; } = null!;
 
     [Display(Name = "ارسال رزومه به (آدرس ایمیل)")]
     [Required(ErrorMessage = "(*)")]
@@ -26,11 +26,11 @@ public class AddNewProjectAdvertisementModel
     [DataType(DataType.EmailAddress)]
     [RegularExpression(pattern: @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
         ErrorMessage = "لطفا آدرس ایمیل معتبری را وارد نمائید")]
-    public string SendResumeTo { set; get; } = default!;
+    public string SendResumeTo { set; get; } = null!;
 
     [Display(Name = "تاریخ انقضای آگهی")]
     [Required(ErrorMessage = "(*)")]
-    public DateTime DueDate { set; get; } = default!;
+    public DateTime DueDate { set; get; }
 
     [Range(minimum: 0, maximum: 23, ErrorMessage = "ساعت وارد شده باید در بازه 0 تا 23 تعیین شود")]
     public int? Hour { set; get; }

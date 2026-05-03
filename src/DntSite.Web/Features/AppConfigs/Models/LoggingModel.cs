@@ -2,7 +2,7 @@
 
 public class LoggingModel
 {
-    public bool IncludeScopes { get; set; } = default!;
+    public bool IncludeScopes { get; set; }
 
-    public LoglevelModel LogLevel { get; set; } = default!;
+    public required LoglevelModel LogLevel { get; set; }
 }

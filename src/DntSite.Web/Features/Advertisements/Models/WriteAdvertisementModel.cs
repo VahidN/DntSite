@@ -6,7 +6,7 @@ public class WriteAdvertisementModel
     [Required(ErrorMessage = "(*)")]
     [StringLength(maximumLength: 450, MinimumLength = 1,
         ErrorMessage = "حداکثر طول عنوان پیام 450 حرف و حداقل آن 1 حرف می‌باشد")]
-    public string Title { set; get; } = default!;
+    public string Title { set; get; } = null!;
 
     [Display(Name = "متن آگهی")]
     [Required(ErrorMessage = "(*)")]
@@ -14,7 +14,7 @@ public class WriteAdvertisementModel
     [MaxLength]
     [MinLength(length: 100, ErrorMessage = "متن یک مطلب جدید حداقل 100 کاراکتر باید باشد")]
     [DataType(DataType.MultilineText)]
-    public string Body { set; get; } = default!;
+    public string Body { set; get; } = null!;
 
     [Display(Name = "گروه(ها)")]
     [Required(ErrorMessage = "لطفا تگ یا گروهی را وارد کنید")]
@@ -23,7 +23,7 @@ public class WriteAdvertisementModel
 
     [Display(Name = "تاریخ انقضای آگهی")]
     [Required(ErrorMessage = "(*)")]
-    public DateTime DueDate { set; get; } = default!;
+    public DateTime DueDate { set; get; }
 
     [Range(minimum: 0, maximum: 23, ErrorMessage = "ساعت وارد شده باید در بازه 0 تا 23 تعیین شود")]
     public int? Hour { set; get; }

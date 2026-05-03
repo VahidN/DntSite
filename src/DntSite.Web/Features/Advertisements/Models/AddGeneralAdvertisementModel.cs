@@ -4,16 +4,16 @@ public class AddGeneralAdvertisementModel
 {
     [Display(Name = "نام کامل شرکت")]
     [Required(ErrorMessage = "(*)")]
-    public string OrganizationName { set; get; } = default!;
+    public string OrganizationName { set; get; } = null!;
 
     [Display(Name = "آدرس کامل شرکت")]
     [Required(ErrorMessage = "(*)")]
-    public string Address { set; get; } = default!;
+    public string Address { set; get; } = null!;
 
     [Display(Name = "امتیازات حضور در مجموعه ما")]
     [Required(ErrorMessage = "(*)")]
     [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
-    public string Benefits { set; get; } = default!;
+    public string Benefits { set; get; } = null!;
 
     [Display(Name = "عنوان شغلی مورد نیاز")]
     [Required(ErrorMessage = "(*)")]
@@ -27,26 +27,26 @@ public class AddGeneralAdvertisementModel
 
     [Display(Name = "شماره تماس")]
     [Required(ErrorMessage = "(*)")]
-    public string Tel { set; get; } = default!;
+    public string Tel { set; get; } = null!;
 
     [Display(Name = "نام شما جهت تماس")]
     [Required(ErrorMessage = "(*)")]
-    public string Name { set; get; } = default!;
+    public string Name { set; get; } = null!;
 
     [Display(Name = "شرایط عمومی متقاضی")]
     [Required(ErrorMessage = "(*)")]
     [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
-    public string GeneralConditions { set; get; } = default!;
+    public string GeneralConditions { set; get; } = null!;
 
     [Display(Name = "شرایط تخصصی متقاضی")]
     [Required(ErrorMessage = "(*)")]
     [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
-    public string SpecialConditions { set; get; } = default!;
+    public string SpecialConditions { set; get; } = null!;
 
     [Display(Name = "اولویت‌ها")]
     [Required(ErrorMessage = "(*)")]
     [RequiredHtmlContent(ErrorMessage = "لطفا حداقل یک سطر توضیح را وارد نمائید.")]
-    public string SpecialPoints { set; get; } = default!;
+    public string SpecialPoints { set; get; } = null!;
 
     [Required(ErrorMessage = "لطفا جنسیتی را انتخاب کنید")]
     [Display(Name = "جنسیت متقاضی")]
@@ -66,11 +66,11 @@ public class AddGeneralAdvertisementModel
     [DataType(DataType.EmailAddress)]
     [RegularExpression(pattern: @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
         ErrorMessage = "لطفا آدرس ایمیل معتبری را وارد نمائید")]
-    public string SendResumeTo { set; get; } = default!;
+    public string SendResumeTo { set; get; } = null!;
 
     [Display(Name = "تاریخ انقضای آگهی")]
     [Required(ErrorMessage = "(*)")]
-    public DateTime DueDate { set; get; } = default!;
+    public DateTime DueDate { set; get; }
 
     [Range(minimum: 0, maximum: 23, ErrorMessage = "ساعت وارد شده باید در بازه 0 تا 23 تعیین شود")]
     public int? Hour { set; get; }

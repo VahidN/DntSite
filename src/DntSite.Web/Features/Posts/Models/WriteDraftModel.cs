@@ -8,7 +8,7 @@ public class WriteDraftModel
     [Required(ErrorMessage = "متن عنوان خالی است")]
     [StringLength(maximumLength: 450, MinimumLength = 1,
         ErrorMessage = "حداکثر طول عنوان پیام 450 حرف و حداقل آن 1 حرف می‌باشد")]
-    public string Title { set; get; } = null!;
+    public string Title { set; get; } = "";
 
     [Display(Name = "مطلب")]
     [Required(ErrorMessage = "متن اصلی خالی است")]
@@ -18,12 +18,12 @@ public class WriteDraftModel
     [DataType(DataType.MultilineText)]
     [ShouldContainPersianLetters(ErrorMessage =
         "به نظر می‌رسد بهتر باشد این مطلب تمام انگلیسی، به صورت یک لینک جدید در «قسمت اشتراک‌ها» مطرح شود")]
-    public string ArticleBody { set; get; } = null!;
+    public string ArticleBody { set; get; } = "";
 
     [Display(Name = "گروه(ها)")]
     [Required(ErrorMessage = "لطفا تگ یا گروهی را وارد کنید")]
     [MinLength(length: 1, ErrorMessage = "لطفا حداقل یک گروه را وارد کنید")]
-    public IList<string> Tags { set; get; } = null!;
+    public IList<string> Tags { set; get; } = [];
 
     [Display(Name = "مطلب تکمیل شده‌ و آماده‌ی انتشار عمومی است")]
     public bool IsReady { set; get; }

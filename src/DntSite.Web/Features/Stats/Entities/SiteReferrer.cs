@@ -5,13 +5,13 @@ namespace DntSite.Web.Features.Stats.Entities;
 
 public class SiteReferrer : BaseEntity
 {
-    [IgnoreAudit] public DateTime LastVisitTime { set; get; } = default!;
+    [IgnoreAudit] public DateTime LastVisitTime { set; get; }
 
-    public string ReferrerTitle { set; get; } = default!;
+    public string ReferrerTitle { set; get; } = null!;
 
-    public string ReferrerUrl { set; get; } = default!;
+    public string ReferrerUrl { set; get; } = null!;
 
-    [IgnoreAudit] public string VisitHash { set; get; } = default!;
+    [IgnoreAudit] public string VisitHash { set; get; } = null!;
 
     [IgnoreAudit] public int VisitsCount { set; get; }
 

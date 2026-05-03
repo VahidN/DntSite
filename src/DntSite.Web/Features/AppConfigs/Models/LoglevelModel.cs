@@ -2,9 +2,9 @@
 
 public class LoglevelModel
 {
-    public LogLevel Default { get; set; } = default!;
+    public LogLevel Default { get; set; }
 
-    public LogLevel System { get; set; } = default!;
+    public LogLevel System { get; set; }
 
-    public LogLevel Microsoft { get; set; } = default!;
+    public LogLevel Microsoft { get; set; }
 }

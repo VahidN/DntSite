@@ -6,11 +6,11 @@ namespace DntSite.Web.Features.Stats.Entities;
 [ComplexType]
 public class LastSiteUrlVisitorStat : IEqualityComparer<LastSiteUrlVisitorStat>, IEqualityComparer
 {
-    public DateTime VisitTime { set; get; } = default!;
+    public DateTime VisitTime { set; get; }
 
-    [StringLength(maximumLength: 100)] public string Ip { set; get; } = default!;
+    [StringLength(maximumLength: 100)] public string Ip { set; get; } = null!;
 
-    [StringLength(maximumLength: 1000)] public string UserAgent { set; get; } = default!;
+    [StringLength(maximumLength: 1000)] public string UserAgent { set; get; } = null!;
 
     [StringLength(maximumLength: 1000)] public string? DisplayName { set; get; }
 

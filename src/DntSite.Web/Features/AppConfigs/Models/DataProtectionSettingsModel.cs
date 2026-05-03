@@ -2,9 +2,11 @@
 
 public class DataProtectionSettingsModel
 {
-    public TimeSpan DataProtectionKeyLifetime { get; set; } = default!;
+    public TimeSpan DataProtectionKeyLifetime { get; set; }
 
-    [Required] [StringLength(1000)] public string ApplicationName { get; set; } = default!;
+    [Required]
+    [StringLength(maximumLength: 1000)]
+    public string ApplicationName { get; set; } = null!;
 
     public int LoginCookieExpirationDays { set; get; }
 }
