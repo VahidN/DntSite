@@ -1,4 +1,5 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.SiteBackup.Models;
 using DntSite.Web.Features.SiteBackup.Services.Contracts;
 using Microsoft.Data.Sqlite;
 
@@ -20,14 +21,14 @@ public class WebSiteBackupService(
         if (await CreateOnlineSqliteBackupAsync(dbBackupFilePath, cancellationToken) &&
             await ValidateSqliteBackupAsync(dbBackupFilePath, cancellationToken))
         {
-            await CompressAndUploadDbBackupFileAsync(dbBackupFilePath, cancellationToken);
+            await CompressAndUploadDatabaseBackupFileAsync(dbBackupFilePath, cancellationToken);
         }
 
-        await CompressAndUploadDataBackupFileAsync(cancellationToken);
+        await CompressAndUploadDataFolderBackupFileAsync(cancellationToken);
     }
 
     private void DeleteOldZipFiles()
-        => appFoldersService.BackupFolderPath.DeleteFiles(SearchOption.AllDirectories, "*.zip");
+        => appFoldersService.BackupFolderPath.DeleteFiles(SearchOption.AllDirectories, "*.*");
 
     private string GetDbBackupFilePath()
     {
@@ -38,7 +39,7 @@ public class WebSiteBackupService(
             newValue: "''", StringComparison.Ordinal);
     }
 
-    private async Task CompressAndUploadDataBackupFileAsync(CancellationToken cancellationToken)
+    private async Task CompressAndUploadDataFolderBackupFileAsync(CancellationToken cancellationToken)
     {
         try
         {
@@ -47,11 +48,15 @@ public class WebSiteBackupService(
 
             var dataBackupFilePath = appFoldersService.BackupFolderPath.SafePathCombine(dataBackupFileName)!;
 
-            appFoldersService.UploadsFolderPath.CompressFolderToZipFile(dataBackupFilePath);
-            await Task.Delay(_delay, cancellationToken);
+            await uploadBackupService.UploadSiteFolderContentsToTelegramAsync(appFoldersService.UploadsFolderPath,
+                dataBackupFilePath,
+                OperatingSystem.IsLinux() ? FileSplitterType.ZipFileAndSplit : FileSplitterType.NormalFileSplit,
+                cancellationToken);
 
-            await uploadBackupService.UploadSiteBackupFileToTelegramAsync(dataBackupFilePath, cancellationToken);
             await Task.Delay(_delay, cancellationToken);
+            dataBackupFilePath.TryDeleteFile(logger);
+
+            DeleteOldZipFiles();
         }
         catch (Exception ex)
         {
@@ -59,17 +64,19 @@ public class WebSiteBackupService(
         }
     }
 
-    private async Task CompressAndUploadDbBackupFileAsync(string dbBackupFilePath, CancellationToken cancellationToken)
+    private async Task CompressAndUploadDatabaseBackupFileAsync(string dbBackupFilePath,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var backupZipFilePath = $"{dbBackupFilePath}.zip";
-            backupZipFilePath.CompressFilesToZipFile(dbBackupFilePath);
+            await uploadBackupService.UploadSiteBackupFileToTelegramAsync(dbBackupFilePath,
+                OperatingSystem.IsLinux() ? FileSplitterType.ZipFileAndSplit : FileSplitterType.NormalFileSplit,
+                cancellationToken);
+
             await Task.Delay(_delay, cancellationToken);
             dbBackupFilePath.TryDeleteFile(logger);
 
-            await uploadBackupService.UploadSiteBackupFileToTelegramAsync(backupZipFilePath, cancellationToken);
-            await Task.Delay(_delay, cancellationToken);
+            DeleteOldZipFiles();
         }
         catch (Exception ex)
         {

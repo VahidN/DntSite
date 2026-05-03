@@ -65,9 +65,13 @@ public static partial class DntQueryBuilderExtensions
         }
     };
 
+    [GeneratedRegex(pattern: @"([(),|\\]|\/i)", RegexOptions.Compiled, matchTimeoutMilliseconds: 3000)]
+    private static partial Regex EscapeRegex { get; }
+
     /// <summary>
     ///     Create a dynamic `Gridify Where` statement for the provided model
     /// </summary>
+    /// <typeparam name="TRecord">Type the record</typeparam>
     public static string ToGridifyFilter<TRecord>(this IList<DntQueryBuilderSearchRule<TRecord>>? searchRules)
         where TRecord : class
     {
@@ -174,8 +178,5 @@ public static partial class DntQueryBuilderExtensions
     }
 
     private static string EscapeValue(this string? value)
-        => string.IsNullOrWhiteSpace(value) ? "" : EscapeRegex().Replace(value, replacement: "\\$1");
-
-    [GeneratedRegex(pattern: @"([(),|\\]|\/i)", RegexOptions.Compiled, matchTimeoutMilliseconds: 3000)]
-    private static partial Regex EscapeRegex();
+        => string.IsNullOrWhiteSpace(value) ? "" : EscapeRegex.Replace(value, replacement: "\\$1");
 }
