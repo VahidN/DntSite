@@ -105,6 +105,15 @@ public sealed class AppFoldersService : IAppFoldersService
 
     public void Dispose() => _disposableSettings?.Dispose();
 
+    public string GetTempDirectory()
+    {
+        var tempDirectory = BackupFolderPath.SafePathCombine("Temp");
+        tempDirectory.TryDeleteDirectory();
+        tempDirectory.TryCreateDirectory();
+
+        return tempDirectory!;
+    }
+
     private string GetWwwRootPath()
     {
         var webRootPath = _webHostEnvironment.WebRootPath;

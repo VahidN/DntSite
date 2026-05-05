@@ -33,4 +33,6 @@ public interface IAppFoldersService : ISingletonService, IDisposable
     string GetFolderPath(FileType fileType);
 
     string GetWebRootAppDataFolderPath(params string[] folders);
+
+    string GetTempDirectory();
 }

@@ -5,7 +5,6 @@ using DntSite.Web.Features.Exports.Models;
 using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.RoadMaps.Services.Contracts;
 using DntSite.Web.Features.RssFeeds.Models;
-using DntSite.Web.Features.SiteBackup.Models;
 using DntSite.Web.Features.SiteBackup.Services.Contracts;
 
 namespace DntSite.Web.Features.Exports.Services;
@@ -17,7 +16,7 @@ public class EPubExportService(
     IAppFoldersService appFoldersService,
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     ILearningPathPdfExportsService learningPathPdfExportsService,
-    ITelegramUploadBackupService telegramUploadBackupService,
+    IWebSiteBackupService webSiteBackupService,
     ILogger<EPubExportService> logger) : IEPubExportService
 {
     private List<EPubListItem>? _allCourses;
@@ -51,9 +50,7 @@ public class EPubExportService(
         var ebookFilePath = await GenerateEPubAsync(tocItems, baseUrl, domain, cancellationToken);
         await Task.Delay(TimeSpan.FromMilliseconds(value: 500), cancellationToken);
 
-        await telegramUploadBackupService.UploadSiteEPubFileToTelegramAsync(ebookFilePath,
-            OperatingSystem.IsLinux() ? FileSplitterType.ZipFileAndSplit : FileSplitterType.NormalFileSplit,
-            cancellationToken);
+        await webSiteBackupService.UploadSiteEPubFileAsync(ebookFilePath, cancellationToken);
     }
 
     private async Task<string> GenerateEPubAsync(EPubTocItems tocItems,

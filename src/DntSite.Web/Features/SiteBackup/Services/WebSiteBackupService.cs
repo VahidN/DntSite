@@ -1,30 +1,76 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
-using DntSite.Web.Features.SiteBackup.Models;
 using DntSite.Web.Features.SiteBackup.Services.Contracts;
 using Microsoft.Data.Sqlite;
 
 namespace DntSite.Web.Features.SiteBackup.Services;
 
 public class WebSiteBackupService(
-    ITelegramUploadBackupService uploadBackupService,
+    ITelegramUploadBackupService telegramUploadBackupService,
     IAppFoldersService appFoldersService,
     ILogger<WebSiteBackupService> logger) : IWebSiteBackupService
 {
+    private const int MaxPartSizeInBytes = 45 * 1024 * 1024; // 45 مگابایت
     private readonly TimeSpan _delay = TimeSpan.FromSeconds(seconds: 7);
 
     public async Task CreateBackupAsync(CancellationToken cancellationToken = default)
     {
-        DeleteOldZipFiles();
-
-        var dbBackupFilePath = GetDbBackupFilePath();
-
-        if (await CreateOnlineSqliteBackupAsync(dbBackupFilePath, cancellationToken) &&
-            await ValidateSqliteBackupAsync(dbBackupFilePath, cancellationToken))
+        try
         {
-            await CompressAndUploadDatabaseBackupFileAsync(dbBackupFilePath, cancellationToken);
-        }
+            if (!NetworkExtensions.IsConnectedToInternet(_delay))
+            {
+                if (logger.IsEnabled(LogLevel.Critical))
+                {
+                    logger.LogCritical(message: "There is no internet connection to run UploadBackupService.");
+                }
 
-        await CompressAndUploadDataFolderBackupFileAsync(cancellationToken);
+                return;
+            }
+
+            DeleteOldZipFiles();
+
+            var dbBackupFilePath = GetDbBackupFilePath();
+
+            if (await CreateOnlineSqliteBackupAsync(dbBackupFilePath, cancellationToken) &&
+                await ValidateSqliteBackupAsync(dbBackupFilePath, cancellationToken))
+            {
+                await CompressAndUploadDatabaseBackupFileAsync(dbBackupFilePath, cancellationToken);
+            }
+
+            await CompressAndUploadDataFolderBackupFileAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Demystify(), message: "Failed to upload site's backup file.");
+        }
+    }
+
+    public async Task UploadSiteEPubFileAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (!NetworkExtensions.IsConnectedToInternet(_delay))
+            {
+                if (logger.IsEnabled(LogLevel.Critical))
+                {
+                    logger.LogCritical(message: "There is no internet connection to run UploadBackupService.");
+                }
+
+                return;
+            }
+
+            var tempDirectory = appFoldersService.GetTempDirectory();
+
+            var partPaths = await filePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory,
+                MaxPartSizeInBytes.ToMegabytes(FileSizeUnit.Byte), logger: logger,
+                cancellationToken: cancellationToken);
+
+            await telegramUploadBackupService.UploadSiteEPubFileToTelegramAsync(partPaths, cancellationToken);
+            DeleteParts(partPaths);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Demystify(), message: "Failed to upload site's epub-backup file.");
+        }
     }
 
     private void DeleteOldZipFiles()
@@ -43,20 +89,14 @@ public class WebSiteBackupService(
     {
         try
         {
-            var dataBackupFileName = string.Create(CultureInfo.InvariantCulture,
-                $"uploads.{DateTime.UtcNow:yyyyMMdd_HHmmss}.{Guid.CryptographicallySecureGuid:N}.zip");
+            var tempDirectory = appFoldersService.GetTempDirectory();
 
-            var dataBackupFilePath = appFoldersService.BackupFolderPath.SafePathCombine(dataBackupFileName)!;
+            var partPaths = await appFoldersService.UploadsFolderPath.ZipAndSplitFolderToMultiplePartsAsync(
+                tempDirectory, MaxPartSizeInBytes.ToMegabytes(FileSizeUnit.Byte), logger: logger,
+                cancellationToken: cancellationToken);
 
-            await uploadBackupService.UploadSiteFolderContentsToTelegramAsync(appFoldersService.UploadsFolderPath,
-                dataBackupFilePath,
-                OperatingSystem.IsLinux() ? FileSplitterType.ZipFileAndSplit : FileSplitterType.NormalFileSplit,
-                cancellationToken);
-
-            await Task.Delay(_delay, cancellationToken);
-            dataBackupFilePath.TryDeleteFile(logger);
-
-            DeleteOldZipFiles();
+            await telegramUploadBackupService.UploadSiteBackupFileToTelegramAsync(partPaths, cancellationToken);
+            DeleteParts(partPaths);
         }
         catch (Exception ex)
         {
@@ -69,18 +109,33 @@ public class WebSiteBackupService(
     {
         try
         {
-            await uploadBackupService.UploadSiteBackupFileToTelegramAsync(dbBackupFilePath,
-                OperatingSystem.IsLinux() ? FileSplitterType.ZipFileAndSplit : FileSplitterType.NormalFileSplit,
-                cancellationToken);
+            var tempDirectory = appFoldersService.GetTempDirectory();
+
+            var partPaths = await dbBackupFilePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory,
+                MaxPartSizeInBytes.ToMegabytes(FileSizeUnit.Byte), logger: logger,
+                cancellationToken: cancellationToken);
+
+            await telegramUploadBackupService.UploadSiteBackupFileToTelegramAsync(partPaths, cancellationToken);
 
             await Task.Delay(_delay, cancellationToken);
-            dbBackupFilePath.TryDeleteFile(logger);
 
-            DeleteOldZipFiles();
+            dbBackupFilePath.TryDeleteFile(logger);
+            DeleteParts(partPaths);
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Demystify(), message: "Failed to compress and upload DB backup file.");
+        }
+    }
+
+    private void DeleteParts(IList<string>? partPaths)
+    {
+        if (partPaths is not null)
+        {
+            foreach (var partPath in partPaths)
+            {
+                partPath.TryDeleteFile(logger);
+            }
         }
     }
 
