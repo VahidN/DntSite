@@ -13,4 +13,8 @@ public class TelegramBackupGroup
     [Display(Name = "شناسه گفتگو")]
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
     public string? ChatId { get; set; }
+
+    [Display(Name = "کلمه عبور فایل Zip")]
+    [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
+    public string? ZipPassword { get; set; }
 }

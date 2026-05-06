@@ -12,5 +12,5 @@ public class ManageBackupsJob(
     protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; }
 
     protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
-        => webSiteBackupService.CreateBackupAsync(cancellationToken);
+        => webSiteBackupService.CreateSiteBackupAsync(cancellationToken);
 }

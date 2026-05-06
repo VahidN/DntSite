@@ -1,40 +1,36 @@
-﻿using DntSite.Web.Features.AppConfigs.Entities;
+using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.SiteBackup.Models;
 using DntSite.Web.Features.SiteBackup.Services.Contracts;
 using DntSite.Web.Features.SiteBackup.Utils;
-using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using File = System.IO.File;
 
 namespace DntSite.Web.Features.SiteBackup.Services;
 
-public class TelegramUploadBackupService(
+public class BaleUploadBackupService(
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IAppFoldersService appFoldersService,
     IHttpClientFactory httpClientFactory,
-    ILogger<TelegramUploadBackupService> logger) : ITelegramUploadBackupService
+    ILogger<BaleUploadBackupService> logger) : IBaleUploadBackupService
 {
     private readonly TimeSpan _delay = TimeSpan.FromSeconds(seconds: 20);
 
-    public async Task<PartsInfo?> UploadSiteBackupFileToTelegramAsync(bool isFolder,
+    public async Task<PartsInfo?> UploadSiteBackupFileToBaleAsync(bool isFolder,
         string path,
         PartsInfo? parts = null,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var telegramBackupGroup = await GetTelegramBackupGroupAsync();
+            var baleBackupGroup = await GetBaleBackupGroupAsync();
 
-            if (telegramBackupGroup is null)
+            if (baleBackupGroup is null)
             {
                 return null;
             }
 
             var tempDirectory = appFoldersService.GetTempDirectory();
 
-            var zipPassword = telegramBackupGroup.ZipPassword;
+            var zipPassword = baleBackupGroup.ZipPassword;
 
             var partPaths = parts.UseProvidedParts(zipPassword) ? parts?.Parts :
                 isFolder ? await path.ZipAndSplitFolderToMultiplePartsAsync(tempDirectory,
@@ -50,38 +46,38 @@ public class TelegramUploadBackupService(
 
             using var httpClient = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
 
-            var telegramBotClient =
-                new TelegramBotClient(telegramBackupGroup.AccessToken!, httpClient, cancellationToken);
+            await UploadPartsAsync(httpClient, baleBackupGroup.AccessToken!, baleBackupGroup.ChatId!, partPaths,
+                cancellationToken);
 
-            await UploadPartsAsync(telegramBotClient, telegramBackupGroup.ChatId!, partPaths, cancellationToken);
-            await SendMessageAsync(telegramBotClient, telegramBackupGroup.ChatId!, partPaths, cancellationToken);
+            await SendMessageAsync(httpClient, baleBackupGroup.AccessToken!, baleBackupGroup.ChatId!, partPaths,
+                cancellationToken);
 
             return new PartsInfo(partPaths, zipPassword);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Demystify(), message: "Failed to UploadSiteBackupFileToTelegramAsync.");
+            logger.LogError(ex.Demystify(), message: "Failed to UploadSiteBackupFileToBaleAsync.");
 
             return null;
         }
     }
 
-    public async Task<PartsInfo?> UploadSiteEPubFileToTelegramAsync(string filePath,
+    public async Task<PartsInfo?> UploadSiteEPubFileToBaleAsync(string filePath,
         PartsInfo? parts = null,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var telegramEPubGroup = await GetTelegramEPubGroupAsync();
+            var baleEPubGroup = await GetBaleEPubGroupAsync();
 
-            if (telegramEPubGroup is null)
+            if (baleEPubGroup is null)
             {
                 return null;
             }
 
             var tempDirectory = appFoldersService.GetTempDirectory();
 
-            var zipPassword = telegramEPubGroup.ZipPassword;
+            var zipPassword = baleEPubGroup.ZipPassword;
 
             var partPaths = parts.UseProvidedParts(zipPassword)
                 ? parts?.Parts
@@ -96,59 +92,58 @@ public class TelegramUploadBackupService(
 
             using var httpClient = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
 
-            var telegramBotClient =
-                new TelegramBotClient(telegramEPubGroup.AccessToken!, httpClient, cancellationToken);
+            await UploadPartsAsync(httpClient, baleEPubGroup.AccessToken!, baleEPubGroup.ChatId!, partPaths,
+                cancellationToken);
 
-            await UploadPartsAsync(telegramBotClient, telegramEPubGroup.ChatId!, partPaths, cancellationToken);
-            await SendMessageAsync(telegramBotClient, telegramEPubGroup.ChatId!, partPaths, cancellationToken);
+            await SendMessageAsync(httpClient, baleEPubGroup.AccessToken!, baleEPubGroup.ChatId!, partPaths,
+                cancellationToken);
 
             return new PartsInfo(partPaths, zipPassword);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Demystify(), message: "Failed to UploadSiteEPubFileToTelegramAsync.");
+            logger.LogError(ex.Demystify(), message: "Failed to UploadSiteEPubFileToBaleAsync.");
 
             return null;
         }
     }
 
-    private async Task<TelegramBackupGroup?> GetTelegramBackupGroupAsync()
+    private async Task<TelegramBackupGroup?> GetBaleBackupGroupAsync()
     {
-        var telegramBackupGroup = (await cachedAppSettingsProvider.GetAppSettingsAsync()).TelegramBackupGroup;
+        var baleBackupGroup = (await cachedAppSettingsProvider.GetAppSettingsAsync()).BaleBackupGroup;
 
-        if (telegramBackupGroup.IsActive && !telegramBackupGroup.AccessToken.IsEmpty() &&
-            !telegramBackupGroup.ChatId.IsEmpty())
+        if (baleBackupGroup.IsActive && !baleBackupGroup.AccessToken.IsEmpty() && !baleBackupGroup.ChatId.IsEmpty())
         {
-            return telegramBackupGroup;
+            return baleBackupGroup;
         }
 
         if (logger.IsEnabled(LogLevel.Critical))
         {
-            logger.LogCritical(message: "`TelegramBackupGroup` is not active or set.");
+            logger.LogCritical(message: "`BaleBackupGroup` is not active or set.");
         }
 
         return null;
     }
 
-    private async Task<TelegramBackupGroup?> GetTelegramEPubGroupAsync()
+    private async Task<TelegramBackupGroup?> GetBaleEPubGroupAsync()
     {
-        var telegramEPubGroup = (await cachedAppSettingsProvider.GetAppSettingsAsync()).TelegramEPubGroup;
+        var baleEPubGroup = (await cachedAppSettingsProvider.GetAppSettingsAsync()).BaleEPubGroup;
 
-        if (telegramEPubGroup.IsActive && !telegramEPubGroup.AccessToken.IsEmpty() &&
-            !telegramEPubGroup.ChatId.IsEmpty())
+        if (baleEPubGroup.IsActive && !baleEPubGroup.AccessToken.IsEmpty() && !baleEPubGroup.ChatId.IsEmpty())
         {
-            return telegramEPubGroup;
+            return baleEPubGroup;
         }
 
         if (logger.IsEnabled(LogLevel.Critical))
         {
-            logger.LogCritical(message: "`TelegramEPubGroup` is not active or set.");
+            logger.LogCritical(message: "`BaleEPubGroup` is not active or set.");
         }
 
         return null;
     }
 
-    private async Task UploadPartsAsync(TelegramBotClient telegramBotClient,
+    private async Task UploadPartsAsync(HttpClient httpClient,
+        string baleToken,
         string chatId,
         IList<string>? partPaths,
         CancellationToken cancellationToken)
@@ -166,13 +161,10 @@ public class TelegramUploadBackupService(
         {
             var uploadedSize = new FileInfo(partPath).Length;
 
-            await using (var content = File.OpenRead(partPath))
-            {
-                await telegramBotClient.SendDocument(chatId, new InputFileStream(content, partPath.GetFileName()), $"""
-                     🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()}
-                     📏 حجم بخش: {uploadedSize.ToFormattedFileSize()}
-                     """, cancellationToken: cancellationToken);
-            }
+            await httpClient.SendFileToBaleChannelAsync(baleToken, chatId, BaleFileType.Document, partPath, $"""
+                 🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()}
+                 📏 حجم بخش: {uploadedSize.ToFormattedFileSize()}
+                 """, cancellationToken);
 
             partNumber++;
 
@@ -182,7 +174,8 @@ public class TelegramUploadBackupService(
         await Task.Delay(_delay, cancellationToken);
     }
 
-    private static async Task SendMessageAsync(TelegramBotClient telegramBotClient,
+    private static async Task SendMessageAsync(HttpClient httpClient,
+        string baleToken,
         string chatId,
         IList<string>? partPaths,
         CancellationToken cancellationToken)
@@ -194,6 +187,6 @@ public class TelegramUploadBackupService(
             return;
         }
 
-        await telegramBotClient.SendMessage(chatId, text, ParseMode.Markdown, cancellationToken: cancellationToken);
+        await httpClient.SendTextMessageToBaleChannelAsync(baleToken, chatId, text, cancellationToken);
     }
 }

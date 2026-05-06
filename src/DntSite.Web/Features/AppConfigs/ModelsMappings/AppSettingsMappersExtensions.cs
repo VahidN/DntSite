@@ -29,13 +29,29 @@ public static class AppSettingsMappersExtensions
             {
                 IsActive = source.TelegramBackupGroupInfo.IsActive,
                 AccessToken = source.TelegramBackupGroupInfo.AccessToken,
-                ChatId = source.TelegramBackupGroupInfo.ChatId
+                ChatId = source.TelegramBackupGroupInfo.ChatId,
+                ZipPassword = source.TelegramBackupGroupInfo.ZipPassword
             },
             TelegramEPubGroup = new TelegramBackupGroup
             {
                 IsActive = source.TelegramEPubGroupInfo.IsActive,
                 AccessToken = source.TelegramEPubGroupInfo.AccessToken,
-                ChatId = source.TelegramEPubGroupInfo.ChatId
+                ChatId = source.TelegramEPubGroupInfo.ChatId,
+                ZipPassword = source.TelegramEPubGroupInfo.ZipPassword
+            },
+            BaleBackupGroup = new TelegramBackupGroup
+            {
+                IsActive = source.BaleBackupGroupInfo.IsActive,
+                AccessToken = source.BaleBackupGroupInfo.AccessToken,
+                ChatId = source.BaleBackupGroupInfo.ChatId,
+                ZipPassword = source.BaleBackupGroupInfo.ZipPassword
+            },
+            BaleEPubGroup = new TelegramBackupGroup
+            {
+                IsActive = source.BaleEPubGroupInfo.IsActive,
+                AccessToken = source.BaleEPubGroupInfo.AccessToken,
+                ChatId = source.BaleEPubGroupInfo.ChatId,
+                ZipPassword = source.BaleEPubGroupInfo.ZipPassword
             },
             ShowRssBriefDescription = source.ShowRssBriefDescription,
             ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,
@@ -72,14 +88,32 @@ public static class AppSettingsMappersExtensions
             {
                 IsActive = appSetting.TelegramBackupGroup.IsActive,
                 AccessToken = appSetting.TelegramBackupGroup.AccessToken,
-                ChatId = appSetting.TelegramBackupGroup.ChatId
+                ChatId = appSetting.TelegramBackupGroup.ChatId,
+                ZipPassword = appSetting.TelegramBackupGroup.ZipPassword
             };
 
             destination.TelegramEPubGroup = new TelegramBackupGroup
             {
                 IsActive = appSetting.TelegramEPubGroup.IsActive,
                 AccessToken = appSetting.TelegramEPubGroup.AccessToken,
-                ChatId = appSetting.TelegramEPubGroup.ChatId
+                ChatId = appSetting.TelegramEPubGroup.ChatId,
+                ZipPassword = appSetting.TelegramEPubGroup.ZipPassword
+            };
+
+            destination.BaleBackupGroup = new TelegramBackupGroup
+            {
+                IsActive = appSetting.BaleBackupGroup.IsActive,
+                AccessToken = appSetting.BaleBackupGroup.AccessToken,
+                ChatId = appSetting.BaleBackupGroup.ChatId,
+                ZipPassword = appSetting.BaleBackupGroup.ZipPassword
+            };
+
+            destination.BaleEPubGroup = new TelegramBackupGroup
+            {
+                IsActive = appSetting.BaleEPubGroup.IsActive,
+                AccessToken = appSetting.BaleEPubGroup.AccessToken,
+                ChatId = appSetting.BaleEPubGroup.ChatId,
+                ZipPassword = appSetting.BaleEPubGroup.ZipPassword
             };
 
             destination.ShowRssBriefDescription = appSetting.ShowRssBriefDescription;
@@ -127,13 +161,29 @@ public static class AppSettingsMappersExtensions
             {
                 IsActive = source.TelegramBackupGroup.IsActive,
                 AccessToken = source.TelegramBackupGroup.AccessToken,
-                ChatId = source.TelegramBackupGroup.ChatId
+                ChatId = source.TelegramBackupGroup.ChatId,
+                ZipPassword = source.TelegramBackupGroup.ZipPassword
             },
             TelegramEPubGroupInfo = new TelegramBackupGroup
             {
                 IsActive = source.TelegramEPubGroup.IsActive,
                 AccessToken = source.TelegramEPubGroup.AccessToken,
-                ChatId = source.TelegramEPubGroup.ChatId
+                ChatId = source.TelegramEPubGroup.ChatId,
+                ZipPassword = source.TelegramEPubGroup.ZipPassword
+            },
+            BaleBackupGroupInfo = new TelegramBackupGroup
+            {
+                IsActive = source.BaleBackupGroup.IsActive,
+                AccessToken = source.BaleBackupGroup.AccessToken,
+                ChatId = source.BaleBackupGroup.ChatId,
+                ZipPassword = source.BaleBackupGroup.ZipPassword
+            },
+            BaleEPubGroupInfo = new TelegramBackupGroup
+            {
+                IsActive = source.BaleEPubGroup.IsActive,
+                AccessToken = source.BaleEPubGroup.AccessToken,
+                ChatId = source.BaleEPubGroup.ChatId,
+                ZipPassword = source.BaleEPubGroup.ZipPassword
             },
             ShowRssBriefDescription = source.ShowRssBriefDescription,
             ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,

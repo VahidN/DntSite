@@ -190,6 +190,11 @@
                           dir="ltr"
                           @bind-Value="Model.TelegramBackupGroupInfo.ChatId"/>
 
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiChatFill"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.TelegramBackupGroupInfo.ZipPassword"/>
             <hr/>
 
             <div>ارسال بک‌آپ فایل ای‌پاب سایت به تلگرام:</div>
@@ -207,6 +212,55 @@
                           dir="ltr"
                           @bind-Value="Model.TelegramEPubGroupInfo.ChatId"/>
 
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiChatFill"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.TelegramEPubGroupInfo.ZipPassword"/>
+            <hr/>
+
+            <div>ارسال بک‌آپ اطلاعات و بانک اطلاعاتی سایت به پیام‌رسان بله:</div>
+            <DntInputCheckBox @bind-Value="Model.BaleBackupGroupInfo.IsActive"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiUniversalAccess"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.BaleBackupGroupInfo.AccessToken"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiChatFill"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.BaleBackupGroupInfo.ChatId"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiChatFill"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.BaleBackupGroupInfo.ZipPassword"/>
+            <hr/>
+
+            <div>ارسال بک‌آپ فایل ای‌پاب سایت به پیام‌رسان بله:</div>
+            <DntInputCheckBox @bind-Value="Model.BaleEPubGroupInfo.IsActive"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiUniversalAccess"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.BaleEPubGroupInfo.AccessToken"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiChatFill"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.BaleEPubGroupInfo.ChatId"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiChatFill"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.BaleEPubGroupInfo.ZipPassword"/>
             <hr/>
 
             <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>

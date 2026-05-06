@@ -1,15 +1,15 @@
-﻿using DntSite.Web.Features.SiteBackup.Models;
+using DntSite.Web.Features.SiteBackup.Models;
 
 namespace DntSite.Web.Features.SiteBackup.Services.Contracts;
 
-public interface ITelegramUploadBackupService : ISingletonService
+public interface IBaleUploadBackupService : ISingletonService
 {
-    Task<PartsInfo?> UploadSiteBackupFileToTelegramAsync(bool isFolder,
+    Task<PartsInfo?> UploadSiteBackupFileToBaleAsync(bool isFolder,
         string path,
         PartsInfo? parts = null,
         CancellationToken cancellationToken = default);
 
-    Task<PartsInfo?> UploadSiteEPubFileToTelegramAsync(string filePath,
+    Task<PartsInfo?> UploadSiteEPubFileToBaleAsync(string filePath,
         PartsInfo? parts = null,
         CancellationToken cancellationToken = default);
 }
