@@ -32,12 +32,22 @@ public class BaleUploadBackupService(
 
             var zipPassword = baleBackupGroup.ZipPassword;
 
-            var partPaths = parts.UseProvidedParts(zipPassword) ? parts?.Parts :
-                isFolder ? await path.ZipAndSplitFolderToMultiplePartsAsync(tempDirectory,
-                    UploadBackupsExtensions.MaxPartSizeMB, password: zipPassword, logger: logger,
-                    cancellationToken: cancellationToken) :
-                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, UploadBackupsExtensions.MaxPartSizeMB,
-                    password: zipPassword, logger: logger, cancellationToken: cancellationToken);
+            var maxPartSizeMB = baleBackupGroup.MaxZipPartSize <= 0
+                ? UploadBackupsExtensions.MaxPartSizeMB
+                : baleBackupGroup.MaxZipPartSize;
+
+            var useProvidedParts = parts.UseProvidedParts(zipPassword);
+
+            if (!useProvidedParts)
+            {
+                parts?.Parts.DeleteParts(logger);
+            }
+
+            var partPaths = useProvidedParts ? parts?.Parts :
+                isFolder ? await path.ZipAndSplitFolderToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
+                    password: zipPassword, logger: logger, cancellationToken: cancellationToken) :
+                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB, password: zipPassword,
+                    logger: logger, cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {
@@ -79,11 +89,21 @@ public class BaleUploadBackupService(
 
             var zipPassword = baleEPubGroup.ZipPassword;
 
-            var partPaths = parts.UseProvidedParts(zipPassword)
+            var maxPartSizeMB = baleEPubGroup.MaxZipPartSize <= 0
+                ? UploadBackupsExtensions.MaxPartSizeMB
+                : baleEPubGroup.MaxZipPartSize;
+
+            var useProvidedParts = parts.UseProvidedParts(zipPassword);
+
+            if (!useProvidedParts)
+            {
+                parts?.Parts.DeleteParts(logger);
+            }
+
+            var partPaths = useProvidedParts
                 ? parts?.Parts
-                : await filePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory,
-                    UploadBackupsExtensions.MaxPartSizeMB, password: zipPassword, logger: logger,
-                    cancellationToken: cancellationToken);
+                : await filePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
+                    password: zipPassword, logger: logger, cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {
@@ -197,7 +217,7 @@ public class BaleUploadBackupService(
 
     private void LogBaleErrors(BaleApiResponseStatus? status)
     {
-        if (status is not null && status is not { Success: true } && logger.IsEnabled(LogLevel.Error))
+        if (status is not null and not { Success: true } && logger.IsEnabled(LogLevel.Error))
         {
             logger.LogError(
                 message: "Send message to Bale failed. StatusCode:`{StatusCode}`, ResponseContent:`{Response}`.",

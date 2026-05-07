@@ -17,4 +17,7 @@ public class TelegramBackupGroup
     [Display(Name = "کلمه عبور فایل Zip")]
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
     public string? ZipPassword { get; set; }
+
+    [Display(Name = "حداکثر اندازه فایل قابل ارسال به مگابایت")]
+    public int MaxZipPartSize { get; set; }
 }

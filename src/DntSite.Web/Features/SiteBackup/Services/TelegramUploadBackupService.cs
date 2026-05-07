@@ -36,12 +36,22 @@ public class TelegramUploadBackupService(
 
             var zipPassword = telegramBackupGroup.ZipPassword;
 
-            var partPaths = parts.UseProvidedParts(zipPassword) ? parts?.Parts :
-                isFolder ? await path.ZipAndSplitFolderToMultiplePartsAsync(tempDirectory,
-                    UploadBackupsExtensions.MaxPartSizeMB, password: zipPassword, logger: logger,
-                    cancellationToken: cancellationToken) :
-                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, UploadBackupsExtensions.MaxPartSizeMB,
-                    password: zipPassword, logger: logger, cancellationToken: cancellationToken);
+            var maxPartSizeMB = telegramBackupGroup.MaxZipPartSize <= 0
+                ? UploadBackupsExtensions.MaxPartSizeMB
+                : telegramBackupGroup.MaxZipPartSize;
+
+            var useProvidedParts = parts.UseProvidedParts(zipPassword);
+
+            if (!useProvidedParts)
+            {
+                parts?.Parts.DeleteParts(logger);
+            }
+
+            var partPaths = useProvidedParts ? parts?.Parts :
+                isFolder ? await path.ZipAndSplitFolderToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
+                    password: zipPassword, logger: logger, cancellationToken: cancellationToken) :
+                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB, password: zipPassword,
+                    logger: logger, cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {
@@ -83,11 +93,21 @@ public class TelegramUploadBackupService(
 
             var zipPassword = telegramEPubGroup.ZipPassword;
 
-            var partPaths = parts.UseProvidedParts(zipPassword)
+            var maxPartSizeMB = telegramEPubGroup.MaxZipPartSize <= 0
+                ? UploadBackupsExtensions.MaxPartSizeMB
+                : telegramEPubGroup.MaxZipPartSize;
+
+            var useProvidedParts = parts.UseProvidedParts(zipPassword);
+
+            if (!useProvidedParts)
+            {
+                parts?.Parts.DeleteParts(logger);
+            }
+
+            var partPaths = useProvidedParts
                 ? parts?.Parts
-                : await filePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory,
-                    UploadBackupsExtensions.MaxPartSizeMB, password: zipPassword, logger: logger,
-                    cancellationToken: cancellationToken);
+                : await filePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
+                    password: zipPassword, logger: logger, cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {

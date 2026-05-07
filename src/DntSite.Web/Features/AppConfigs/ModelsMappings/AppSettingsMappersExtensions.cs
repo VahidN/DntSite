@@ -25,34 +25,10 @@ public static class AppSettingsMappersExtensions
                 IsActive = source.GeminiNewsFeedsInfo.IsActive,
                 NewsFeeds = source.GeminiNewsFeedsInfo.NewsFeeds.ConvertMultiLineTextToList()
             },
-            TelegramBackupGroup = new TelegramBackupGroup
-            {
-                IsActive = source.TelegramBackupGroupInfo.IsActive,
-                AccessToken = source.TelegramBackupGroupInfo.AccessToken,
-                ChatId = source.TelegramBackupGroupInfo.ChatId,
-                ZipPassword = source.TelegramBackupGroupInfo.ZipPassword
-            },
-            TelegramEPubGroup = new TelegramBackupGroup
-            {
-                IsActive = source.TelegramEPubGroupInfo.IsActive,
-                AccessToken = source.TelegramEPubGroupInfo.AccessToken,
-                ChatId = source.TelegramEPubGroupInfo.ChatId,
-                ZipPassword = source.TelegramEPubGroupInfo.ZipPassword
-            },
-            BaleBackupGroup = new TelegramBackupGroup
-            {
-                IsActive = source.BaleBackupGroupInfo.IsActive,
-                AccessToken = source.BaleBackupGroupInfo.AccessToken,
-                ChatId = source.BaleBackupGroupInfo.ChatId,
-                ZipPassword = source.BaleBackupGroupInfo.ZipPassword
-            },
-            BaleEPubGroup = new TelegramBackupGroup
-            {
-                IsActive = source.BaleEPubGroupInfo.IsActive,
-                AccessToken = source.BaleEPubGroupInfo.AccessToken,
-                ChatId = source.BaleEPubGroupInfo.ChatId,
-                ZipPassword = source.BaleEPubGroupInfo.ZipPassword
-            },
+            TelegramBackupGroup = source.TelegramBackupGroupInfo.MapToTelegramBackupGroup(),
+            TelegramEPubGroup = source.TelegramEPubGroupInfo.MapToTelegramBackupGroup(),
+            BaleBackupGroup = source.BaleBackupGroupInfo.MapToTelegramBackupGroup(),
+            BaleEPubGroup = source.BaleEPubGroupInfo.MapToTelegramBackupGroup(),
             ShowRssBriefDescription = source.ShowRssBriefDescription,
             ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,
             YouTubeDataApikey = source.YouTubeDataApikey,
@@ -84,37 +60,10 @@ public static class AppSettingsMappersExtensions
                 NewsFeeds = appSetting.GeminiNewsFeeds.NewsFeeds
             };
 
-            destination.TelegramBackupGroup = new TelegramBackupGroup
-            {
-                IsActive = appSetting.TelegramBackupGroup.IsActive,
-                AccessToken = appSetting.TelegramBackupGroup.AccessToken,
-                ChatId = appSetting.TelegramBackupGroup.ChatId,
-                ZipPassword = appSetting.TelegramBackupGroup.ZipPassword
-            };
-
-            destination.TelegramEPubGroup = new TelegramBackupGroup
-            {
-                IsActive = appSetting.TelegramEPubGroup.IsActive,
-                AccessToken = appSetting.TelegramEPubGroup.AccessToken,
-                ChatId = appSetting.TelegramEPubGroup.ChatId,
-                ZipPassword = appSetting.TelegramEPubGroup.ZipPassword
-            };
-
-            destination.BaleBackupGroup = new TelegramBackupGroup
-            {
-                IsActive = appSetting.BaleBackupGroup.IsActive,
-                AccessToken = appSetting.BaleBackupGroup.AccessToken,
-                ChatId = appSetting.BaleBackupGroup.ChatId,
-                ZipPassword = appSetting.BaleBackupGroup.ZipPassword
-            };
-
-            destination.BaleEPubGroup = new TelegramBackupGroup
-            {
-                IsActive = appSetting.BaleEPubGroup.IsActive,
-                AccessToken = appSetting.BaleEPubGroup.AccessToken,
-                ChatId = appSetting.BaleEPubGroup.ChatId,
-                ZipPassword = appSetting.BaleEPubGroup.ZipPassword
-            };
+            destination.TelegramBackupGroup = appSetting.TelegramBackupGroup.MapToTelegramBackupGroup();
+            destination.TelegramEPubGroup = appSetting.TelegramEPubGroup.MapToTelegramBackupGroup();
+            destination.BaleBackupGroup = appSetting.BaleBackupGroup.MapToTelegramBackupGroup();
+            destination.BaleEPubGroup = appSetting.BaleEPubGroup.MapToTelegramBackupGroup();
 
             destination.ShowRssBriefDescription = appSetting.ShowRssBriefDescription;
             destination.ShouldCreateNewsScreenshots = appSetting.ShouldCreateNewsScreenshots;
@@ -128,6 +77,20 @@ public static class AppSettingsMappersExtensions
         }
 
         return destination ?? appSetting;
+    }
+
+    public static TelegramBackupGroup MapToTelegramBackupGroup(this TelegramBackupGroup source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return new TelegramBackupGroup
+        {
+            IsActive = source.IsActive,
+            AccessToken = source.AccessToken,
+            ChatId = source.ChatId,
+            ZipPassword = source.ZipPassword,
+            MaxZipPartSize = source.MaxZipPartSize
+        };
     }
 
     public static AppSettingModel MapAppSettingToAppSettingModel(this AppSetting source)
@@ -157,34 +120,10 @@ public static class AppSettingsMappersExtensions
                 IsActive = source.GeminiNewsFeeds.IsActive,
                 NewsFeeds = source.GeminiNewsFeeds.NewsFeeds.ConvertListToMultiLineText()
             },
-            TelegramBackupGroupInfo = new TelegramBackupGroup
-            {
-                IsActive = source.TelegramBackupGroup.IsActive,
-                AccessToken = source.TelegramBackupGroup.AccessToken,
-                ChatId = source.TelegramBackupGroup.ChatId,
-                ZipPassword = source.TelegramBackupGroup.ZipPassword
-            },
-            TelegramEPubGroupInfo = new TelegramBackupGroup
-            {
-                IsActive = source.TelegramEPubGroup.IsActive,
-                AccessToken = source.TelegramEPubGroup.AccessToken,
-                ChatId = source.TelegramEPubGroup.ChatId,
-                ZipPassword = source.TelegramEPubGroup.ZipPassword
-            },
-            BaleBackupGroupInfo = new TelegramBackupGroup
-            {
-                IsActive = source.BaleBackupGroup.IsActive,
-                AccessToken = source.BaleBackupGroup.AccessToken,
-                ChatId = source.BaleBackupGroup.ChatId,
-                ZipPassword = source.BaleBackupGroup.ZipPassword
-            },
-            BaleEPubGroupInfo = new TelegramBackupGroup
-            {
-                IsActive = source.BaleEPubGroup.IsActive,
-                AccessToken = source.BaleEPubGroup.AccessToken,
-                ChatId = source.BaleEPubGroup.ChatId,
-                ZipPassword = source.BaleEPubGroup.ZipPassword
-            },
+            TelegramBackupGroupInfo = source.TelegramBackupGroup.MapToTelegramBackupGroup(),
+            TelegramEPubGroupInfo = source.TelegramEPubGroup.MapToTelegramBackupGroup(),
+            BaleBackupGroupInfo = source.BaleBackupGroup.MapToTelegramBackupGroup(),
+            BaleEPubGroupInfo = source.BaleEPubGroup.MapToTelegramBackupGroup(),
             ShowRssBriefDescription = source.ShowRssBriefDescription,
             ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,
             YouTubeDataApikey = source.YouTubeDataApikey

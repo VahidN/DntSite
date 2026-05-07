@@ -195,6 +195,11 @@
                           InputType="password"
                           dir="ltr"
                           @bind-Value="Model.TelegramBackupGroupInfo.ZipPassword"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.On"
+                            FieldIcon="@DntBootstrapIcons.BiFileArrowUp"
+                            dir="ltr"
+                            @bind-Value="Model.TelegramBackupGroupInfo.MaxZipPartSize"/>
             <hr/>
 
             <div>ارسال بک‌آپ فایل ای‌پاب سایت به تلگرام:</div>
@@ -217,6 +222,11 @@
                           InputType="password"
                           dir="ltr"
                           @bind-Value="Model.TelegramEPubGroupInfo.ZipPassword"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.On"
+                            FieldIcon="@DntBootstrapIcons.BiFileArrowUp"
+                            dir="ltr"
+                            @bind-Value="Model.TelegramEPubGroupInfo.MaxZipPartSize"/>
             <hr/>
 
             <div>ارسال بک‌آپ اطلاعات و بانک اطلاعاتی سایت به پیام‌رسان بله:</div>
@@ -239,6 +249,12 @@
                           InputType="password"
                           dir="ltr"
                           @bind-Value="Model.BaleBackupGroupInfo.ZipPassword"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.On"
+                            FieldIcon="@DntBootstrapIcons.BiFileArrowUp"
+                            dir="ltr"
+                            @bind-Value="Model.BaleBackupGroupInfo.MaxZipPartSize"/>
+
             <hr/>
 
             <div>ارسال بک‌آپ فایل ای‌پاب سایت به پیام‌رسان بله:</div>
@@ -261,6 +277,12 @@
                           InputType="password"
                           dir="ltr"
                           @bind-Value="Model.BaleEPubGroupInfo.ZipPassword"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.On"
+                            FieldIcon="@DntBootstrapIcons.BiFileArrowUp"
+                            dir="ltr"
+                            @bind-Value="Model.BaleEPubGroupInfo.MaxZipPartSize"/>
+
             <hr/>
 
             <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
