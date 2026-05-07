@@ -161,10 +161,13 @@ public class BaleUploadBackupService(
         {
             var uploadedSize = new FileInfo(partPath).Length;
 
-            await httpClient.SendFileToBaleChannelAsync(baleToken, chatId, BaleFileType.Document, partPath, $"""
+            var status = await httpClient.SendFileToBaleChannelAsync(baleToken, chatId, BaleFileType.Document, partPath,
+                $"""
                  🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()}
                  📏 حجم بخش: {uploadedSize.ToFormattedFileSize()}
                  """, cancellationToken);
+
+            LogBaleErrors(status);
 
             partNumber++;
 
@@ -174,7 +177,7 @@ public class BaleUploadBackupService(
         await Task.Delay(_delay, cancellationToken);
     }
 
-    private static async Task SendMessageAsync(HttpClient httpClient,
+    private async Task SendMessageAsync(HttpClient httpClient,
         string baleToken,
         string chatId,
         IList<string>? partPaths,
@@ -187,6 +190,18 @@ public class BaleUploadBackupService(
             return;
         }
 
-        await httpClient.SendTextMessageToBaleChannelAsync(baleToken, chatId, text, cancellationToken);
+        var status = await httpClient.SendTextMessageToBaleChannelAsync(baleToken, chatId, text, cancellationToken);
+
+        LogBaleErrors(status);
+    }
+
+    private void LogBaleErrors(BaleApiResponseStatus? status)
+    {
+        if (status is not null && status is not { Success: true } && logger.IsEnabled(LogLevel.Error))
+        {
+            logger.LogError(
+                message: "Send message to Bale failed. StatusCode:`{StatusCode}`, ResponseContent:`{Response}`.",
+                status.StatusCode, status.ResponseContent);
+        }
     }
 }
