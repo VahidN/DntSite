@@ -2,6 +2,7 @@
 @using DntSite.Web.Features.News.Models
 @using DntSite.Web.Features.UserProfiles.Components
 @attribute [Route(NewsRoutingConstants.AddDailyNewsItemAIBacklogs)]
+@attribute [Route(NewsRoutingConstants.AddDailyNewsItemAIBacklogsPageCurrentPage)]
 
 <DntSitePageTitle Group="مدیریت برنامه" PageTitle="افزودن بک‌لاگ خبری" CurrentPage="@null"/>
 
@@ -38,7 +39,7 @@
             </FrameHeader>
             <FrameBody>
                 <DntSimpleTable TRecord="DailyNewsItemAIBacklog"
-                                Records="_backlogs!"
+                                Records="_backlogs!.Data"
                                 TableClass="table table-striped table-hover caption-top"
                                 HeaderClass="table-secondary"
                                 FooterRowClass="table-warning"
@@ -124,7 +125,12 @@
                     </DataSourceIsEmptyTemplate>
                 </DntSimpleTable>
 
-                @if (_backlogs!.Count > 0)
+                <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                                    TotalItemCount="_backlogs!.TotalItems"
+                                    BasePath="@NewsRoutingConstants.AddDailyNewsItemAIBacklogs"
+                                    CurrentPage="CurrentPage"/>
+
+                @if (_backlogs!.TotalItems > 0)
                 {
                     <div class="d-flex align-items-center justify-content-center">
                         <button class="btn btn-primary btn-sm mt-2" type="submit" name="@nameof(BacklogActionValue)"

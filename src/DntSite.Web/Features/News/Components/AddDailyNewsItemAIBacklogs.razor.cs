@@ -1,4 +1,5 @@
 using DntSite.Web.Features.AppConfigs.Components;
+using DntSite.Web.Features.Common.Utils.Pagings.Models;
 using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.News.Models;
 using DntSite.Web.Features.News.RoutingConstants;
@@ -11,7 +12,8 @@ namespace DntSite.Web.Features.News.Components;
 [Authorize(Roles = CustomRoles.Admin)]
 public partial class AddDailyNewsItemAIBacklogs
 {
-    private List<DailyNewsItemAIBacklog>? _backlogs;
+    private const int ItemsPerPage = 20;
+    private PagedResultModel<DailyNewsItemAIBacklog>? _backlogs;
 
     [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
 
@@ -26,6 +28,8 @@ public partial class AddDailyNewsItemAIBacklogs
     [SupplyParameterFromForm] public IList<int>? AllIds { set; get; }
 
     [InjectComponentScoped] internal IDailyNewsItemAIBacklogService DailyNewsItemAIBacklogService { set; get; } = null!;
+
+    [Parameter] public int? CurrentPage { set; get; }
 
     private async Task PerformAsync()
     {
@@ -49,7 +53,12 @@ public partial class AddDailyNewsItemAIBacklogs
     }
 
     private async Task ShowDataAsync()
-        => _backlogs = await DailyNewsItemAIBacklogService.GetNotProcessedDailyNewsItemAIBacklogsAsync();
+    {
+        CurrentPage ??= 1;
+
+        _backlogs = await DailyNewsItemAIBacklogService.GetLastPagedDailyNewsItemAIBacklogsAsync(CurrentPage.Value - 1,
+            ItemsPerPage);
+    }
 
     protected override async Task OnInitializedAsync()
     {

@@ -62,6 +62,10 @@ public static class NewsRoutingConstants
     public const string DeletePostUrlTemplate = $"{WriteNews}/delete/{{0}}";
 
     public const string AddDailyNewsItemAIBacklogs = "/add-ai-news-backlogs";
+
+    public const string AddDailyNewsItemAIBacklogsPageCurrentPage =
+        $"{AddDailyNewsItemAIBacklogs}/page/{{CurrentPage:int?}}";
+
     public const string UrlTitleSeparator = "::";
 
     public const string DailyNewsItemsBookmarks = "/news-bookmarks";
