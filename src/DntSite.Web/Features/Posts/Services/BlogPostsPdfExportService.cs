@@ -87,7 +87,9 @@ public class BlogPostsPdfExportService(
                     string.Format(CultureInfo.InvariantCulture, PostsMappersExtensions.ParsedPostUrlTemplate, post.Id),
                     escapeRelativeUrl: false),
                 Tags = post.Tags.Select(y => y.Name).ToList(),
-                Comments = MapCommentsToExportComment(post)
+                Comments = MapCommentsToExportComment(post),
+                DocumentTypeIdHash = post.MapToPostWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+                    .DocumentTypeIdHash
             };
 
     public async Task ExportNotProcessedBlogPostsToSeparatePdfFilesAsync(ExportType exportType,

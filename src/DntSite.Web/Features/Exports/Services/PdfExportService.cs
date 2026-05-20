@@ -5,6 +5,7 @@ using DntSite.Web.Features.Exports.Models;
 using DntSite.Web.Features.Exports.ModelsMappings;
 using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.RssFeeds.Models;
+using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Exports.Services;
 
@@ -15,6 +16,7 @@ public class PdfExportService(
     ILockerService lockerService,
     IFileNameSanitizerService fileNameSanitizerService,
     ICacheService cacheService,
+    ISimilarPostsService similarPostsService,
     ILogger<PdfExportService> logger) : IPdfExportService
 {
     private const string PdfPageTemplateFileName = "pdf-page-template.html";
@@ -252,7 +254,8 @@ public class PdfExportService(
 
         foreach (var doc in docs)
         {
-            mergedBodySb.AppendLine(doc.ToHtmlDocumentBody());
+            var similarPostsBody = similarPostsService.GetSimilarPostsHtmlBody(doc.DocumentTypeIdHash);
+            mergedBodySb.AppendLine(doc.ToHtmlDocumentBody(similarPostsBody));
         }
 
         var htmlDoc = string.Format(CultureInfo.InvariantCulture, GetPageTemplateContent(), title.ApplyRle(),

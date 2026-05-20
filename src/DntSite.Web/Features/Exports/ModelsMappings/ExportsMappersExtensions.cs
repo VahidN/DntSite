@@ -35,12 +35,12 @@ public static class ExportsMappersExtensions
         </div>
         """);
 
-    public static string ToHtmlDocumentBody(this ExportDocument doc)
+    public static string ToHtmlDocumentBody(this ExportDocument doc, string similarPostsBody)
     {
         ArgumentNullException.ThrowIfNull(doc);
 
         var postTitle = doc.ToPostTitle();
-        var postBody = doc.ToPostBody();
+        var postBody = $"{doc.ToPostBody()}{similarPostsBody}";
         var commentsTree = doc.ToCommentsTree();
 
         return commentsTree.IsEmpty()

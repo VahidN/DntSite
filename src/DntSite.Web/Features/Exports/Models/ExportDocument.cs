@@ -4,6 +4,8 @@ public class ExportDocument
 {
     public int Id { set; get; }
 
+    public required string DocumentTypeIdHash { set; get; }
+
     public required string Title { set; get; }
 
     public required string Body { set; get; }

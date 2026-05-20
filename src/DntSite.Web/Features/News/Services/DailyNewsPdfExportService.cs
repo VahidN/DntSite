@@ -84,7 +84,10 @@ public class DailyNewsPdfExportService(
                     string.Format(CultureInfo.InvariantCulture, NewsMappersExtensions.ParsedPostUrlTemplate, post.Id),
                     escapeRelativeUrl: false),
                 Tags = post.Tags.Select(y => y.Name).ToList(),
-                Comments = MapCommentsToExportComment(post)
+                Comments = MapCommentsToExportComment(post),
+                DocumentTypeIdHash =
+                    post.MapToNewsWhatsNewItemModel(showBriefDescription: false, siteRootUri: "", newsThumbImage: "")
+                        .DocumentTypeIdHash
             };
 
     public async Task ExportNotProcessedDailyNewsToSeparatePdfFilesAsync(ExportType exportType,

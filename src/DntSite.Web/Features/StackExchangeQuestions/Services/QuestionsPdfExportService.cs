@@ -68,7 +68,9 @@ public class QuestionsPdfExportService(
                     string.Format(CultureInfo.InvariantCulture, QuestionsMappersExtensions.ParsedPostUrlTemplate,
                         post.Id), escapeRelativeUrl: false),
                 Tags = post.Tags.Select(y => y.Name).ToList(),
-                Comments = MapCommentsToExportComment(post)
+                Comments = MapCommentsToExportComment(post),
+                DocumentTypeIdHash = post.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+                    .DocumentTypeIdHash
             };
 
     public async Task<List<int>> FindIdsNeedUpdateAsync(CancellationToken cancellationToken)

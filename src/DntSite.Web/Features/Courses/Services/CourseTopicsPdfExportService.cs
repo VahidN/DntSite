@@ -1,5 +1,6 @@
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Courses.Entities;
+using DntSite.Web.Features.Courses.ModelsMappings;
 using DntSite.Web.Features.Courses.RoutingConstants;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.Exports.Models;
@@ -110,7 +111,9 @@ public class CourseTopicsPdfExportService(
                         $"{CoursesRoutingConstants.CoursesTopicBase}/{post.CourseId}/{post.DisplayId:D}"),
                     escapeRelativeUrl: false),
                 Tags = post.Course.Tags.Select(y => y.Name).ToList(),
-                Comments = MapCommentsToExportComment(post)
+                Comments = MapCommentsToExportComment(post),
+                DocumentTypeIdHash = post.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false)
+                    .DocumentTypeIdHash
             };
 
     public async Task CreateMergedPdfOfCoursesAsync(ExportType exportType, CancellationToken cancellationToken)
