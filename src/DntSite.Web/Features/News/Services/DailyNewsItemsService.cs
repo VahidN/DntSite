@@ -228,15 +228,14 @@ public class DailyNewsItemsService(
         // این شماره‌ها پشت سر هم نیستند
         => new()
         {
-            CurrentNews =
-                await _dailyNewsItem.AsNoTracking()
-                    .Where(x => x.IsDeleted == showDeletedItems && x.Id == id)
-                    .Include(x => x.User)
-                    .Include(blogPost => blogPost.Reactions)
-                    .Include(x => x.Bookmarks)
-                    .Include(x => x.Tags)
-                    .OrderBy(x => x.Id)
-                    .FirstOrDefaultAsync(),
+            CurrentNews = await _dailyNewsItem.AsNoTracking()
+                .Where(x => x.IsDeleted == showDeletedItems && x.Id == id)
+                .Include(x => x.User)
+                .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
+                .Include(x => x.Tags)
+                .OrderBy(x => x.Id)
+                .FirstOrDefaultAsync(),
             NextNews = await _dailyNewsItem.AsNoTracking()
                 .Where(x => x.IsDeleted == showDeletedItems && x.Id > id)
                 .OrderBy(x => x.Id)
@@ -308,7 +307,10 @@ public class DailyNewsItemsService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _dailyNewsItem.AsNoTracking() from t in b.Tags where t.Name == tagName select b;
+        var query = from b in _dailyNewsItem.AsNoTracking()
+            from t in b.Tags
+            where t.Name == tagName
+            select b;
 
         query = query.Include(x => x.User)
             .Include(blogPost => blogPost.Tags)
@@ -565,7 +567,8 @@ public class DailyNewsItemsService(
         }
     }
 
-    public async Task<IList<string>> GetNotProcessedLinksAsync(IEnumerable<string> urls, CancellationToken ct = default)
+    public async Task<IList<string>> GetNotProcessedLinksAsync(IEnumerable<string?> urls,
+        CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(urls);
 
@@ -573,6 +576,11 @@ public class DailyNewsItemsService(
 
         foreach (var url in urls)
         {
+            if (url.IsEmpty())
+            {
+                continue;
+            }
+
             var key = passwordHasherService.GetSha1Hash(urlNormalizationService.NormalizeUrl(url.Trim()));
             itemsDictionary[key] = url;
         }

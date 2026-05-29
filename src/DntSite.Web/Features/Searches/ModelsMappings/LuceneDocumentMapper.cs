@@ -41,7 +41,7 @@ public static class LuceneDocumentMapper
             new TextField(nameof(WhatsNewItemModel.OriginalTitle), post.OriginalTitle, Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.Url), post.Url, Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.PublishDate),
-                post.PublishDate.ToString(DateTimeFormat, CultureInfo.InvariantCulture), Field.Store.YES),
+                post.PublishDate?.ToString(DateTimeFormat, CultureInfo.InvariantCulture) ?? "", Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.ItemType), post.ItemType.Value, Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.AuthorName), post.AuthorName, Field.Store.YES),
             new TextField(nameof(WhatsNewItemModel.Content), post.Content, Field.Store.YES),
@@ -76,11 +76,10 @@ public static class LuceneDocumentMapper
             Id = document.Get(nameof(WhatsNewItemModel.Id), CultureInfo.InvariantCulture).ToInt(),
             OriginalTitle = document.Get(nameof(WhatsNewItemModel.OriginalTitle), CultureInfo.InvariantCulture),
             Url = document.Get(nameof(WhatsNewItemModel.Url), CultureInfo.InvariantCulture),
-            PublishDate =
-                DateTimeOffset.ParseExact(publishDate, DateTimeFormat, DateTimeFormatInfo.InvariantInfo,
-                    DateTimeStyles.AssumeUniversal),
-            ItemType =
-                WhatsNewItemType.Get(document.Get(nameof(WhatsNewItemModel.ItemType), CultureInfo.InvariantCulture)),
+            PublishDate = DateTimeOffset.ParseExact(publishDate, DateTimeFormat, DateTimeFormatInfo.InvariantInfo,
+                DateTimeStyles.AssumeUniversal),
+            ItemType = WhatsNewItemType.Get(document.Get(nameof(WhatsNewItemModel.ItemType),
+                CultureInfo.InvariantCulture)),
             EntityType = Type.GetType(document.Get(nameof(WhatsNewItemModel.EntityType), CultureInfo.InvariantCulture)),
             AuthorName = document.Get(nameof(WhatsNewItemModel.AuthorName), CultureInfo.InvariantCulture),
             UserId = document.Get(nameof(WhatsNewItemModel.UserId), CultureInfo.InvariantCulture).ToInt(),
@@ -113,12 +112,12 @@ public static class LuceneDocumentMapper
         };
     }
 
-    private static IEnumerable<string> GetCategories(this Document document)
+    private static string[] GetCategories(this Document document)
     {
         var categories = document.Get(nameof(WhatsNewItemModel.Categories), CultureInfo.InvariantCulture);
 
         return string.IsNullOrWhiteSpace(categories)
-            ? Enumerable.Empty<string>()
+            ? []
             : categories.Split(CategoriesSeparator, StringSplitOptions.RemoveEmptyEntries);
     }
 }

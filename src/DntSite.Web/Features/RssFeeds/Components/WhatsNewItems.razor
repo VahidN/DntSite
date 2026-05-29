@@ -23,7 +23,7 @@
                           Tags="null"
                           Title="@post.OriginalTitle"
                           BriefDescription="@post.Content"
-                          CreatedAt="post.PublishDate.UtcDateTime"
+                          CreatedAt="post.PublishDate!.Value.UtcDateTime"
                           RecordUser="post.User"
                           NumberOfComments="0"
                           NumberOfViews="0"

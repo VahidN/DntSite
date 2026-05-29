@@ -34,7 +34,7 @@ public static class LearningPathsMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id),
                 escapeRelativeUrl: false),
-            Categories = item.Tags.Select(x => x.Name),
+            Categories = [..item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.LearningPaths,
             Id = item.Id,
             UserId = item.UserId,

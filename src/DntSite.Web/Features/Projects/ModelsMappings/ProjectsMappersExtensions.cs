@@ -85,8 +85,9 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content =
-                showBriefDescription ? item.FileDescription.GetBriefDescription(charLength: 450) : item.FileDescription,
+            Content = showBriefDescription
+                ? item.FileDescription.GetBriefDescription(charLength: 450)
+                : item.FileDescription,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -186,7 +187,7 @@ public static class ProjectsMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id),
                 escapeRelativeUrl: false),
-            Categories = item.Tags.Select(x => x.Name),
+            Categories = [..item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.ProjectsNews,
             Id = item.Id,
             UserId = item.UserId,
@@ -204,8 +205,9 @@ public static class ProjectsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content =
-                showBriefDescription ? item.FileDescription.GetBriefDescription(charLength: 450) : item.FileDescription,
+            Content = showBriefDescription
+                ? item.FileDescription.GetBriefDescription(charLength: 450)
+                : item.FileDescription,
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0

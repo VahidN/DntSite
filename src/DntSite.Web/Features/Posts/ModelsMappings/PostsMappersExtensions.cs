@@ -65,7 +65,7 @@ public static class PostsMappersExtensions
             Url = siteRootUri.CombineUrl(
                 string.Create(CultureInfo.InvariantCulture, $"{PostsRoutingConstants.PostBase}/{item.Id}"),
                 escapeRelativeUrl: false),
-            Categories = item.Tags.Select(x => x.Name),
+            Categories = [..item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.Author,
             Id = item.Id,
             UserId = item.UserId,
@@ -94,7 +94,7 @@ public static class PostsMappersExtensions
             Url = siteRootUri.CombineUrl(
                 string.Create(CultureInfo.InvariantCulture, $"{PostsRoutingConstants.PostBase}/{item.Id}"),
                 escapeRelativeUrl: false),
-            Categories = item.Tags.Select(x => x.Name),
+            Categories = [..item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.Tag,
             Id = item.Id,
             UserId = item.UserId,
@@ -122,7 +122,7 @@ public static class PostsMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id),
                 escapeRelativeUrl: false),
-            Categories = item.Tags.Select(x => x.Name),
+            Categories = [..item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.Posts,
             Id = item.Id,
             UserId = item.UserId,

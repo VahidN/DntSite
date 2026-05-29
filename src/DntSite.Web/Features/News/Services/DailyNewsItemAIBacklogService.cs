@@ -177,6 +177,11 @@ public class DailyNewsItemAIBacklogService(
 
         foreach (var feedItem in feedItems)
         {
+            if (feedItem.Url.IsEmpty())
+            {
+                continue;
+            }
+
             AddDailyNewsItemAIBacklog(new DailyNewsItemAIBacklog
             {
                 Url = feedItem.Url.Trim(),
@@ -296,6 +301,11 @@ public class DailyNewsItemAIBacklogService(
 
         foreach (var feedItem in feedItems)
         {
+            if (feedItem.Url.IsEmpty())
+            {
+                continue;
+            }
+
             AddDailyNewsItemAIBacklog(new DailyNewsItemAIBacklog
             {
                 Url = feedItem.Url.Trim(),
@@ -314,7 +324,7 @@ public class DailyNewsItemAIBacklogService(
 
     private async Task<List<FeedItem>> GetNewFeedItemsAsync(string feedUrl, CancellationToken ct)
     {
-        var rssItems = (await rssReaderService.ReadRssAsync(feedUrl, ct)).RssItems;
+        var rssItems = (await rssReaderService.ReadRssAsync(feedUrl, ct))?.RssItems;
 
         if (rssItems is null)
         {
@@ -331,9 +341,9 @@ public class DailyNewsItemAIBacklogService(
     {
         rssItems ??= [];
 
-        var newLinks =
-            await dailyNewsItemsService.GetNotProcessedLinksAsync(rssItems.Select(feedItem => feedItem.Url).Distinct(),
-                ct);
+        var urls = rssItems.Where(feedItem => !feedItem.Url.IsEmpty()).Select(feedItem => feedItem.Url).Distinct();
+
+        var newLinks = await dailyNewsItemsService.GetNotProcessedLinksAsync(urls, ct);
 
         newLinks = await GetNewBacklogLinksAsync(newLinks, ct);
 

@@ -77,7 +77,7 @@ public interface IDailyNewsItemsService : IScopedService
 
     Task<DailyNewsItem> AddNewsItemAsDeletedAsync(string url, User? user);
 
-    Task<IList<string>> GetNotProcessedLinksAsync(IEnumerable<string> urls, CancellationToken ct = default);
+    Task<IList<string>> GetNotProcessedLinksAsync(IEnumerable<string?> urls, CancellationToken ct = default);
 
     Task NotifyAddOrUpdateChangesAsync(DailyNewsItem? newsItem, DailyNewsItemModel? writeNewsModel, User? user);
 

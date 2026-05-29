@@ -53,10 +53,9 @@ public static class NewsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content =
-                showBriefDescription
-                    ? item.BriefDescription.GetBriefDescription(charLength: 450)
-                    : $"{item.BriefDescription} {newsThumbImage}",
+            Content = showBriefDescription
+                ? item.BriefDescription.GetBriefDescription(charLength: 450)
+                : $"{item.BriefDescription} {newsThumbImage}",
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -67,7 +66,7 @@ public static class NewsMappersExtensions
             Url = siteRootUri.CombineUrl(
                 string.Create(CultureInfo.InvariantCulture, $"{NewsRoutingConstants.NewsDetailsBase}/{item.Id}"),
                 escapeRelativeUrl: false),
-            Categories = item.Tags.Select(x => x.Name),
+            Categories = [..item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.NewsAuthor,
             Id = item.Id,
             UserId = item.UserId,
@@ -86,10 +85,9 @@ public static class NewsMappersExtensions
         {
             User = item.User,
             AuthorName = item.User?.FriendlyName ?? item.GuestUser.UserName,
-            Content =
-                showBriefDescription
-                    ? item.BriefDescription.GetBriefDescription(charLength: 450)
-                    : $"{item.BriefDescription} {newsThumbImage}",
+            Content = showBriefDescription
+                ? item.BriefDescription.GetBriefDescription(charLength: 450)
+                : $"{item.BriefDescription} {newsThumbImage}",
             PublishDate = new DateTimeOffset(item.Audit.CreatedAt),
             LastUpdatedTime =
                 new DateTimeOffset(item.AuditActions.Count > 0
@@ -99,7 +97,7 @@ public static class NewsMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id),
                 escapeRelativeUrl: false),
-            Categories = item.Tags.Select(x => x.Name),
+            Categories = [..item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.News,
             Id = item.Id,
             UserId = item.UserId,

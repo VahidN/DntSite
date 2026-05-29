@@ -39,7 +39,7 @@ public static class SurveysMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id),
                 escapeRelativeUrl: false),
-            Categories = item.Tags.Select(x => x.Name),
+            Categories = [..item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.AllVotes,
             Id = item.Id,
             UserId = item.UserId,
