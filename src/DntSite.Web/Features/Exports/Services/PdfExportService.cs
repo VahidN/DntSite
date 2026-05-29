@@ -254,7 +254,7 @@ public class PdfExportService(
 
         foreach (var doc in docs)
         {
-            var similarPostsBody = similarPostsService.GetSimilarPostsHtmlBody(doc.DocumentTypeIdHash);
+            var similarPostsBody = await similarPostsService.GetSimilarPostsHtmlBodyAsync(doc.DocumentTypeIdHash);
             mergedBodySb.AppendLine(doc.ToHtmlDocumentBody(similarPostsBody));
         }
 

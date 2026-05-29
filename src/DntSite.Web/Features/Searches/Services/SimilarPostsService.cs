@@ -1,11 +1,14 @@
 using System.Text;
+using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Searches.Services.Contracts;
 
 namespace DntSite.Web.Features.Searches.Services;
 
-public class SimilarPostsService(IFullTextSearchService fullTextSearchService) : ISimilarPostsService
+public class SimilarPostsService(
+    IFullTextSearchService fullTextSearchService,
+    ICachedAppSettingsProvider cachedAppSettingsProvider) : ISimilarPostsService
 {
-    public string GetSimilarPostsHtmlBody(string? documentTypeIdHash, int maxItems = 11)
+    public async Task<string> GetSimilarPostsHtmlBodyAsync(string? documentTypeIdHash, int maxItems = 11)
     {
         if (documentTypeIdHash.IsEmpty())
         {
@@ -26,6 +29,13 @@ public class SimilarPostsService(IFullTextSearchService fullTextSearchService) :
             return string.Empty;
         }
 
+        var (siteRootUri, _) = await cachedAppSettingsProvider.GetSiteRootDomainAsync();
+
+        if (siteRootUri.IsEmpty())
+        {
+            return string.Empty;
+        }
+
         var html = new StringBuilder();
 
         html.AppendLine(value: "<div class='card mt-3 mb-2 shadow-sm'>");
@@ -40,9 +50,16 @@ public class SimilarPostsService(IFullTextSearchService fullTextSearchService) :
 
         foreach (var item in similarPosts)
         {
+            var itemUrl = item.Url;
+
+            if (!itemUrl.IsValidUrl() || !itemUrl.StartsWith(siteRootUri, StringComparison.OrdinalIgnoreCase))
+            {
+                itemUrl = siteRootUri.CombineUrl(itemUrl, escapeRelativeUrl: false);
+            }
+
             html.AppendFormat(CultureInfo.InvariantCulture,
                 format: "<a class='list-group-item list-group-item-action d-flex align-items-center' href='{0}'>",
-                item.Url);
+                itemUrl);
 
             html.AppendFormat(CultureInfo.InvariantCulture, format: "<span class='badge {0} rounded-pill me-2'>",
                 item.ItemType.BgColor);

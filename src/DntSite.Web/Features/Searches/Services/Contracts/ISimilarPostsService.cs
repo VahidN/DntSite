@@ -2,5 +2,5 @@
 
 public interface ISimilarPostsService : ISingletonService
 {
-    string GetSimilarPostsHtmlBody(string? documentTypeIdHash, int maxItems = 11);
+    Task<string> GetSimilarPostsHtmlBodyAsync(string? documentTypeIdHash, int maxItems = 11);
 }
