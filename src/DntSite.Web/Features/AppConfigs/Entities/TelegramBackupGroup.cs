@@ -3,14 +3,14 @@
 [ComplexType]
 public class TelegramBackupGroup
 {
-    [Display(Name = "ارسال به تلگرام فعال است؟")]
+    [Display(Name = "ارسال به پیام‌رسان فعال است؟")]
     public bool IsActive { set; get; }
 
     [Display(Name = "توکن دسترسی")]
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
     public string? AccessToken { get; set; }
 
-    [Display(Name = "شناسه گفتگو")]
+    [Display(Name = "شناسه کانال/گروه")]
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
     public string? ChatId { get; set; }
 
