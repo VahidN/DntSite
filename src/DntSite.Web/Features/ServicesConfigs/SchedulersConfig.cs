@@ -59,7 +59,10 @@ public static class SchedulersConfig
             });
 
             options.AddScheduledTask<ManageBackupsJob>(utcNow
-                => GetNowIranTime(utcNow) is { Hour: 4, Minute: 1, Second: 1 });
+                => GetNowIranTime(utcNow) is
+                {
+                    DayOfWeek: DayOfWeek.Friday or DayOfWeek.Monday, Hour: 4, Minute: 1, Second: 1
+                });
 
             options.AddScheduledTask<HumansTxtJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 1, Second: 1 });

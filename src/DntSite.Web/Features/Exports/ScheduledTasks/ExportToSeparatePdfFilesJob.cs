@@ -3,7 +3,6 @@ using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.Common.ScheduledTasks;
 using DntSite.Web.Features.Courses.Services.Contracts;
 using DntSite.Web.Features.Exports.Models;
-using DntSite.Web.Features.Exports.Services.Contracts;
 using DntSite.Web.Features.News.Services.Contracts;
 using DntSite.Web.Features.Posts.Services.Contracts;
 using DntSite.Web.Features.StackExchangeQuestions.Services.Contracts;
@@ -15,7 +14,6 @@ public class ExportToSeparatePdfFilesJob(
     ICourseTopicsPdfExportService courseTopicsPdfExportService,
     IQuestionsPdfExportService questionsPdfExportService,
     IDailyNewsPdfExportService dailyNewsPdfExportService,
-    IEPubExportService ePubExportService,
     ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
     protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; } = true;
@@ -33,7 +31,5 @@ public class ExportToSeparatePdfFilesJob(
 
         await dailyNewsPdfExportService.ExportNotProcessedDailyNewsToSeparatePdfFilesAsync(ExportType.PdfFile,
             cancellationToken);
-
-        await ePubExportService.StartAsync(cancellationToken);
     }
 }

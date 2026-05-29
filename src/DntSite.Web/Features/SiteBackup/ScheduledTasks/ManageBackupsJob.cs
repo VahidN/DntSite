@@ -1,16 +1,21 @@
 ﻿using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
-using DntSite.Web.Features.SiteBackup.Services.Contracts;
 using DntSite.Web.Features.Common.ScheduledTasks;
+using DntSite.Web.Features.Exports.Services.Contracts;
+using DntSite.Web.Features.SiteBackup.Services.Contracts;
 
 namespace DntSite.Web.Features.SiteBackup.ScheduledTasks;
 
 public class ManageBackupsJob(
     IWebSiteBackupService webSiteBackupService,
+    IEPubExportService ePubExportService,
     ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
 {
     protected override bool ShouldNotBeExecutedIfSiteIsNotActive { get; set; }
 
-    protected override Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
-        => webSiteBackupService.CreateSiteBackupAsync(cancellationToken);
+    protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
+    {
+        await webSiteBackupService.CreateSiteBackupAsync(cancellationToken);
+        await ePubExportService.StartAsync(cancellationToken);
+    }
 }
