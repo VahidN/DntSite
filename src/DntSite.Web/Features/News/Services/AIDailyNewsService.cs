@@ -339,11 +339,11 @@ public class AIDailyNewsService(
                 {
                     var apiResponse = responseResult.Result?.ResponseParts?.LastOrDefault()?.Text;
 
-                    if (apiResponse.IsEmpty() || !apiResponse.ContainsFarsi())
+                    if (apiResponse.IsEmpty())
                     {
                         logger.LogWarning(
                             message:
-                            "Bad ApiResponse -> IsEmptyOrEnglish -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
+                            "Bad ApiResponse -> IsEmpty -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
                             aiModel, feedItemUrl, responseResult.ResponseBody ?? "");
 
                         continue;
