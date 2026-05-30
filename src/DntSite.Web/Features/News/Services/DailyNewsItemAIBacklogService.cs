@@ -51,56 +51,6 @@ public class DailyNewsItemAIBacklogService(
             ? _dailyNewsItemAIBacklogs.FindAsync(id.Value)
             : ValueTask.FromResult<DailyNewsItemAIBacklog?>(result: null);
 
-    public async Task MarkAsDeletedOrApprovedAsync(IList<int>? allIds,
-        IList<int>? selectedDeleteIds,
-        IList<int>? selectedApproveIds)
-    {
-        if (allIds is null)
-        {
-            return;
-        }
-
-        selectedDeleteIds ??= [];
-
-        if (selectedDeleteIds.Count > 0)
-        {
-            await _dailyNewsItemAIBacklogs.Where(x => selectedDeleteIds.Contains(x.Id))
-                .ExecuteUpdateAsync(builder
-                    => builder.SetProperty(aiBacklog => aiBacklog.IsDeleted, valueExpression: true));
-        }
-
-        var notDeletedIds = allIds.Except(selectedDeleteIds).ToList();
-
-        if (notDeletedIds.Count > 0)
-        {
-            await _dailyNewsItemAIBacklogs.Where(x => notDeletedIds.Contains(x.Id))
-                .ExecuteUpdateAsync(builder
-                    => builder.SetProperty(aiBacklog => aiBacklog.IsDeleted, valueExpression: false));
-        }
-
-        selectedApproveIds ??= [];
-
-        if (selectedApproveIds.Count > 0)
-        {
-            await _dailyNewsItemAIBacklogs.Where(x => selectedApproveIds.Contains(x.Id))
-                .ExecuteUpdateAsync(builder
-                    => builder.SetProperty(aiBacklog => aiBacklog.IsApproved, valueExpression: true));
-        }
-
-        var notApprovedIds = allIds.Except(selectedApproveIds).ToList();
-
-        if (notApprovedIds.Count > 0)
-        {
-            await _dailyNewsItemAIBacklogs.Where(x => notApprovedIds.Contains(x.Id))
-                .ExecuteUpdateAsync(builder
-                    => builder.SetProperty(aiBacklog => aiBacklog.IsApproved, valueExpression: false));
-        }
-
-        await emailsFactoryService.SendEmailToAllAdminsNormalAsync(messageId: "AIBackLog", inReplyTo: "AIBackLog",
-            references: "AIBackLog", html: "عملیات پذیرش/لغو لینک‌های بک‌لاگ هوش مصنوعی جدید انجام شد.",
-            emailSubject: "پیشنهاد نهایی لینک‌های بک‌لاگ هوش مصنوعی");
-    }
-
     public async Task MarkAsDeletedAsync(int id)
     {
         var item = await FindDailyNewsItemAIBacklogAsync(id);
@@ -251,6 +201,58 @@ public class DailyNewsItemAIBacklogService(
                 logger.LogError(ex.Demystify(), message: "Error processing `{FeedUrl}`.", feedUrl);
             }
         }
+    }
+
+    public async Task MarkAsDeletedOrApprovedAsync(string siteRootUri,
+        IList<int>? allIds,
+        IList<int>? selectedDeleteIds,
+        IList<int>? selectedApproveIds)
+    {
+        if (allIds is null)
+        {
+            return;
+        }
+
+        selectedDeleteIds ??= [];
+
+        if (selectedDeleteIds.Count > 0)
+        {
+            await _dailyNewsItemAIBacklogs.Where(x => selectedDeleteIds.Contains(x.Id))
+                .ExecuteUpdateAsync(builder
+                    => builder.SetProperty(aiBacklog => aiBacklog.IsDeleted, valueExpression: true));
+        }
+
+        var notDeletedIds = allIds.Except(selectedDeleteIds).ToList();
+
+        if (notDeletedIds.Count > 0)
+        {
+            await _dailyNewsItemAIBacklogs.Where(x => notDeletedIds.Contains(x.Id))
+                .ExecuteUpdateAsync(builder
+                    => builder.SetProperty(aiBacklog => aiBacklog.IsDeleted, valueExpression: false));
+        }
+
+        selectedApproveIds ??= [];
+
+        if (selectedApproveIds.Count > 0)
+        {
+            await _dailyNewsItemAIBacklogs.Where(x => selectedApproveIds.Contains(x.Id))
+                .ExecuteUpdateAsync(builder
+                    => builder.SetProperty(aiBacklog => aiBacklog.IsApproved, valueExpression: true));
+        }
+
+        var notApprovedIds = allIds.Except(selectedApproveIds).ToList();
+
+        if (notApprovedIds.Count > 0)
+        {
+            await _dailyNewsItemAIBacklogs.Where(x => notApprovedIds.Contains(x.Id))
+                .ExecuteUpdateAsync(builder
+                    => builder.SetProperty(aiBacklog => aiBacklog.IsApproved, valueExpression: false));
+        }
+
+        await emailsFactoryService.SendEmailToAllAdminsNormalAsync(messageId: "AIBackLog", inReplyTo: "AIBackLog",
+            references: "AIBackLog",
+            $"عملیات پذیرش/لغو لینک‌های بک‌لاگ هوش مصنوعی جدید انجام شد.<br/><br/><a href='{siteRootUri.CombineUrl(NewsRoutingConstants.AddDailyNewsItemAIBacklogs, escapeRelativeUrl: false)}'>پذیرش/لغو لینک‌ها</a>",
+            emailSubject: "پیشنهاد نهایی لینک‌های بک‌لاگ هوش مصنوعی");
     }
 
     private async Task<List<FeedItem>> GetNewUrlsToAddAsync(string urls)

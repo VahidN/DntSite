@@ -23,7 +23,8 @@ public interface IDailyNewsItemAIBacklogService : IScopedService
 
     Task MarkAsApprovedAsync(int id);
 
-    Task MarkAsDeletedOrApprovedAsync(IList<int>? allIds,
+    Task MarkAsDeletedOrApprovedAsync(string siteRootUri,
+        IList<int>? allIds,
         IList<int>? selectedDeleteIds,
         IList<int>? selectedApproveIds);
 

@@ -16,10 +16,15 @@
             }
         </ul>
     </div>
+    <br/>
+    <br/>
+    <a href="@AddBacklogsUrl">پذیرش/لغو لینک‌ها</a>
 </LayoutView>
 
 @code {
 
     [Parameter] public LinkBacklogsToAdminsEmailModel Model { set; get; } = null!;
+
+    private string AddBacklogsUrl => Model.SiteRootUri.CombineUrl(NewsRoutingConstants.AddDailyNewsItemAIBacklogs, escapeRelativeUrl: false);
 
 }

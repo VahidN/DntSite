@@ -43,8 +43,8 @@ public partial class AddDailyNewsItemAIBacklogs
 
                 break;
             case AIBacklogAction.ApplyChanges:
-                await DailyNewsItemAIBacklogService.MarkAsDeletedOrApprovedAsync(AllIds, SelectedDeleteIds,
-                    SelectedApproveIds);
+                await DailyNewsItemAIBacklogService.MarkAsDeletedOrApprovedAsync(ApplicationState.RootUrl, AllIds,
+                    SelectedDeleteIds, SelectedApproveIds);
 
                 break;
         }
