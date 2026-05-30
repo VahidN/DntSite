@@ -115,6 +115,7 @@ public class AIDailyNewsService(
         - Do NOT include any text before or after the output record.
         - The output format MUST be consistent across all outputs.
         - UTF-8 encoding is mandatory.
+        - Provide the final answer directly. Do not include any internal reasoning, chain of thought, or 'thought' blocks in your response. Output only the plain text response.
 
         ────────────────────────────────────────
         PRIMARY OUTPUT FORMAT (SUCCESS)
@@ -336,7 +337,7 @@ public class AIDailyNewsService(
 
                 if (responseResult.IsSuccessfulResponse is not (null or false))
                 {
-                    var apiResponse = responseResult.Result?.ResponseParts?.FirstOrDefault()?.Text;
+                    var apiResponse = responseResult.Result?.ResponseParts?.LastOrDefault()?.Text;
 
                     if (apiResponse.IsEmpty() || !apiResponse.ContainsFarsi())
                     {
@@ -451,10 +452,7 @@ public class AIDailyNewsService(
 
     private async Task<List<string>> GetAIModelNamesAsync(string apiKey, CancellationToken cancellationToken)
     {
-        List<string> models =
-        [
-            "gemma-4-31b-it", "gemma-4-26b-a4b-it", "gemini-3.1-flash-lite"
-        ];
+        List<string> models = ["gemma-4-31b-it", "gemma-4-26b-a4b-it", "gemini-3.1-flash-lite"];
 
         try
         {
