@@ -87,9 +87,9 @@ public static class GeminiNewsApiParser
         return new GeminiSuccessResult
         {
             Status = "ok",
-            Title = title.GetNormalizedAIText(),
+            Title = title.GetNormalizedAIText().RemoveHtmlTags(),
             Summary = summary.GetNormalizedAIText(),
-            Tags = ParseTags(tagsRaw.GetNormalizedAIText())
+            Tags = ParseTags(tagsRaw)
         };
     }
 
@@ -113,7 +113,7 @@ public static class GeminiNewsApiParser
 
         return raw.Trim('[', ']')
             .Split(separator: ',', StringSplitOptions.RemoveEmptyEntries)
-            .Select(t => t.Trim())
+            .Select(t => t.GetNormalizedAIText().RemoveHtmlTags().TrimStart(trimChar: '#'))
             .ToList();
     }
 }

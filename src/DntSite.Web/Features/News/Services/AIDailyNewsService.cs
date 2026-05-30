@@ -22,6 +22,7 @@ public class AIDailyNewsService(
 {
     private const int QuotaLimit = 15000;
     private const int MaxTextSize = 3800;
+    private const int MaxTagsCount = 5;
 
     private static readonly CompositeFormat PromptTemplate = CompositeFormat.Parse(format: """
         You are RaviAI, a developer-focused AI specialized in Microsoft .NET software development news.
@@ -111,7 +112,7 @@ public class AIDailyNewsService(
         OUTPUT REQUIREMENTS
         ────────────────────────────────────────
         - Output MUST be a SINGLE block of text.
-        - Do NOT include any text before or after the record.
+        - Do NOT include any text before or after the output record.
         - The output format MUST be consistent across all outputs.
         - UTF-8 encoding is mandatory.
 
@@ -125,7 +126,7 @@ public class AIDailyNewsService(
         Each paragraph MUST contain at least 2 full sentences.
         Paragraphs MUST be separated by a single blank line.
         Focus on the main announcement, technical details, implications for .NET developers, and conclusions.]
-        TAGS: [3–5 English technical terms, PascalCase or TitleCase, comma-separated
+        TAGS: [3–{2} English technical terms, PascalCase or TitleCase, comma-separated
         (e.g., DotNet, CSharp, ASPNetCore, Blazor, Azure)]
         === RAVI_AI_SUCCESS_RECORD_END ===
 
@@ -236,13 +237,14 @@ public class AIDailyNewsService(
                 return true;
             }
 
-            var geminiApiResult =
+            var (geminiApiResult, inUseModel) =
                 await GetGeminiResponseResultAsync(appSetting.GeminiNewsFeeds.ApiKey!, prompt, backlog.Url, ct);
 
             if (geminiApiResult is null)
             {
-                logger.LogWarning(message: "Failed to get a successful response from Gemini -> `{FeedItemUrl}`.",
-                    backlog.Url);
+                logger.LogWarning(
+                    message: "Failed to get a successful response from Gemini[{InUseModel}] -> `{FeedItemUrl}`.",
+                    inUseModel, backlog.Url);
 
                 ResetSuccessfulAIModel();
 
@@ -261,14 +263,27 @@ public class AIDailyNewsService(
                             var news = await dailyNewsItemsService.AddNewsItemAsDeletedAsync(backlog.Url, aiUser);
                             await dailyNewsItemAiBacklogService.MarkAsProcessedAsync(backlog.Id, news.Id);
 
-                            logger.LogWarning(message: "`GeminiFallbackResult -> {FeedItemUrl}` -> {Reason}.",
-                                backlog.Url, fallbackResult.Reason);
+                            logger.LogWarning(
+                                message: "`GeminiFallbackResult[{InUseModel}] -> {FeedItemUrl}` -> {Reason}.",
+                                inUseModel, backlog.Url, fallbackResult.Reason);
 
                             return true;
                     }
 
                     break;
                 case GeminiSuccessResult successResult:
+
+                    if (HasNotEnoughTags(successResult))
+                    {
+                        logger.LogWarning(
+                            message:
+                            "Failed to get a successful response with enough tags from Gemini[{InUseModel}] -> `{FeedItemUrl}`.",
+                            inUseModel, backlog.Url);
+
+                        ResetSuccessfulAIModel();
+
+                        return false;
+                    }
 
                     var dailyNewsItemModel = new DailyNewsItemModel
                     {
@@ -294,10 +309,13 @@ public class AIDailyNewsService(
         return true;
     }
 
+    private static bool HasNotEnoughTags(GeminiSuccessResult successResult)
+        => successResult.Tags?.Count is 0 or > MaxTagsCount;
+
     private static bool IsLanguageSupportFailure(GeminiSuccessResult successResult)
         => !successResult.Title.ContainsFarsi() || !successResult.Summary.ContainsFarsi();
 
-    private async Task<GeminiApiResult?> GetGeminiResponseResultAsync(string apiKey,
+    private async Task<(GeminiApiResult? Result, string InUseModel)> GetGeminiResponseResultAsync(string apiKey,
         string prompt,
         string feedItemUrl,
         CancellationToken ct)
@@ -320,10 +338,11 @@ public class AIDailyNewsService(
                 {
                     var apiResponse = responseResult.Result?.ResponseParts?.FirstOrDefault()?.Text;
 
-                    if (apiResponse.IsEmpty())
+                    if (apiResponse.IsEmpty() || !apiResponse.ContainsFarsi())
                     {
                         logger.LogWarning(
-                            message: "ApiResponse -> IsEmpty -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
+                            message:
+                            "Bad ApiResponse -> IsEmptyOrEnglish -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
                             aiModel, feedItemUrl, responseResult.ResponseBody ?? "");
 
                         continue;
@@ -344,7 +363,7 @@ public class AIDailyNewsService(
                         default:
                             SetSuccessfulAIModel(aiModel);
 
-                            return geminiApiResult;
+                            return (geminiApiResult, aiModel);
                     }
                 }
 
@@ -362,7 +381,7 @@ public class AIDailyNewsService(
 
         ResetSuccessfulAIModel();
 
-        return null;
+        return (null, "");
     }
 
     private void SetSuccessfulAIModel(string aiModel) => _successfulAIModel = aiModel;
@@ -387,7 +406,7 @@ public class AIDailyNewsService(
             description = description.GetBriefDescription(MaxTextSize);
         }
 
-        return string.Format(CultureInfo.InvariantCulture, PromptTemplate, backlog.Title, description);
+        return string.Format(CultureInfo.InvariantCulture, PromptTemplate, backlog.Title, description, MaxTagsCount);
     }
 
     private async Task<string?> GetDescriptionAsync(AppSetting appSetting,
