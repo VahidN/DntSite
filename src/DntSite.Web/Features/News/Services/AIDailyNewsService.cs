@@ -453,8 +453,7 @@ public class AIDailyNewsService(
     {
         List<string> models =
         [
-            "gemma-4-31b-it", "gemma-4-26b-a4b-it", "gemma-3-12b-it", "gemma-3-1b-it", "gemma-3-27b-it",
-            "gemma-3-2b-it", "gemma-3-4b-it", "gemma-3n-e2b-it", "gemini-3.1-flash-lite"
+            "gemma-4-31b-it", "gemma-4-26b-a4b-it", "gemini-3.1-flash-lite"
         ];
 
         try
