@@ -217,7 +217,9 @@ public static class PostsMappersExtensions
             ReadingTimeMinutes = body.MinReadTime(wordsPerMinute: 180),
             DateTimeToShow = dateTimeToShow,
             UserId = currentUserService.GetCurrentUserId(),
-            Tags = []
+            Tags = source.Tags,
+            IsReady = source.IsReady,
+            NumberOfRequiredPoints = source.NumberOfRequiredPoints
         };
 
         if (!currentUserService.IsCurrentUserAdmin())
@@ -233,7 +235,9 @@ public static class PostsMappersExtensions
             destination.ReadingTimeMinutes = draft.ReadingTimeMinutes;
             destination.DateTimeToShow = draft.DateTimeToShow;
             destination.UserId = draft.UserId;
-            destination.DateTimeToShow = draft.DateTimeToShow;
+            destination.IsReady = draft.IsReady;
+            destination.Tags = draft.Tags;
+            destination.NumberOfRequiredPoints = draft.NumberOfRequiredPoints;
         }
 
         return destination ?? draft;
@@ -256,7 +260,10 @@ public static class PostsMappersExtensions
             Minute = source.DateTimeToShow == null ? 55 : iranDate.Minute,
             PersianDateYear = persianDate?.Year ?? 0,
             PersianDateMonth = persianDate?.Month ?? 1,
-            PersianDateDay = persianDate?.Day ?? 1
+            PersianDateDay = persianDate?.Day ?? 1,
+            IsReady = source.IsReady,
+            NumberOfRequiredPoints = source.NumberOfRequiredPoints,
+            Tags = source.Tags
         };
     }
 }

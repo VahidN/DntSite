@@ -90,7 +90,8 @@ public static class SurveysMappersExtensions
         {
             Title = source.Title,
             Description = antiXssService.GetSanitizedHtml(source.Description),
-            DueDate = dueDate
+            DueDate = dueDate,
+            AllowMultipleSelection = source.AllowMultipleSelection
         };
 
         if (destination is not null)
@@ -98,6 +99,7 @@ public static class SurveysMappersExtensions
             destination.Title = survey.Title;
             destination.Description = survey.Description;
             destination.DueDate = survey.DueDate;
+            destination.AllowMultipleSelection = survey.AllowMultipleSelection;
         }
 
         return destination ?? survey;
@@ -114,6 +116,7 @@ public static class SurveysMappersExtensions
             Title = source.Title,
             Description = source.Description,
             ExpirationDate = dueDate,
+            AllowMultipleSelection = source.AllowMultipleSelection,
             Hour = dueDate?.Hour,
             Minute = dueDate?.Minute,
             VoteItems = source.SurveyItems.Where(x => !x.IsDeleted)
