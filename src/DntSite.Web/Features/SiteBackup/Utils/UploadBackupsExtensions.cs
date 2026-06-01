@@ -33,12 +33,13 @@ public static class UploadBackupsExtensions
         }
 
         var hasParts = partPaths.Any(file => file.EndsWith(value: ".part", StringComparison.OrdinalIgnoreCase));
+        var fileName = Path.GetFileNameWithoutExtension(partPaths[index: 0]);
 
         return hasParts
             ? $"""
                📦 **راهنمای دریافت فایل بک‌آپ تاریخ {DateTime.IranNowUtc.Persian.Text.LongDateTime} **
 
-               ✅ فایل بک‌آپ به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
+               ✅ فایل بک‌آپ {fileName} به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
 
                🔹 **برای دریافت کل فایل:**
                1. روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
@@ -47,17 +48,17 @@ public static class UploadBackupsExtensions
                4. با ابزار ترکیب، فایل‌ها را به هم بچسبانید:
 
                **با خط فرمان (ویندوز):**
-               type *.part > file.zip
+               type *.part > {fileName}.zip
 
                **با خط فرمان (لینوکس/مک):**
-               cat *.part > file.zip
+               cat *.part > {fileName}.zip
 
                ⚠️ **نکته:** حتماً ابتدا همه‌ی بخش‌ها را دانلود کنید!
                """.Trim()
             : $"""
                📦 **راهنمای دریافت فایل بک‌آپ تاریخ {DateTime.IranNowUtc.Persian.Text.LongDateTime} **
 
-               ✅ فایل بک‌آپ به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
+               ✅ فایل بک‌آپ {fileName} به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
 
                🔹 **برای دریافت کل فایل:**
                1. روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
