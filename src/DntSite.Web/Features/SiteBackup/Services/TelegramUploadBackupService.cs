@@ -49,9 +49,11 @@ public class TelegramUploadBackupService(
 
             var partPaths = useProvidedParts ? parts?.Parts :
                 isFolder ? await path.ZipAndSplitFolderToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
-                    password: zipPassword, logger: logger, cancellationToken: cancellationToken) :
-                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB, password: zipPassword,
-                    logger: logger, cancellationToken: cancellationToken);
+                    appendSecureGuidToOutputName: false, password: zipPassword, logger: logger,
+                    cancellationToken: cancellationToken) :
+                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
+                    appendSecureGuidToOutputName: false, password: zipPassword, logger: logger,
+                    cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {
@@ -107,7 +109,8 @@ public class TelegramUploadBackupService(
             var partPaths = useProvidedParts
                 ? parts?.Parts
                 : await filePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
-                    password: zipPassword, logger: logger, cancellationToken: cancellationToken);
+                    appendSecureGuidToOutputName: false, password: zipPassword, logger: logger,
+                    cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {

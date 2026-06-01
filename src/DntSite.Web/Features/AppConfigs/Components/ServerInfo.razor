@@ -53,9 +53,7 @@
             </div>
             <div>
                 <label>فعال بودن صرفه جویی زمانی: </label>
-                <span dir="ltr">
-                <DntBooleanLabel Value="@_info.ServerInfo.TimeZone.IsDaylightSavingTime"/>
-            </span>
+                <DntBooleanLabel Value="@_info.ServerInfo.TimeZone."/>
             </div>
             <div>
                 <label>BaseUtcOffset: </label>
@@ -132,18 +130,23 @@
             <div>
                 <label>متغیرهای محیطی: </label>
                 @foreach (var item in _info.ServerInfo.OS.EnvironmentVariables)
-                {
-                    <div dir="ltr">
-                        <label>@item.Key: </label>
-                        <span dir="ltr">@item.Value</span>
+                                                                                   {
+                                                                                   <div dir="ltr">
+                <label>@item.
+                        Key: </label>
+                        <span dir="ltr">@.Value</span>
                     </div>
-                }
-                @foreach (var line in _info.ServerInfo.LinuxInfo.EnvironmentVariables)
+                    }
+                    @foreach (var line in _info..LinuxInfo.)
                 {
-                    <div dir="ltr">
-                        <span dir="ltr"> @line </span>
-                    </div>
+                <div dir="ltr">
+                    <span dir=""> @line </span>
+                </div>
                 }
+            </div>
+            <div>
+                <label>برنامه zip نصب است؟ </label>
+                <DntBooleanLabel Value="_info.ServerInfo.LinuxInfo.IsZipInstalled"/>
             </div>
         </FrameBody>
     </DntCardFrame>
@@ -163,12 +166,14 @@
             </div>
             <div>
                 <label>سکوی کاری: </label>
-                <span dir="ltr">@_info.ServerInfo.Runtime.RuntimeIdentifier</span>
+                <span dir="ltr">@_info.ServerInfo.Runtime.
+                    RuntimeIdentifier</span>
             </div>
             <div>
                 <label>نگارش برنامه: </label>
                 <span
-                    dir="ltr">@_info.ServerInfo.Runtime.InformationalVersion, @_info.VersionInfo</span>
+                    dir="ltr">@_info.ServerInfo.Runtime.InformationalVersion, @
+                    _info.VersionInfo</span>
             </div>
         </FrameBody>
     </DntCardFrame>
@@ -180,21 +185,23 @@
         <FrameBody>
             <div>
                 <pre dir="ltr">
-					@_info!.ServerInfo.Runtime.DotNetInfo
+					@_info!.ServerInfo
+                    .Runtime.DotNetInfo
                 </pre>
-                @if (_info.ServerInfo.LinuxInfo.AvailableSdkVersions.Count > 0)
+                @if (_info.ServerInfo.LinuxInfo.AvailableSdkVersions.Count > 0
+                )
                 {
-                    <hr>
-                    <div dir="ltr">
-                        <div>Available Sdk Versions:</div>
-                        @foreach (var version in _info.ServerInfo.LinuxInfo.AvailableSdkVersions)
-                        {
-                            <DntBadge BadgeValue="version"
-                                      Title="نگارش موجود"
-                                      BadgeValueBgColor="TextBgColor.Info"
-                            />
-                        }
-                    </div>
+                 <hr>
+                 <div dir="ltr">
+                <div>Available Sdk</div>
+                    @foreach (var version in _info.ServerInfo.LinuxInfo.AvailableSdkVersions)
+                     {
+                     <DntBadge BadgeValue="version"
+                Title=""
+                    BadgeValueBgColor="TextBgColor.Info"
+                />
+                    }
+                </div>
                 }
             </div>
         </FrameBody>
@@ -207,7 +214,8 @@
         <FrameBody>
             <div>
                 <pre dir="ltr">
-					@_info!.ServerInfo.Runtime.SdkCheckInfo
+					@_info!.ServerInfo
+                    .Runtime.SdkCheckInfo
                 </pre>
             </div>
         </FrameBody>
@@ -294,7 +302,8 @@
                                           RowCellClass='record => "text-right align-middle"'
                                           FooterCellClass="text-center align-middle">
                         <CellValueTemplate Context="record">
-                            @record.CreationDate.ToFriendlyPersianDateTextify()
+                            @record.CreationDate
+                            .ToFriendlyPersianDateTextify()
                         </CellValueTemplate>
                     </DntSimpleTableColumn>
                     <DntSimpleTableColumn HeaderTitle="تاریخ فعال شدن"

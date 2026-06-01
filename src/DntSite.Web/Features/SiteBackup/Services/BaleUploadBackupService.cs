@@ -45,9 +45,11 @@ public class BaleUploadBackupService(
 
             var partPaths = useProvidedParts ? parts?.Parts :
                 isFolder ? await path.ZipAndSplitFolderToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
-                    password: zipPassword, logger: logger, cancellationToken: cancellationToken) :
-                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB, password: zipPassword,
-                    logger: logger, cancellationToken: cancellationToken);
+                    appendSecureGuidToOutputName: false, password: zipPassword, logger: logger,
+                    cancellationToken: cancellationToken) :
+                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
+                    appendSecureGuidToOutputName: false, password: zipPassword, logger: logger,
+                    cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {
@@ -103,7 +105,8 @@ public class BaleUploadBackupService(
             var partPaths = useProvidedParts
                 ? parts?.Parts
                 : await filePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
-                    password: zipPassword, logger: logger, cancellationToken: cancellationToken);
+                    appendSecureGuidToOutputName: false, password: zipPassword, logger: logger,
+                    cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {
@@ -189,6 +192,11 @@ public class BaleUploadBackupService(
 
             LogBaleErrors(status);
 
+            if (IsFailed(status))
+            {
+                return;
+            }
+
             partNumber++;
 
             await Task.Delay(_delay, cancellationToken);
@@ -196,6 +204,8 @@ public class BaleUploadBackupService(
 
         await Task.Delay(_delay, cancellationToken);
     }
+
+    private static bool IsFailed(BaleApiResponseStatus? status) => status is not null and not { Success: true };
 
     private async Task SendMessageAsync(HttpClient httpClient,
         string baleToken,
@@ -217,11 +227,11 @@ public class BaleUploadBackupService(
 
     private void LogBaleErrors(BaleApiResponseStatus? status)
     {
-        if (status is not null and not { Success: true } && logger.IsEnabled(LogLevel.Error))
+        if (IsFailed(status) && logger.IsEnabled(LogLevel.Error))
         {
             logger.LogError(
                 message: "Send message to Bale failed. StatusCode:`{StatusCode}`, ResponseContent:`{Response}`.",
-                status.StatusCode, status.ResponseContent);
+                status?.StatusCode, status?.ResponseContent);
         }
     }
 }
