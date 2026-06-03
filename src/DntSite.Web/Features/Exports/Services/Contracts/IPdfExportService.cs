@@ -11,6 +11,8 @@ public interface IPdfExportService : IScopedService
 
     void RebuildExports();
 
+    void DeleteLargeHtmlTagFiles();
+
     string? GetPhysicalFilePath(string? itemType, string? name);
 
     Task InvalidateExportedFilesAsync(WhatsNewItemType itemType, params IList<int>? docIds);

@@ -245,6 +245,27 @@ public class PdfExportService(
         return _pageTemplateContent;
     }
 
+    public void DeleteLargeHtmlTagFiles()
+    {
+        WhatsNewItemType[] largeTypes =
+        [
+            WhatsNewItemType.AllCourses, WhatsNewItemType.NewsTag, WhatsNewItemType.Tag,
+            WhatsNewItemType.LearningPaths
+        ];
+
+        foreach (var itemType in largeTypes)
+        {
+            var itemHtmlFiles =
+                new DirectoryInfo(appFoldersService.ExportsAssetsFolder).GetFiles(
+                    $"*{itemType.Name.ToLowerInvariant()}*.html");
+
+            foreach (var file in itemHtmlFiles)
+            {
+                file.Delete();
+            }
+        }
+    }
+
     private static string GetCacheKey(WhatsNewItemType itemType, int id)
         => string.Create(CultureInfo.InvariantCulture, $"___{itemType.Name}_{id}___").ToLowerInvariant();
 

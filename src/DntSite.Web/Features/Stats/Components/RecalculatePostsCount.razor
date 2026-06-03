@@ -74,6 +74,14 @@
                 </button>
 
                 <button type="submit"
+                        data-cancel-confirm-message="حذف HTMLهای بزرگ؟"
+                        name="@nameof(RecalculateAction)"
+                        value="@RecalculatePostsCountAction.DeleteLargeHtmlFiles"
+                        class="btn btn-sm btn-primary me-2">
+                    حذف HTMLهای بزرگ
+                </button>
+
+                <button type="submit"
                         data-cancel-confirm-message="دریافت اخبار توسط هوش مصنوعی؟"
                         name="@nameof(RecalculateAction)"
                         value="@RecalculatePostsCountAction.RunAIDailyNewsService"

@@ -18,37 +18,37 @@ namespace DntSite.Web.Features.Stats.Components;
 [Authorize(Roles = CustomRoles.Admin)]
 public partial class RecalculatePostsCount
 {
-    [InjectComponentScoped] internal IStatService StatService { set; get; } = null!;
+    [InjectComponentScoped] internal IStatService StatService { get; set; } = null!;
 
-    [InjectComponentScoped] internal ISiteReferrersService SiteReferrersService { set; get; } = null!;
+    [InjectComponentScoped] internal ISiteReferrersService SiteReferrersService { get; set; } = null!;
 
-    [InjectComponentScoped] internal IPdfExportService PdfExportService { set; get; } = null!;
+    [InjectComponentScoped] internal IPdfExportService PdfExportService { get; set; } = null!;
 
-    [InjectComponentScoped] internal IAIDailyNewsService AIDailyNewsService { set; get; } = null!;
+    [InjectComponentScoped] internal IAIDailyNewsService AIDailyNewsService { get; set; } = null!;
 
-    [InjectComponentScoped] internal IDailyNewsScreenshotsService DailyNewsScreenshotsService { set; get; } = null!;
+    [InjectComponentScoped] internal IDailyNewsScreenshotsService DailyNewsScreenshotsService { get; set; } = null!;
 
-    [InjectComponentScoped] internal IWebSiteBackupService WebSiteBackupService { set; get; } = null!;
+    [InjectComponentScoped] internal IWebSiteBackupService WebSiteBackupService { get; set; } = null!;
 
-    [Inject] internal IFullTextSearchService FullTextSearchService { set; get; } = null!;
+    [Inject] internal IFullTextSearchService FullTextSearchService { get; set; } = null!;
 
-    [Inject] internal ILogger<RecalculatePostsCount> Logger { set; get; } = null!;
+    [Inject] internal ILogger<RecalculatePostsCount> Logger { get; set; } = null!;
 
-    [SupplyParameterFromForm] internal RecalculatePostsCountAction RecalculateAction { set; get; }
+    [SupplyParameterFromForm] internal RecalculatePostsCountAction RecalculateAction { get; set; }
 
-    [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
+    [CascadingParameter] internal DntAlert Alert { get; set; } = null!;
 
-    [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
+    [CascadingParameter] internal ApplicationState ApplicationState { get; set; } = null!;
 
-    [InjectComponentScoped] internal IBlogPostsPdfExportService BlogPostsPdfExportService { set; get; } = null!;
+    [InjectComponentScoped] internal IBlogPostsPdfExportService BlogPostsPdfExportService { get; set; } = null!;
 
-    [InjectComponentScoped] internal ICourseTopicsPdfExportService CourseTopicsPdfExportService { set; get; } = null!;
+    [InjectComponentScoped] internal ICourseTopicsPdfExportService CourseTopicsPdfExportService { get; set; } = null!;
 
-    [InjectComponentScoped] internal IQuestionsPdfExportService QuestionsPdfExportService { set; get; } = null!;
+    [InjectComponentScoped] internal IQuestionsPdfExportService QuestionsPdfExportService { get; set; } = null!;
 
-    [InjectComponentScoped] internal IDailyNewsPdfExportService DailyNewsPdfExportService { set; get; } = null!;
+    [InjectComponentScoped] internal IDailyNewsPdfExportService DailyNewsPdfExportService { get; set; } = null!;
 
-    [InjectComponentScoped] internal IEPubExportService EPubExportService { set; get; } = null!;
+    [InjectComponentScoped] internal IEPubExportService EPubExportService { get; set; } = null!;
 
     private async Task OnValidSubmitAsync()
     {
@@ -93,6 +93,11 @@ public partial class RecalculatePostsCount
 
             case RecalculatePostsCountAction.RebuildExports:
                 PdfExportService.RebuildExports();
+
+                break;
+
+            case RecalculatePostsCountAction.DeleteLargeHtmlFiles:
+                PdfExportService.DeleteLargeHtmlTagFiles();
 
                 break;
 

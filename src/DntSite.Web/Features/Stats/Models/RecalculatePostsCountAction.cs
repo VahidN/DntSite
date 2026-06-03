@@ -12,5 +12,6 @@ public enum RecalculatePostsCountAction
     RunAIDailyNewsService,
     InvalidateAllScreenshots,
     RunBackup,
-    CreateEPub
+    CreateEPub,
+    DeleteLargeHtmlFiles
 }
