@@ -104,7 +104,8 @@ public class LearningPathPdfExportsService(
             var blogPostDocs = await blogPostsPdfExportService.MapBlogPostsToExportDocumentsAsync(item.PostIds);
 
             await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.LearningPaths, item.Id,
-                item.Title, [..blogPostDocs, ..courseTopicDocs, ..questionDocs, ..newsDocs]);
+                item.Title, deleteHtmlDocAtTheEnd: true,
+                [..blogPostDocs, ..courseTopicDocs, ..questionDocs, ..newsDocs]);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }

@@ -118,7 +118,8 @@ public class BlogPostsPdfExportService(
                 return;
             }
 
-            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.Posts, doc.Id, doc.Title, doc);
+            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.Posts, doc.Id, doc.Title,
+                deleteHtmlDocAtTheEnd: false, doc);
 
             if (exportType == ExportType.PdfFile)
             {
@@ -151,7 +152,7 @@ public class BlogPostsPdfExportService(
             var blogPostDocs = await MapBlogPostsToExportDocumentsAsync(tagPostsIds);
 
             await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.Tag, tag.Id,
-                $"مطالب گروه {tag.Name}", blogPostDocs);
+                $"مطالب گروه {tag.Name}", deleteHtmlDocAtTheEnd: true, blogPostDocs);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }

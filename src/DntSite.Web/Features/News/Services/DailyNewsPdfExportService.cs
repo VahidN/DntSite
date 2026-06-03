@@ -116,7 +116,8 @@ public class DailyNewsPdfExportService(
                 return;
             }
 
-            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.News, doc.Id, doc.Title, doc);
+            await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.News, doc.Id, doc.Title,
+                deleteHtmlDocAtTheEnd: false, doc);
 
             if (exportType == ExportType.PdfFile)
             {
@@ -149,7 +150,7 @@ public class DailyNewsPdfExportService(
             var dailyNewsItemDocs = await MapDailyNewsToExportDocumentsAsync(tagPostsIds);
 
             await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.NewsTag, tag.Id,
-                $"مطالب گروه {tag.Name}", dailyNewsItemDocs);
+                $"مطالب گروه {tag.Name}", deleteHtmlDocAtTheEnd: true, dailyNewsItemDocs);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }

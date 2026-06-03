@@ -27,5 +27,6 @@ public interface IPdfExportService : IScopedService
         WhatsNewItemType itemType,
         int id,
         string title,
+        bool deleteHtmlDocAtTheEnd,
         params IList<ExportDocument> docs);
 }

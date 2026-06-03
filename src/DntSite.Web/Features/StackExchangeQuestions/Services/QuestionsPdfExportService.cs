@@ -115,7 +115,7 @@ public class QuestionsPdfExportService(
             }
 
             await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.Questions, doc.Id, doc.Title,
-                doc);
+                deleteHtmlDocAtTheEnd: false, doc);
 
             if (exportType == ExportType.PdfFile)
             {

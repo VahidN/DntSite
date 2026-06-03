@@ -141,7 +141,7 @@ public class CourseTopicsPdfExportService(
             var docs = await MapCourseTopicsToExportDocumentsAsync(topicIds);
 
             await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.AllCourses, course.Id,
-                course.Title, docs);
+                course.Title, deleteHtmlDocAtTheEnd: true, docs);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }
@@ -174,7 +174,7 @@ public class CourseTopicsPdfExportService(
             }
 
             await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.AllCoursesTopics, doc.Id,
-                doc.Title, doc);
+                doc.Title, deleteHtmlDocAtTheEnd: false, doc);
 
             if (exportType == ExportType.PdfFile)
             {

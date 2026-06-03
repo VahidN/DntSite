@@ -157,6 +157,7 @@ public class PdfExportService(
         WhatsNewItemType itemType,
         int id,
         string title,
+        bool deleteHtmlDocAtTheEnd,
         params IList<ExportDocument> docs)
     {
         ArgumentNullException.ThrowIfNull(docs);
@@ -208,6 +209,13 @@ public class PdfExportService(
             outputPdfFilePath = null;
 
             htmlDocFilePath.TryDeleteFile(logger);
+        }
+        finally
+        {
+            if (deleteHtmlDocAtTheEnd)
+            {
+                htmlDocFilePath.TryDeleteFile(logger);
+            }
         }
 
         return outputPdfFilePath;
