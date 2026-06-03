@@ -7,38 +7,38 @@ public class AppSettingModel
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
     [Display(Name = "نام سایت")]
     [Required(ErrorMessage = "*")]
-    public string BlogName { set; get; } = default!;
+    public string BlogName { get; set; } = default!;
 
-    [Display(Name = "سایت فعال است؟")] public bool SiteIsActive { set; get; }
+    [Display(Name = "سایت فعال است؟")] public bool SiteIsActive { get; set; }
 
     [Display(Name = "سایت، پس از چند روز عدم سرزدن ادمین، غیرفعال شود؟")]
-    public int DeactivateSiteAfterDaysOfInactivity { set; get; }
+    public int DeactivateSiteAfterDaysOfInactivity { get; set; }
 
     [Display(Name = "امضای ایمیل‌های برنامه")]
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
-    public string? SiteEmailsSig { set; get; }
+    public string? SiteEmailsSig { get; set; }
 
-    public SmtpServerSetting SmtpServerSetting { set; get; } = new();
+    public SmtpServerSetting SmtpServerSetting { get; set; } = new();
 
-    [Display(Name = "آدرس ایمیل سایت")] public string? SiteFromEmail { set; get; }
+    [Display(Name = "آدرس ایمیل سایت")] public string? SiteFromEmail { get; set; }
 
     [Display(Name = "آیا ثبت نام در سایت باز است؟")]
-    public bool CanUsersRegister { set; get; }
+    public bool CanUsersRegister { get; set; }
 
     [Display(Name = "آدرس کامل سایت‌های بسته شده (دومین و زیر دومین‌ها) در قسمت ارسال لینک (هر سطر یک آدرس)")]
-    public string? BannedUrls { set; get; }
+    public string? BannedUrls { get; set; }
 
     [Display(Name = "آدرس کامل سایت‌های بسته شده (فقط اصل هاست) در قسمت ارسال لینک (هر سطر یک آدرس)")]
-    public string? BannedSites { set; get; }
+    public string? BannedSites { get; set; }
 
     [Display(Name = "الگوهای ارجاع دهنده‌های ممنوع (هر سطر یک الگو)")]
-    public string? BannedReferrers { set; get; }
+    public string? BannedReferrers { get; set; }
 
     [Display(Name = "ایمیل‌های ممنوع (هر سطر یک آدرس)")]
-    public string? BannedEmails { set; get; }
+    public string? BannedEmails { get; set; }
 
     [Display(Name = "کلمات عبور ممنوع (هر سطر یک مورد)")]
-    public string? BannedPasswords { set; get; }
+    public string? BannedPasswords { get; set; }
 
     public UsedPasswordsSetting UsedPasswords { get; set; } = new();
 
@@ -60,11 +60,14 @@ public class AppSettingModel
     public TelegramBackupGroup BaleEPubGroupInfo { get; set; } = new();
 
     [Display(Name = "فقط خلاصه توضیحات در فیدها نمایش داده شود")]
-    public bool ShowRssBriefDescription { set; get; }
+    public bool ShowRssBriefDescription { get; set; }
 
     [Display(Name = "برای مطالب خبری، اسکرین‌شات تهیه شود")]
-    public bool ShouldCreateNewsScreenshots { set; get; }
+    public bool ShouldCreateNewsScreenshots { get; set; }
+
+    [Display(Name = "برای گروه‌های مطالب و خبرها، فایل PDF تهیه شود")]
+    public bool ShouldCreatePdfsForTags { get; set; }
 
     [Display(Name = "کلید ای‌پی‌آی YouTube")]
-    public string? YouTubeDataApikey { set; get; }
+    public string? YouTubeDataApikey { get; set; }
 }

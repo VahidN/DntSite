@@ -128,6 +128,11 @@ public class DailyNewsPdfExportService(
 
     public async Task CreateMergedPdfOfNewsTagsAsync(ExportType exportType, CancellationToken cancellationToken)
     {
+        if (!(await appSettingsService.GetAppSettingModelAsync()).ShouldCreatePdfsForTags)
+        {
+            return;
+        }
+
         var tags = await _dailyNewsTags.NotCacheable().AsNoTracking().OrderBy(x => x.Id).ToListAsync(cancellationToken);
 
         foreach (var tag in tags)

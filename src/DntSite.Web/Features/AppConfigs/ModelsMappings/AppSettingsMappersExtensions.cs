@@ -31,6 +31,7 @@ public static class AppSettingsMappersExtensions
             BaleEPubGroup = source.BaleEPubGroupInfo.MapToTelegramBackupGroup(),
             ShowRssBriefDescription = source.ShowRssBriefDescription,
             ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,
+            ShouldCreatePdfsForTags = source.ShouldCreatePdfsForTags,
             YouTubeDataApikey = source.YouTubeDataApikey,
             BlogName = source.BlogName,
             SiteIsActive = source.SiteIsActive,
@@ -67,6 +68,7 @@ public static class AppSettingsMappersExtensions
 
             destination.ShowRssBriefDescription = appSetting.ShowRssBriefDescription;
             destination.ShouldCreateNewsScreenshots = appSetting.ShouldCreateNewsScreenshots;
+            destination.ShouldCreatePdfsForTags = appSetting.ShouldCreatePdfsForTags;
             destination.YouTubeDataApikey = appSetting.YouTubeDataApikey;
             destination.SiteIsActive = appSetting.SiteIsActive;
             destination.DeactivateSiteAfterDaysOfInactivity = appSetting.DeactivateSiteAfterDaysOfInactivity;
@@ -126,6 +128,7 @@ public static class AppSettingsMappersExtensions
             BaleEPubGroupInfo = source.BaleEPubGroup.MapToTelegramBackupGroup(),
             ShowRssBriefDescription = source.ShowRssBriefDescription,
             ShouldCreateNewsScreenshots = source.ShouldCreateNewsScreenshots,
+            ShouldCreatePdfsForTags = source.ShouldCreatePdfsForTags,
             YouTubeDataApikey = source.YouTubeDataApikey
         };
     }
