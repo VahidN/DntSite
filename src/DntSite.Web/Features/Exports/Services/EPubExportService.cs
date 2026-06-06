@@ -23,34 +23,41 @@ public class EPubExportService(
 
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        var (baseUrl, domain) = await cachedAppSettingsProvider.GetSiteRootDomainAsync();
-
-        if (baseUrl.IsEmpty() || domain.IsEmpty())
+        try
         {
-            if (logger.IsEnabled(LogLevel.Critical))
+            var (baseUrl, domain) = await cachedAppSettingsProvider.GetSiteRootDomainAsync();
+
+            if (baseUrl.IsEmpty() || domain.IsEmpty())
             {
-                logger.LogCritical(message: "`SiteRoot` URL is not set in the app settings.");
+                if (logger.IsEnabled(LogLevel.Critical))
+                {
+                    logger.LogCritical(message: "`SiteRoot` URL is not set in the app settings.");
+                }
+
+                return;
             }
 
-            return;
-        }
+            var tocItems = await ePubExportDataProviderService.GetEPubTocItemsAsync(cancellationToken);
 
-        var tocItems = await ePubExportDataProviderService.GetEPubTocItemsAsync(cancellationToken);
-
-        if (tocItems is { ArticlesCount: 0, NewsCount: 0 })
-        {
-            if (logger.IsEnabled(LogLevel.Debug))
+            if (tocItems is { ArticlesCount: 0, NewsCount: 0 })
             {
-                logger.LogDebug(message: "There is no content to produce the .EPUB file.");
+                if (logger.IsEnabled(LogLevel.Warning))
+                {
+                    logger.LogWarning(message: "There is no content to produce the .EPUB file.");
+                }
+
+                return;
             }
 
-            return;
+            var ebookFilePath = await GenerateEPubAsync(tocItems, baseUrl, domain, cancellationToken);
+            await Task.Delay(TimeSpan.FromMilliseconds(value: 500), cancellationToken);
+
+            await webSiteBackupService.UploadSiteEPubFileAsync(ebookFilePath, cancellationToken);
         }
-
-        var ebookFilePath = await GenerateEPubAsync(tocItems, baseUrl, domain, cancellationToken);
-        await Task.Delay(TimeSpan.FromMilliseconds(value: 500), cancellationToken);
-
-        await webSiteBackupService.UploadSiteEPubFileAsync(ebookFilePath, cancellationToken);
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Demystify(), message: "Failed to UploadSiteEPubFile.");
+        }
     }
 
     private async Task<string> GenerateEPubAsync(EPubTocItems tocItems,

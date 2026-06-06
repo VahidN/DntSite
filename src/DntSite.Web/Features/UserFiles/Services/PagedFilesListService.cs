@@ -31,7 +31,7 @@ public class PagedFilesListService(
         }
 
         var skipRecords = pageNumber * recordsPerPage;
-        var allFilesList = GetFilesByExtensions(new DirectoryInfo(dir), searchPattern.Split(separator: ';')).ToList();
+        var allFilesList = new DirectoryInfo(dir).GetFilesByExtensions(searchPattern.Split(separator: ';')).ToList();
 
         var pagedFilesList = allFilesList.OrderByDescending(x => x.LastWriteTime)
             .Skip(skipRecords)
@@ -76,21 +76,5 @@ public class PagedFilesListService(
         {
             await adminsEmailsService.CommonFileEditedSendEmailAsync(fileNameToDelete, description: "حذف فایل");
         }
-    }
-
-    private static IEnumerable<FileInfo> GetFilesByExtensions(DirectoryInfo dir, params string[] extensions)
-    {
-        ArgumentNullException.ThrowIfNull(extensions);
-
-        var fileInfos = dir.EnumerateFiles();
-
-        if (extensions.Length == 1 && string.Equals(extensions[0].Trim(), b: "*.*", StringComparison.Ordinal))
-        {
-            return fileInfos;
-        }
-
-        var pathExtensions = extensions.Select(Path.GetExtension).Distinct().ToArray();
-
-        return fileInfos.Where(f => pathExtensions.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
     }
 }

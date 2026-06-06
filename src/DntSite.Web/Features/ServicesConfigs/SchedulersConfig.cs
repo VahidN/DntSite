@@ -58,11 +58,14 @@ public static class SchedulersConfig
                 return now.Hour % 2 == 0 && now is { Minute: 10, Second: 1 };
             });
 
-            options.AddScheduledTask<ManageBackupsJob>(utcNow
+            options.AddScheduledTask<BackupDatabaseJob>(utcNow
                 => GetNowIranTime(utcNow) is
                 {
                     DayOfWeek: DayOfWeek.Friday or DayOfWeek.Monday, Hour: 4, Minute: 1, Second: 1
                 });
+
+            options.AddScheduledTask<BackupDataFolderJob>(utcNow
+                => GetNowIranTime(utcNow) is { DayOfWeek: DayOfWeek.Saturday, Hour: 4, Minute: 1, Second: 1 });
 
             options.AddScheduledTask<HumansTxtJob>(utcNow
                 => GetNowIranTime(utcNow) is { Hour: 3, Minute: 1, Second: 1 });

@@ -2,7 +2,9 @@
 
 public interface IWebSiteBackupService : ISingletonService
 {
-    Task CreateSiteBackupAsync(CancellationToken cancellationToken = default);
+    Task CreateDatabaseBackupAsync(CancellationToken cancellationToken = default);
+
+    Task CompressAndUploadDataFolderBackupFileAsync(CancellationToken cancellationToken);
 
     Task UploadSiteEPubFileAsync(string filePath, CancellationToken cancellationToken = default);
 }

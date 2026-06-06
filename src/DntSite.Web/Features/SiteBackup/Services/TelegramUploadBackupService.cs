@@ -20,6 +20,7 @@ public class TelegramUploadBackupService(
 
     public async Task<PartsInfo?> UploadSiteBackupFileToTelegramAsync(bool isFolder,
         string path,
+        string? outputFileName,
         PartsInfo? parts = null,
         CancellationToken cancellationToken = default)
     {
@@ -49,11 +50,9 @@ public class TelegramUploadBackupService(
 
             var partPaths = useProvidedParts ? parts?.Parts :
                 isFolder ? await path.ZipAndSplitFolderToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
-                    appendSecureGuidToOutputName: false, password: zipPassword, logger: logger,
-                    cancellationToken: cancellationToken) :
-                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
-                    appendSecureGuidToOutputName: false, password: zipPassword, logger: logger,
-                    cancellationToken: cancellationToken);
+                    outputFileName, password: zipPassword, logger: logger, cancellationToken: cancellationToken) :
+                await path.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB, outputFileName,
+                    password: zipPassword, logger: logger, cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {
@@ -79,6 +78,7 @@ public class TelegramUploadBackupService(
     }
 
     public async Task<PartsInfo?> UploadSiteEPubFileToTelegramAsync(string filePath,
+        string? outputFileName,
         PartsInfo? parts = null,
         CancellationToken cancellationToken = default)
     {
@@ -108,9 +108,8 @@ public class TelegramUploadBackupService(
 
             var partPaths = useProvidedParts
                 ? parts?.Parts
-                : await filePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB,
-                    appendSecureGuidToOutputName: false, password: zipPassword, logger: logger,
-                    cancellationToken: cancellationToken);
+                : await filePath.ZipAndSplitFileToMultiplePartsAsync(tempDirectory, maxPartSizeMB, outputFileName,
+                    password: zipPassword, logger: logger, cancellationToken: cancellationToken);
 
             if (partPaths?.Count == 0)
             {
@@ -217,6 +216,6 @@ public class TelegramUploadBackupService(
             return;
         }
 
-        await telegramBotClient.SendMessage(chatId, text, ParseMode.Markdown, cancellationToken: cancellationToken);
+        await telegramBotClient.SendMessage(chatId, text, ParseMode.MarkdownV2, cancellationToken: cancellationToken);
     }
 }

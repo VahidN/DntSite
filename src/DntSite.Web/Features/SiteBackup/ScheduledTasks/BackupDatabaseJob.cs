@@ -6,7 +6,7 @@ using DntSite.Web.Features.SiteBackup.Services.Contracts;
 
 namespace DntSite.Web.Features.SiteBackup.ScheduledTasks;
 
-public class ManageBackupsJob(
+public class BackupDatabaseJob(
     IWebSiteBackupService webSiteBackupService,
     IEPubExportService ePubExportService,
     ICachedAppSettingsProvider cachedAppSettingsProvider) : AppSettingAwareScheduledTaskBase(cachedAppSettingsProvider)
@@ -15,7 +15,7 @@ public class ManageBackupsJob(
 
     protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
-        await webSiteBackupService.CreateSiteBackupAsync(cancellationToken);
+        await webSiteBackupService.CreateDatabaseBackupAsync(cancellationToken);
         await ePubExportService.StartAsync(cancellationToken);
     }
 }

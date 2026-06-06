@@ -33,30 +33,31 @@ public static class UploadBackupsExtensions
         }
 
         var hasParts = partPaths.Any(file => file.EndsWith(value: ".part", StringComparison.OrdinalIgnoreCase));
-        var fileName = Path.GetFileNameWithoutExtension(partPaths[index: 0]);
+        var fileName = Path.GetFileNameWithoutExtension(partPaths[index: 0]).EscapeMarkdownV2();
+        var dateTime = DateTime.IranNowUtc.Persian.Text.LongDateTime.EscapeMarkdownV2();
 
         return hasParts
             ? $"""
-               📦 **راهنمای دریافت فایل بک‌آپ تاریخ {DateTime.IranNowUtc.Persian.Text.LongDateTime} **
+               📦 **راهنمای دریافت فایل بک‌آپ تاریخ {dateTime} **
 
                ✅ فایل بک‌آپ {fileName} به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
 
                🔹 **برای دریافت کل فایل:**
                1. روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
                2. آن‌ها را در یک پوشه قرار دهید
-               3. نام فایل‌ها باید به ترتیب باشند: file_1.part، file_2.part، و غیره
+               3. نام فایل‌ها باید به ترتیب باشند: file1.part، file2.part، و غیره
                4. با ابزار ترکیب، فایل‌ها را به هم بچسبانید:
 
                **با خط فرمان (ویندوز):**
-               type *.part > {fileName}.zip
+               type *.part \> {fileName}.zip
 
-               **با خط فرمان (لینوکس/مک):**
-               cat *.part > {fileName}.zip
+               **با خط فرمان (لینوکس، مک):**
+               cat *.part \> {fileName}.zip
 
                ⚠️ **نکته:** حتماً ابتدا همه‌ی بخش‌ها را دانلود کنید!
                """.Trim()
             : $"""
-               📦 **راهنمای دریافت فایل بک‌آپ تاریخ {DateTime.IranNowUtc.Persian.Text.LongDateTime} **
+               📦 **راهنمای دریافت فایل بک‌آپ تاریخ {dateTime} **
 
                ✅ فایل بک‌آپ {fileName} به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
 
@@ -64,7 +65,7 @@ public static class UploadBackupsExtensions
                1. روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
                2. تمام قطعات فایل (مانند `file.z01`، `file.z02` و `file.zip`) را در **یک پوشه** قرار دهید.
                3. روی فایل `file.zip` (یا `file.z01`) **کلیک راست** کنید.
-               4. از منوی `7-Zip` گزینه‌ی **`Extract Here`** یا **`Extract to "file\"`** را انتخاب کنید.
+               4. از منوی `7-Zip` گزینه‌ی **Extract Here** یا **Extract to file"** را انتخاب کنید.
                5. ابزار به صورت خودکار تمام قطعات را شناسایی کرده و فایل اصلی را خارج می‌سازد.
 
                ⚠️ **نکته:** حتماً ابتدا همه‌ی بخش‌ها را دانلود کنید!

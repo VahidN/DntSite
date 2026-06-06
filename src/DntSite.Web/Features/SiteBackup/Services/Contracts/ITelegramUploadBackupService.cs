@@ -6,10 +6,12 @@ public interface ITelegramUploadBackupService : ISingletonService
 {
     Task<PartsInfo?> UploadSiteBackupFileToTelegramAsync(bool isFolder,
         string path,
+        string? outputFileName,
         PartsInfo? parts = null,
         CancellationToken cancellationToken = default);
 
     Task<PartsInfo?> UploadSiteEPubFileToTelegramAsync(string filePath,
+        string? outputFileName,
         PartsInfo? parts = null,
         CancellationToken cancellationToken = default);
 }

@@ -13,7 +13,11 @@ public class WebSiteBackupService(
 {
     private readonly TimeSpan _delay = TimeSpan.FromSeconds(seconds: 7);
 
-    public async Task CreateSiteBackupAsync(CancellationToken cancellationToken = default)
+    private static string NameSalt => DateTime.IranNowUtc.Persian.Text.ShortDateTime.Replace(oldChar: ':', newChar: '-')
+        .Replace(oldChar: '/', newChar: '-')
+        .Replace(oldChar: ' ', newChar: '-');
+
+    public async Task CreateDatabaseBackupAsync(CancellationToken cancellationToken = default)
     {
         try
         {
@@ -31,8 +35,6 @@ public class WebSiteBackupService(
             {
                 await CompressAndUploadDatabaseBackupFileAsync(dbBackupFilePath, cancellationToken);
             }
-
-            await CompressAndUploadDataFolderBackupFileAsync(cancellationToken);
         }
         catch (Exception ex)
         {
@@ -50,11 +52,10 @@ public class WebSiteBackupService(
             }
 
             var telegramPartsInfo = await telegramUploadBackupService.UploadSiteEPubFileToTelegramAsync(filePath,
-                parts: null, cancellationToken);
+                filePath.GetFileName(), parts: null, cancellationToken);
 
-            var balePartsInfo =
-                await baleUploadBackupService.UploadSiteEPubFileToBaleAsync(filePath, telegramPartsInfo,
-                    cancellationToken);
+            var balePartsInfo = await baleUploadBackupService.UploadSiteEPubFileToBaleAsync(filePath,
+                filePath.GetFileName(), telegramPartsInfo, cancellationToken);
 
             filePath.TryDeleteFile(logger);
             telegramPartsInfo?.Parts.DeleteParts(logger);
@@ -63,6 +64,34 @@ public class WebSiteBackupService(
         catch (Exception ex)
         {
             logger.LogError(ex.Demystify(), message: "Failed to upload site's epub-backup file.");
+        }
+    }
+
+    public async Task CompressAndUploadDataFolderBackupFileAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            if (!IsConnectedToInternet())
+            {
+                return;
+            }
+
+            DeleteOldZipFiles();
+
+            var outputFileName = $"{new DirectoryInfo(appFoldersService.UploadsFolderPath).Name}-{NameSalt}.zip";
+
+            var telegramPartsInfo = await telegramUploadBackupService.UploadSiteBackupFileToTelegramAsync(
+                isFolder: true, appFoldersService.UploadsFolderPath, outputFileName, parts: null, cancellationToken);
+
+            var balePartsInfo = await baleUploadBackupService.UploadSiteBackupFileToBaleAsync(isFolder: true,
+                appFoldersService.UploadsFolderPath, outputFileName, telegramPartsInfo, cancellationToken);
+
+            telegramPartsInfo?.Parts.DeleteParts(logger);
+            balePartsInfo?.Parts.DeleteParts(logger);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Demystify(), message: "Failed to compress and upload data backup file.");
         }
     }
 
@@ -86,31 +115,10 @@ public class WebSiteBackupService(
 
     private string GetDbBackupFilePath()
     {
-        var dbBackupFileName = string.Create(CultureInfo.InvariantCulture,
-            $"db.backup.{DateTime.UtcNow:yyyyMMdd_HHmmss}.{Guid.CryptographicallySecureGuid:N}.sqlite");
+        var dbBackupFileName = string.Create(CultureInfo.InvariantCulture, $"db.backup.{NameSalt}.sqlite");
 
         return appFoldersService.BackupFolderPath.SafePathCombine(dbBackupFileName)!.Replace(oldValue: "'",
             newValue: "''", StringComparison.Ordinal);
-    }
-
-    private async Task CompressAndUploadDataFolderBackupFileAsync(CancellationToken cancellationToken)
-    {
-        try
-        {
-            var telegramPartsInfo =
-                await telegramUploadBackupService.UploadSiteBackupFileToTelegramAsync(isFolder: true,
-                    appFoldersService.UploadsFolderPath, parts: null, cancellationToken);
-
-            var balePartsInfo = await baleUploadBackupService.UploadSiteBackupFileToBaleAsync(isFolder: true,
-                appFoldersService.UploadsFolderPath, telegramPartsInfo, cancellationToken);
-
-            telegramPartsInfo?.Parts.DeleteParts(logger);
-            balePartsInfo?.Parts.DeleteParts(logger);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex.Demystify(), message: "Failed to compress and upload data backup file.");
-        }
     }
 
     private async Task CompressAndUploadDatabaseBackupFileAsync(string dbBackupFilePath,
@@ -118,12 +126,11 @@ public class WebSiteBackupService(
     {
         try
         {
-            var telegramPartsInfo =
-                await telegramUploadBackupService.UploadSiteBackupFileToTelegramAsync(isFolder: false, dbBackupFilePath,
-                    parts: null, cancellationToken);
+            var telegramPartsInfo = await telegramUploadBackupService.UploadSiteBackupFileToTelegramAsync(
+                isFolder: false, dbBackupFilePath, dbBackupFilePath.GetFileName(), parts: null, cancellationToken);
 
             var balePartsInfo = await baleUploadBackupService.UploadSiteBackupFileToBaleAsync(isFolder: false,
-                dbBackupFilePath, telegramPartsInfo, cancellationToken);
+                dbBackupFilePath, dbBackupFilePath.GetFileName(), telegramPartsInfo, cancellationToken);
 
             await Task.Delay(_delay, cancellationToken);
 

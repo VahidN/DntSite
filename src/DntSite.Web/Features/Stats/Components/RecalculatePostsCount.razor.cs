@@ -107,7 +107,7 @@ public partial class RecalculatePostsCount
                 break;
 
             case RecalculatePostsCountAction.RunBackup:
-                await WebSiteBackupService.CreateSiteBackupAsync();
+                await WebSiteBackupService.CreateDatabaseBackupAsync();
 
                 break;
 
