@@ -255,18 +255,21 @@ public class AIDailyNewsService(
             switch (geminiApiResult)
             {
                 case GeminiFallbackResult fallbackResult:
+                    logger.LogWarning(message: "`GeminiFallbackResult[{InUseModel}] -> {FeedItemUrl}` -> {Reason}.",
+                        inUseModel, backlog.Url, fallbackResult.Reason);
+
                     switch (fallbackResult.Reason)
                     {
+                        case GeminiFallbackReason.InsufficientContent:
+                            await ProcessItemAsync(backlog, aiUser, successResult: null);
+
+                            break;
+
                         case GeminiFallbackReason.Unreadable:
                         case GeminiFallbackReason.NotDotNetRelated:
-                        case GeminiFallbackReason.InsufficientContent:
                         case GeminiFallbackReason.LowSignalNews:
                             var news = await dailyNewsItemsService.AddNewsItemAsDeletedAsync(backlog.Url, aiUser);
                             await dailyNewsItemAiBacklogService.MarkAsProcessedAsync(backlog.Id, news.Id);
-
-                            logger.LogWarning(
-                                message: "`GeminiFallbackResult[{InUseModel}] -> {FeedItemUrl}` -> {Reason}.",
-                                inUseModel, backlog.Url, fallbackResult.Reason);
 
                             return true;
                     }
@@ -286,18 +289,7 @@ public class AIDailyNewsService(
                         return false;
                     }
 
-                    var dailyNewsItemModel = new DailyNewsItemModel
-                    {
-                        Title = successResult.Title ?? backlog.Title ?? backlog.Url,
-                        Url = backlog.Url,
-                        DescriptionText = successResult.Summary ?? "",
-                        Tags = successResult.Tags ?? [DailyNewsItemsService.DefaultTag]
-                    };
-
-                    var newsItem = await dailyNewsItemsService.AddNewsItemAsync(dailyNewsItemModel, aiUser);
-                    await dailyNewsItemsService.NotifyAddOrUpdateChangesAsync(newsItem, dailyNewsItemModel, aiUser);
-
-                    await dailyNewsItemAiBacklogService.MarkAsProcessedAsync(backlog.Id, newsItem.Id);
+                    await ProcessItemAsync(backlog, aiUser, successResult);
 
                     break;
             }
@@ -308,6 +300,22 @@ public class AIDailyNewsService(
         }
 
         return true;
+    }
+
+    private async Task ProcessItemAsync(DailyNewsItemAIBacklog backlog, User aiUser, GeminiSuccessResult? successResult)
+    {
+        var dailyNewsItemModel = new DailyNewsItemModel
+        {
+            Title = successResult?.Title ?? backlog.Title ?? backlog.Url,
+            Url = backlog.Url,
+            DescriptionText = successResult?.Summary ?? backlog.Title ?? "",
+            Tags = successResult?.Tags ?? [DailyNewsItemsService.DefaultTag]
+        };
+
+        var newsItem = await dailyNewsItemsService.AddNewsItemAsync(dailyNewsItemModel, aiUser);
+        await dailyNewsItemsService.NotifyAddOrUpdateChangesAsync(newsItem, dailyNewsItemModel, aiUser);
+
+        await dailyNewsItemAiBacklogService.MarkAsProcessedAsync(backlog.Id, newsItem.Id);
     }
 
     private static bool HasNotEnoughTags(GeminiSuccessResult successResult)
@@ -342,8 +350,7 @@ public class AIDailyNewsService(
                     if (apiResponse.IsEmpty())
                     {
                         logger.LogWarning(
-                            message:
-                            "Bad ApiResponse -> IsEmpty -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
+                            message: "Bad ApiResponse -> IsEmpty -> `{Model}` -> `{FeedItemUrl}` -> `{ResponseBody}`.",
                             aiModel, feedItemUrl, responseResult.ResponseBody ?? "");
 
                         continue;
