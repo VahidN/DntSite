@@ -64,7 +64,9 @@ public class TelegramUploadBackupService(
             var telegramBotClient =
                 new TelegramBotClient(telegramBackupGroup.AccessToken!, httpClient, cancellationToken);
 
-            await UploadPartsAsync(telegramBotClient, telegramBackupGroup.ChatId!, partPaths, cancellationToken);
+            await UploadPartsAsync(telegramBotClient, telegramBackupGroup.ChatId!, partPaths,
+                $"{(isFolder ? "پوشه " : "فایل ")}`{outputFileName}`", cancellationToken);
+
             await SendMessageAsync(telegramBotClient, telegramBackupGroup.ChatId!, partPaths, cancellationToken);
 
             return new PartsInfo(partPaths, zipPassword);
@@ -121,7 +123,9 @@ public class TelegramUploadBackupService(
             var telegramBotClient =
                 new TelegramBotClient(telegramEPubGroup.AccessToken!, httpClient, cancellationToken);
 
-            await UploadPartsAsync(telegramBotClient, telegramEPubGroup.ChatId!, partPaths, cancellationToken);
+            await UploadPartsAsync(telegramBotClient, telegramEPubGroup.ChatId!, partPaths,
+                $"فایل `{filePath.GetFileName()}`", cancellationToken);
+
             await SendMessageAsync(telegramBotClient, telegramEPubGroup.ChatId!, partPaths, cancellationToken);
 
             return new PartsInfo(partPaths, zipPassword);
@@ -173,6 +177,7 @@ public class TelegramUploadBackupService(
     private async Task UploadPartsAsync(TelegramBotClient telegramBotClient,
         string chatId,
         IList<string>? partPaths,
+        string description,
         CancellationToken cancellationToken)
     {
         var totalParts = partPaths?.Count ?? 0;
@@ -191,8 +196,7 @@ public class TelegramUploadBackupService(
             await using (var content = File.OpenRead(partPath))
             {
                 await telegramBotClient.SendDocument(chatId, new InputFileStream(content, partPath.GetFileName()), $"""
-                     🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()}
-                     📏 حجم بخش: {uploadedSize.ToFormattedFileSize()}
+                     🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()} {description}
                      """, cancellationToken: cancellationToken);
             }
 

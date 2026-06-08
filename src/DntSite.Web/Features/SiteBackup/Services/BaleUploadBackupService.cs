@@ -1,4 +1,4 @@
-using DntSite.Web.Features.AppConfigs.Entities;
+﻿using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
 using DntSite.Web.Features.SiteBackup.Models;
 using DntSite.Web.Features.SiteBackup.Services.Contracts;
@@ -58,7 +58,7 @@ public class BaleUploadBackupService(
             using var httpClient = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
 
             await UploadPartsAsync(httpClient, baleBackupGroup.AccessToken!, baleBackupGroup.ChatId!, partPaths,
-                cancellationToken);
+                $"{(isFolder ? "پوشه " : "فایل ")}`{outputFileName}`", cancellationToken);
 
             await SendMessageAsync(httpClient, baleBackupGroup.AccessToken!, baleBackupGroup.ChatId!, partPaths,
                 cancellationToken);
@@ -115,7 +115,7 @@ public class BaleUploadBackupService(
             using var httpClient = httpClientFactory.CreateClient(NamedHttpClient.BaseHttpClient);
 
             await UploadPartsAsync(httpClient, baleEPubGroup.AccessToken!, baleEPubGroup.ChatId!, partPaths,
-                cancellationToken);
+                $"فایل `{filePath.GetFileName()}`", cancellationToken);
 
             await SendMessageAsync(httpClient, baleEPubGroup.AccessToken!, baleEPubGroup.ChatId!, partPaths,
                 cancellationToken);
@@ -168,6 +168,7 @@ public class BaleUploadBackupService(
         string baleToken,
         string chatId,
         IList<string>? partPaths,
+        string description,
         CancellationToken cancellationToken)
     {
         var totalParts = partPaths?.Count ?? 0;
@@ -185,8 +186,7 @@ public class BaleUploadBackupService(
 
             var status = await httpClient.SendFileToBaleChannelAsync(baleToken, chatId, BaleFileType.Document, partPath,
                 $"""
-                 🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()}
-                 📏 حجم بخش: {uploadedSize.ToFormattedFileSize()}
+                 🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()} {description}
                  """, cancellationToken);
 
             LogBaleErrors(status);
