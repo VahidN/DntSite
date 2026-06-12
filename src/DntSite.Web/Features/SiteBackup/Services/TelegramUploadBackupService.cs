@@ -1,5 +1,6 @@
 ﻿using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.SiteBackup.Models;
 using DntSite.Web.Features.SiteBackup.Services.Contracts;
 using DntSite.Web.Features.SiteBackup.Utils;
@@ -14,6 +15,7 @@ public class TelegramUploadBackupService(
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IAppFoldersService appFoldersService,
     IHttpClientFactory httpClientFactory,
+    IEmailsFactoryService emailsFactoryService,
     ILogger<TelegramUploadBackupService> logger) : ITelegramUploadBackupService
 {
     private readonly TimeSpan _delay = TimeSpan.FromSeconds(seconds: 20);
@@ -206,7 +208,7 @@ public class TelegramUploadBackupService(
         await Task.Delay(_delay, cancellationToken);
     }
 
-    private static async Task SendMessageAsync(TelegramBotClient telegramBotClient,
+    private async Task SendMessageAsync(TelegramBotClient telegramBotClient,
         string chatId,
         IList<string>? partPaths,
         CancellationToken cancellationToken)
@@ -219,5 +221,9 @@ public class TelegramUploadBackupService(
         }
 
         await telegramBotClient.SendMessage(chatId, text, ParseMode.Html, cancellationToken: cancellationToken);
+
+        await emailsFactoryService.SendEmailToAllAdminsNormalAsync(messageId: "TelegramUploadBackup",
+            inReplyTo: "TelegramUploadBackup", references: "TelegramUploadBackup", text,
+            emailSubject: "ارسال فایل بک‌آپ به تلگرام");
     }
 }
