@@ -33,42 +33,46 @@ public static class UploadBackupsExtensions
         }
 
         var hasParts = partPaths.Any(file => file.EndsWith(value: ".part", StringComparison.OrdinalIgnoreCase));
-        var fileName = Path.GetFileNameWithoutExtension(partPaths[index: 0]);
-        var dateTime = DateTime.IranNowUtc.Persian.Text.LongDateTime;
+        var safeFileName = WebUtility.HtmlEncode(Path.GetFileNameWithoutExtension(partPaths[index: 0]));
+        var safeDateTime = WebUtility.HtmlEncode(DateTime.IranNowUtc.Persian.Text.LongDateTime);
 
         return hasParts
             ? $"""
-               📦 **راهنمای دریافت فایل بک‌آپ تاریخ** `{dateTime}`
+               📦 <b>راهنمای دریافت فایل بک‌آپ تاریخ: {safeDateTime}</b>
 
-               ✅ فایل بک‌آپ `{fileName}` به `{totalParts.ToPersianNumbers()}` بخش تقسیم و ارسال شد.
+               ✅ فایل بک‌آپ <code>{safeFileName}</code> به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
 
-               🔹 **برای دریافت کل فایل:**
-               - روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
-               - آن‌ها را در یک پوشه قرار دهید
-               - نام فایل‌ها باید به ترتیب باشند: `file1.part` `file2.part` و غیره
-               - با ابزار ترکیب، فایل‌ها را به هم بچسبانید:
+               🔹 <b>برای دریافت کل فایل:</b>
 
-               **با خط فرمان (ویندوز):**
-               `type *.part > {fileName}.zip`
+               • روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
+               • آن‌ها را در یک پوشه قرار دهید
+               • نام فایل‌ها باید به ترتیب باشند: <code>file1.part</code> <code>file2.part</code> و غیره
+               • با ابزار ترکیب، فایل‌ها را به هم بچسبانید:
 
-               **با خط فرمان (لینوکس، مک):**
-               `cat *.part > {fileName}.zip`
+               <b>با خط فرمان (ویندوز):</b>
 
-               ⚠️ **نکته:** حتماً ابتدا همه‌ی بخش‌ها را دانلود کنید!
+               <code>type *.part &gt; {safeFileName}.zip</code>
+
+               <b>با خط فرمان (لینوکس، مک):</b>
+
+               <code>cat *.part &gt; {safeFileName}.zip</code>
+
+               ⚠️ <b>نکته:</b> حتماً ابتدا همه‌ی بخش‌ها را دانلود کنید!
                """.Trim()
             : $"""
-               📦 **راهنمای دریافت فایل بک‌آپ تاریخ** `{dateTime}`
+               📦 <b>راهنمای دریافت فایل بک‌آپ تاریخ: {safeDateTime}</b>
 
-               ✅ فایل بک‌آپ `{fileName}` به `{totalParts.ToPersianNumbers()}` بخش تقسیم و ارسال شد.
+               ✅ فایل بک‌آپ <code>{safeFileName}</code> به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
 
-               🔹 **برای دریافت کل فایل:**
-               - روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
-               - تمام قطعات فایل (مانند `file.z01` `file.z02` و `file.zip`) را در یک پوشه قرار دهید.
-               - روی فایل `file.zip` (یا `file.z01`) کلیک راست کنید.
-               - از منوی `7-Zip` گزینه‌ی `Extract Here` یا `Extract to file` را انتخاب کنید.
-               - ابزار به صورت خودکار تمام قطعات را شناسایی کرده و فایل اصلی را خارج می‌سازد.
+               🔹 <b>برای دریافت کل فایل:</b>
 
-               ⚠️ **نکته:** حتماً ابتدا همه‌ی بخش‌ها را دانلود کنید!
+               • روی فایل‌های آپلودشده کلیک کرده و همه را دانلود کنید
+               • تمام قطعات فایل (مانند <code>file.z01</code>، <code>file.z02</code> و <code>file.zip</code>) را در یک پوشه قرار دهید.
+               • روی فایل <code>file.zip</code> (یا <code>file.z01</code>) کلیک راست کنید.
+               • از منوی <code>7-Zip</code> گزینه <code>Extract Here</code> یا <code>Extract to file</code> را انتخاب کنید.
+               • ابزار به صورت خودکار تمام قطعات را شناسایی کرده و فایل اصلی را خارج می‌سازد.
+
+               ⚠️ <b>نکته:</b> حتماً ابتدا همه‌ی بخش‌ها را دانلود کنید!
                """.Trim();
     }
 }

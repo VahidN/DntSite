@@ -191,13 +191,11 @@ public class TelegramUploadBackupService(
 
         foreach (var partPath in partPaths)
         {
-            var uploadedSize = new FileInfo(partPath).Length;
-
             await using (var content = File.OpenRead(partPath))
             {
                 await telegramBotClient.SendDocument(chatId, new InputFileStream(content, partPath.GetFileName()), $"""
                      🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()} {description}
-                     """, cancellationToken: cancellationToken);
+                     """, ParseMode.MarkdownV2, cancellationToken: cancellationToken);
             }
 
             partNumber++;
@@ -220,6 +218,6 @@ public class TelegramUploadBackupService(
             return;
         }
 
-        await telegramBotClient.SendMessage(chatId, text, ParseMode.MarkdownV2, cancellationToken: cancellationToken);
+        await telegramBotClient.SendMessage(chatId, text, ParseMode.Html, cancellationToken: cancellationToken);
     }
 }
