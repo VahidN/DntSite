@@ -10,13 +10,13 @@ namespace DntSite.Web.Features.SideBar.Components;
 [Authorize(Roles = CustomRoles.Admin)]
 public partial class AddCustomSidebar
 {
-    [CascadingParameter] internal DntAlert Alert { set; get; } = null!;
+    [CascadingParameter] internal DntAlert Alert { get; set; } = null!;
 
-    [CascadingParameter] internal ApplicationState ApplicationState { set; get; } = null!;
+    [CascadingParameter] internal ApplicationState ApplicationState { get; set; } = null!;
 
-    [InjectComponentScoped] internal ICustomSidebarService CustomSidebarService { set; get; } = null!;
+    [InjectComponentScoped] internal ICustomSidebarService CustomSidebarService { get; set; } = null!;
 
-    [InjectComponentScoped] internal IEmailsFactoryService EmailsFactoryService { set; get; } = null!;
+    [InjectComponentScoped] internal IEmailsFactoryService EmailsFactoryService { get; set; } = null!;
 
     [SupplyParameterFromForm] public CustomSidebarModel? Model { get; set; }
 
@@ -53,7 +53,9 @@ public partial class AddCustomSidebar
     private async Task PerformAsync()
     {
         await CustomSidebarService.AddOrUpdateCustomSidebarAsync(Model);
-        await EmailsFactoryService.SendTextToAllAdminsAsync(text: "تنظیمات ساید بار سایت با موفقیت ویرایش گردید");
+
+        await EmailsFactoryService.SendTextToAllAdminsAsync(
+            $"تنظیمات ساید بار سایت با موفقیت ویرایش گردید:<br>{Model?.Description}");
 
         Alert.ShowAlert(AlertType.Success, title: "با تشکر!", message: " اطلاعات ذخیره شدند.");
     }
