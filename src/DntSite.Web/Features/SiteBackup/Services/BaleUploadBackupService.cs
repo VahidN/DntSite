@@ -187,7 +187,7 @@ public class BaleUploadBackupService(
             var status = await httpClient.SendFileToBaleChannelAsync(baleToken, chatId, BaleFileType.Document, partPath,
                 $"""
                  🔹 بخش {partNumber.ToPersianNumbers()} از {totalParts.ToPersianNumbers()} {description}
-                 """, cancellationToken);
+                 """, BaleParseMode.MarkdownV2, cancellationToken);
 
             LogBaleErrors(status);
 
@@ -219,7 +219,9 @@ public class BaleUploadBackupService(
             return;
         }
 
-        var status = await httpClient.SendTextMessageToBaleChannelAsync(baleToken, chatId, text, cancellationToken);
+        var status =
+            await httpClient.SendTextMessageToBaleChannelAsync(baleToken, chatId, text, BaleParseMode.Html,
+                cancellationToken);
 
         LogBaleErrors(status);
     }
