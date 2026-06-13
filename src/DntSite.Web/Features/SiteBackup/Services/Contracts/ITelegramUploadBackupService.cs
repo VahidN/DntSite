@@ -2,7 +2,7 @@
 
 namespace DntSite.Web.Features.SiteBackup.Services.Contracts;
 
-public interface ITelegramUploadBackupService : ISingletonService
+public interface ITelegramUploadBackupService : IScopedService
 {
     Task<PartsInfo?> UploadSiteBackupFileToTelegramAsync(bool isFolder,
         string path,

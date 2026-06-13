@@ -1,6 +1,6 @@
 ﻿namespace DntSite.Web.Features.SiteBackup.Services.Contracts;
 
-public interface IOnlineSqliteBackupService : ISingletonService
+public interface IOnlineSqliteBackupService : IScopedService
 {
     Task<bool> CreateOnlineSqliteBackupAsync(string dbBackupFilePath, CancellationToken cancellationToken = default);
 

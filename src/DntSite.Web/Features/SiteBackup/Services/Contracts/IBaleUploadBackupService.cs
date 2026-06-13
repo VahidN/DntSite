@@ -2,7 +2,7 @@ using DntSite.Web.Features.SiteBackup.Models;
 
 namespace DntSite.Web.Features.SiteBackup.Services.Contracts;
 
-public interface IBaleUploadBackupService : ISingletonService
+public interface IBaleUploadBackupService : IScopedService
 {
     Task<PartsInfo?> UploadSiteBackupFileToBaleAsync(bool isFolder,
         string path,

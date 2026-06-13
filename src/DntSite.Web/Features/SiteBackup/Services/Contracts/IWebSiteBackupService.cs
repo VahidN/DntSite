@@ -1,6 +1,6 @@
 ﻿namespace DntSite.Web.Features.SiteBackup.Services.Contracts;
 
-public interface IWebSiteBackupService : ISingletonService
+public interface IWebSiteBackupService : IScopedService
 {
     Task CreateDatabaseBackupAsync(CancellationToken cancellationToken = default);
 

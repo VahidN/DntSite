@@ -1,5 +1,6 @@
 ﻿using DntSite.Web.Features.AppConfigs.Entities;
 using DntSite.Web.Features.AppConfigs.Services.Contracts;
+using DntSite.Web.Features.Common.Services.Contracts;
 using DntSite.Web.Features.SiteBackup.Models;
 using DntSite.Web.Features.SiteBackup.Services.Contracts;
 using DntSite.Web.Features.SiteBackup.Utils;
@@ -10,6 +11,7 @@ public class BaleUploadBackupService(
     ICachedAppSettingsProvider cachedAppSettingsProvider,
     IAppFoldersService appFoldersService,
     IHttpClientFactory httpClientFactory,
+    IEmailsFactoryService emailsFactoryService,
     ILogger<BaleUploadBackupService> logger) : IBaleUploadBackupService
 {
     private readonly TimeSpan _delay = TimeSpan.FromSeconds(seconds: 20);
@@ -222,6 +224,10 @@ public class BaleUploadBackupService(
         var status =
             await httpClient.SendTextMessageToBaleChannelAsync(baleToken, chatId, text, BaleParseMode.Html,
                 cancellationToken);
+
+        await emailsFactoryService.SendEmailToAllAdminsNormalAsync(messageId: "BaleUploadBackup",
+            inReplyTo: "BaleUploadBackup", references: "BaleUploadBackup", text,
+            emailSubject: "ارسال فایل بک‌آپ به بله");
 
         LogBaleErrors(status);
     }
