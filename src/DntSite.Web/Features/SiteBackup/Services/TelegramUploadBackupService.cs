@@ -18,6 +18,7 @@ public class TelegramUploadBackupService(
     IEmailsFactoryService emailsFactoryService,
     ILogger<TelegramUploadBackupService> logger) : ITelegramUploadBackupService
 {
+    private const string InReplyTo = "TelegramUploadBackup";
     private readonly TimeSpan _delay = TimeSpan.FromSeconds(seconds: 20);
 
     public async Task<PartsInfo?> UploadSiteBackupFileToTelegramAsync(bool isFolder,
@@ -222,8 +223,9 @@ public class TelegramUploadBackupService(
 
         await telegramBotClient.SendMessage(chatId, text, ParseMode.Html, cancellationToken: cancellationToken);
 
-        await emailsFactoryService.SendEmailToAllAdminsNormalAsync(messageId: "TelegramUploadBackup",
-            inReplyTo: "TelegramUploadBackup", references: "TelegramUploadBackup", text,
+        await emailsFactoryService.SendEmailToAllAdminsNormalAsync(InReplyTo, InReplyTo, InReplyTo,
+            text.Replace(oldValue: "\n", newValue: "<br>", StringComparison.Ordinal)
+                .WrapInDirectionalDiv(fontFamily: "inherit", fontSize: "inherit"),
             emailSubject: "ارسال فایل بک‌آپ به تلگرام");
     }
 }

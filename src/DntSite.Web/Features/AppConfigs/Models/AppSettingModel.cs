@@ -70,4 +70,6 @@ public class AppSettingModel
 
     [Display(Name = "کلید ای‌پی‌آی YouTube")]
     public string? YouTubeDataApikey { get; set; }
+
+    public MegaNzBackupModel MegaNzBackupInfo { get; set; } = new();
 }

@@ -25,6 +25,16 @@ public static class AppSettingsMappersExtensions
                 IsActive = source.GeminiNewsFeedsInfo.IsActive,
                 NewsFeeds = source.GeminiNewsFeedsInfo.NewsFeeds.ConvertMultiLineTextToList()
             },
+            MegaNzBackup = new MegaNzBackup
+            {
+                IsActive = source.MegaNzBackupInfo.IsActive,
+                MegaEmail = source.MegaNzBackupInfo.MegaEmail,
+                MegaPassword = source.MegaNzBackupInfo.MegaPassword,
+                MegaBackupFolder = source.MegaNzBackupInfo.MegaBackupFolder,
+                MegaEPubFolder = source.MegaNzBackupInfo.MegaEPubFolder,
+                KeepLastNFilesOnMegaNz = source.MegaNzBackupInfo.KeepLastNFilesOnMegaNz,
+                ZipPassword = source.MegaNzBackupInfo.ZipPassword
+            },
             TelegramBackupGroup = source.TelegramBackupGroupInfo.MapToTelegramBackupGroup(),
             TelegramEPubGroup = source.TelegramEPubGroupInfo.MapToTelegramBackupGroup(),
             BaleBackupGroup = source.BaleBackupGroupInfo.MapToTelegramBackupGroup(),
@@ -59,6 +69,17 @@ public static class AppSettingsMappersExtensions
                 ApiKey = appSetting.GeminiNewsFeeds.ApiKey,
                 IsActive = appSetting.GeminiNewsFeeds.IsActive,
                 NewsFeeds = appSetting.GeminiNewsFeeds.NewsFeeds
+            };
+
+            destination.MegaNzBackup = new MegaNzBackup
+            {
+                IsActive = appSetting.MegaNzBackup.IsActive,
+                MegaEmail = appSetting.MegaNzBackup.MegaEmail,
+                MegaPassword = appSetting.MegaNzBackup.MegaPassword,
+                MegaBackupFolder = appSetting.MegaNzBackup.MegaBackupFolder,
+                MegaEPubFolder = appSetting.MegaNzBackup.MegaEPubFolder,
+                KeepLastNFilesOnMegaNz = appSetting.MegaNzBackup.KeepLastNFilesOnMegaNz,
+                ZipPassword = appSetting.MegaNzBackup.ZipPassword
             };
 
             destination.TelegramBackupGroup = appSetting.TelegramBackupGroup.MapToTelegramBackupGroup();
@@ -121,6 +142,16 @@ public static class AppSettingsMappersExtensions
                 ApiKey = source.GeminiNewsFeeds.ApiKey,
                 IsActive = source.GeminiNewsFeeds.IsActive,
                 NewsFeeds = source.GeminiNewsFeeds.NewsFeeds.ConvertListToMultiLineText()
+            },
+            MegaNzBackupInfo = new MegaNzBackupModel
+            {
+                IsActive = source.MegaNzBackup.IsActive,
+                MegaEmail = source.MegaNzBackup.MegaEmail,
+                MegaPassword = source.MegaNzBackup.MegaPassword,
+                MegaBackupFolder = source.MegaNzBackup.MegaBackupFolder,
+                MegaEPubFolder = source.MegaNzBackup.MegaEPubFolder,
+                KeepLastNFilesOnMegaNz = source.MegaNzBackup.KeepLastNFilesOnMegaNz,
+                ZipPassword = source.MegaNzBackup.ZipPassword
             },
             TelegramBackupGroupInfo = source.TelegramBackupGroup.MapToTelegramBackupGroup(),
             TelegramEPubGroupInfo = source.TelegramEPubGroup.MapToTelegramBackupGroup(),

@@ -4,7 +4,7 @@
 public class TelegramBackupGroup
 {
     [Display(Name = "ارسال به پیام‌رسان فعال است؟")]
-    public bool IsActive { set; get; }
+    public bool IsActive { get; set; }
 
     [Display(Name = "توکن دسترسی")]
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
@@ -21,3 +21,4 @@ public class TelegramBackupGroup
     [Display(Name = "حداکثر اندازه فایل قابل ارسال به مگابایت")]
     public int MaxZipPartSize { get; set; }
 }
+

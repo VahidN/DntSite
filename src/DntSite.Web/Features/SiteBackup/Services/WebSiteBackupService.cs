@@ -8,6 +8,7 @@ public class WebSiteBackupService(
     IOnlineSqliteBackupService onlineSqliteBackupService,
     ITelegramUploadBackupService telegramUploadBackupService,
     IBaleUploadBackupService baleUploadBackupService,
+    IMegaNzUploadBackupService megaNzUploadBackupService,
     IAppFoldersService appFoldersService,
     ILogger<WebSiteBackupService> logger) : IWebSiteBackupService
 {
@@ -51,6 +52,9 @@ public class WebSiteBackupService(
                 return;
             }
 
+            await megaNzUploadBackupService.UploadSiteEPubFileToMegaNzAsync(filePath, filePath.GetFileName(),
+                cancellationToken);
+
             var telegramPartsInfo = await telegramUploadBackupService.UploadSiteEPubFileToTelegramAsync(filePath,
                 filePath.GetFileName(), parts: null, cancellationToken);
 
@@ -79,6 +83,9 @@ public class WebSiteBackupService(
             DeleteOldZipFiles();
 
             var outputFileName = $"{new DirectoryInfo(appFoldersService.UploadsFolderPath).Name}-{NameSalt}.zip";
+
+            await megaNzUploadBackupService.UploadSiteBackupFileToMegaNzAsync(isFolder: true,
+                appFoldersService.UploadsFolderPath, outputFileName, cancellationToken);
 
             var telegramPartsInfo = await telegramUploadBackupService.UploadSiteBackupFileToTelegramAsync(
                 isFolder: true, appFoldersService.UploadsFolderPath, outputFileName, parts: null, cancellationToken);
@@ -126,6 +133,9 @@ public class WebSiteBackupService(
     {
         try
         {
+            await megaNzUploadBackupService.UploadSiteBackupFileToMegaNzAsync(isFolder: false, dbBackupFilePath,
+                dbBackupFilePath.GetFileName(), cancellationToken);
+
             var telegramPartsInfo = await telegramUploadBackupService.UploadSiteBackupFileToTelegramAsync(
                 isFolder: false, dbBackupFilePath, dbBackupFilePath.GetFileName(), parts: null, cancellationToken);
 

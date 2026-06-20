@@ -289,6 +289,42 @@
 
             <hr/>
 
+            <div>ارسال بک‌آپ سایت به مگاان‌زد:</div>
+            <DntInputCheckBox @bind-Value="Model.MegaNzBackupInfo.IsActive"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiSignpost"
+                          dir="ltr"
+                          @bind-Value="Model.MegaNzBackupInfo.MegaEmail"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiPass"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.MegaNzBackupInfo.MegaPassword"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiFolder"
+                          dir="ltr"
+                          @bind-Value="Model.MegaNzBackupInfo.MegaBackupFolder"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.On"
+                          FieldIcon="@DntBootstrapIcons.BiFolder2"
+                          dir="ltr"
+                          @bind-Value="Model.MegaNzBackupInfo.MegaEPubFolder"/>
+
+            <DntInputNumber AutoCompleteType="AutoCompleteType.On"
+                            FieldIcon="@DntBootstrapIcons.BiClockHistory"
+                            dir="ltr"
+                            @bind-Value="Model.MegaNzBackupInfo.KeepLastNFilesOnMegaNz"/>
+
+            <DntInputText AutoCompleteType="AutoCompleteType.Off"
+                          FieldIcon="@DntBootstrapIcons.BiStar"
+                          InputType="password"
+                          dir="ltr"
+                          @bind-Value="Model.MegaNzBackupInfo.ZipPassword"/>
+            <hr/>
+
             <DntButton Type="ButtonType.Submit" IsSubmittingText="در حال ارسال ...">ارسال</DntButton>
         </EditForm>
     </FrameBody>

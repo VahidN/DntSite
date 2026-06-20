@@ -14,6 +14,7 @@ public class BaleUploadBackupService(
     IEmailsFactoryService emailsFactoryService,
     ILogger<BaleUploadBackupService> logger) : IBaleUploadBackupService
 {
+    private const string InReplyTo = "BaleUploadBackup";
     private readonly TimeSpan _delay = TimeSpan.FromSeconds(seconds: 20);
 
     public async Task<PartsInfo?> UploadSiteBackupFileToBaleAsync(bool isFolder,
@@ -225,8 +226,9 @@ public class BaleUploadBackupService(
             await httpClient.SendTextMessageToBaleChannelAsync(baleToken, chatId, text, BaleParseMode.Html,
                 cancellationToken);
 
-        await emailsFactoryService.SendEmailToAllAdminsNormalAsync(messageId: "BaleUploadBackup",
-            inReplyTo: "BaleUploadBackup", references: "BaleUploadBackup", text,
+        await emailsFactoryService.SendEmailToAllAdminsNormalAsync(InReplyTo, InReplyTo, InReplyTo,
+            text.Replace(oldValue: "\n", newValue: "<br>", StringComparison.Ordinal)
+                .WrapInDirectionalDiv(fontFamily: "inherit", fontSize: "inherit"),
             emailSubject: "ارسال فایل بک‌آپ به بله");
 
         LogBaleErrors(status);

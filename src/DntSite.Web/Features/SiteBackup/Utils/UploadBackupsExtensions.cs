@@ -23,7 +23,7 @@ public static class UploadBackupsExtensions
         => parts?.Parts is not null && parts.Parts.Count != 0 &&
            string.Equals(parts.Password, currentZipPassword, StringComparison.Ordinal);
 
-    public static string? GetUploadMessage(this IList<string>? partPaths)
+    public static string? GetUploadMessage(this ICollection<string>? partPaths)
     {
         var totalParts = partPaths?.Count ?? 0;
 
@@ -33,7 +33,7 @@ public static class UploadBackupsExtensions
         }
 
         var hasParts = partPaths.Any(file => file.EndsWith(value: ".part", StringComparison.OrdinalIgnoreCase));
-        var safeFileName = WebUtility.HtmlEncode(Path.GetFileNameWithoutExtension(partPaths[index: 0]));
+        var safeFileName = WebUtility.HtmlEncode(Path.GetFileNameWithoutExtension(partPaths.First()));
         var safeDateTime = WebUtility.HtmlEncode(DateTime.IranNowUtc.Persian.Text.LongDateTime);
 
         return hasParts

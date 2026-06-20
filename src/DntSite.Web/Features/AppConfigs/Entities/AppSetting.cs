@@ -67,4 +67,6 @@ public class AppSetting : BaseAuditedEntity
     [Display(Name = "کلید ای‌پی‌آی YouTube")]
     [StringLength(maximumLength: 1000, ErrorMessage = "حداکثر 1000 کاراکتر")]
     public string? YouTubeDataApikey { get; set; }
+
+    public MegaNzBackup MegaNzBackup { get; set; } = new();
 }
