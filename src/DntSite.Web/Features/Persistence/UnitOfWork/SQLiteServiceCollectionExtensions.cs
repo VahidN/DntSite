@@ -39,7 +39,7 @@ public static class SqLiteServiceCollectionExtensions
 
         optionsBuilder.UseSqlite(connectionString, sqliteOptionsBuilder =>
         {
-            sqliteOptionsBuilder.CommandTimeout((int)TimeSpan.FromMinutes(3).TotalSeconds);
+            sqliteOptionsBuilder.CommandTimeout((int)TimeSpan.FromMinutes(minutes: 3).TotalSeconds);
             sqliteOptionsBuilder.MigrationsAssembly(typeof(SqLiteServiceCollectionExtensions).Assembly.FullName);
         });
 
@@ -50,6 +50,8 @@ public static class SqLiteServiceCollectionExtensions
 
         optionsBuilder.ConfigureWarnings(warnings =>
         {
+            warnings.Ignore(RelationalEventId.MigrationsNotFound);
+
             warnings.Log((CoreEventId.LazyLoadOnDisposedContextWarning, LogLevel.Warning),
                 (CoreEventId.DetachedLazyLoadingWarning, LogLevel.Warning),
                 (CoreEventId.ManyServiceProvidersCreatedWarning, LogLevel.Warning),
