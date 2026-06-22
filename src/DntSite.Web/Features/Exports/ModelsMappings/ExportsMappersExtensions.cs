@@ -85,7 +85,7 @@ public static class ExportsMappersExtensions
                                  imageUrl.Contains(folder.Pattern, StringComparison.OrdinalIgnoreCase))
                 .Select(folder => folder.ImagesFolderPath.SafePathCombine(fileName))
                 .Where(fullPath => fullPath.FileExists())
-                .Select(File.ReadAllBytes!)
+                .Select(File.ReadAllBytes)
                 .FirstOrDefault();
         });
     }

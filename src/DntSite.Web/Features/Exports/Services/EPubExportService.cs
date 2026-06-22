@@ -140,7 +140,7 @@ public class EPubExportService(
         }
 
         epub.AddStylesheetData(epubPath: "styles.css",
-            File.ReadAllText(appFoldersService.ExportsAssetsFolder.SafePathCombine("styles.css")!)
+            File.ReadAllText(appFoldersService.ExportsAssetsFolder.SafePathCombine("styles.css"))
                 .Replace(oldValue: "../", newValue: "", StringComparison.OrdinalIgnoreCase)
                 .Replace(oldValue: "font-size: 14px;", newValue: "font-size: inherit;",
                     StringComparison.OrdinalIgnoreCase)
@@ -148,17 +148,17 @@ public class EPubExportService(
                     StringComparison.OrdinalIgnoreCase));
 
         epub.AddStylesheetData(epubPath: "bootstrap.rtl.min.css",
-            File.ReadAllText(appFoldersService.ExportsAssetsFolder.SafePathCombine("bootstrap.rtl.min.css")!));
+            File.ReadAllText(appFoldersService.ExportsAssetsFolder.SafePathCombine("bootstrap.rtl.min.css")));
 
         epub.AddStylesheetData(epubPath: "vs.min.css",
-            File.ReadAllText(appFoldersService.ExportsAssetsFolder.SafePathCombine("vs.min.css")!));
+            File.ReadAllText(appFoldersService.ExportsAssetsFolder.SafePathCombine("vs.min.css")));
 
         epub.AddData(epubPath: "SyntaxHighlighter.js",
-            File.ReadAllBytes(appFoldersService.ExportsAssetsFolder.SafePathCombine("SyntaxHighlighter.js")!),
+            File.ReadAllBytes(appFoldersService.ExportsAssetsFolder.SafePathCombine("SyntaxHighlighter.js")),
             mediaType: "text/javascript");
 
         epub.AddData(epubPath: "highlight.min.js",
-            File.ReadAllBytes(appFoldersService.ExportsAssetsFolder.SafePathCombine("highlight.min.js")!),
+            File.ReadAllBytes(appFoldersService.ExportsAssetsFolder.SafePathCombine("highlight.min.js")),
             mediaType: "text/javascript");
     }
 

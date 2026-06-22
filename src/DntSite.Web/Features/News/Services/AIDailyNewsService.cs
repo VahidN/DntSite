@@ -471,7 +471,7 @@ public class AIDailyNewsService(
                 models =
                 [
                     .. models.Concat(_apiAIModels.Select(info
-                            => info.Name.TrimStart(value: "models/", StringComparison.OrdinalIgnoreCase)!))
+                            => info.Name.TrimStart(value: "models/", StringComparison.OrdinalIgnoreCase)))
                         .Distinct(StringComparer.OrdinalIgnoreCase)
                 ];
             }

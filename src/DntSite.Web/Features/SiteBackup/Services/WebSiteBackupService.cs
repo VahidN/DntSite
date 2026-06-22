@@ -124,8 +124,8 @@ public class WebSiteBackupService(
     {
         var dbBackupFileName = string.Create(CultureInfo.InvariantCulture, $"db.backup.{NameSalt}.sqlite");
 
-        return appFoldersService.BackupFolderPath.SafePathCombine(dbBackupFileName)!.Replace(oldValue: "'",
-            newValue: "''", StringComparison.Ordinal);
+        return appFoldersService.BackupFolderPath.SafePathCombine(dbBackupFileName)
+            .Replace(oldValue: "'", newValue: "''", StringComparison.Ordinal);
     }
 
     private async Task CompressAndUploadDatabaseBackupFileAsync(string dbBackupFilePath,

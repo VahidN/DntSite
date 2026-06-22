@@ -99,6 +99,6 @@ public class EPubExportDocsInfoService(IPdfExportService pdfExportService, IAppF
         epubExportDir.DeleteFiles(SearchOption.AllDirectories, "*.epub");
 
         return epubExportDir.SafePathCombine(
-            $"dnt-{DateTime.IranNowUtc.Persian.Text.ShortDate.Replace(oldChar: '/', newChar: '-')}.epub")!;
+            $"dnt-{DateTime.IranNowUtc.Persian.Text.ShortDate.Replace(oldChar: '/', newChar: '-')}.epub");
     }
 }
