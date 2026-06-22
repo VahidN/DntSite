@@ -36,11 +36,16 @@ public static class UploadBackupsExtensions
         var safeFileName = WebUtility.HtmlEncode(Path.GetFileNameWithoutExtension(partPaths.First()));
         var safeDateTime = WebUtility.HtmlEncode(DateTime.IranNowUtc.Persian.Text.LongDateTime);
 
+        var totalSize = partPaths.Select(file => new FileInfo(file).Length)
+            .Sum()
+            .ToFormattedFileSize()
+            .ToPersianNumbers();
+
         return hasParts
             ? $"""
                📦 <b>راهنمای دریافت فایل بک‌آپ تاریخ: {safeDateTime}</b>
 
-               ✅ فایل بک‌آپ <code>{safeFileName}</code> به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
+               ✅ فایل بک‌آپ <code>{safeFileName}</code> به حجم {totalSize} به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
 
                🔹 <b>برای دریافت کل فایل:</b>
 
@@ -62,7 +67,7 @@ public static class UploadBackupsExtensions
             : $"""
                📦 <b>راهنمای دریافت فایل بک‌آپ تاریخ: {safeDateTime}</b>
 
-               ✅ فایل بک‌آپ <code>{safeFileName}</code> به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
+               ✅ فایل بک‌آپ <code>{safeFileName}</code> به حجم {totalSize} به {totalParts.ToPersianNumbers()} بخش تقسیم و ارسال شد.
 
                🔹 <b>برای دریافت کل فایل:</b>
 
