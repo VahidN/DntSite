@@ -36,8 +36,7 @@ public static class UploadBackupsExtensions
         var safeFileName = WebUtility.HtmlEncode(Path.GetFileNameWithoutExtension(partPaths.First()));
         var safeDateTime = WebUtility.HtmlEncode(DateTime.IranNowUtc.Persian.Text.LongDateTime);
 
-        var totalSize = partPaths.Select(file => new FileInfo(file).Length)
-            .Sum()
+        var totalSize = partPaths.Sum(file => new FileInfo(file).Length)            
             .ToFormattedFileSize()
             .ToPersianNumbers();
 
