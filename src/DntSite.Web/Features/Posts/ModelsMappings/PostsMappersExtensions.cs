@@ -234,7 +234,9 @@ public static class PostsMappersExtensions
             destination.IsConverted = draft.IsConverted;
             destination.ReadingTimeMinutes = draft.ReadingTimeMinutes;
             destination.DateTimeToShow = draft.DateTimeToShow;
-            destination.UserId = draft.UserId;
+
+            destination.UserId ??= draft.UserId;
+
             destination.IsReady = draft.IsReady;
             destination.Tags = draft.Tags;
             destination.NumberOfRequiredPoints = draft.NumberOfRequiredPoints;
