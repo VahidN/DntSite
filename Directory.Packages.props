@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Meziantou.Analyzer" Version="3.0.105" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="4.14.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="5.6.0" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="10.0.9" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
