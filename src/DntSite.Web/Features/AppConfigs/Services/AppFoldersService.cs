@@ -13,20 +13,7 @@ public sealed class AppFoldersService : IAppFoldersService
 
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    private string? _articleImagesPath;
-    private string? _avatarsPath;
-    private string? _backupPath;
-    private string? _customFontWithPersianDigitsPath;
-    private string? _databaseFolderPath;
-    private string? _defaultConnectionString;
-    private string? _exportsAssetsFolder;
-    private string? _exportsPath;
-    private string? _fontsFolderPath;
-    private string? _luceneIndexFolderPath;
     private StartupSettingsModel _siteSettings;
-    private string? _thumbnailsServicePath;
-    private string? _uploadsPath;
-    private string? _wwwRootPath;
 
     public AppFoldersService(IWebHostEnvironment webHostEnvironment, IOptionsMonitor<StartupSettingsModel> siteSettings)
     {
@@ -38,34 +25,34 @@ public sealed class AppFoldersService : IAppFoldersService
         _disposableSettings = siteSettings.OnChange(settings => _siteSettings = settings);
     }
 
-    public string DefaultConnectionString => _defaultConnectionString ??= GetDefaultConnectionString();
+    public string DefaultConnectionString => field ??= GetDefaultConnectionString();
 
-    public string DatabaseFolderPath => _databaseFolderPath ??= GetWebRootAppDataFolderPath("Database");
+    public string DatabaseFolderPath => field ??= GetWebRootAppDataFolderPath("Database");
 
-    public string WwwRootPath => _wwwRootPath ??= GetWwwRootPath();
+    public string WwwRootPath => field ??= GetWwwRootPath();
 
-    public string ExportsPath => _exportsPath ??= GetWebRootAppDataFolderPath("exports");
+    public string ExportsPath => field ??= GetWebRootAppDataFolderPath("exports");
 
-    public string ExportsAssetsFolder => _exportsAssetsFolder ??= ExportsPath.SafePathCombine("assets");
+    public string ExportsAssetsFolder => field ??= ExportsPath.SafePathCombine("assets");
 
-    public string AvatarsFolderPath => _avatarsPath ??= GetWebRootAppDataFolderPath(UploadsFolder, "Avatars");
+    public string ExportsEpubDocsFolder => field ??= ExportsPath.SafePathCombine("EpubDocs");
 
-    public string UploadsFolderPath => _uploadsPath ??= GetWebRootAppDataFolderPath(UploadsFolder);
+    public string AvatarsFolderPath => field ??= GetWebRootAppDataFolderPath(UploadsFolder, "Avatars");
 
-    public string BackupFolderPath => _backupPath ??= GetWebRootAppDataFolderPath("Backup");
+    public string UploadsFolderPath => field ??= GetWebRootAppDataFolderPath(UploadsFolder);
 
-    public string ArticleImagesFolderPath
-        => _articleImagesPath ??= GetWebRootAppDataFolderPath(UploadsFolder, "ArticleImages");
+    public string BackupFolderPath => field ??= GetWebRootAppDataFolderPath("Backup");
+
+    public string ArticleImagesFolderPath => field ??= GetWebRootAppDataFolderPath(UploadsFolder, "ArticleImages");
 
     public string ThumbnailsServiceFolderPath
-        => _thumbnailsServicePath ??= GetWebRootAppDataFolderPath(UploadsFolder, "ThumbnailsService");
+        => field ??= GetWebRootAppDataFolderPath(UploadsFolder, "ThumbnailsService");
 
-    public string CustomFontWithPersianDigitsPath => _customFontWithPersianDigitsPath ??=
-        WwwRootPath.SafePathCombine("fonts", "Samim-FD.ttf");
+    public string CustomFontWithPersianDigitsPath => field ??= WwwRootPath.SafePathCombine("fonts", "Samim-FD.ttf");
 
-    public string FontsFolderPath => _fontsFolderPath ??= WwwRootPath.SafePathCombine("fonts");
+    public string FontsFolderPath => field ??= WwwRootPath.SafePathCombine("fonts");
 
-    public string LuceneIndexFolderPath => _luceneIndexFolderPath ??= GetWebRootAppDataFolderPath("LuceneIndex");
+    public string LuceneIndexFolderPath => field ??= GetWebRootAppDataFolderPath("LuceneIndex");
 
     public string GetFolderPath(FileType fileType)
         => fileType switch

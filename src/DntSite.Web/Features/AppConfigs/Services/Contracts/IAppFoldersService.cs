@@ -6,6 +6,8 @@ public interface IAppFoldersService : ISingletonService, IDisposable
 {
     string DefaultConnectionString { get; }
 
+    string ExportsEpubDocsFolder { get; }
+
     string DatabaseFolderPath { get; }
 
     string WwwRootPath { get; }

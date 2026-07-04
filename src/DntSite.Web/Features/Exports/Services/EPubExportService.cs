@@ -66,7 +66,7 @@ public class EPubExportService(
         CancellationToken cancellationToken)
     {
         var ebookFilePath = docsInfoService.GetEbookFilePath();
-        using var epub = new EPubDocument(ebookFilePath);
+        using var epub = new EPubDocument(ebookFilePath, appFoldersService.ExportsEpubDocsFolder);
         AddMetaData(epub, domain);
         AddStaticAssets(epub);
         var sideBar = CreateMainToc(epub, tocItems, baseUrl, domain);
@@ -139,8 +139,10 @@ public class EPubExportService(
                 mediaType: "application/x-font-ttf");
         }
 
+        var exportsAssetsFolder = appFoldersService.ExportsAssetsFolder;
+
         epub.AddStylesheetData(epubPath: "styles.css",
-            File.ReadAllText(appFoldersService.ExportsAssetsFolder.SafePathCombine("styles.css"))
+            File.ReadAllText(exportsAssetsFolder.SafePathCombine("styles.css"))
                 .Replace(oldValue: "../", newValue: "", StringComparison.OrdinalIgnoreCase)
                 .Replace(oldValue: "font-size: 14px;", newValue: "font-size: inherit;",
                     StringComparison.OrdinalIgnoreCase)
@@ -148,18 +150,17 @@ public class EPubExportService(
                     StringComparison.OrdinalIgnoreCase));
 
         epub.AddStylesheetData(epubPath: "bootstrap.rtl.min.css",
-            File.ReadAllText(appFoldersService.ExportsAssetsFolder.SafePathCombine("bootstrap.rtl.min.css")));
+            File.ReadAllText(exportsAssetsFolder.SafePathCombine("bootstrap.rtl.min.css")));
 
         epub.AddStylesheetData(epubPath: "vs.min.css",
-            File.ReadAllText(appFoldersService.ExportsAssetsFolder.SafePathCombine("vs.min.css")));
+            File.ReadAllText(exportsAssetsFolder.SafePathCombine("vs.min.css")));
 
         epub.AddData(epubPath: "SyntaxHighlighter.js",
-            File.ReadAllBytes(appFoldersService.ExportsAssetsFolder.SafePathCombine("SyntaxHighlighter.js")),
+            File.ReadAllBytes(exportsAssetsFolder.SafePathCombine("SyntaxHighlighter.js")),
             mediaType: "text/javascript");
 
         epub.AddData(epubPath: "highlight.min.js",
-            File.ReadAllBytes(appFoldersService.ExportsAssetsFolder.SafePathCombine("highlight.min.js")),
-            mediaType: "text/javascript");
+            File.ReadAllBytes(exportsAssetsFolder.SafePathCombine("highlight.min.js")), mediaType: "text/javascript");
     }
 
     private async Task AddContentsAsync(EPubDocument epub,
