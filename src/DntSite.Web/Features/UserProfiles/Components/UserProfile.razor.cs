@@ -4,7 +4,7 @@ namespace DntSite.Web.Features.UserProfiles.Components;
 
 public partial class UserProfile
 {
-    [Parameter] [EditorRequired] public User? User { set; get; }
+    [Parameter] [EditorRequired] public User? User { get; set; }
 
     private bool HasSocialNetworkItem => !string.IsNullOrWhiteSpace(User?.UserSocialNetwork?.LinkedInProfileId) ||
                                          !string.IsNullOrWhiteSpace(User?.UserSocialNetwork?.TwitterName) ||
@@ -38,7 +38,7 @@ public partial class UserProfile
         if (!string.IsNullOrWhiteSpace(homePage) &&
             !homePage.StartsWith(value: "http", StringComparison.OrdinalIgnoreCase))
         {
-            homePage = $"http://{homePage}";
+            homePage = $"https://{homePage}";
         }
 
         return homePage;
