@@ -10,27 +10,23 @@ public class EPubExportHtmlProviderService(
     IEPubExportDocsInfoService docsInfoService) : IEPubExportHtmlProviderService
 {
     public string ApplyHtmlPageTemplate(string title, string body, string? sideBar)
-    {
-        var content = string.Format(CultureInfo.InvariantCulture, pdfExportService.GetPageTemplateContent(),
-            title.ApplyRle(), body);
-
-        return sideBar is null
-            ? content
-            : $"""
-               <div class='container-fluid min-vh-100 d-flex flex-column'>
-                   <div class='row flex-grow-1'>
-                       <div class='col-md-2'>
-                        {sideBar}
-                       </div>
-                       <div class='col-md-10'>
-                           <div class='mt-4 mb-3 container-fluid'>
-                             {content}
+        => string.Format(CultureInfo.InvariantCulture, pdfExportService.GetPageTemplateContent(), title.ApplyRle(),
+            sideBar is null
+                ? body
+                : $"""
+                   <div class='container-fluid min-vh-100 d-flex flex-column'>
+                       <div class='row flex-grow-1'>
+                           <div class='col-md-2'>
+                            {sideBar}
+                           </div>
+                           <div class='col-md-10'>
+                               <div class='mt-4 mb-3 container-fluid'>
+                                 {body}
+                               </div>
                            </div>
                        </div>
                    </div>
-               </div>
-               """;
-    }
+                   """);
 
     public async Task<string> GetEPubContentItemLinkAsync(WhatsNewItemType type, EPubContentItem subItem)
     {

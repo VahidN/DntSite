@@ -318,11 +318,12 @@ public class EPubExportService(
                 ]
             ], tableClass: "table shadow-sm rounded table-hover mx-auto w-auto caption-top"));
 
-        var content = htmlProviderService.ApplyHtmlPageTemplate(domain, html.ToString(), sideBar: null);
+        var body = html.ToString();
+        var content = htmlProviderService.ApplyHtmlPageTemplate(domain, body, sideBar: null);
         epub.AddXhtmlData(docsInfoService.GetEPubTocPath(domain, page: 1), content);
         epub.AddNavPoint(domain, docsInfoService.GetEPubTocPath(domain, page: 1), playOrder: 0);
 
-        return content;
+        return body;
     }
 
     private async Task CreateItemsListContentAsync(EPubDocument epub,
