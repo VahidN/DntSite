@@ -21,7 +21,7 @@ public class EPubExportService(
 {
     private List<EPubListItem>? _allCourses;
 
-    public async Task StartAsync(CancellationToken cancellationToken = default)
+    public async Task StartAsync(bool uploadFile, bool deleteFileAtEnd, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -52,7 +52,15 @@ public class EPubExportService(
             var ebookFilePath = await GenerateEPubAsync(tocItems, baseUrl, domain, cancellationToken);
             await Task.Delay(TimeSpan.FromMilliseconds(value: 500), cancellationToken);
 
-            await webSiteBackupService.UploadSiteEPubFileAsync(ebookFilePath, cancellationToken);
+            if (uploadFile)
+            {
+                await webSiteBackupService.UploadSiteEPubFileAsync(ebookFilePath, cancellationToken);
+            }
+
+            if (deleteFileAtEnd)
+            {
+                ebookFilePath.TryDeleteFile(logger);
+            }
         }
         catch (Exception ex)
         {

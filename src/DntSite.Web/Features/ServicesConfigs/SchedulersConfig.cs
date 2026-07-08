@@ -64,6 +64,9 @@ public static class SchedulersConfig
                     DayOfWeek: DayOfWeek.Friday or DayOfWeek.Monday, Hour: 4, Minute: 1, Second: 1
                 });
 
+            options.AddScheduledTask<UpdateSiteMirrorJob>(utcNow
+                => GetNowIranTime(utcNow) is { Hour: 6, Minute: 1, Second: 1 });
+
             options.AddScheduledTask<BackupDataFolderJob>(utcNow
                 => GetNowIranTime(utcNow) is { DayOfWeek: DayOfWeek.Saturday, Hour: 4, Minute: 1, Second: 1 });
 

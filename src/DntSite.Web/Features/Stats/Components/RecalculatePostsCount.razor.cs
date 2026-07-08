@@ -121,7 +121,7 @@ public partial class RecalculatePostsCount
 
                 await DailyNewsPdfExportService.ExportNotProcessedDailyNewsToSeparatePdfFilesAsync(ExportType.HtmlFile);
 
-                await EPubExportService.StartAsync();
+                await EPubExportService.StartAsync(uploadFile: true, deleteFileAtEnd: true);
 
                 break;
         }

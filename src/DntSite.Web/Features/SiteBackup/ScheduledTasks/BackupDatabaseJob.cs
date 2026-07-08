@@ -16,6 +16,6 @@ public class BackupDatabaseJob(
     protected override async Task ExecuteAsync(AppSetting appSetting, CancellationToken cancellationToken)
     {
         await webSiteBackupService.CreateDatabaseBackupAsync(cancellationToken);
-        await ePubExportService.StartAsync(cancellationToken);
+        await ePubExportService.StartAsync(uploadFile: true, deleteFileAtEnd: true, cancellationToken);
     }
 }

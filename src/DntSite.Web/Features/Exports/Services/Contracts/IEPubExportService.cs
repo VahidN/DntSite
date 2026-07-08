@@ -2,5 +2,5 @@ namespace DntSite.Web.Features.Exports.Services.Contracts;
 
 public interface IEPubExportService : IScopedService
 {
-    Task StartAsync(CancellationToken cancellationToken = default);
+    Task StartAsync(bool uploadFile, bool deleteFileAtEnd, CancellationToken cancellationToken = default);
 }
