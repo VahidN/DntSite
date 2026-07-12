@@ -63,8 +63,8 @@ public class EPubExportHtmlProviderService(
         html.AppendLine(value: "<div class='card mt-2 mb-2' align='center'>");
 
         html.AppendLine(title.ContainsFarsi()
-            ? $"<h2 class='card-header shadow-sm align-items-center'>{title}</h2>"
-            : $"<h2 class='card-header shadow-sm align-items-center' dir='ltr'>{title}</h2>");
+            ? $"<h4 class='card-header shadow-sm align-items-center'>{title}</h4>"
+            : $"<h4 class='card-header shadow-sm align-items-center' dir='ltr'>{title}</h4>");
 
         html.AppendLine(value: "</div>");
     }
