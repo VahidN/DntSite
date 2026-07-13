@@ -9,7 +9,7 @@ public class EPubExportHtmlProviderService(
     IPdfExportService pdfExportService,
     IEPubExportDocsInfoService docsInfoService) : IEPubExportHtmlProviderService
 {
-    public string ApplyHtmlPageTemplate(string title, string body, string? sideBar)
+    public string ApplyHtmlPageTemplate(string title, string body, string? sideBar, string? seoTags)
         => string.Format(CultureInfo.InvariantCulture, pdfExportService.GetPageTemplateContent(), title.ApplyRle(),
             sideBar is null
                 ? body
@@ -26,7 +26,7 @@ public class EPubExportHtmlProviderService(
                            </div>
                        </div>
                    </div>
-                   """);
+                   """, seoTags ?? "");
 
     public async Task<string> GetEPubContentItemLinkAsync(WhatsNewItemType type, EPubContentItem subItem)
     {

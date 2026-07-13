@@ -287,8 +287,10 @@ public class PdfExportService(
             mergedBodySb.AppendLine(doc.ToHtmlDocumentBody(similarPostsBody));
         }
 
+        const string SeoTags = "";
+
         var htmlDoc = string.Format(CultureInfo.InvariantCulture, GetPageTemplateContent(), title.ApplyRle(),
-            mergedBodySb.ToString());
+            mergedBodySb.ToString(), SeoTags);
 
         htmlDoc = htmlDoc.ToHtmlWithLocalImageUrls(appFoldersService.GetFolderPath(FileType.Image),
             appFoldersService.GetFolderPath(FileType.CourseImage), appFoldersService.GetFolderPath(FileType.NewsThumb));

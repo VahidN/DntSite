@@ -80,9 +80,10 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
             })
             .Select(ap => new EPubListItem(
                 new EPubContentItem(ap.Author.Id, ap.Author.FriendlyName, Content: null, DisplayId: null, null, null,
+                    null,
                     null),
                 SubItems: ap.AuthorPosts.Select(userBlogPost => new EPubContentItem(userBlogPost.Id, userBlogPost.Title,
-                        Content: null, DisplayId: null, null, userBlogPost.Audit.CreatedAt, null))
+                        Content: null, DisplayId: null, null, userBlogPost.Audit.CreatedAt, null, null))
                     .ToList()));
 
     private IQueryable<EPubListItem> GetArticleGroupsQuery()
@@ -93,10 +94,10 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
             .Where(postTag => !postTag.IsDeleted)
             .OrderBy(postTag => postTag.Name)
             .Select(postTag => new EPubListItem(
-                new EPubContentItem(postTag.Id, postTag.Name, Content: null, DisplayId: null, null, null, null),
+                new EPubContentItem(postTag.Id, postTag.Name, Content: null, DisplayId: null, null, null, null, null),
                 SubItems: postTag.AssociatedEntities.Select(tagBlogPost => new EPubContentItem(tagBlogPost.Id,
                         tagBlogPost.Title, Content: null, DisplayId: null, tagBlogPost.User!.FriendlyName,
-                        tagBlogPost.Audit.CreatedAt, null))
+                        tagBlogPost.Audit.CreatedAt, null, null))
                     .ToList()));
 
     private IQueryable<EPubListItem> GetLearningPathsQuery()
@@ -104,9 +105,8 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
             .AsNoTracking()
             .Where(path => !path.IsDeleted)
             .OrderByDescending(path => path.Id)
-            .Select(path
-                => new EPubListItem(new EPubContentItem(path.Id, path.Title, path.Description, null, null, null, null),
-                    null));
+            .Select(path => new EPubListItem(
+                new EPubContentItem(path.Id, path.Title, path.Description, null, null, null, null, null), null));
 
     private IQueryable<EPubListItem> GetArticlesQuery()
         => _blogPosts.NotCacheable()
@@ -114,10 +114,14 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
             .Include(blogPost => blogPost.User)
             .Where(blogPost => !blogPost.IsDeleted)
             .OrderByDescending(blogPost => blogPost.Id)
-            .Select(blogPost
-                => new EPubListItem(
-                    new EPubContentItem(blogPost.Id, blogPost.Title, null, null, blogPost.User!.FriendlyName,
-                        blogPost.Audit.CreatedAt, null), null));
+            .Select(blogPost => new EPubListItem(new EPubContentItem(blogPost.Id, blogPost.Title, null, null,
+                blogPost.User!.FriendlyName, blogPost.Audit.CreatedAt, null, new PageSeoMetadata
+                {
+                    Description = blogPost.BriefDescription,
+                    Title = blogPost.Title,
+                    AuthorName = blogPost.User!.FriendlyName,
+                    DatePublished = blogPost.Audit.CreatedAt
+                }), null));
 
     private IQueryable<EPubListItem> GetNewsQuery()
         => _dailyNews.NotCacheable()
@@ -125,10 +129,14 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
             .Include(newsItem => newsItem.User)
             .Where(newsItem => !newsItem.IsDeleted)
             .OrderByDescending(newsItem => newsItem.Id)
-            .Select(newsItem
-                => new EPubListItem(
-                    new EPubContentItem(newsItem.Id, newsItem.Title, null, null, newsItem.User!.FriendlyName,
-                        newsItem.Audit.CreatedAt, newsItem.Url), null));
+            .Select(newsItem => new EPubListItem(new EPubContentItem(newsItem.Id, newsItem.Title, null, null,
+                newsItem.User!.FriendlyName, newsItem.Audit.CreatedAt, newsItem.Url, new PageSeoMetadata
+                {
+                    Description = newsItem.BriefDescription,
+                    Title = newsItem.Title,
+                    AuthorName = newsItem.User!.FriendlyName,
+                    DatePublished = newsItem.Audit.CreatedAt
+                }), null));
 
     private IQueryable<EPubListItem> GetCoursesQuery()
         => _courses.NotCacheable()
@@ -138,10 +146,16 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
             .Where(course => !course.IsDeleted)
             .OrderByDescending(course => course.Id)
             .Select(course => new EPubListItem(
-                new EPubContentItem(course.Id, course.Title, Content: null, DisplayId: null, null, null, null),
+                new EPubContentItem(course.Id, course.Title, Content: null, DisplayId: null, null, null, null, null),
                 SubItems: course.CourseTopics.Select(courseTopic => new EPubContentItem(courseTopic.Id,
-                        courseTopic.Title, Content: null, DisplayId: courseTopic.DisplayId,
-                        courseTopic.User!.FriendlyName,
-                        courseTopic.Audit.CreatedAt, null))
+                        courseTopic.Title,
+                        Content: null, DisplayId: courseTopic.DisplayId, courseTopic.User!.FriendlyName,
+                        courseTopic.Audit.CreatedAt, null, new PageSeoMetadata
+                        {
+                            Description = courseTopic.Body.GetBriefDescription(450),
+                            Title = courseTopic.Title,
+                            AuthorName = courseTopic.User!.FriendlyName,
+                            DatePublished = courseTopic.Audit.CreatedAt
+                        }))
                     .ToList()));
 }

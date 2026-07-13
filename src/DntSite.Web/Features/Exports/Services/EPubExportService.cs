@@ -238,7 +238,9 @@ public class EPubExportService(
         var bodyHtml = await htmlProviderService.GetLastAndNextLinksHtmlAsync(type, item, cancellationToken) +
                        bodyNode.InnerHtml;
 
-        content = htmlProviderService.ApplyHtmlPageTemplate(title, bodyHtml, sideBar);
+        content = htmlProviderService.ApplyHtmlPageTemplate(title, bodyHtml, sideBar,
+            item.PageSeoMetadata?.GenerateSeoHeadTags());
+
         content = await FixEPubLocalUrlsAsync(content, domain, cancellationToken);
         epub.AddXhtmlData(fileName, content);
     }
@@ -327,7 +329,7 @@ public class EPubExportService(
             ], tableClass: "table shadow-sm rounded table-hover mx-auto w-auto caption-top"));
 
         var body = html.ToString();
-        var content = htmlProviderService.ApplyHtmlPageTemplate(domain, body, sideBar: null);
+        var content = htmlProviderService.ApplyHtmlPageTemplate(domain, body, sideBar: null, seoTags: null);
         epub.AddXhtmlData(docsInfoService.GetEPubTocPath(domain, page: 1), content);
         epub.AddNavPoint(domain, docsInfoService.GetEPubTocPath(domain, page: 1), playOrder: 0);
 
@@ -408,7 +410,7 @@ public class EPubExportService(
             var pointPath = navPointPath(currentPage);
 
             epub.AddXhtmlData(pointPath,
-                htmlProviderService.ApplyHtmlPageTemplate(listTitle, html.ToString(), sideBar));
+                htmlProviderService.ApplyHtmlPageTemplate(listTitle, html.ToString(), sideBar, seoTags: null));
 
             currentPage++;
 

@@ -6,7 +6,7 @@ namespace DntSite.Web.Features.Exports.Services.Contracts;
 
 public interface IEPubExportHtmlProviderService : IScopedService
 {
-    string ApplyHtmlPageTemplate(string title, string body, string? sideBar);
+    string ApplyHtmlPageTemplate(string title, string body, string? sideBar, string? seoTags);
 
     Task<string> GetEPubContentItemLinkAsync(WhatsNewItemType type, EPubContentItem subItem);
 

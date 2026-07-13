@@ -7,4 +7,5 @@ public record EPubContentItem(
     Guid? DisplayId,
     string? Author,
     DateTime? PublishDate,
-    string? Url);
+    string? Url,
+    PageSeoMetadata? PageSeoMetadata);
