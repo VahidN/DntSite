@@ -299,34 +299,16 @@ public class EPubExportService(
         var html = new StringBuilder();
 
         html.AppendLine(HtmlExtensions.CreateHtmlTable(
-            $"<div class='row mt-3'><a target='_blank' style='text-align: center !important;' dir='ltr' href='{baseUrl}'>{domain.ToLowerInvariant()}</a></div>",
+            $"<div class='row mt-1'><a target='_blank' style='text-align: center !important;' dir='ltr' href='{baseUrl}'>{domain.ToLowerInvariant()}</a></div>",
             [],
             [
-                [
-                    $"<a href='{docsInfoService.GetArticlesTocPath(domain, page: 1)}'>مطالب</a>",
-                    htmlProviderService.WrapInBadge(items.ArticlesCount.ToPersianNumbers())
-                ],
-                [
-                    $"<a href='{docsInfoService.GetAuthorsTocPath(domain, page: 1)}'>نویسندگان</a>",
-                    htmlProviderService.WrapInBadge(items.AuthorsCount.ToPersianNumbers())
-                ],
-                [
-                    $"<a href='{docsInfoService.GetTagsTocPath(domain, page: 1)}'>گروه‌های مطالب</a>",
-                    htmlProviderService.WrapInBadge(items.ArticleGroupsCount.ToPersianNumbers())
-                ],
-                [
-                    $"<a href='{docsInfoService.GetLearningPathsTocPath(domain, page: 1)}'>نقشه‌های راه</a>",
-                    htmlProviderService.WrapInBadge(items.LearningPathsCount.ToPersianNumbers())
-                ],
-                [
-                    $"<a href='{docsInfoService.GetCoursesTocPath(domain, page: 1)}'>دوره‌ها</a>",
-                    htmlProviderService.WrapInBadge(items.CoursesCount.ToPersianNumbers())
-                ],
-                [
-                    $"<a href='{docsInfoService.GetNewsTocPath(domain, page: 1)}'>اشتراک‌ها</a>",
-                    htmlProviderService.WrapInBadge(items.NewsCount.ToPersianNumbers())
-                ]
-            ], tableClass: "table shadow-sm rounded table-hover mx-auto w-auto caption-top"));
+                [$"<a href='{docsInfoService.GetArticlesTocPath(domain, page: 1)}'>مطالب</a>"],
+                [$"<a href='{docsInfoService.GetAuthorsTocPath(domain, page: 1)}'>نویسندگان</a>"],
+                [$"<a href='{docsInfoService.GetTagsTocPath(domain, page: 1)}'>گروه‌های مطالب</a>"],
+                [$"<a href='{docsInfoService.GetLearningPathsTocPath(domain, page: 1)}'>نقشه‌های راه</a>"],
+                [$"<a href='{docsInfoService.GetCoursesTocPath(domain, page: 1)}'>دوره‌ها</a>"],
+                [$"<a href='{docsInfoService.GetNewsTocPath(domain, page: 1)}'>اشتراک‌ها</a>"]
+            ], tableClass: "table mt-4 shadow-sm rounded table-hover mx-auto w-100 caption-bottom"));
 
         var body = html.ToString();
         var content = htmlProviderService.ApplyHtmlPageTemplate(domain, body, sideBar: null, seoTags: null);
