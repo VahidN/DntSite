@@ -49,7 +49,9 @@ public class EPubExportService(
                 return;
             }
 
-            var ebookFilePath = await GenerateEPubAsync(tocItems, baseUrl, domain, cancellationToken);
+            var ebookFilePath =
+                await GenerateEPubAsync(tocItems, baseUrl, domain, showItemsCounts: false, cancellationToken);
+
             await Task.Delay(TimeSpan.FromMilliseconds(value: 500), cancellationToken);
 
             if (uploadFile)
@@ -71,13 +73,14 @@ public class EPubExportService(
     private async Task<string> GenerateEPubAsync(EPubTocItems tocItems,
         string baseUrl,
         string domain,
+        bool showItemsCounts,
         CancellationToken cancellationToken)
     {
         var ebookFilePath = docsInfoService.GetEbookFilePath();
         using var epub = new EPubDocument(ebookFilePath, appFoldersService.ExportsEpubDocsFolder);
         AddMetaData(epub, domain);
         AddStaticAssets(epub);
-        var sideBar = CreateMainToc(epub, tocItems, baseUrl, domain);
+        var sideBar = CreateMainToc(epub, tocItems, baseUrl, domain, showItemsCounts);
         await AddTableOfContentsAsync(epub, domain, sideBar, cancellationToken);
 
         await AddContentsAsync(epub, WhatsNewItemType.Posts, processSubItems: false, domain, sideBar,
@@ -294,21 +297,39 @@ public class EPubExportService(
         }, cancellationToken: cancellationToken);
     }
 
-    private string CreateMainToc(EPubDocument epub, EPubTocItems items, string baseUrl, string domain)
+    private string CreateMainToc(EPubDocument epub,
+        EPubTocItems items,
+        string baseUrl,
+        string domain,
+        bool showItemsCounts)
     {
         var html = new StringBuilder();
 
+        var articlesLink = $"<a href='{docsInfoService.GetArticlesTocPath(domain, page: 1)}'>مطالب</a>";
+        var authorsLink = $"<a href='{docsInfoService.GetAuthorsTocPath(domain, page: 1)}'>نویسندگان</a>";
+        var tagsLink = $"<a href='{docsInfoService.GetTagsTocPath(domain, page: 1)}'>گروه‌های مطالب</a>";
+
+        var learningPathsLink =
+            $"<a href='{docsInfoService.GetLearningPathsTocPath(domain, page: 1)}'>نقشه‌های راه</a>";
+
+        var coursesLink = $"<a href='{docsInfoService.GetCoursesTocPath(domain, page: 1)}'>دوره‌ها</a>";
+        var newsLink = $"<a href='{docsInfoService.GetNewsTocPath(domain, page: 1)}'>اشتراک‌ها</a>";
+
+        IEnumerable<IEnumerable<string>> rows = showItemsCounts
+            ?
+            [
+                [articlesLink, htmlProviderService.WrapInBadge(items.ArticlesCount.ToPersianNumbers())],
+                [authorsLink, htmlProviderService.WrapInBadge(items.AuthorsCount.ToPersianNumbers())],
+                [tagsLink, htmlProviderService.WrapInBadge(items.ArticleGroupsCount.ToPersianNumbers())],
+                [learningPathsLink, htmlProviderService.WrapInBadge(items.LearningPathsCount.ToPersianNumbers())],
+                [coursesLink, htmlProviderService.WrapInBadge(items.CoursesCount.ToPersianNumbers())],
+                [newsLink, htmlProviderService.WrapInBadge(items.NewsCount.ToPersianNumbers())]
+            ]
+            : [[articlesLink], [authorsLink], [tagsLink], [learningPathsLink], [coursesLink], [newsLink]];
+
         html.AppendLine(HtmlExtensions.CreateHtmlTable(
             $"<div class='row mt-1'><a target='_blank' style='text-align: center !important;' dir='ltr' href='{baseUrl}'>{domain.ToLowerInvariant()}</a></div>",
-            [],
-            [
-                [$"<a href='{docsInfoService.GetArticlesTocPath(domain, page: 1)}'>مطالب</a>"],
-                [$"<a href='{docsInfoService.GetAuthorsTocPath(domain, page: 1)}'>نویسندگان</a>"],
-                [$"<a href='{docsInfoService.GetTagsTocPath(domain, page: 1)}'>گروه‌های مطالب</a>"],
-                [$"<a href='{docsInfoService.GetLearningPathsTocPath(domain, page: 1)}'>نقشه‌های راه</a>"],
-                [$"<a href='{docsInfoService.GetCoursesTocPath(domain, page: 1)}'>دوره‌ها</a>"],
-                [$"<a href='{docsInfoService.GetNewsTocPath(domain, page: 1)}'>اشتراک‌ها</a>"]
-            ], tableClass: "table mt-4 shadow-sm rounded table-hover mx-auto w-100 caption-bottom"));
+            [], rows, tableClass: "table mt-4 shadow-sm rounded table-hover mx-auto w-100 caption-bottom"));
 
         var body = html.ToString();
         var content = htmlProviderService.ApplyHtmlPageTemplate(domain, body, sideBar: null, seoTags: null);
