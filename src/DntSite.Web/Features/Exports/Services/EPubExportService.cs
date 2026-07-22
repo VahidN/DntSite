@@ -293,6 +293,13 @@ public class EPubExportService(
                 return (await docsInfoService.GetDocPathAsync(WhatsNewItemType.News, newsIds[index: 0])).FileName;
             }
 
+            var pathsIds = learningPathPdfExportsService.GetLearningPathsIds([pageUrl]);
+
+            if (pathsIds.Count > 0)
+            {
+                return docsInfoService.GetLearningPathsTocPath(domain, page: 1);
+            }
+
             return null;
         }, cancellationToken: cancellationToken);
     }
@@ -306,7 +313,10 @@ public class EPubExportService(
         var html = new StringBuilder();
         html.AppendLine(value: "<div class='card mt-4 shadow-sm'>");
         html.AppendLine(value: "<div class='card-header text-center h5'>");
-        html.AppendLine($"<a target='_blank' dir='ltr' href='{baseUrl}'>{domain.ToLowerInvariant()}</a>");
+
+        html.AppendLine(CultureInfo.InvariantCulture,
+            $"<a target='_blank' dir='ltr' href='{baseUrl}'>{domain.ToLowerInvariant()}</a>");
+
         html.AppendLine(value: "</div>");
 
         var articlesLink = $"<a href='{docsInfoService.GetArticlesTocPath(domain, page: 1)}'>مطالب</a>";

@@ -10,5 +10,7 @@ public interface ILearningPathPdfExportsService : IScopedService
 
     IList<int> GetPostIds(IList<string> links);
 
+    IList<int> GetLearningPathsIds(IList<string> links);
+
     Task<IList<Guid>> GetCourseTopicIdsAsync(IList<string> links);
 }

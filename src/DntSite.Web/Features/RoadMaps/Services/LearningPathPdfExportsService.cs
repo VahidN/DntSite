@@ -43,6 +43,22 @@ public class LearningPathPdfExportsService(
         ];
     }
 
+    public IList<int> GetLearningPathsIds(IList<string> links)
+    {
+        if (links.IsNullOrEmpty())
+        {
+            return [];
+        }
+
+        return
+        [
+            ..GetItemPostIds(contains: "/learning-paths/details/", links, segmentNumber: 3)
+                .TryConvertToListOfT<int>(ignoreParsingFailures: true),
+            ..GetItemPostIds(contains: "/LearningPaths/details/", links, segmentNumber: 3)
+                .TryConvertToListOfT<int>(ignoreParsingFailures: true)
+        ];
+    }
+
     public IList<int> GetPostIds(IList<string> links)
     {
         if (links.IsNullOrEmpty())
