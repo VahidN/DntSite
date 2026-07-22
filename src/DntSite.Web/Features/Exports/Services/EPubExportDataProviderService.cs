@@ -131,7 +131,8 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
                     Description = blogPost.BriefDescription,
                     Title = blogPost.Title,
                     AuthorName = blogPost.User!.FriendlyName,
-                    DatePublished = blogPost.Audit.CreatedAt
+                    DatePublished = blogPost.Audit.CreatedAt,
+                    ShowLlmsTxt = false
                 }), null));
 
     private IQueryable<EPubListItem> GetNewsQuery()
@@ -146,7 +147,8 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
                     Description = newsItem.BriefDescription,
                     Title = newsItem.Title,
                     AuthorName = newsItem.User!.FriendlyName,
-                    DatePublished = newsItem.Audit.CreatedAt
+                    DatePublished = newsItem.Audit.CreatedAt,
+                    ShowLlmsTxt = false
                 }), null));
 
     private IQueryable<EPubListItem> GetCoursesQuery()
@@ -166,7 +168,8 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
                             Description = courseTopic.Body.GetBriefDescription(450),
                             Title = courseTopic.Title,
                             AuthorName = courseTopic.User!.FriendlyName,
-                            DatePublished = courseTopic.Audit.CreatedAt
+                            DatePublished = courseTopic.Audit.CreatedAt,
+                            ShowLlmsTxt = false
                         }))
                     .ToList()));
 
@@ -182,6 +185,7 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
                     Description = question.Description.GetBriefDescription(450),
                     Title = question.Title,
                     AuthorName = question.User!.FriendlyName,
-                    DatePublished = question.Audit.CreatedAt
+                    DatePublished = question.Audit.CreatedAt,
+                    ShowLlmsTxt = false
                 }), null));
 }
