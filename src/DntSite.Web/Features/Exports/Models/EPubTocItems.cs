@@ -6,4 +6,5 @@ public record EPubTocItems(
     int ArticleGroupsCount,
     int LearningPathsCount,
     int CoursesCount,
-    int NewsCount);
+    int NewsCount,
+    int StackExchangeQuestionCount);

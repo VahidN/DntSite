@@ -36,4 +36,10 @@ public interface IEPubExportDataProviderService : IScopedService
     Task<List<EPubListItem>> GetAllArticlesAsync(CancellationToken cancellationToken);
 
     Task<List<EPubListItem>> GetAllNewsAsync(CancellationToken cancellationToken);
+
+    Task<PagedResultModel<EPubListItem>> GetExchangeQuestionsAsync(int pageNumber,
+        int recordsPerPage,
+        CancellationToken cancellationToken);
+
+    Task<List<EPubListItem>> GetAllExchangeQuestionsAsync(CancellationToken cancellationToken);
 }

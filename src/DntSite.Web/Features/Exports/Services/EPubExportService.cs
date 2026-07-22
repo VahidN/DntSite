@@ -107,6 +107,13 @@ public class EPubExportService(
             pagerPage => docsInfoService.GetArticlesTocPath(domain, pagerPage), WhatsNewItemType.Posts,
             fixLocalUrls: false, domain, sideBar, cancellationToken);
 
+        await CreateItemsListContentAsync(epub, title: "پرسش‌ها",
+            page => docsInfoService.GetExchangeQuestionsTocPath(domain, page), itemsPerPage: 100,
+            (page, itemsPerPage)
+                => ePubExportDataProviderService.GetExchangeQuestionsAsync(page, itemsPerPage, cancellationToken),
+            pagerPage => docsInfoService.GetExchangeQuestionsTocPath(domain, pagerPage), WhatsNewItemType.Questions,
+            fixLocalUrls: false, domain, sideBar, cancellationToken);
+
         await CreateItemsListContentAsync(epub, title: "دوره‌ها",
             page => docsInfoService.GetCoursesTocPath(domain, page), itemsPerPage: 10,
             (page, itemsPerPage)
@@ -328,6 +335,7 @@ public class EPubExportService(
 
         var coursesLink = $"<a href='{docsInfoService.GetCoursesTocPath(domain, page: 1)}'>دوره‌ها</a>";
         var newsLink = $"<a href='{docsInfoService.GetNewsTocPath(domain, page: 1)}'>اشتراک‌ها</a>";
+        var questionsLink = $"<a href='{docsInfoService.GetExchangeQuestionsTocPath(domain, page: 1)}'>پرسش‌ها</a>";
 
         IEnumerable<IEnumerable<string>> rows = showItemsCounts
             ?
@@ -337,9 +345,14 @@ public class EPubExportService(
                 [tagsLink, htmlProviderService.WrapInBadge(items.ArticleGroupsCount.ToPersianNumbers())],
                 [learningPathsLink, htmlProviderService.WrapInBadge(items.LearningPathsCount.ToPersianNumbers())],
                 [coursesLink, htmlProviderService.WrapInBadge(items.CoursesCount.ToPersianNumbers())],
-                [newsLink, htmlProviderService.WrapInBadge(items.NewsCount.ToPersianNumbers())]
+                [newsLink, htmlProviderService.WrapInBadge(items.NewsCount.ToPersianNumbers())],
+                [questionsLink, htmlProviderService.WrapInBadge(items.StackExchangeQuestionCount.ToPersianNumbers())]
             ]
-            : [[articlesLink], [authorsLink], [tagsLink], [learningPathsLink], [coursesLink], [newsLink]];
+            :
+            [
+                [articlesLink], [authorsLink], [tagsLink], [learningPathsLink], [coursesLink], [newsLink],
+                [questionsLink]
+            ];
 
         html.AppendLine(HtmlExtensions.CreateHtmlTable(caption: null, [], rows,
             tableClass: "table shadow-sm mb-0 rounded table-hover mx-auto w-100 caption-bottom"));

@@ -52,6 +52,9 @@ public class EPubExportDocsInfoService(IPdfExportService pdfExportService, IAppF
     public string GetArticlesTocPath(string domain, int page)
         => string.Create(CultureInfo.InvariantCulture, $"{domain}-articles-toc-page-{page}.html");
 
+    public string GetExchangeQuestionsTocPath(string domain, int page)
+        => string.Create(CultureInfo.InvariantCulture, $"{domain}-questions-toc-page-{page}.html");
+
     public string GetAuthorsTocPath(string domain, int page)
         => string.Create(CultureInfo.InvariantCulture, $"{domain}-authors-toc-page-{page}.html");
 

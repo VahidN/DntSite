@@ -11,6 +11,8 @@ public interface IEPubExportDocsInfoService : IScopedService
         int numberOfTries,
         CancellationToken cancellationToken);
 
+    string GetExchangeQuestionsTocPath(string domain, int page);
+
     string GetEPubTocPath(string domain, int page);
 
     string GetArticlesTocPath(string domain, int page);

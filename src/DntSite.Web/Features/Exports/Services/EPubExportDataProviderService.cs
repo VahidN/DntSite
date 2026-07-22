@@ -7,6 +7,7 @@ using DntSite.Web.Features.News.Entities;
 using DntSite.Web.Features.Persistence.UnitOfWork;
 using DntSite.Web.Features.Posts.Entities;
 using DntSite.Web.Features.RoadMaps.Entities;
+using DntSite.Web.Features.StackExchangeQuestions.Entities;
 using DntSite.Web.Features.UserProfiles.Entities;
 using EFCoreSecondLevelCacheInterceptor;
 
@@ -19,6 +20,7 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
     private readonly DbSet<Course> _courses = uow.DbSet<Course>();
     private readonly DbSet<DailyNewsItem> _dailyNews = uow.DbSet<DailyNewsItem>();
     private readonly DbSet<LearningPath> _learningPaths = uow.DbSet<LearningPath>();
+    private readonly DbSet<StackExchangeQuestion> _stackExchangeQuestions = uow.DbSet<StackExchangeQuestion>();
     private readonly DbSet<User> _users = uow.DbSet<User>();
 
     public async Task<EPubTocItems> GetEPubTocItemsAsync(CancellationToken cancellationToken)
@@ -26,7 +28,8 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
             await GetAuthorsQuery().CountAsync(cancellationToken),
             await GetArticleGroupsQuery().CountAsync(cancellationToken),
             await GetLearningPathsQuery().CountAsync(cancellationToken),
-            await GetCoursesQuery().CountAsync(cancellationToken), await GetNewsQuery().CountAsync(cancellationToken));
+            await GetCoursesQuery().CountAsync(cancellationToken), await GetNewsQuery().CountAsync(cancellationToken),
+            await GetExchangeQuestionsQuery().CountAsync(cancellationToken));
 
     public Task<PagedResultModel<EPubListItem>> GetArticlesAsync(int pageNumber,
         int recordsPerPage,
@@ -66,6 +69,14 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
 
     public Task<List<EPubListItem>> GetAllCoursesAsync(CancellationToken cancellationToken)
         => GetCoursesQuery().ToListAsync(cancellationToken);
+
+    public Task<PagedResultModel<EPubListItem>> GetExchangeQuestionsAsync(int pageNumber,
+        int recordsPerPage,
+        CancellationToken cancellationToken)
+        => GetExchangeQuestionsQuery().ApplyQueryablePagingAsync(pageNumber, recordsPerPage, cancellationToken);
+
+    public Task<List<EPubListItem>> GetAllExchangeQuestionsAsync(CancellationToken cancellationToken)
+        => GetExchangeQuestionsQuery().ToListAsync(cancellationToken);
 
     private IQueryable<EPubListItem> GetAuthorsQuery()
         => _users.NotCacheable()
@@ -158,4 +169,19 @@ public class EPubExportDataProviderService(IUnitOfWork uow) : IEPubExportDataPro
                             DatePublished = courseTopic.Audit.CreatedAt
                         }))
                     .ToList()));
+
+    private IQueryable<EPubListItem> GetExchangeQuestionsQuery()
+        => _stackExchangeQuestions.NotCacheable()
+            .AsNoTracking()
+            .Include(question => question.User)
+            .Where(question => !question.IsDeleted)
+            .OrderByDescending(question => question.Id)
+            .Select(question => new EPubListItem(new EPubContentItem(question.Id, question.Title, null, null,
+                question.User!.FriendlyName, question.Audit.CreatedAt, null, new PageSeoMetadata
+                {
+                    Description = question.Description.GetBriefDescription(450),
+                    Title = question.Title,
+                    AuthorName = question.User!.FriendlyName,
+                    DatePublished = question.Audit.CreatedAt
+                }), null));
 }
