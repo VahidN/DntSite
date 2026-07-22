@@ -304,6 +304,10 @@ public class EPubExportService(
         bool showItemsCounts)
     {
         var html = new StringBuilder();
+        html.AppendLine(value: "<div class='card mt-4 shadow-sm'>");
+        html.AppendLine(value: "<div class='card-header text-center h5'>");
+        html.AppendLine($"<a target='_blank' dir='ltr' href='{baseUrl}'>{domain.ToLowerInvariant()}</a>");
+        html.AppendLine(value: "</div>");
 
         var articlesLink = $"<a href='{docsInfoService.GetArticlesTocPath(domain, page: 1)}'>مطالب</a>";
         var authorsLink = $"<a href='{docsInfoService.GetAuthorsTocPath(domain, page: 1)}'>نویسندگان</a>";
@@ -327,10 +331,10 @@ public class EPubExportService(
             ]
             : [[articlesLink], [authorsLink], [tagsLink], [learningPathsLink], [coursesLink], [newsLink]];
 
-        html.AppendLine(HtmlExtensions.CreateHtmlTable(
-            $"<div class='row mt-1'><a target='_blank' style='text-align: center !important;' dir='ltr' href='{baseUrl}'>{domain.ToLowerInvariant()}</a></div>",
-            [], rows, tableClass: "table mt-4 shadow-sm rounded table-hover mx-auto w-100 caption-bottom"));
+        html.AppendLine(HtmlExtensions.CreateHtmlTable(caption: null, [], rows,
+            tableClass: "table shadow-sm mb-0 rounded table-hover mx-auto w-100 caption-bottom"));
 
+        html.AppendLine(value: "</div>");
         var body = html.ToString();
         var content = htmlProviderService.ApplyHtmlPageTemplate(domain, body, sideBar: null, seoTags: null);
         epub.AddXhtmlData(docsInfoService.GetEPubTocPath(domain, page: 1), content);
