@@ -90,6 +90,10 @@ public class EPubExportService(
             cancellationToken);
 
         await AddContentsAsync(epub, WhatsNewItemType.News, processSubItems: false, domain, sideBar, cancellationToken);
+
+        await AddContentsAsync(epub, WhatsNewItemType.Questions, processSubItems: false, domain, sideBar,
+            cancellationToken);
+
         epub.Generate();
 
         return ebookFilePath;
@@ -202,6 +206,10 @@ public class EPubExportService(
         else if (type == WhatsNewItemType.News)
         {
             posts = await ePubExportDataProviderService.GetAllNewsAsync(cancellationToken);
+        }
+        else if (type == WhatsNewItemType.Questions)
+        {
+            posts = await ePubExportDataProviderService.GetAllExchangeQuestionsAsync(cancellationToken);
         }
 
         if (posts is null)
