@@ -27,7 +27,7 @@ indent_size = 4
 [*.sh]
 indent_size = 4
 
-[*.cs]
+[*.{cs,razor,cshtml}]
 
 csharp_indent_block_contents = true
 csharp_indent_braces = false

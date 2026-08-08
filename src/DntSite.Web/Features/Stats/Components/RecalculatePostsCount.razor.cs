@@ -22,6 +22,8 @@ public partial class RecalculatePostsCount
 
     [InjectComponentScoped] internal ISiteReferrersService SiteReferrersService { get; set; } = null!;
 
+    [InjectComponentScoped] internal ISiteUrlsService SiteUrlsService { get; set; } = null!;
+
     [InjectComponentScoped] internal IPdfExportService PdfExportService { get; set; } = null!;
 
     [InjectComponentScoped] internal IAIDailyNewsService AIDailyNewsService { get; set; } = null!;
@@ -73,6 +75,7 @@ public partial class RecalculatePostsCount
 
             case RecalculatePostsCountAction.DeleteAllSiteReferrers:
                 await SiteReferrersService.DeleteAllAsync();
+                await SiteUrlsService.DeleteAllAsync();
 
                 break;
 
@@ -135,5 +138,5 @@ public partial class RecalculatePostsCount
         AddBreadCrumbs();
     }
 
-    private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([..StatsBreadCrumbs.DefaultBreadCrumbs]);
+    private void AddBreadCrumbs() => ApplicationState.BreadCrumbs.AddRange([.. StatsBreadCrumbs.DefaultBreadCrumbs]);
 }
