@@ -170,17 +170,16 @@ public class CourseTopicsService(
         return new CourseTopicModel
         {
             ThisTopic = thisTopic,
-            PreviousTopic =
-                await _courseTopics.AsNoTracking()
-                    .Where(x => x.IsDeleted != onlyActive && x.Id > id && x.CourseId == courseId)
-                    .OrderBy(x => x.Id)
-                    .Include(x => x.User)
-                    .Include(x => x.Course)
-                    .ThenInclude(x => x.Tags)
-                    .Include(x => x.Reactions)
-                    .Include(x => x.Bookmarks)
-                    .OrderBy(x => x.Id)
-                    .FirstOrDefaultAsync(),
+            PreviousTopic = await _courseTopics.AsNoTracking()
+                .Where(x => x.IsDeleted != onlyActive && x.Id > id && x.CourseId == courseId)
+                .OrderBy(x => x.Id)
+                .Include(x => x.User)
+                .Include(x => x.Course)
+                .ThenInclude(x => x.Tags)
+                .Include(x => x.Reactions)
+                .Include(x => x.Bookmarks)
+                .OrderBy(x => x.Id)
+                .FirstOrDefaultAsync(),
             NextTopic = await _courseTopics.AsNoTracking()
                 .Where(x => x.IsDeleted != onlyActive && x.Id < id && x.CourseId == courseId)
                 .OrderByDescending(x => x.Id)
@@ -239,7 +238,7 @@ public class CourseTopicsService(
     {
         ArgumentNullException.ThrowIfNull(writeCourseItemModel);
 
-        if (courseTopic is null)
+        if (courseTopic?.Course is null)
         {
             return;
         }
@@ -248,8 +247,11 @@ public class CourseTopicsService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(
-            courseTopic.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+        if (courseTopic.Course.IsReadyToPublish)
+        {
+            fullTextSearchService.AddOrUpdateLuceneDocument(
+                courseTopic.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+        }
 
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
     }
@@ -268,8 +270,11 @@ public class CourseTopicsService(
 
         await SetParentAsync(courseTopic, courseId);
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(
-            courseTopic.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+        if (courseTopic.Course.IsReadyToPublish)
+        {
+            fullTextSearchService.AddOrUpdateLuceneDocument(
+                courseTopic.MapToWhatsNewItemModel(siteRootUri: "", showBriefDescription: false));
+        }
 
         await pdfExportService.InvalidateExportedFilesAsync(WhatsNewItemType.AllCoursesTopics, courseTopic.Id);
 

@@ -66,7 +66,7 @@ public static class CourseMappersExtensions
                 string.Create(CultureInfo.InvariantCulture,
                     $"{CoursesRoutingConstants.CoursesTopicBase}/{item.CourseId}/{item.DisplayId:D}"),
                 escapeRelativeUrl: false),
-            Categories = [..item.Course.Tags.Select(x => x.Name)],
+            Categories = [.. item.Course.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.AllCoursesTopics,
             Id = item.Id,
             UserId = item.UserId,
@@ -94,7 +94,7 @@ public static class CourseMappersExtensions
             OriginalTitle = item.Title,
             Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id),
                 escapeRelativeUrl: false),
-            Categories = [..item.Tags.Select(x => x.Name)],
+            Categories = [.. item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.AllCourses,
             Id = item.Id,
             UserId = item.UserId,
@@ -115,7 +115,9 @@ public static class CourseMappersExtensions
             Description = antiXssService.GetSanitizedHtml(source.Description),
             Requirements = antiXssService.GetSanitizedHtml(source.Requirements),
             Perm = source.Perm,
-            IsFree = source.Perm != CourseType.IsNotFree
+            IsFree = source.Perm != CourseType.IsNotFree,
+            IsReadyToPublish = source.IsReadyToPublish,
+            TopicsList = source.TopicsList
         };
 
         switch (source.Perm)
@@ -151,6 +153,8 @@ public static class CourseMappersExtensions
             destination.NumberOfMonthsRequired = course.NumberOfMonthsRequired;
             destination.NumberOfTotalRatingsRequired = course.NumberOfTotalRatingsRequired;
             destination.NumberOfMonthsTotalRatingsRequired = course.NumberOfMonthsTotalRatingsRequired;
+            destination.IsReadyToPublish = course.IsReadyToPublish;
+            destination.TopicsList = course.TopicsList ?? "";
         }
 
         return destination ?? course;
@@ -166,7 +170,9 @@ public static class CourseMappersExtensions
             Description = source.Description,
             Requirements = source.Requirements ?? "",
             Perm = source.Perm,
-            Tags = source.Tags?.Select(tag => tag.Name).ToList() ?? []
+            Tags = source.Tags?.Select(tag => tag.Name).ToList() ?? [],
+            IsReadyToPublish = source.IsReadyToPublish,
+            TopicsList = source.TopicsList ?? ""
         };
     }
 
@@ -184,7 +190,8 @@ public static class CourseMappersExtensions
             Title = source.Title,
             Body = body,
             ReadingTimeMinutes = body.MinReadTime(),
-            DisplayId = Guid.NewGuid()
+            DisplayId = Guid.NewGuid(),
+            IsMainTopic = source.IsMainTopic
         };
 
         if (destination is not null)
@@ -193,6 +200,7 @@ public static class CourseMappersExtensions
             destination.Body = courseTopic.Body;
             destination.ReadingTimeMinutes = courseTopic.ReadingTimeMinutes;
             destination.DisplayId = courseTopic.DisplayId;
+            destination.IsMainTopic = courseTopic.IsMainTopic;
         }
 
         return destination ?? courseTopic;

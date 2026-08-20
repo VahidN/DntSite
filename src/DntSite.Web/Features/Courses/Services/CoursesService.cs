@@ -83,7 +83,10 @@ public class CoursesService(
         PagerSortBy pagerSortBy = PagerSortBy.Date,
         bool isAscending = false)
     {
-        var query = from b in _courses.AsNoTracking() from t in b.Tags where t.Name == tag select b;
+        var query = from b in _courses.AsNoTracking()
+            from t in b.Tags
+            where t.Name == tag
+            select b;
 
         query = query.Include(x => x.User)
             .Include(blogPost => blogPost.Tags)
@@ -395,23 +398,21 @@ public class CoursesService(
 
         return new CourseItemModel
         {
-            CurrentCourse =
-                await query.Where(x => x.IsDeleted != onlyActive && x.Id == id)
-                    .Include(x => x.User)
-                    .Include(blogPost => blogPost.Reactions)
-                    .Include(x => x.Bookmarks)
-                    .Include(x => x.Tags)
-                    .Include(x => x.CourseTopics)
-                    .OrderBy(x => x.Id)
-                    .FirstOrDefaultAsync(),
-            NextCourse =
-                await query.Where(x => x.IsDeleted != onlyActive && x.Id > id)
-                    .OrderBy(x => x.Id)
-                    .Include(x => x.User)
-                    .Include(blogPost => blogPost.Reactions)
-                    .Include(x => x.Bookmarks)
-                    .Include(x => x.Tags)
-                    .FirstOrDefaultAsync(),
+            CurrentCourse = await query.Where(x => x.IsDeleted != onlyActive && x.Id == id)
+                .Include(x => x.User)
+                .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
+                .Include(x => x.Tags)
+                .Include(x => x.CourseTopics)
+                .OrderBy(x => x.Id)
+                .FirstOrDefaultAsync(),
+            NextCourse = await query.Where(x => x.IsDeleted != onlyActive && x.Id > id)
+                .OrderBy(x => x.Id)
+                .Include(x => x.User)
+                .Include(blogPost => blogPost.Reactions)
+                .Include(x => x.Bookmarks)
+                .Include(x => x.Tags)
+                .FirstOrDefaultAsync(),
             PreviousCourse = await query.Where(x => x.IsDeleted != onlyActive && x.Id < id)
                 .OrderByDescending(x => x.Id)
                 .Include(x => x.User)
@@ -488,8 +489,11 @@ public class CoursesService(
 
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: "",
-            showBriefDescription: false));
+        if (writeCourseModel.IsReadyToPublish)
+        {
+            fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: "",
+                showBriefDescription: false));
+        }
     }
 
     public async Task<Course?> AddCourseItemAsync(CourseModel? writeCourseModel, User? user)
@@ -505,8 +509,11 @@ public class CoursesService(
         var course = AddCourse(item);
         await uow.SaveChangesAsync();
 
-        fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: "",
-            showBriefDescription: false));
+        if (writeCourseModel.IsReadyToPublish)
+        {
+            fullTextSearchService.AddOrUpdateLuceneDocument(course.MapToWhatsNewItemModel(siteRootUri: "",
+                showBriefDescription: false));
+        }
 
         return course;
     }
