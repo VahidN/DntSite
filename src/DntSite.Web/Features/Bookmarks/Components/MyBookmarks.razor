@@ -1,0 +1,52 @@
+﻿@using DntSite.Web.Features.Bookmarks.Models
+@attribute [Route(BookmarksRoutingConstants.MyBookmarks)]
+@attribute [Route(BookmarksRoutingConstants.MyBookmarksPageCurrentPage)]
+
+<DntSitePageTitle Group="مطالب" PageTitle="@MainTitle" CurrentPage="@CurrentPage"/>
+
+<DntLoading IsLoading="@(_items is null)">
+    <DntSimpleTable TRecord="BookmarkDto"
+                    Records="_items!.Data"
+                    TableClass="table table-striped table-hover caption-top"
+                    HeaderClass="table-secondary"
+                    FooterRowClass="table-warning"
+                    TableResponsiveClass="row table-responsive"
+                    RowClass='record => ""'>
+        <CaptionTemplate>
+            <strong>@MainTitle</strong>
+        </CaptionTemplate>
+        <TableColumns>
+            <DntSimpleTableColumn HeaderTitle="گروه"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-center align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    <DntBadge BadgeValueBgColor="TextBgColor.Dark" BadgeValue="@record.Type"/>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+            <DntSimpleTableColumn HeaderTitle="عنوان"
+                                  HeaderCellClass="text-center"
+                                  RowCellClass='record => "text-right align-middle"'
+                                  FooterCellClass="text-center align-middle">
+                <CellValueTemplate Context="record">
+                    <DntLink IsExternal="false" Url="@record.Url">
+                        <span dir="@record.Title.GetDir()">
+                            @record.Title
+                        </span>
+                    </DntLink>
+                </CellValueTemplate>
+            </DntSimpleTableColumn>
+        </TableColumns>
+
+        <DataSourceIsEmptyTemplate>
+            <div class="alert alert-info">
+                اطلاعاتی برای نمایش یافت نشد.
+            </div>
+        </DataSourceIsEmptyTemplate>
+    </DntSimpleTable>
+
+    <DntSimplePaginator ItemsPerPage="ItemsPerPage"
+                        TotalItemCount="_items!.TotalItems"
+                        BasePath="@BookmarksRoutingConstants.MyBookmarks"
+                        CurrentPage="CurrentPage"/>
+</DntLoading>

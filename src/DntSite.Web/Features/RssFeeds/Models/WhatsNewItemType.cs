@@ -4,6 +4,28 @@ public sealed class WhatsNewItemType
 {
     public const string CommentsOf = "نظرات";
     public const string RepliesOf = "پاسخ";
+    public const string BacklogsName = "پیشنهادها";
+    public const string QuestionsName = "پرسش‌ها";
+    public const string LearningPathsName = "مسیرراه‌ها";
+    public const string AllCoursesTopicsName = "مطالب دوره‌ها";
+    public const string AllCoursesName = "دوره‌ها";
+    public const string AllVotesName = "نظرسنجی‌ها";
+    public const string AllAdvertisementsName = "آگهی‌ها";
+    public const string AllDraftsName = "به زودی";
+    public const string ProjectsNewsName = "پروژه‌ها";
+    public const string ProjectsFilesName = "فایل‌های پروژه‌ها";
+    public const string ProjectsIssuesName = "بازخوردهای پروژه‌ها";
+    public const string ProjectFaqsName = "راهنماهای پروژه";
+    public const string ProjectsFaqsName = "راهنماهای پروژه‌ها";
+    public const string ProjectFilesName = "فایل‌های پروژه‌";
+    public const string ProjectIssuesName = "بازخورد‌های پروژه‌";
+    public const string PostsName = "مطالب";
+    public const string NewsName = "اشتراک‌ها";
+    public const string NewsTagName = "گروه اشتراک‌ها";
+    public const string TagName = "گروه‌ها";
+    public const string AuthorName = "نویسنده‌ها";
+    public const string NewsAuthorName = "اشتراک‌های اشخاص";
+    public const string CourseTopicsRepliesName = "بازخوردهای دوره";
 
     private static readonly Dictionary<string, WhatsNewItemType> WhatsNewItemTypes = new()
     {
@@ -11,38 +33,37 @@ public sealed class WhatsNewItemType
             nameof(QuestionsComments), new WhatsNewItemType($"{RepliesOf} به پرسش‌ها", bgColor: "bg-primary")
         },
         {
-            nameof(Backlogs), new WhatsNewItemType(value: "پیشنهادها", bgColor: "bg-secondary")
+            nameof(Backlogs), new WhatsNewItemType(BacklogsName, bgColor: "bg-secondary")
         },
         {
-            nameof(Questions), new WhatsNewItemType(value: "پرسش‌ها", bgColor: "bg-success")
+            nameof(Questions), new WhatsNewItemType(QuestionsName, bgColor: "bg-success")
         },
         {
-            nameof(LearningPaths), new WhatsNewItemType(value: "مسیرراه‌ها", bgColor: "bg-danger")
+            nameof(LearningPaths), new WhatsNewItemType(LearningPathsName, bgColor: "bg-danger")
         },
         {
-            nameof(AllCoursesTopics), new WhatsNewItemType(value: "مطالب دوره‌ها", bgColor: "bg-warning")
+            nameof(AllCoursesTopics), new WhatsNewItemType(AllCoursesTopicsName, bgColor: "bg-warning")
         },
         {
-            nameof(AllCourses), new WhatsNewItemType(value: "دوره‌ها", bgColor: "bg-info")
+            nameof(AllCourses), new WhatsNewItemType(AllCoursesName, bgColor: "bg-info")
         },
         {
-            nameof(AllVotes), new WhatsNewItemType(value: "نظرسنجی‌ها", bgColor: "bg-dark")
+            nameof(AllVotes), new WhatsNewItemType(AllVotesName, bgColor: "bg-dark")
         },
         {
-            nameof(AllAdvertisements), new WhatsNewItemType(value: "آگهی‌ها", bgColor: "bg-primary bg-gradient")
+            nameof(AllAdvertisements), new WhatsNewItemType(AllAdvertisementsName, bgColor: "bg-primary bg-gradient")
         },
         {
-            nameof(AllDrafts), new WhatsNewItemType(value: "به زودی", bgColor: "bg-secondary bg-gradient")
+            nameof(AllDrafts), new WhatsNewItemType(AllDraftsName, bgColor: "bg-secondary bg-gradient")
         },
         {
-            nameof(ProjectsNews), new WhatsNewItemType(value: "پروژه‌ها", bgColor: "bg-success bg-gradient")
+            nameof(ProjectsNews), new WhatsNewItemType(ProjectsNewsName, bgColor: "bg-success bg-gradient")
         },
         {
-            nameof(ProjectsFiles), new WhatsNewItemType(value: "فایل‌های پروژه‌ها", bgColor: "bg-danger bg-gradient")
+            nameof(ProjectsFiles), new WhatsNewItemType(ProjectsFilesName, bgColor: "bg-danger bg-gradient")
         },
         {
-            nameof(ProjectsIssues),
-            new WhatsNewItemType(value: "بازخوردهای پروژه‌ها", bgColor: "bg-warning bg-gradient")
+            nameof(ProjectsIssues), new WhatsNewItemType(ProjectsIssuesName, bgColor: "bg-warning bg-gradient")
         },
         {
             nameof(ProjectsIssuesReplies),
@@ -57,25 +78,25 @@ public sealed class WhatsNewItemType
         },
         {
             nameof(ProjectFaqs),
-            new WhatsNewItemType(value: "راهنماهای پروژه", bgColor: "bg-secondary-subtle text-secondary-emphasis")
+            new WhatsNewItemType(ProjectFaqsName, bgColor: "bg-secondary-subtle text-secondary-emphasis")
         },
         {
-            nameof(ProjectsFaqs), new WhatsNewItemType(value: "راهنماهای پروژه‌ها", bgColor: "bg-light text-dark")
+            nameof(ProjectsFaqs), new WhatsNewItemType(ProjectsFaqsName, bgColor: "bg-light text-dark")
         },
         {
             nameof(ProjectFiles),
-            new WhatsNewItemType(value: "فایل‌های پروژه‌", bgColor: "bg-danger-subtle text-danger-emphasis")
+            new WhatsNewItemType(ProjectFilesName, bgColor: "bg-danger-subtle text-danger-emphasis")
         },
         {
             nameof(ProjectIssues),
-            new WhatsNewItemType(value: "بازخورد‌های پروژه‌", bgColor: "bg-warning-subtle text-warning-emphasis")
+            new WhatsNewItemType(ProjectIssuesName, bgColor: "bg-warning-subtle text-warning-emphasis")
         },
         {
             nameof(ProjectIssuesReplies),
             new WhatsNewItemType($"{RepliesOf} ‌به بازخورد‌های پروژه‌", bgColor: "bg-info-subtle text-info-emphasis")
         },
         {
-            nameof(Posts), new WhatsNewItemType(value: "مطالب", bgColor: "bg-success-subtle text-success-emphasis")
+            nameof(Posts), new WhatsNewItemType(PostsName, bgColor: "bg-success-subtle text-success-emphasis")
         },
         {
             nameof(Comments),
@@ -83,20 +104,18 @@ public sealed class WhatsNewItemType
         },
         {
             nameof(News),
-            new WhatsNewItemType(value: "اشتراک‌ها", bgColor: "bg-secondary-subtle text-secondary-emphasis bg-gradient")
+            new WhatsNewItemType(NewsName, bgColor: "bg-secondary-subtle text-secondary-emphasis bg-gradient")
         },
         {
             nameof(NewsTag),
-            new WhatsNewItemType(value: "گروه اشتراک‌ها",
-                bgColor: "bg-secondary-subtle text-secondary-emphasis bg-gradient")
+            new WhatsNewItemType(NewsTagName, bgColor: "bg-secondary-subtle text-secondary-emphasis bg-gradient")
         },
         {
-            nameof(Tag),
-            new WhatsNewItemType(value: "گروه‌ها", bgColor: "bg-success-subtle text-success-emphasis bg-gradient")
+            nameof(Tag), new WhatsNewItemType(TagName, bgColor: "bg-success-subtle text-success-emphasis bg-gradient")
         },
         {
             nameof(Author),
-            new WhatsNewItemType(value: "نویسنده‌ها", bgColor: "bg-danger-subtle text-danger-emphasis bg-gradient")
+            new WhatsNewItemType(AuthorName, bgColor: "bg-danger-subtle text-danger-emphasis bg-gradient")
         },
         {
             nameof(NewsComments),
@@ -105,11 +124,11 @@ public sealed class WhatsNewItemType
         },
         {
             nameof(NewsAuthor),
-            new WhatsNewItemType(value: "اشتراک‌های اشخاص", bgColor: "bg-info-subtle text-info-emphasis bg-gradient")
+            new WhatsNewItemType(NewsAuthorName, bgColor: "bg-info-subtle text-info-emphasis bg-gradient")
         },
         {
             nameof(CourseTopicsReplies),
-            new WhatsNewItemType(value: "بازخوردهای دوره", bgColor: "bg-light text-dark bg-gradient")
+            new WhatsNewItemType(CourseTopicsRepliesName, bgColor: "bg-light text-dark bg-gradient")
         }
     };
 

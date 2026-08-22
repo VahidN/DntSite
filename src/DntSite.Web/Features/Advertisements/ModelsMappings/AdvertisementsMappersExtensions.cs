@@ -33,15 +33,18 @@ public static class AdvertisementsMappersExtensions
                     : item.Audit.CreatedAt),
             Title = $"{WhatsNewItemType.AllAdvertisements.Value}: {item.Title}",
             OriginalTitle = item.Title,
-            Url = siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, item.Id),
-                escapeRelativeUrl: false),
-            Categories = [..item.Tags.Select(x => x.Name)],
+            Url = GetAllAdvertisementsUrl(item.Id, siteRootUri),
+            Categories = [.. item.Tags.Select(x => x.Name)],
             ItemType = WhatsNewItemType.AllAdvertisements,
             Id = item.Id,
             UserId = item.UserId,
             EntityType = item.GetType()
         };
     }
+
+    public static string GetAllAdvertisementsUrl(int id, string siteRootUri)
+        => siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, id),
+            escapeRelativeUrl: false);
 
     public static WhatsNewItemModel MapToWhatsNewItemModel(this AdvertisementComment item,
         string siteRootUri,

@@ -7,6 +7,11 @@ namespace DntSite.Web.Features.Bookmarks.Services.Contracts;
 
 public interface IBookmarksService : IScopedService
 {
+    Task<PagedResultModel<BookmarkDto>> GetAllUserBookmarksAsync(int? userId,
+        int pageNumber,
+        int recordsPerPage = 20,
+        bool isAscending = false);
+
     Task<bool> SavePostBookmarkAsync<TBookmarkEntity, TForeignKeyEntity>(int fkId,
         BookmarkActionType actionType,
         int? fromUserId)
