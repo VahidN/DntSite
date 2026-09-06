@@ -27,7 +27,7 @@ public class LearningPathPdfExportsService(
 {
     private readonly DbSet<LearningPath> _learningPaths = uow.DbSet<LearningPath>();
 
-    public IList<int> GetNewsIds(IList<string> links)
+    public IList<int> GetNewsIds(IList<string?> links)
     {
         if (links.IsNullOrEmpty())
         {
@@ -36,14 +36,14 @@ public class LearningPathPdfExportsService(
 
         return
         [
-            ..GetItemPostIds(contains: "/news/details/", links, segmentNumber: 3)
+            .. GetItemPostIds(contains: "/news/details/", links, segmentNumber: 3)
                 .TryConvertToListOfT<int>(ignoreParsingFailures: true),
-            ..GetItemPostIds(contains: "/newsarchive/details/", links, segmentNumber: 3)
+            .. GetItemPostIds(contains: "/newsarchive/details/", links, segmentNumber: 3)
                 .TryConvertToListOfT<int>(ignoreParsingFailures: true)
         ];
     }
 
-    public IList<int> GetLearningPathsIds(IList<string> links)
+    public IList<int> GetLearningPathsIds(IList<string?> links)
     {
         if (links.IsNullOrEmpty())
         {
@@ -52,14 +52,14 @@ public class LearningPathPdfExportsService(
 
         return
         [
-            ..GetItemPostIds(contains: "/learning-paths/details/", links, segmentNumber: 3)
+            .. GetItemPostIds(contains: "/learning-paths/details/", links, segmentNumber: 3)
                 .TryConvertToListOfT<int>(ignoreParsingFailures: true),
-            ..GetItemPostIds(contains: "/LearningPaths/details/", links, segmentNumber: 3)
+            .. GetItemPostIds(contains: "/LearningPaths/details/", links, segmentNumber: 3)
                 .TryConvertToListOfT<int>(ignoreParsingFailures: true)
         ];
     }
 
-    public IList<int> GetPostIds(IList<string> links)
+    public IList<int> GetPostIds(IList<string?> links)
     {
         if (links.IsNullOrEmpty())
         {
@@ -70,7 +70,7 @@ public class LearningPathPdfExportsService(
             .TryConvertToListOfT<int>(ignoreParsingFailures: true);
     }
 
-    public async Task<IList<Guid>> GetCourseTopicIdsAsync(IList<string> links)
+    public async Task<IList<Guid>> GetCourseTopicIdsAsync(IList<string?> links)
     {
         if (links.IsNullOrEmpty())
         {
@@ -121,7 +121,7 @@ public class LearningPathPdfExportsService(
 
             await pdfExportService.CreateSinglePdfFileAsync(exportType, WhatsNewItemType.LearningPaths, item.Id,
                 item.Title, deleteHtmlDocAtTheEnd: true,
-                [..blogPostDocs, ..courseTopicDocs, ..questionDocs, ..newsDocs]);
+                [.. blogPostDocs, .. courseTopicDocs, .. questionDocs, .. newsDocs]);
 
             await Task.Delay(TimeSpan.FromSeconds(seconds: 15), cancellationToken);
         }
@@ -177,21 +177,23 @@ public class LearningPathPdfExportsService(
         return results;
     }
 
-    private static IList<int> GetQuestionIds(List<string> links)
+    private static IList<int> GetQuestionIds(List<string?> links)
         => GetItemPostIds(contains: "/questions/details/", links, segmentNumber: 3)
             .TryConvertToListOfT<int>(ignoreParsingFailures: true);
 
-    private List<string> GetLearningPathLinks(LearningPath item, string siteRootUri)
+    private List<string?> GetLearningPathLinks(LearningPath item, string siteRootUri)
         => htmlHelperService.ExtractLinks(item.Description)
             .Where(link => link.IsValidUrl() && link.HaveTheSameDomain(siteRootUri))
             .ToList();
 
-    private static List<string> GetItemPostIds(string contains, IList<string> links, int segmentNumber)
+    private static List<string> GetItemPostIds(string contains, IList<string?> links, int segmentNumber)
     {
         var postIds = new List<string>();
 
-        foreach (var link in links.Where(x => x.Contains(contains, StringComparison.OrdinalIgnoreCase)))
+        foreach (var link in links.Where(x => x?.Contains(contains, StringComparison.OrdinalIgnoreCase) == true))
         {
+            if (link.IsEmpty()) { continue; }
+
             var uri = new Uri(link);
 
             if (uri.Segments.Length <= segmentNumber)

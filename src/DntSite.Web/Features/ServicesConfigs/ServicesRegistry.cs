@@ -1,8 +1,4 @@
-using System.Security.Claims;
-using System.Security.Principal;
 using DntSite.Web.Features.AppConfigs.Models;
-using DntSite.Web.Features.DbSeeder.Services.Contracts;
-using Microsoft.AspNetCore.HttpOverrides;
 
 namespace DntSite.Web.Features.ServicesConfigs;
 
@@ -20,12 +16,11 @@ public static class ServicesRegistry
 
         services.AddHttpContextAccessor();
         services.AddIPrincipal();
-        services.AutoInjectAllServices();
 
         var siteSettings = configuration.GetSiteSettings();
         services.AddConfiguredDbContext(siteSettings, environment);
         services.AddCustomizedDataProtection(siteSettings);
-        services.AddDNTCommonWeb();        
+        services.AddDNTCommonWeb(autoInjectAllServices: true);
         services.AddSchedulers();
         services.RunHostedServicesConcurrently();
         services.AddCustomizedControllers();

@@ -358,6 +358,8 @@ public class BlogPostsService(
 
             foreach (var image in postImages)
             {
+                if (image.IsEmpty()) { continue; }
+
                 var fileName = image.Md5Hash();
 
                 var fileExt = ".jpg";

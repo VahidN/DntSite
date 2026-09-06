@@ -6,11 +6,11 @@ public interface ILearningPathPdfExportsService : IScopedService
 {
     Task CreateMergedPdfOfLearningPathsAsync(ExportType exportType, CancellationToken cancellationToken);
 
-    IList<int> GetNewsIds(IList<string> links);
+    IList<int> GetNewsIds(IList<string?> links);
 
-    IList<int> GetPostIds(IList<string> links);
+    IList<int> GetPostIds(IList<string?> links);
 
-    IList<int> GetLearningPathsIds(IList<string> links);
+    IList<int> GetLearningPathsIds(IList<string?> links);
 
-    Task<IList<Guid>> GetCourseTopicIdsAsync(IList<string> links);
+    Task<IList<Guid>> GetCourseTopicIdsAsync(IList<string?> links);
 }
