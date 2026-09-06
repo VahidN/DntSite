@@ -459,7 +459,7 @@ public class AIDailyNewsService(
 
     private async Task<List<string>> GetAIModelNamesAsync(string apiKey, CancellationToken cancellationToken)
     {
-        List<string> models = ["gemma-4-31b-it", "gemma-4-26b-a4b-it", "gemini-3.1-flash-lite"];
+        List<string> models = ["gemini-flash-lite-latest", "gemma-4-31b-it", "gemma-4-26b-a4b-it"];
 
         try
         {
