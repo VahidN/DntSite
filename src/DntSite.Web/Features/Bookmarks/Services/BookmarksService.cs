@@ -130,7 +130,7 @@ public class BookmarksService(IUnitOfWork uow) : IBookmarksService
         return true;
     }
 
-#pragma warning disable CA1305,CA1863,MA0076
+#pragma warning disable CA1305,CA1863,MA0076,MA0075
     public async Task<PagedResultModel<BookmarkDto>> GetAllUserBookmarksAsync(int? userId,
         int pageNumber,
         int recordsPerPage = 20,
@@ -251,7 +251,7 @@ public class BookmarksService(IUnitOfWork uow) : IBookmarksService
             Data = await allQueries.ApplyPaging(pageNumber, recordsPerPage).ToListAsync()
         };
     }
-#pragma warning restore CA1305,CA1863,MA0076
+#pragma warning restore CA1305,CA1863,MA0076,MA0075
 
     private IQueryable<TBookmarkEntity> GetUserBookmarksQuery<TBookmarkEntity, TForeignKeyEntity>(int? userId,
         bool? isAscending = null)

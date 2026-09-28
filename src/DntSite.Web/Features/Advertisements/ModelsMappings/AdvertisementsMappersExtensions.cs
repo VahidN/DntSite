@@ -42,10 +42,6 @@ public static class AdvertisementsMappersExtensions
         };
     }
 
-    public static string GetAllAdvertisementsUrl(int id, string siteRootUri)
-        => siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, id),
-            escapeRelativeUrl: false);
-
     public static WhatsNewItemModel MapToWhatsNewItemModel(this AdvertisementComment item,
         string siteRootUri,
         bool showBriefDescription)
@@ -75,6 +71,10 @@ public static class AdvertisementsMappersExtensions
             EntityType = item.GetType()
         };
     }
+
+    public static string GetAllAdvertisementsUrl(int id, string siteRootUri)
+        => siteRootUri.CombineUrl(string.Format(CultureInfo.InvariantCulture, ParsedPostUrlTemplate, id),
+            escapeRelativeUrl: false);
 
     public static Advertisement MapWriteAdvertisementModelToAdvertisement(this WriteAdvertisementModel source,
         IAppAntiXssService antiXssService,

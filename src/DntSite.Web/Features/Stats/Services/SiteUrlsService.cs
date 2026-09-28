@@ -147,7 +147,7 @@ public class SiteUrlsService(
             UserAgent = ua,
             DisplayName = context.User.GetFirstUserClaimValue(UserRolesService.DisplayNameClaim),
             IsSpider = await spidersService.IsSpiderClientAsync(ip, ua),
-            ClientInfo = await uaParserService.GetClientInfoAsync(context)
+            ClientInfo = await uaParserService.GetClientInfoAsync(context, context.RequestAborted)
         };
     }
 
